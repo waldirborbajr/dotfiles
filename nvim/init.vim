@@ -604,7 +604,7 @@ let g:fern#drawer_width = 35
 let g:fern#default_hidden = 1
 let g:fern#disable_drawer_auto_quit = 1
 
-"noremap <silent> <C-b> :Fern . -drawer -reveal=% -toggle -width=35<CR><C-w>=
+noremap <silent> <C-b> :Fern . -drawer -reveal=% -toggle -width=35<CR><C-w>=
 
 function! s:init_fern() abort
   nmap <buffer><expr>
