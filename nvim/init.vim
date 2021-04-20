@@ -511,36 +511,102 @@ command! -bang -nargs=* Rg
   \ "rg --column --line-number --no-heading --color=always --smart-case " .
   \ <q-args>, 1, fzf#vim#with_preview(), <bang>0)
 
+
+" .............................................................................
+" netrw
+" .............................................................................
+
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 4
+let g:netrw_winsize = 20
+
+function! OpenToRight()
+  :normal v
+  let g:path=expand('%:p')
+  execute 'q!'
+  execute 'belowright vnew' g:path
+  :normal <C-w>l
+endfunction
+
+function! OpenBelow()
+  :normal v
+  let g:path=expand('%:p')
+  execute 'q!'
+  execute 'belowright new' g:path
+  :normal <C-w>l
+endfunction
+
+function! OpenTab()
+  :normal v
+  let g:path=expand('%:p')
+  execute 'q!'
+  execute 'tabedit' g:path
+  :normal <C-w>l
+endfunction
+
+function! NetrwMappings()
+    " Hack fix to make ctrl-l work properly
+    noremap <buffer> <A-l> <C-w>l
+    noremap <buffer> <C-l> <C-w>l
+    noremap <silent> <C-b> :call ToggleNetrw()<CR>
+    noremap <buffer> V :call OpenToRight()<cr>
+    noremap <buffer> H :call OpenBelow()<cr>
+    noremap <buffer> T :call OpenTab()<cr>
+endfunction
+
+augroup netrw_mappings
+    autocmd!
+    autocmd filetype netrw call NetrwMappings()
+augroup END
+
+" Allow for netrw to be toggled
+function! ToggleNetrw()
+    if g:NetrwIsOpen
+        let i = bufnr("$")
+        while (i >= 1)
+            if (getbufvar(i, "&filetype") == "netrw")
+                silent exe "bwipeout " . i
+            endif
+            let i-=1
+        endwhile
+        let g:NetrwIsOpen=0
+    else
+        let g:NetrwIsOpen=1
+        silent Lexplore
+    endif
+endfunction
+
+" Check before opening buffer on any file
+function! NetrwOnBufferOpen()
+  if exists('b:noNetrw')
+      return
+  endif
+  call ToggleNetrw()
+endfun
+
+" Close Netrw if it's the only buffer open
+autocmd WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw" || &buftype == 'quickfix' |q|endif
+
+" Make netrw act like a project Draw
+augroup ProjectDrawer
+  autocmd!
+  autocmd VimEnter * :call NetrwOnBufferOpen()
+augroup END
+
+let g:NetrwIsOpen=0
+
 " .............................................................................
 " lambdalisue/fern.vim
 " .............................................................................
 
-" Disable netrw.
-"let g:loaded_netrw  = 1
-"let g:loaded_netrwPlugin = 1
-"let g:loaded_netrwSettings = 1
-"let g:loaded_netrwFileHandlers = 1
+let g:fern#drawer_width = 35
+let g:fern#default_hidden = 1
+let g:fern#disable_drawer_auto_quit = 1
 
-augroup my-fern-hijack
-  autocmd!
-  autocmd BufEnter * ++nested call s:hijack_directory()
-augroup END
+"noremap <silent> <C-b> :Fern . -drawer -reveal=% -toggle -width=35<CR><C-w>=
 
-function! s:hijack_directory() abort
-  let path = expand('%:p')
-  if !isdirectory(path)
-    return
-  endif
-  bwipeout %
-  execute printf('Fern %s', fnameescape(path))
-endfunction
-
-" Custom settings and mappings.
-let g:fern#disable_default_mappings = 1
-
-noremap <silent> <Leader>f :Fern . -drawer -reveal=% -toggle -width=35<CR><C-w>=
-
-function! FernInit() abort
+function! s:init_fern() abort
   nmap <buffer><expr>
         \ <Plug>(fern-my-open-expand-collapse)
         \ fern#smart#leaf(
@@ -558,16 +624,23 @@ function! FernInit() abort
   nmap <buffer> r <Plug>(fern-action-reload)
   nmap <buffer> k <Plug>(fern-action-mark)
   nmap <buffer> K <Plug>(fern-action-mark-children:leaf)
-  nmap <buffer> b <Plug>(fern-action-open:split)
-  nmap <buffer> v <Plug>(fern-action-open:vsplit)
+  nmap <buffer> C <Plug>(fern-action-copy)
+  nmap <buffer> T <Plug>(fern-action-new-file)
+  nmap <buffer> D <Plug>(fern-action-new-dir)
+  nmap <buffer> dd <Plug>(fern-action-trash)
+  nmap <buffer> H <Plug>(fern-action-open:split)
+  nmap <buffer> V <Plug>(fern-action-open:vsplit)
+
   nmap <buffer><nowait> < <Plug>(fern-action-leave)
   nmap <buffer><nowait> > <Plug>(fern-action-enter)
 endfunction
 
-augroup FernGroup
-  autocmd!
-  autocmd FileType fern call FernInit()
+augroup fern-custom
+  autocmd! *
+  autocmd FileType fern call s:init_fern()
 augroup END
+
+let g:fern#renderer = "nerdfont"
 
 " .............................................................................
 " unblevable/quick-scope
@@ -678,22 +751,6 @@ nmap <leader>gl :tabe %<CR>:Glog -- %<CR>
 " ctrlp
 set runtimepath^=~/.config/nvim/plugged/ctrlp.vim
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
-
-" netrw
-
-"nnoremap - :Explore<CR>
-nnoremap <C-b> :Fern . -drawer -toggle<CR>
-let g:netrw_banner = 0
-let g:netrw_liststyle = 3
-let g:netrw_bufsettings = 'noma nomod nu nobl nowrap ro'
-let g:netrw_altv = 1
-let g:netrw_winsize = 25
-let g:netrw_browse_split=2
-
-autocmd FileType netrw setl bufhidden=delete
-
-"-- netrw END
-
 
 "-- vim-go specific configuration
 
