@@ -511,7 +511,6 @@ command! -bang -nargs=* Rg
   \ "rg --column --line-number --no-heading --color=always --smart-case " .
   \ <q-args>, 1, fzf#vim#with_preview(), <bang>0)
 
-
 " .............................................................................
 " netrw
 " .............................................................................
@@ -600,9 +599,18 @@ let g:NetrwIsOpen=0
 " lambdalisue/fern.vim
 " .............................................................................
 
+" Disable netrw.
+let g:loaded_netrw  = 1
+let g:loaded_netrwPlugin = 1
+let g:loaded_netrwSettings = 1
+let g:loaded_netrwFileHandlers = 1
+
 let g:fern#drawer_width = 35
 let g:fern#default_hidden = 1
 let g:fern#disable_drawer_auto_quit = 1
+
+" Custom settings and mappings.
+let g:fern#disable_default_mappings = 1
 
 noremap <silent> <C-b> :Fern . -drawer -reveal=% -toggle -width=35<CR><C-w>=
 
@@ -630,7 +638,6 @@ function! s:init_fern() abort
   nmap <buffer> dd <Plug>(fern-action-trash)
   nmap <buffer> H <Plug>(fern-action-open:split)
   nmap <buffer> V <Plug>(fern-action-open:vsplit)
-
   nmap <buffer><nowait> < <Plug>(fern-action-leave)
   nmap <buffer><nowait> > <Plug>(fern-action-enter)
 endfunction
@@ -855,7 +862,7 @@ endif
 
 " map tag pop and push for all files
 nmap <C-a> <C-o>
-nmap <C-d> <Plug>(coc-definition)
+nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gr <Plug>(coc-references)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> rn <Plug>(coc-rename)
