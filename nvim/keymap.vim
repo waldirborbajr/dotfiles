@@ -7,6 +7,9 @@ let g:netrw_liststyle = 3
 let g:netrw_browse_split = 4
 let g:netrw_altv = 1
 let g:netrw_winsize = 25
+let g:netrw_browse_split=2
+let g:netrw_banner=0
+let g:netrw_winsize=25
 
 let g:session_directory = "~/.config/nvim/session"
 let g:session_autoload = "no"
@@ -14,10 +17,6 @@ let g:session_autosave = "no"
 let g:session_command_aliases = 1
 
 let g:startify_session_dir = "~/.config/nvim/session"
-
-let g:netrw_browse_split=2
-let g:netrw_banner=0
-let g:netrw_winsize=25
 
 let g:ctrlp_use_caching=0
 

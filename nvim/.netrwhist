@@ -1,5 +1,6 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =2
+let g:netrw_dirhistcnt =3
+let g:netrw_dirhist_3='/Volumes/BPlus/Workspaces/GOLang/src/nfeloader'
 let g:netrw_dirhist_2='/Volumes/BPlus/Workspaces'
 let g:netrw_dirhist_1='/Volumes/BPlus/Workspaces/GOLang'
 let g:netrw_dirhist_0='/Volumes/BPlus/Workspaces/GOLang/src'
@@ -9,4 +10,3 @@ let g:netrw_dirhist_7='/Volumes/BPlus/Workspaces/GOLang/src/nfeloader'
 let g:netrw_dirhist_6='/Volumes/BPlus/Workspaces/GOLang/src/nfeloader/pkgs'
 let g:netrw_dirhist_5='/Volumes/BPlus/Workspaces/GOLang/src/nfeloader'
 let g:netrw_dirhist_4='/Volumes/BPlus/Workspaces/GOLang/src/nfeloader/logs'
-let g:netrw_dirhist_3='/Volumes/BPlus/Workspaces/GOLang/src/nfeloader'

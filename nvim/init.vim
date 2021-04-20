@@ -38,15 +38,12 @@ call plug#begin(expand('~/.config/nvim/plugged'))
 
 " Startify
 Plug 'mhinz/vim-startify'
+
 " fuzzy find files
 Plug 'ctrlpvim/ctrlp.vim' 
 Plug 'ryanoasis/vim-devicons'  " https://github.com/ryanoasis/vim-devicons + https://github.com/ryanoasis/nerd-fonts/
 Plug 'vim-airline/vim-airline' " https://github.com/vim-airline/vim-airline
 Plug 'mkitt/tabline.vim'       " https://github.com/mkitt/tabline.vim
-" Themes
-"Plug 'morhetz/gruvbox' "My favorite theme
-"Plug 'sainnhe/gruvbox-material'
-"Plug 'sonph/onehalf', { 'rtp': 'vim' }
 
 "> Go
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' } " https://github.com/fatih/vim-go
@@ -68,24 +65,12 @@ Plug 'junegunn/fzf.vim'
 " Better manage Vim sessions.
 Plug 'tpope/vim-obsession'
 
-" Zoom in and out of a specific split pane (similar to tmux).
-Plug 'dhruvasagar/vim-zoom'
-
 " Pass focus events from tmux to Vim (useful for autoread and linting tools).
 Plug 'tmux-plugins/vim-tmux-focus-events'
 
 " Navigate and manipulate files in a tree view.
 Plug 'lambdalisue/fern.vim'
 Plug 'lambdalisue/fern-mapping-mark-children.vim'
-
-" Helpers for moving and manipulating files / directories.
-Plug 'tpope/vim-eunuch'
-
-" Run a diff on 2 directories.
-Plug 'will133/vim-dirdiff'
-
-" Run a diff on 2 blocks of text.
-Plug 'AndrewRadev/linediff.vim'
 
 " Add spelling errors to the quickfix list (vim-ingo-library is a dependency).
 Plug 'inkarkat/vim-ingo-library' | Plug 'inkarkat/vim-SpellCheck'
@@ -96,41 +81,14 @@ Plug 'machakann/vim-highlightedyank'
 " Highlight which character to jump to when using horizontal movement keys.
 Plug 'unblevable/quick-scope'
 
-" Modify * to also work with visual selections.
-Plug 'nelstrom/vim-visual-star-search'
-
-" Automatically clear search highlights after you move your cursor.
-Plug 'haya14busa/is.vim'
-
 " Handle multi-file find and replace.
 Plug 'mhinz/vim-grepper'
-
-" Better display unwanted whitespace.
-Plug 'ntpeters/vim-better-whitespace'
-
-" Toggle comments in various ways.
-Plug 'tpope/vim-commentary'
-
-" Automatically set 'shiftwidth' + 'expandtab' (indention) based on file type.
-Plug 'tpope/vim-sleuth'
-
-" A number of useful motions for the quickfix list, pasting and more.
-Plug 'tpope/vim-unimpaired'
-
-" Drastically improve insert mode performance in files with folds.
-Plug 'Konfekt/FastFold'
 
 " Show git file changes in the gutter.
 Plug 'mhinz/vim-signify'
 
 " A git wrapper.
 Plug 'tpope/vim-fugitive'
-
-" Dim paragraphs above and below the active paragraph.
-Plug 'junegunn/limelight.vim'
-
-" Distraction free writing by removing UI elements and centering everything.
-Plug 'junegunn/goyo.vim'
 
 " A bunch of useful language related snippets (ultisnips is the engine).
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
@@ -145,23 +103,19 @@ Plug 'janko/vim-test'
 Plug 'cakebaker/scss-syntax.vim'
 Plug 'chr4/nginx.vim'
 Plug 'chrisbra/csv.vim'
-Plug 'ekalinin/dockerfile.vim'
-Plug 'elixir-editors/vim-elixir'
-Plug 'Glench/Vim-Jinja2-Syntax'
+
+Plug 'ekalinin/Dockerfile.vim'
+Plug 'kkvh/vim-docker-tools'
+Plug 'skanehira/docker-compose.vim'
+
 Plug 'godlygeek/tabular' | Plug 'tpope/vim-markdown'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' }
-Plug 'jvirtanen/vim-hcl'
 Plug 'lifepillar/pgsql.vim'
-Plug 'othree/html5.vim'
-Plug 'pangloss/vim-javascript'
-Plug 'PotatoesMaster/i3-vim-syntax'
 Plug 'stephpy/vim-yaml'
 Plug 'tmux-plugins/vim-tmux'
 Plug 'tpope/vim-git'
 Plug 'tpope/vim-liquid'
-Plug 'tpope/vim-rails'
 Plug 'vim-python/python-syntax'
-Plug 'vim-ruby/vim-ruby'
 Plug 'wgwoods/vim-systemd-syntax'
 
 call plug#end()
@@ -472,17 +426,6 @@ augroup CursorLine
     au WinLeave * setlocal nocursorline
 augroup END
 
-" Mappings to make Vim more friendly towards presenting slides.
-autocmd BufNewFile,BufRead *.vpm call SetVimPresentationMode()
-function SetVimPresentationMode()
-  nnoremap <buffer> <Right> :n<CR>
-  nnoremap <buffer> <Left> :N<CR>
-
-  if !exists('#goyo')
-    Goyo
-  endif
-endfunction
-
 " ----------------------------------------------------------------------------
 " Basic commands
 " ----------------------------------------------------------------------------
@@ -663,27 +606,6 @@ xmap <Leader>R
      \<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
 
 " .............................................................................
-" ntpeters/vim-better-whitespace
-" .............................................................................
-
-let g:strip_whitespace_confirm=0
-let g:strip_whitelines_at_eof=1
-let g:strip_whitespace_on_save=1
-
-" .............................................................................
-" Konfekt/FastFold
-" .............................................................................
-
-let g:fastfold_savehook=0
-let g:fastfold_fold_command_suffixes=[]
-
-" .............................................................................
-" junegunn/limelight.vim
-" .............................................................................
-
-let g:limelight_conceal_ctermfg=244
-
-" .............................................................................
 " iamcco/markdown-preview.nvim
 " .............................................................................
 
@@ -759,10 +681,15 @@ let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standar
 
 " netrw
 
-nnoremap - :Explore<CR>
+"nnoremap - :Explore<CR>
+nnoremap <C-b> :Fern . -drawer -toggle<CR>
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3
 let g:netrw_bufsettings = 'noma nomod nu nobl nowrap ro'
+let g:netrw_altv = 1
+let g:netrw_winsize = 25
+let g:netrw_browse_split=2
+
 autocmd FileType netrw setl bufhidden=delete
 
 "-- netrw END
@@ -789,6 +716,9 @@ autocmd BufEnter *.go nmap <leader>ii  <Plug>(go-implements)
 autocmd BufEnter *.go nmap <leader>ci  <Plug>(go-describe)
 autocmd BufEnter *.go nmap <leader>cc  <Plug>(go-callers)
 autocmd BufEnter *.go nmap <leader>cs  <Plug>(go-callstack)
+
+" Show by default 4 spaces for a tab
+autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=2 shiftwidth=2
 
 autocmd ColorScheme * highlight CocErrorFloat guifg=#ffffff
 autocmd ColorScheme * highlight CocInfoFloat guifg=#ffffff
