@@ -71,6 +71,7 @@ Plug 'tmux-plugins/vim-tmux-focus-events'
 " Navigate and manipulate files in a tree view.
 Plug 'lambdalisue/fern.vim'
 Plug 'lambdalisue/fern-mapping-mark-children.vim'
+Plug 'lambdalisue/fern-git-status.vim'
 
 " Add spelling errors to the quickfix list (vim-ingo-library is a dependency).
 Plug 'inkarkat/vim-ingo-library' | Plug 'inkarkat/vim-SpellCheck'
@@ -98,6 +99,9 @@ Plug 'vim-scripts/AutoComplPop'
 
 " Run test suites for various languages.
 Plug 'janko/vim-test'
+
+" Plugin highlights Git repository modifications via the signs column 
+Plug 'airblade/vim-gitgutter'
 
 " Languages and file types.
 Plug 'cakebaker/scss-syntax.vim'
@@ -596,6 +600,31 @@ augroup END
 let g:NetrwIsOpen=0
 
 " .............................................................................
+" lambdalisue/fern-git-status.vim
+" .............................................................................
+
+let g:gitgutter_grep                    = 'rg'
+let g:gitgutter_map_keys                = 0
+let g:gitgutter_sign_added              = '▎'
+let g:gitgutter_sign_modified           = '▎'
+let g:gitgutter_sign_modified_removed   = '▌'
+let g:gitgutter_sign_removed            = '▎'
+let g:gitgutter_sign_removed_first_line = '▎'
+nmap [g <Plug>GitGutterPrevHunkzz
+nmap ]g <Plug>GitGutterNextHunkzz
+nmap <Leader>p <Plug>GitGutterPreviewHunk
+nmap <Leader>+ <Plug>GitGutterStageHunk
+nmap <Leader>- <Plug>GitGutterUndoHunk
+
+" .............................................................................
+" lambdalisue/fern-git-status.vim
+" .............................................................................
+
+let g:fern_git_status#disable_ignored    = 1
+let g:fern_git_status#disable_untracked  = 1
+let g:fern_git_status#disable_submodules = 1
+
+" .............................................................................
 " lambdalisue/fern.vim
 " .............................................................................
 
@@ -610,9 +639,15 @@ let g:fern#default_hidden = 1
 let g:fern#disable_drawer_auto_quit = 1
 
 " Custom settings and mappings.
-let g:fern#disable_default_mappings = 1
+let g:fern#disable_default_mappings   = 1
+let g:fern#disable_drawer_auto_quit   = 1
+let g:fern#disable_viewer_hide_cursor = 1
 
 noremap <silent> <C-b> :Fern . -drawer -reveal=% -toggle -width=35<CR><C-w>=
+
+"noremap <silent> <Leader>d :Fern . -drawer -width=35 -toggle<CR><C-w>=
+"noremap <silent> <Leader>f :Fern . -drawer -reveal=% -width=35<CR><C-w>=
+noremap <silent> <Leader>. :Fern %:h -drawer -width=35<CR><C-w>=
 
 function! s:init_fern() abort
   nmap <buffer><expr>
@@ -648,6 +683,12 @@ augroup fern-custom
 augroup END
 
 let g:fern#renderer = "nerdfont"
+let g:fern#mark_symbol                       = '●'
+let g:fern#renderer#default#collapsed_symbol = '▷ '
+let g:fern#renderer#default#expanded_symbol  = '▼ '
+let g:fern#renderer#default#leading          = ' '
+let g:fern#renderer#default#leaf_symbol      = ' '
+let g:fern#renderer#default#root_symbol      = '~ '
 
 " .............................................................................
 " unblevable/quick-scope
@@ -846,7 +887,7 @@ let g:go_highlight_structs = 1
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
-set updatetime=300
+set updatetime=100
 
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
