@@ -41,7 +41,9 @@ set signcolumn=yes
 
 set mouse=a
 
+set ttyfast                     " Indicate fast terminal conn for faster redraw
 
+"set shell=zsh
 
 highlight ColorColumn ctermbg=0 guibg=lightgrey
 filetype on

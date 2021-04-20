@@ -9,7 +9,6 @@ let g:NERDTreeGitStatusWithFlags = 1
 
 let g:NERDTreeIgnore = ['^node_modules$']
 
-
 " Auto start NERD tree if no files are specified
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | exe 'NERDTree' | endif
@@ -24,7 +23,6 @@ nmap ++ <plug>NERDCommenterToggle
 
 " select file in NERDTree
 nnoremap <silent> <leader>nf :NERDTreeFind<CR>
-
 
 " sync open file with NERDTree
 " " Check if NERDTree is open or active

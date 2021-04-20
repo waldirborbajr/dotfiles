@@ -3,8 +3,6 @@ let g:airline_theme='gruvbox'
 let g:airline_powerline_fonts = 1
 set statusline+=%{exists('g:loaded_fugitive')?fugitive#statusline():''}
 
-
-
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 let g:airline#extensions#tabline#left_sep = ' '

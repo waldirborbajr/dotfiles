@@ -8,12 +8,10 @@ let g:netrw_browse_split = 4
 let g:netrw_altv = 1
 let g:netrw_winsize = 25
 
-
 let g:session_directory = "~/.config/nvim/session"
 let g:session_autoload = "no"
 let g:session_autosave = "no"
 let g:session_command_aliases = 1
-
 
 let g:startify_session_dir = "~/.config/nvim/session"
 
@@ -22,7 +20,6 @@ let g:netrw_banner=0
 let g:netrw_winsize=25
 
 let g:ctrlp_use_caching=0
-
 
 " Abbreviations
 cnoreabbrev W! w!
@@ -41,13 +38,10 @@ map <F2> :colorscheme onehalflight<CR>
 map <F3> :set background=dark<CR>
 map <F4> :set background=light<CR>
 
-
 " navigate between errors
 "map <C-n> :cnext<CR>
 "map <C-m> :cprevious<CR>
 "nnoremap <leader>a :cclose<CR>
-
-
 
 " Shortcut to edit THIS configuration file: (e)dit (c)onfiguration
 nnoremap <silent> <leader>se :e $MYVIMRC<CR>
@@ -55,15 +49,11 @@ nnoremap <silent> <leader>se :e $MYVIMRC<CR>
 " Shortcut to source (reload) THIS configuration file after editing it: (s)ource (c)onfiguraiton
 nnoremap <silent> <leader>sc :source $MYVIMRC<CR>
 
-
-
 " toggle line numbers
 nnoremap <silent> <leader>n :set number! number?<CR>
 
 " toggle line wrap
 nnoremap <silent> <leader>w :set wrap! wrap?<CR>
-
-
 
 " buffer (switch between current and last buffer)
 nnoremap <silent> <leader>bb <C-^>
@@ -77,7 +67,7 @@ nnoremap <C-[> :bp<CR>
 "nnoremap <C-h> :bp<CR>
 " close buffer
 nnoremap <silent> <leader>bd :bd<CR>
-nnoremap <C-\> :bd<CR>
+" nnoremap <C-\> :bd<CR>
 " kill buffer
 nnoremap <silent> <leader>bk :bd!<CR>
 " list buffers
@@ -88,8 +78,6 @@ nnoremap <silent> <leader>bg :ls<CR>:buffer<Space>
 nnoremap <silent> <leader>bh :new<CR>
 " vertical split with new buffer
 nnoremap <silent> <leader>bv :vnew<CR>
-
-
 
 " improved keyboard navigation
 "nnoremap <leader>h <C-w>h
@@ -102,29 +90,3 @@ inoremap <C-h> <left>
 inoremap <C-j> <down>
 inoremap <C-k> <up>
 inoremap <C-l> <right>
-
-
-
-" improved keyboard support for navigation (especially terminal)
-" https://neovim.io/doc/user/nvim_terminal_emulator.html
-"tnoremap <Esc> <C-\><C-n>
-tnoremap <A-h> <C-\><C-n><C-w>h
-tnoremap <A-j> <C-\><C-n><C-w>j
-tnoremap <A-k> <C-\><C-n><C-w>k
-tnoremap <A-l> <C-\><C-n><C-w>l
-nnoremap <A-h> <C-w>h
-nnoremap <A-j> <C-w>j
-nnoremap <A-k> <C-w>k
-nnoremap <A-l> <C-w>l
-
-
-
-" Start terminal in insert mode
-au BufEnter * if &buftype == 'terminal' | :startinsert | endif
-nnoremap <silent> <leader>tt :terminal<CR>
-nnoremap <silent> <leader>tv :vnew<CR>:terminal<CR>
-nnoremap <silent> <leader>th :new<CR>:terminal<CR>
-tnoremap <C-x> <C-\><C-n><C-w>q
-
-
-

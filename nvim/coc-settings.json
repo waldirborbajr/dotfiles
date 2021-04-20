@@ -1,6 +1,6 @@
 {
   "suggest.noselect": false,
-  "diagnostic.errorSign": "✖",
+  "diagnostic.errorSign": "✘",
   "diagnostic.warningSign": "⚠",
   "diagnostic.infoSign": "ℹ",
   "diagnostic.hintSign": "➤",
@@ -15,16 +15,19 @@
   "languageserver": {
     "golang": {
       "command": "gopls",
-      "args": [],
-      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
-      "filetypes": ["go"],
-      "initializationOptions": {
-        "gocodeCompletionEnabled": true,
-        "diagnosticsEnabled": true,
-        "lintTool": "golint",
-        "usePlaceholders": true
-      }
+      "rootPatterns": ["go.mod"],
+      "disableWorkspaceFolders": true,
+      "filetypes": ["go"]
+      // "initializationOptions": {
+      //   "gocodeCompletionEnabled": true,
+      //   "diagnosticsEnabled": true,
+      //   "lintTool": "golint",
+      //   "usePlaceholders": true
+      // }
     }
+  },
+  "go.goplsOptions": {
+    "staticcheck": true
   },
   "coc.preferences.formatOnSaveFiletypes": [
     "go",

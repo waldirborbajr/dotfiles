@@ -6,66 +6,880 @@
 "
 " version 1.0.0
 "
-" REFs
-" https://github.com/carlosd-ss/dotfiles
-" https://gist.github.com/benawad/b768f5a5bbd92c8baabd363b7e79786f
-" https://www.youtube.com/watch?v=gnupOrSEikQ
-" https://github.com/alexandreliberato/vim-modular
+" -----------------------------------------------------------------------------
+" This config is targeted for Vim 8.1+ and expects you to have Plug installed.
+" -----------------------------------------------------------------------------
+
+let g:tablineclosebutton=1
+
+" -----------------------------------------------------------------------------
+" Plugins
+" -----------------------------------------------------------------------------
+
+let vimplug_exists=expand('~/.config/nvim/autoload/plug.vim')
+let curl_exists=expand('curl')
+
+if !filereadable(vimplug_exists)
+  if !executable(curl_exists)
+    echoerr "You have to install curl or first install vim-plug yourself!"
+    execute "q!"
+  endif
+  echo "Installing Vim-Plug..."
+  echo ""
+  silent exec "!"curl_exists" -fLo " . shellescape(vimplug_exists) . " --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+  let g:not_finish_vimplug = "yes"
+
+  autocmd VimEnter * PlugInstall --sync
+endif
 
 
-source $HOME/.config/nvim/plugins.vim
-source $HOME/.config/nvim/settings.vim
-source $HOME/.config/nvim/keymap.vim  
-source $HOME/.config/nvim/modules/vimgo.vim
-source $HOME/.config/nvim/modules/nerdtree.vim
-source $HOME/.config/nvim/modules/airline.vim
-source $HOME/.config/nvim/modules/fzf.vim
-"source $HOME/.config/nvim/modules/commentary.vim
-source $HOME/.config/nvim/modules/coc.vim
-source $HOME/.config/nvim/modules/linter.vim
+" Specify a directory for plugins.
+call plug#begin(expand('~/.config/nvim/plugged'))
+
+" Startify
+Plug 'mhinz/vim-startify'
+" fuzzy find files
+Plug 'ctrlpvim/ctrlp.vim' 
+Plug 'ryanoasis/vim-devicons'  " https://github.com/ryanoasis/vim-devicons + https://github.com/ryanoasis/nerd-fonts/
+Plug 'vim-airline/vim-airline' " https://github.com/vim-airline/vim-airline
+Plug 'mkitt/tabline.vim'       " https://github.com/mkitt/tabline.vim
+" Themes
+"Plug 'morhetz/gruvbox' "My favorite theme
+"Plug 'sainnhe/gruvbox-material'
+"Plug 'sonph/onehalf', { 'rtp': 'vim' }
+
+"> Go
+Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' } " https://github.com/fatih/vim-go
+Plug 'neoclide/coc.nvim', {'branch': 'release'}     " https://github.com/neoclide/coc.nvim
+Plug 'SirVer/ultisnips'                             " https://github.com/sirver/UltiSnips
 
 
-" CONFIGURE theme gruvbox
+"
+"
+"
 
+" Gruvbox Community theme.
+Plug 'gruvbox-community/gruvbox'
 
+" Integrate fzf with Vim.
+Plug '~/.fzf'
+Plug 'junegunn/fzf.vim'
 
-function! Light()
-    echom "set bg=light"
-    set background=light
-    "colorscheme off
-    set list
-endfunction
+" Better manage Vim sessions.
+Plug 'tpope/vim-obsession'
 
-function! Dark()
-    echom "set bg=dark"
+" Zoom in and out of a specific split pane (similar to tmux).
+Plug 'dhruvasagar/vim-zoom'
 
-    colorscheme gruvbox
-    set background=dark
-    let g:gruvbox_contrast_dark='hard'
-    let g:gruvbox_bold=1
-    let g:gruvbox_italic=1
-    let g:gruvbox_italicize_comments=1
-    let g:gruvbox_invert_tabline=1
-    let g:gruvbox_invert_indent_guides=1
+" Pass focus events from tmux to Vim (useful for autoread and linting tools).
+Plug 'tmux-plugins/vim-tmux-focus-events'
 
-    "darcula fix to hide the indents:
-    "set nolist
-endfunction
+" Navigate and manipulate files in a tree view.
+Plug 'lambdalisue/fern.vim'
+Plug 'lambdalisue/fern-mapping-mark-children.vim'
 
-function! ToggleLightDark()
-  if &bg ==# "light"
-    call Dark()
+" Helpers for moving and manipulating files / directories.
+Plug 'tpope/vim-eunuch'
+
+" Run a diff on 2 directories.
+Plug 'will133/vim-dirdiff'
+
+" Run a diff on 2 blocks of text.
+Plug 'AndrewRadev/linediff.vim'
+
+" Add spelling errors to the quickfix list (vim-ingo-library is a dependency).
+Plug 'inkarkat/vim-ingo-library' | Plug 'inkarkat/vim-SpellCheck'
+
+" Briefly highlight which text was yanked.
+Plug 'machakann/vim-highlightedyank'
+
+" Highlight which character to jump to when using horizontal movement keys.
+Plug 'unblevable/quick-scope'
+
+" Modify * to also work with visual selections.
+Plug 'nelstrom/vim-visual-star-search'
+
+" Automatically clear search highlights after you move your cursor.
+Plug 'haya14busa/is.vim'
+
+" Handle multi-file find and replace.
+Plug 'mhinz/vim-grepper'
+
+" Better display unwanted whitespace.
+Plug 'ntpeters/vim-better-whitespace'
+
+" Toggle comments in various ways.
+Plug 'tpope/vim-commentary'
+
+" Automatically set 'shiftwidth' + 'expandtab' (indention) based on file type.
+Plug 'tpope/vim-sleuth'
+
+" A number of useful motions for the quickfix list, pasting and more.
+Plug 'tpope/vim-unimpaired'
+
+" Drastically improve insert mode performance in files with folds.
+Plug 'Konfekt/FastFold'
+
+" Show git file changes in the gutter.
+Plug 'mhinz/vim-signify'
+
+" A git wrapper.
+Plug 'tpope/vim-fugitive'
+
+" Dim paragraphs above and below the active paragraph.
+Plug 'junegunn/limelight.vim'
+
+" Distraction free writing by removing UI elements and centering everything.
+Plug 'junegunn/goyo.vim'
+
+" A bunch of useful language related snippets (ultisnips is the engine).
+Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+
+" Automatically show Vim's complete menu while typing.
+Plug 'vim-scripts/AutoComplPop'
+
+" Run test suites for various languages.
+Plug 'janko/vim-test'
+
+" Languages and file types.
+Plug 'cakebaker/scss-syntax.vim'
+Plug 'chr4/nginx.vim'
+Plug 'chrisbra/csv.vim'
+Plug 'ekalinin/dockerfile.vim'
+Plug 'elixir-editors/vim-elixir'
+Plug 'Glench/Vim-Jinja2-Syntax'
+Plug 'godlygeek/tabular' | Plug 'tpope/vim-markdown'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install' }
+Plug 'jvirtanen/vim-hcl'
+Plug 'lifepillar/pgsql.vim'
+Plug 'othree/html5.vim'
+Plug 'pangloss/vim-javascript'
+Plug 'PotatoesMaster/i3-vim-syntax'
+Plug 'stephpy/vim-yaml'
+Plug 'tmux-plugins/vim-tmux'
+Plug 'tpope/vim-git'
+Plug 'tpope/vim-liquid'
+Plug 'tpope/vim-rails'
+Plug 'vim-python/python-syntax'
+Plug 'vim-ruby/vim-ruby'
+Plug 'wgwoods/vim-systemd-syntax'
+
+call plug#end()
+
+" -----------------------------------------------------------------------------
+" Color settings
+" -----------------------------------------------------------------------------
+
+" Enable 24-bit true colors if your terminal supports it.
+if (has("termguicolors"))
+  " https://github.com/vim/vim/issues/993#issuecomment-255651605
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+
+  set termguicolors
+endif
+
+" Enable syntax highlighting.
+syntax on
+
+" Specific colorscheme settings (must come before setting your colorscheme).
+if !exists('g:gruvbox_contrast_light')
+  let g:gruvbox_contrast_light='hard'
+endif
+
+" Set the color scheme.
+colorscheme gruvbox
+set background=dark
+
+" Specific colorscheme settings (must come after setting your colorscheme).
+if (g:colors_name == 'gruvbox')
+  if (&background == 'dark')
+    hi Visual cterm=NONE ctermfg=NONE ctermbg=237 guibg=#3a3a3a
   else
-    call Light()
+    hi Visual cterm=NONE ctermfg=NONE ctermbg=228 guibg=#f2e5bc
+    hi CursorLine cterm=NONE ctermfg=NONE ctermbg=228 guibg=#f2e5bc
+    hi ColorColumn cterm=NONE ctermfg=NONE ctermbg=228 guibg=#f2e5bc
+  endif
+endif
+
+" Spelling mistakes will be colored up red.
+hi SpellBad cterm=underline ctermfg=203 guifg=#ff5f5f
+hi SpellLocal cterm=underline ctermfg=203 guifg=#ff5f5f
+hi SpellRare cterm=underline ctermfg=203 guifg=#ff5f5f
+hi SpellCap cterm=underline ctermfg=203 guifg=#ff5f5f
+
+" -----------------------------------------------------------------------------
+" Status line
+" -----------------------------------------------------------------------------
+
+" Heavily inspired by: https://github.com/junegunn/dotfiles/blob/master/vimrc
+function! s:statusline_expr()
+  let mod = "%{&modified ? '[+] ' : !&modifiable ? '[x] ' : ''}"
+  let ro  = "%{&readonly ? '[RO] ' : ''}"
+  let ft  = "%{len(&filetype) ? '['.&filetype.'] ' : ''}"
+  let fug = "%{exists('g:loaded_fugitive') ? fugitive#statusline() : ''}"
+  let sep = ' %= '
+  let pos = ' %-12(%l : %c%V%) '
+  let pct = ' %P'
+
+  return '[%n] %f %<'.mod.ro.ft.fug.sep.pos.'%*'.pct
+endfunction
+
+let &statusline = s:statusline_expr()
+
+" -----------------------------------------------------------------------------
+" Basic Settings
+"   Research any of these by running :help <setting>
+" -----------------------------------------------------------------------------
+
+let mapleader=" "
+let maplocalleader=" "
+
+set autoindent
+set autoread
+set backspace=indent,eol,start
+set backupdir=/temp//,.
+set clipboard=unnamedplus
+set colorcolumn=120 
+set complete+=kspell
+set completeopt=menuone,longest
+set cursorline
+set directory=/temp//,.
+set encoding=utf-8
+set expandtab smarttab
+set formatoptions=tcqrn1
+set hidden
+set hlsearch
+set ignorecase
+set incsearch
+set laststatus=2
+set matchpairs+=<:> " Use % to jump between pairs
+set mmp=5000
+set modelines=2
+set mouse=a
+set nocompatible
+set noerrorbells visualbell t_vb=
+set noshiftround
+set nospell
+set nostartofline
+set number relativenumber
+set regexpengine=1
+set ruler
+set scrolloff=3
+set shiftwidth=2
+set showcmd
+set showmatch
+set shortmess+=c
+set showmode
+set smartcase
+set softtabstop=2
+set spelllang=en_us
+set splitbelow
+"set splitright
+set tabstop=2
+set textwidth=0
+set ttimeout
+set timeoutlen=1000
+set ttimeoutlen=0
+set ttyfast
+if !has('nvim')
+  set ttymouse=sgr
+endif
+set undodir=/tmp
+set undofile
+set virtualedit=block
+set whichwrap=b,s,<,>
+set wildmenu
+set wildmode=full
+set wrap
+
+" Some servers have issues with backup files, see #649.
+set nobackup
+set nowritebackup
+
+hi Search cterm=NONE ctermfg=black ctermbg=red
+
+runtime! macros/matchit.vim
+
+" -----------------------------------------------------------------------------
+" Basic mappings
+" -----------------------------------------------------------------------------
+
+" Abbreviations
+cnoreabbrev W! w!
+cnoreabbrev Q! q!
+cnoreabbrev Qall! qall!
+cnoreabbrev Wq wq
+cnoreabbrev Wa wa
+cnoreabbrev wQ wq
+cnoreabbrev WQ wq
+cnoreabbrev W w
+cnoreabbrev Q q
+cnoreabbrev Qall qall
+
+" Seamlessly treat visual lines as actual lines when moving around.
+noremap j gj
+noremap k gk
+noremap <Down> gj
+noremap <Up> gk
+inoremap <Down> <C-o>gj
+inoremap <Up> <C-o>gk
+
+" Navigate around splits with a single key combo.
+nnoremap <C-l> <C-w><C-l>
+nnoremap <C-h> <C-w><C-h>
+nnoremap <C-k> <C-w><C-k>
+nnoremap <C-j> <C-w><C-j>
+
+" Press * to search for the term under the cursor or a visual selection and
+" then press a key below to replace all instances of it in the current file.
+nnoremap <Leader>r :%s///g<Left><Left>
+nnoremap <Leader>rc :%s///gc<Left><Left><Left>
+
+" The same as above but instead of acting on the whole file it will be
+" restricted to the previously visually selected range. You can do that by
+" pressing *, visually selecting the range you want it to apply to and then
+" press a key below to replace all instances of it in the current selection.
+xnoremap <Leader>r :s///g<Left><Left>
+xnoremap <Leader>rc :s///gc<Left><Left><Left>
+
+" Type a replacement term and press . to repeat the replacement again. Useful
+" for replacing a few instances of the term (comparable to multiple cursors).
+nnoremap <silent> s* :let @/='\<'.expand('<cword>').'\>'<CR>cgn
+xnoremap <silent> s* "sy:let @/=@s<CR>cgn
+
+" Clear search highlights.
+map <Leader><Space> :let @/=''<CR>
+
+" Format paragraph (selected or not) to 80 character lines.
+nnoremap <Leader>g gqap
+xnoremap <Leader>g gqa
+
+" Prevent x from overriding what's in the clipboard.
+noremap x "_x
+noremap X "_x
+
+" Prevent selecting and pasting from overwriting what you originally copied.
+xnoremap p pgvy
+
+" Keep cursor at the bottom of the visual selection after you yank it.
+vmap y ygv<Esc>
+
+" Edit Vim config file in a new tab.
+map <Leader>ev :tabnew $MYVIMRC<CR>
+
+" Source Vim config file.
+map <Leader>sv :source $MYVIMRC<CR>
+
+" Toggle spell check.
+map <F5> :setlocal spell!<CR>
+
+" Toggle relative line numbers and regular line numbers.
+nmap <F6> :set invrelativenumber<CR>
+
+" Automatically fix the last misspelled word and jump back to where you were.
+"   Taken from this talk: https://www.youtube.com/watch?v=lwD8G1P52Sk
+nnoremap <leader>sp :normal! mz[s1z=`z<CR>
+
+" Toggle visually showing all whitespace characters.
+noremap <F7> :set list!<CR>
+inoremap <F7> <C-o>:set list!<CR>
+cnoremap <F7> <C-c>:set list!<CR>
+
+" Move 1 more lines up or down in normal and visual selection modes.
+nnoremap K :m .-2<CR>==
+nnoremap J :m .+1<CR>==
+vnoremap K :m '<-2<CR>gv=gv
+vnoremap J :m '>+1<CR>gv=gv
+
+" Toggle quickfix window.
+function! QuickFix_toggle()
+    for i in range(1, winnr('$'))
+        let bnum = winbufnr(i)
+        if getbufvar(bnum, '&buftype') == 'quickfix'
+            cclose
+            return
+        endif
+    endfor
+
+    copen
+endfunction
+nnoremap <silent> <Leader>c :call QuickFix_toggle()<CR>
+
+" Convert the selected text's title case using the external tcc script.
+"   Requires: https://github.com/nickjj/title-case-converter
+vnoremap <Leader>tc c<C-r>=system('tcc', getreg('"'))[:-2]<CR>
+
+" Navigate the complete menu items like CTRL+n / CTRL+p would.
+inoremap <expr> <Down> pumvisible() ? "<C-n>" :"<Down>"
+inoremap <expr> <Up> pumvisible() ? "<C-p>" : "<Up>"
+
+" Select the complete menu item like CTRL+y would.
+inoremap <expr> <Right> pumvisible() ? "<C-y>" : "<Right>"
+inoremap <expr> <CR> pumvisible() ? "<C-y>" :"<CR>"
+
+" Cancel the complete menu item like CTRL+e would.
+inoremap <expr> <Left> pumvisible() ? "<C-e>" : "<Left>"
+
+" -----------------------------------------------------------------------------
+" Basic autocommands
+" -----------------------------------------------------------------------------
+
+" remove trailing whitespace from lines and preserve cursor position
+function! StripTrailingWhitespaces()
+    let l = line(".")
+    let c = col(".")
+    %s/\s\+$//e
+    call cursor(l, c)
+endfun
+
+" Toggle between displaying/hiding tabs
+function! ShowTabsToggle()
+    set listchars=tab:>-
+    set list!
+endfun
+
+command! -nargs=0 ShowTabsToggle :call ShowTabsToggle()
+
+" remove trailing spaces on save
+autocmd BufWritePre *.cpp :call StripTrailingWhitespaces()
+autocmd BufWritePre *.c :call StripTrailingWhitespaces()
+autocmd BufWritePre *.py :call StripTrailingWhitespaces()
+autocmd BufWritePre *.go :call StripTrailingWhitespaces()
+
+" Auto-resize splits when Vim gets resized.
+autocmd VimResized * wincmd =
+
+" Update a buffer's contents on focus if it changed outside of Vim.
+au FocusGained,BufEnter * :checktime
+
+" Unset paste on InsertLeave.
+autocmd InsertLeave * silent! set nopaste
+
+" Make sure all types of requirements.txt files get syntax highlighting.
+autocmd BufNewFile,BufRead requirements*.txt set ft=python
+
+" Make sure .aliases, .bash_aliases and similar files get syntax highlighting.
+autocmd BufNewFile,BufRead .*aliases set ft=sh
+
+" Ensure tabs don't get converted to spaces in Makefiles.
+autocmd FileType make setlocal noexpandtab
+
+" Only show the cursor line in the active buffer.
+augroup CursorLine
+    au!
+    au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+    au WinLeave * setlocal nocursorline
+augroup END
+
+" Mappings to make Vim more friendly towards presenting slides.
+autocmd BufNewFile,BufRead *.vpm call SetVimPresentationMode()
+function SetVimPresentationMode()
+  nnoremap <buffer> <Right> :n<CR>
+  nnoremap <buffer> <Left> :N<CR>
+
+  if !exists('#goyo')
+    Goyo
   endif
 endfunction
 
-" toggle colors to optimize based on light or dark background
-nnoremap <leader>c :call ToggleLightDark()<CR>
+" ----------------------------------------------------------------------------
+" Basic commands
+" ----------------------------------------------------------------------------
+
+" Add all TODO items to the quickfix list relative to where you opened Vim.
+function! s:todo() abort
+  let entries = []
+  for cmd in ['git grep -niIw -e TODO -e FIXME 2> /dev/null',
+            \ 'grep -rniIw -e TODO -e FIXME . 2> /dev/null']
+    let lines = split(system(cmd), '\n')
+    if v:shell_error != 0 | continue | endif
+    for line in lines
+      let [fname, lno, text] = matchlist(line, '^\([^:]*\):\([^:]*\):\(.*\)')[1:3]
+      call add(entries, { 'filename': fname, 'lnum': lno, 'text': text })
+    endfor
+    break
+  endfor
+
+  if !empty(entries)
+    call setqflist(entries)
+    copen
+  endif
+endfunction
+
+command! Todo call s:todo()
+
+" Profile Vim by running this command once to start it and again to stop it.
+function! s:profile(bang)
+  if a:bang
+    profile pause
+    noautocmd qall
+  else
+    profile start /tmp/profile.log
+    profile func *
+    profile file *
+  endif
+endfunction
+
+command! -bang Profile call s:profile(<bang>0)
+
+" -----------------------------------------------------------------------------
+" Plugin settings, mappings and autocommands
+" -----------------------------------------------------------------------------
+
+" .............................................................................
+" junegunn/fzf.vim
+" .............................................................................
+
+let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all'
+
+" Customize fzf colors to match your color scheme.
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-b': 'split',
+  \ 'ctrl-v': 'vsplit',
+  \ 'ctrl-y': {lines -> setreg('*', join(lines, "\n"))}}
+
+" Launch fzf with CTRL+P.
+nnoremap <silent> <C-p> :FZF -m<CR>
+
+" Map a few common things to do with FZF.
+nnoremap <silent> <Leader><Enter> :Buffers<CR>
+nnoremap <silent> <Leader>l :Lines<CR>
+
+" Allow passing optional flags into the Rg command.
+"   Example: :Rg myterm -g '*.md'
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \ "rg --column --line-number --no-heading --color=always --smart-case " .
+  \ <q-args>, 1, fzf#vim#with_preview(), <bang>0)
+
+" .............................................................................
+" lambdalisue/fern.vim
+" .............................................................................
+
+" Disable netrw.
+"let g:loaded_netrw  = 1
+"let g:loaded_netrwPlugin = 1
+"let g:loaded_netrwSettings = 1
+"let g:loaded_netrwFileHandlers = 1
+
+augroup my-fern-hijack
+  autocmd!
+  autocmd BufEnter * ++nested call s:hijack_directory()
+augroup END
+
+function! s:hijack_directory() abort
+  let path = expand('%:p')
+  if !isdirectory(path)
+    return
+  endif
+  bwipeout %
+  execute printf('Fern %s', fnameescape(path))
+endfunction
+
+" Custom settings and mappings.
+let g:fern#disable_default_mappings = 1
+
+noremap <silent> <Leader>f :Fern . -drawer -reveal=% -toggle -width=35<CR><C-w>=
+
+function! FernInit() abort
+  nmap <buffer><expr>
+        \ <Plug>(fern-my-open-expand-collapse)
+        \ fern#smart#leaf(
+        \   "\<Plug>(fern-action-open:select)",
+        \   "\<Plug>(fern-action-expand)",
+        \   "\<Plug>(fern-action-collapse)",
+        \ )
+  nmap <buffer> <CR> <Plug>(fern-my-open-expand-collapse)
+  nmap <buffer> <2-LeftMouse> <Plug>(fern-my-open-expand-collapse)
+  nmap <buffer> n <Plug>(fern-action-new-path)
+  nmap <buffer> d <Plug>(fern-action-remove)
+  nmap <buffer> m <Plug>(fern-action-move)
+  nmap <buffer> M <Plug>(fern-action-rename)
+  nmap <buffer> h <Plug>(fern-action-hidden-toggle)
+  nmap <buffer> r <Plug>(fern-action-reload)
+  nmap <buffer> k <Plug>(fern-action-mark)
+  nmap <buffer> K <Plug>(fern-action-mark-children:leaf)
+  nmap <buffer> b <Plug>(fern-action-open:split)
+  nmap <buffer> v <Plug>(fern-action-open:vsplit)
+  nmap <buffer><nowait> < <Plug>(fern-action-leave)
+  nmap <buffer><nowait> > <Plug>(fern-action-enter)
+endfunction
+
+augroup FernGroup
+  autocmd!
+  autocmd FileType fern call FernInit()
+augroup END
+
+" .............................................................................
+" unblevable/quick-scope
+" .............................................................................
+
+" Trigger a highlight in the appropriate direction when pressing these keys.
+let g:qs_highlight_on_keys=['f', 'F', 't', 'T']
+
+" Only underline the highlights instead of using custom colors.
+highlight QuickScopePrimary gui=underline cterm=underline
+highlight QuickScopeSecondary gui=underline cterm=underline
+
+" .............................................................................
+" mhinz/vim-grepper
+" .............................................................................
+
+let g:grepper={}
+let g:grepper.tools=["rg"]
+
+xmap gr <plug>(GrepperOperator)
+
+" After searching for text, press this mapping to do a project wide find and
+" replace. It's similar to <leader>r except this one applies to all matches
+" across all files instead of just the current file.
+nnoremap <Leader>R
+  \ :let @s='\<'.expand('<cword>').'\>'<CR>
+  \ :Grepper -cword -noprompt<CR>
+  \ :cfdo %s/<C-r>s//g \| update
+  \<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
+
+" The same as above except it works with a visual selection.
+xmap <Leader>R
+    \ "sy
+    \ gvgr
+    \ :cfdo %s/<C-r>s//g \| update
+     \<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
+
+" .............................................................................
+" ntpeters/vim-better-whitespace
+" .............................................................................
+
+let g:strip_whitespace_confirm=0
+let g:strip_whitelines_at_eof=1
+let g:strip_whitespace_on_save=1
+
+" .............................................................................
+" Konfekt/FastFold
+" .............................................................................
+
+let g:fastfold_savehook=0
+let g:fastfold_fold_command_suffixes=[]
+
+" .............................................................................
+" junegunn/limelight.vim
+" .............................................................................
+
+let g:limelight_conceal_ctermfg=244
+
+" .............................................................................
+" iamcco/markdown-preview.nvim
+" .............................................................................
+
+let g:mkdp_auto_close=0
+let g:mkdp_refresh_slow=1
+let g:mkdp_markdown_css=fnameescape($HOME).'/.local/lib/github-markdown-css/github-markdown.css'
+
+" .............................................................................
+" SirVer/ultisnips
+" .............................................................................
+
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+
+" .............................................................................
+" janko/vim-test
+" .............................................................................
+
+if has('nvim')
+  let test#strategy='neovim'
+else
+  let test#strategy='vimterminal'
+endif
+
+let test#python#pytest#executable='docker-compose exec web py.test'
+
+let test#ruby#rails#executable='docker-compose exec -e RAILS_ENV=test webpacker rails test'
+
+let test#elixir#exunit#executable='docker-compose exec -e MIX_ENV=test web mix test'
+
+nmap <silent> t<C-n> :TestNearest<CR>
+nmap <silent> t<C-f> :TestFile<CR>
+nmap <silent> t<C-a> :TestSuite<CR>
+nmap <silent> t<C-l> :TestLast<CR>
+nmap <silent> t<C-v> :TestVisit<CR>
 
 
-" =====================================
-" Init
-" =====================================
-silent call Dark()
-autocmd VimEnter * wincmd p
+" .............................................................................
+" EXPERIMENTAL
+" .............................................................................
+
+
+" switch tabs using Ctrl+[Left/Right]
+nnoremap <C-Left> :tabprevious<CR>
+nnoremap <C-Right> :tabnext<CR>
+
+" map moving tabs
+nnoremap <C-Up> :tabm +1<CR>
+nnoremap <C-Down> :tabm -1<CR>
+
+" map switch windows
+nnoremap <Tab> <C-w>w
+nnoremap <S-Tab> <C-w>h
+
+" map resizing buffers
+nnoremap <A-Right> :vertical resize+5<CR>
+nnoremap <A-Left> :vertical resize-5<CR>
+nnoremap <A-Up> :resize+5<CR>
+nnoremap <A-Down> :resize-5<CR>
+
+" fugitive.vim mappings
+nmap <leader>gb :Gblame<CR>
+nmap <leader>gr :Gread<CR>
+nmap <leader>gw :Gwrite<CR>
+nmap <leader>gd :tabe<CR>:Gdiffsplit<CR>
+nmap <leader>gs :tabe<CR>:Gstatus<CR>
+nmap <leader>gc :Gcommit<CR>
+nmap <leader>gl :tabe %<CR>:Glog -- %<CR>
+
+" ctrlp
+set runtimepath^=~/.config/nvim/plugged/ctrlp.vim
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+
+" netrw
+
+nnoremap - :Explore<CR>
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_bufsettings = 'noma nomod nu nobl nowrap ro'
+autocmd FileType netrw setl bufhidden=delete
+
+"-- netrw END
+
+
+"-- vim-go specific configuration
+
+" run :GoBuild or :GoTestCompile based on the go file
+function! s:build_go_files()
+  let l:file = expand('%')
+  if l:file =~# '^\f\+_test\.go$'
+    call go#test#Test(0, 1)
+  elseif l:file =~# '^\f\+\.go$'
+    call go#cmd#Build(0)
+  endif
+endfunction
+
+" create custom mappings for Go files
+autocmd BufEnter *.go nmap <leader>t  <Plug>(go-test)
+autocmd BufEnter *.go nmap <leader>tt <Plug>(go-test-func)
+autocmd BufEnter *.go nmap <leader>c  <Plug>(go-coverage-toggle)
+autocmd BufEnter *.go nmap <leader>i  <Plug>(go-info)
+autocmd BufEnter *.go nmap <leader>ii  <Plug>(go-implements)
+autocmd BufEnter *.go nmap <leader>ci  <Plug>(go-describe)
+autocmd BufEnter *.go nmap <leader>cc  <Plug>(go-callers)
+autocmd BufEnter *.go nmap <leader>cs  <Plug>(go-callstack)
+
+autocmd ColorScheme * highlight CocErrorFloat guifg=#ffffff
+autocmd ColorScheme * highlight CocInfoFloat guifg=#ffffff
+autocmd ColorScheme * highlight CocWarningFloat guifg=#ffffff
+autocmd ColorScheme * highlight SignColumn guibg=#adadad
+
+autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
+autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
+autocmd FileType go nmap <leader>t <Profilelug>(go-test)
+
+autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
+autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
+autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
+autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
+
+autocmd FileType go setlocal foldmethod=expr foldexpr=getline(v:lnum)=~'^\s*'.&commentstring[0]
+
+" disable all linters as that is taken care of by coc.nvim
+let g:go_diagnostics_enabled = 0
+let g:go_metalinter_enabled = []
+
+" don't jump to errors after metalinter is invoked
+let g:go_jump_to_error = 0
+
+" run go imports on file save
+let g:go_fmt_command = "goimports"
+
+" automatically highlight variable your cursor is on
+let g:go_auto_sameids = 0 " 1
+
+let g:go_list_type = "quickfix"    " error lists are of type quickfix
+let g:go_def_mapping_enabled = 0   " coc.vim will do `gd`
+
+"Syntax Highlighting
+let g:go_fold_enable = ['block', 'import', 'varconst', 'package_comment']
+let g:go_highlight_array_whitespace_error = 1
+let g:go_highlight_chan_whitespace_error = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_space_tab_error = 1
+let g:go_highlight_trailing_whitespace_error = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_parameters = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_generate_tags = 1
+let g:go_highlight_string_spellcheck = 1
+let g:go_highlight_format_strings = 1
+let g:go_highlight_variable_declarations = 1
+let g:go_highlight_variable_assignments = 1
+let g:go_highlight_diagnostic_errors = 1
+let g:go_highlight_diagnostic_warnings = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
+
+"-- vim-go specific configuration (END)
+
+"-- coc.nvim specific configuration
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+
+" Only show signcolumn on errors
+set signcolumn=auto
+
+if has("patch-8.1.1564")
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
+
+" map tag pop and push for all files
+nmap <C-a> <C-o>
+nmap <C-d> <Plug>(coc-definition)
+nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> rn <Plug>(coc-rename)
+
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+"-- coc.nvim specific configuration (END)
