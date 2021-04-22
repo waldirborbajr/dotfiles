@@ -267,6 +267,7 @@ runtime! macros/matchit.vim
 " Buffer control
 nnoremap <leader>[ :bp<CR>
 nnoremap <leader>] :bn<CR>
+nnoremap <leader>\ :ls<CR>
 
 " Fix indenting visual block
 vmap < <gv
