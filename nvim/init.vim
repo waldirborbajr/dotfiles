@@ -6,11 +6,11 @@
 "
 " version 1.0.0
 "
+" https://bluz71.github.io/2017/05/21/vim-plugins-i-like.html
+"
 " -----------------------------------------------------------------------------
 " This config is targeted for Vim 8.1+ and expects you to have Plug installed.
 " -----------------------------------------------------------------------------
-
-let g:tablineclosebutton=1
 
 " -----------------------------------------------------------------------------
 " Plugins
@@ -42,14 +42,12 @@ Plug 'mhinz/vim-startify'
 " fuzzy find files
 Plug 'ctrlpvim/ctrlp.vim' 
 Plug 'ryanoasis/vim-devicons'  " https://github.com/ryanoasis/vim-devicons + https://github.com/ryanoasis/nerd-fonts/
-Plug 'vim-airline/vim-airline' " https://github.com/vim-airline/vim-airline
-Plug 'mkitt/tabline.vim'       " https://github.com/mkitt/tabline.vim
+" Plug 'vim-airline/vim-airline' " https://github.com/vim-airline/vim-airline
+" Plug 'mkitt/tabline.vim'       " https://github.com/mkitt/tabline.vim
 
 "> Go
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' } " https://github.com/fatih/vim-go
 Plug 'neoclide/coc.nvim', {'branch': 'release'}     " https://github.com/neoclide/coc.nvim
-Plug 'SirVer/ultisnips'                             " https://github.com/sirver/UltiSnips
-
 
 "
 "
@@ -92,16 +90,19 @@ Plug 'mhinz/vim-signify'
 Plug 'tpope/vim-fugitive'
 
 " A bunch of useful language related snippets (ultisnips is the engine).
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+" Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 
 " Automatically show Vim's complete menu while typing.
-Plug 'vim-scripts/AutoComplPop'
+" Plug 'vim-scripts/AutoComplPop'
 
 " Run test suites for various languages.
 Plug 'janko/vim-test'
 
 " Plugin highlights Git repository modifications via the signs column 
 Plug 'airblade/vim-gitgutter'
+
+Plug 'bluz71/vim-moonfly-statusline'
+Plug 'Yggdroot/indentLine'
 
 " Languages and file types.
 Plug 'cakebaker/scss-syntax.vim'
@@ -262,6 +263,25 @@ runtime! macros/matchit.vim
 " -----------------------------------------------------------------------------
 " Basic mappings
 " -----------------------------------------------------------------------------
+
+" Buffer control
+nnoremap <leader>[ :bp<CR>
+nnoremap <leader>] :bn<CR>
+
+" Fix indenting visual block
+vmap < <gv
+vmap > >gv
+
+" Tab
+"nnoremap <Tab> gt
+"nnoremap <S-Tab> gT
+"nnoremap <silent> <A-t> :tabnew<CR>
+"nnoremap <silent> <A-2> :tabmove +<CR>
+"nnoremap <silent> <A-1> :tabmove -<CR>
+
+" Tab shortcuts
+nnoremap <A-p> :tabp<CR>
+nnoremap <A-n> :tabn<CR>
 
 " Abbreviations
 cnoreabbrev W! w!
@@ -475,6 +495,27 @@ command! -bang Profile call s:profile(<bang>0)
 " -----------------------------------------------------------------------------
 
 " .............................................................................
+" Yggdroot/indentLine'
+" .............................................................................
+
+let g:indentLine_char       = '▏'
+let g:indentLine_setConceal = 0
+
+" .............................................................................
+" bluz71/vim-moonfly-statusline
+" .............................................................................
+
+let g:moonflyIgnoreDefaultColors = 1
+
+highlight! link User1 DiffText
+highlight! link User2 DiffAdd
+highlight! link User3 Search
+highlight! link User4 IncSearch
+highlight! link User5 StatusLine
+highlight! link User6 StatusLine
+highlight! link User7 StatusLine
+
+" .............................................................................
 " junegunn/fzf.vim
 " .............................................................................
 
@@ -514,90 +555,6 @@ command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
   \ "rg --column --line-number --no-heading --color=always --smart-case " .
   \ <q-args>, 1, fzf#vim#with_preview(), <bang>0)
-
-" .............................................................................
-" netrw
-" .............................................................................
-
-let g:netrw_banner = 0
-let g:netrw_liststyle = 3
-let g:netrw_browse_split = 4
-let g:netrw_winsize = 20
-
-function! OpenToRight()
-  :normal v
-  let g:path=expand('%:p')
-  execute 'q!'
-  execute 'belowright vnew' g:path
-  :normal <C-w>l
-endfunction
-
-function! OpenBelow()
-  :normal v
-  let g:path=expand('%:p')
-  execute 'q!'
-  execute 'belowright new' g:path
-  :normal <C-w>l
-endfunction
-
-function! OpenTab()
-  :normal v
-  let g:path=expand('%:p')
-  execute 'q!'
-  execute 'tabedit' g:path
-  :normal <C-w>l
-endfunction
-
-function! NetrwMappings()
-    " Hack fix to make ctrl-l work properly
-    noremap <buffer> <A-l> <C-w>l
-    noremap <buffer> <C-l> <C-w>l
-    noremap <silent> <C-b> :call ToggleNetrw()<CR>
-    noremap <buffer> V :call OpenToRight()<cr>
-    noremap <buffer> H :call OpenBelow()<cr>
-    noremap <buffer> T :call OpenTab()<cr>
-endfunction
-
-augroup netrw_mappings
-    autocmd!
-    autocmd filetype netrw call NetrwMappings()
-augroup END
-
-" Allow for netrw to be toggled
-function! ToggleNetrw()
-    if g:NetrwIsOpen
-        let i = bufnr("$")
-        while (i >= 1)
-            if (getbufvar(i, "&filetype") == "netrw")
-                silent exe "bwipeout " . i
-            endif
-            let i-=1
-        endwhile
-        let g:NetrwIsOpen=0
-    else
-        let g:NetrwIsOpen=1
-        silent Lexplore
-    endif
-endfunction
-
-" Check before opening buffer on any file
-function! NetrwOnBufferOpen()
-  if exists('b:noNetrw')
-      return
-  endif
-  call ToggleNetrw()
-endfun
-
-" Close Netrw if it's the only buffer open
-autocmd WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw" || &buftype == 'quickfix' |q|endif
-
-" Make netrw act like a project Draw
-augroup ProjectDrawer
-  autocmd!
-  autocmd VimEnter * :call NetrwOnBufferOpen()
-augroup END
-
-let g:NetrwIsOpen=0
 
 " .............................................................................
 " lambdalisue/fern-git-status.vim
@@ -705,26 +662,14 @@ highlight QuickScopeSecondary gui=underline cterm=underline
 " mhinz/vim-grepper
 " .............................................................................
 
-let g:grepper={}
-let g:grepper.tools=["rg"]
+let g:grepper = {}
+let g:grepper.tools = ["rg"]
+runtime autoload/grepper.vim
+let g:grepper.jump = 1
 
-xmap gr <plug>(GrepperOperator)
-
-" After searching for text, press this mapping to do a project wide find and
-" replace. It's similar to <leader>r except this one applies to all matches
-" across all files instead of just the current file.
-nnoremap <Leader>R
-  \ :let @s='\<'.expand('<cword>').'\>'<CR>
-  \ :Grepper -cword -noprompt<CR>
-  \ :cfdo %s/<C-r>s//g \| update
-  \<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
-
-" The same as above except it works with a visual selection.
-xmap <Leader>R
-    \ "sy
-    \ gvgr
-    \ :cfdo %s/<C-r>s//g \| update
-     \<Left><Left><Left><Left><Left><Left><Left><Left><Left><Left><Left>
+nnoremap <Leader>/ :GrepperRg<Space>
+nnoremap gs :Grepper -cword -noprompt<CR>
+xmap gs <Plug>(GrepperOperator)
 
 " .............................................................................
 " iamcco/markdown-preview.nvim
@@ -738,8 +683,8 @@ let g:mkdp_markdown_css=fnameescape($HOME).'/.local/lib/github-markdown-css/gith
 " SirVer/ultisnips
 " .............................................................................
 
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+"let g:UltiSnipsJumpForwardTrigger="<tab>"
+"let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
 " .............................................................................
 " janko/vim-test
@@ -767,7 +712,6 @@ nmap <silent> t<C-v> :TestVisit<CR>
 " .............................................................................
 " EXPERIMENTAL
 " .............................................................................
-
 
 " switch tabs using Ctrl+[Left/Right]
 nnoremap <C-Left> :tabprevious<CR>
