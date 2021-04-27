@@ -264,6 +264,12 @@ runtime! macros/matchit.vim
 " Basic mappings
 " -----------------------------------------------------------------------------
 
+" Mover no modo insert sem as setas
+inoremap <C-h> <left>
+inoremap <C-j> <down>
+inoremap <C-k> <up>
+inoremap <C-l> <right>
+
 " Buffer control
 nnoremap <leader>[ :bp<CR>
 nnoremap <leader>] :bn<CR>
