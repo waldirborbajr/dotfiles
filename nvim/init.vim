@@ -264,6 +264,18 @@ runtime! macros/matchit.vim
 " Basic mappings
 " -----------------------------------------------------------------------------
 
+" Setas redimensionam janelas adjacentes
+nnoremap <left> :vertical resize -5<cr>
+nnoremap <right> :vertical resize +5<cr>
+nnoremap <up> :resize -5<cr>
+nnoremap <down> :resize +5<cr>
+
+" map resizing buffers
+nnoremap <A-Right> :vertical resize+5<CR>
+nnoremap <A-Left> :vertical resize-5<CR>
+nnoremap <A-Up> :resize+5<CR>
+nnoremap <A-Down> :resize-5<CR>
+
 " Mover no modo insert sem as setas
 inoremap <C-h> <left>
 inoremap <C-j> <down>
@@ -731,12 +743,6 @@ nnoremap <C-Down> :tabm -1<CR>
 " map switch windows
 nnoremap <Tab> <C-w>w
 nnoremap <S-Tab> <C-w>h
-
-" map resizing buffers
-nnoremap <A-Right> :vertical resize+5<CR>
-nnoremap <A-Left> :vertical resize-5<CR>
-nnoremap <A-Up> :resize+5<CR>
-nnoremap <A-Down> :resize-5<CR>
 
 " fugitive.vim mappings
 nmap <leader>gb :Gblame<CR>
