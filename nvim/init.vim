@@ -265,10 +265,10 @@ runtime! macros/matchit.vim
 " -----------------------------------------------------------------------------
 
 " Setas redimensionam janelas adjacentes
-nnoremap <left> :vertical resize -5<cr>
-nnoremap <right> :vertical resize +5<cr>
-nnoremap <up> :resize -5<cr>
-nnoremap <down> :resize +5<cr>
+"nnoremap <left> :vertical resize -5<cr>
+"nnoremap <right> :vertical resize +5<cr>
+"nnoremap <up> :resize -5<cr>
+"nnoremap <down> :resize +5<cr>
 
 " map resizing buffers
 nnoremap <A-Right> :vertical resize+5<CR>
