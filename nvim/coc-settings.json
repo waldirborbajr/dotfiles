@@ -5,7 +5,7 @@
   "diagnostic.infoSign": "ℹ",
   "diagnostic.hintSign": "➤",
   "suggest.autoTrigger": "always",
-  "suggest.timeout": 500,
+  "suggest.timeout": 300,
   "diagnostic.checkCurrentLine": true,
   "suggest.floatEnable": true,
   "suggest.enablePreview": false,
