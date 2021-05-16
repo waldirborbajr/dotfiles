@@ -28,6 +28,15 @@ set ignorecase
 set smartcase
 set laststatus=2
 set expandtab
+set backupdir=~/.config/nvim/null
+set directory=~/.config/nvim/null
+set undodir=~/.config/nvim/null
+set backspace=indent
+set backspace+=eol
+set backspace+=start
+set nocompatible
+set title
+syntax on
 
 let vimplug_exists=expand('~/.config/nvim/autoload/plug.vim')
 let curl_exists=expand('curl')
