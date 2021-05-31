@@ -4,13 +4,8 @@
 " _/ // / / / / /__| |/ / / / / / / /
 "/___/_/ /_/_/\__(_)___/_/_/ /_/ /_/
 "
-" version 1.0.0
+" version 1.0.1
 "
-" https://bluz71.github.io/2017/05/21/vim-plugins-i-like.html
-"
-" -----------------------------------------------------------------------------
-" This config is targeted for Vim 8.1+ and expects you to have Plug installed.
-" -----------------------------------------------------------------------------
 
 " let mapleader=" "
 let mapleader = "\<Space>"
@@ -24,8 +19,6 @@ set smarttab
 set softtabstop=2
 set mouse=a
 set timeoutlen=1000
-set ignorecase
-set smartcase
 set laststatus=2
 set expandtab
 set backupdir=~/.config/nvim/null
@@ -36,7 +29,26 @@ set backspace+=eol
 set backspace+=start
 set nocompatible
 set title
+set clipboard=unnamed,unnamedplus
 syntax on
+set encoding=utf-8
+set completeopt-=preview " For No Previews
+set tabpagemax=50
+
+" Search
+set hlsearch
+set ignorecase
+set incsearch
+set smartcase
+
+" Split Options
+set splitbelow
+set splitright
+
+" Perfomance
+set ttyfast
+set complete-=i
+set lazyredraw
 
 let vimplug_exists=expand('~/.config/nvim/autoload/plug.vim')
 let curl_exists=expand('curl')
@@ -54,31 +66,30 @@ if !filereadable(vimplug_exists)
   autocmd VimEnter * PlugInstall --sync
 endif
 
-" call plug#begin()
 call plug#begin(expand('~/.config/nvim/plugged'))
+  Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' } " https://github.com/fatih/vim-go
+  Plug 'https://github.com/ctrlpvim/ctrlp.vim' " CTRL-P
+  " Plug 'https://github.com/puremourning/vimspector' " A multi language graphical debugger
+  " https://pepa.holla.cz/2021/03/01/golang-debugging-application-in-neovim/
 
-Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' } " https://github.com/fatih/vim-go
-Plug 'https://github.com/ctrlpvim/ctrlp.vim' " CTRL-P
-" Plug 'https://github.com/puremourning/vimspector' " A multi language graphical debugger
-" https://pepa.holla.cz/2021/03/01/golang-debugging-application-in-neovim/
+  Plug 'https://github.com/Yggdroot/indentLine' " indentLine
 
-Plug 'https://github.com/Yggdroot/indentLine' " indentLine
-
-Plug 'mhinz/vim-startify' " Startify
-Plug 'http://github.com/tpope/vim-surround' " Surrounding ysw)
-Plug 'https://github.com/preservim/nerdtree' " NerdTree
-Plug 'https://github.com/tpope/vim-commentary' " For Commenting gcc & gc
-Plug 'https://github.com/vim-airline/vim-airline' " Status bar
-Plug 'https://github.com/rafi/awesome-vim-colorschemes' " Retro Scheme
-Plug 'https://github.com/neoclide/coc.nvim',{'branch': 'release'}  " Auto Completion
-Plug 'https://github.com/ryanoasis/vim-devicons' " Developer Icons
-Plug 'https://github.com/tc50cal/vim-terminal' " Vim Terminal
-Plug 'https://github.com/preservim/tagbar' " Tagbar for code navigation F8
-Plug 'https://github.com/terryma/vim-multiple-cursors' " CTRL + N for multiple cursors
-
-set encoding=UTF-8
-
+  Plug 'mhinz/vim-startify' " Startify
+  Plug 'http://github.com/tpope/vim-surround' " Surrounding ysw)
+  Plug 'https://github.com/preservim/nerdtree' " NerdTree
+  Plug 'https://github.com/tpope/vim-commentary' " For Commenting gcc & gc
+  Plug 'https://github.com/vim-airline/vim-airline' " Status bar
+  Plug 'https://github.com/rafi/awesome-vim-colorschemes' " Retro Scheme
+  Plug 'https://github.com/neoclide/coc.nvim',{'branch': 'release'}  " Auto Completion
+  Plug 'https://github.com/ryanoasis/vim-devicons' " Developer Icons
+  Plug 'https://github.com/tc50cal/vim-terminal' " Vim Terminal
+  Plug 'https://github.com/preservim/tagbar' " Tagbar for code navigation F8
+  Plug 'https://github.com/terryma/vim-multiple-cursors' " CTRL + N for multiple cursors
 call plug#end()
+
+" Text shifting
+vnoremap > >gv
+vnoremap < <gv
 
 " Abbreviations
 cnoreabbrev W! w!
@@ -97,27 +108,33 @@ nnoremap <Leader>vve :e $MYVIMRC<CR>
 " " Reload vimr configuration file
 nnoremap <Leader>vvr :source $MYVIMRC<CR>
 
-" nnoremap <C-f> :NERDTreeFocus<CR>
-" nnoremap <C-n> :NERDTree<CR>
-" nnoremap <C-t> :NERDTreeToggle<CR>
+"" Sanity and cool stuff {
+nnoremap <leader>u :UndotreeShow<CR>
+nnoremap <leader>o :NERDTree<CR>
+nnoremap <leader>ot :NERDTreeToggle<CR>
+nnoremap <leader>oc :NERDTreeClose<CR>
+
+nnoremap <silent> <leader>+ :vertical resize +5<CR>
+nnoremap <silent> <leader>- :vertical resize -5<CR>
+
 nnoremap <C-t> :NERDTreeToggle<CR>:NERDTreeRefreshRoot<CR> " nerdtree
-" nnoremap <C-l> :call CocActionAsync('jumpDefinition')<CR>
 nnoremap <silent> <C-k> :bnext<CR>:call SyncTree()<CR>
 nnoremap <silent> <C-j> :bprev<CR>:call SyncTree()<CR>
 nnoremap <silent> <F2> :NERDTreeToggle<cr><c-w>l:call SyncTree()<cr><c-w>h
 
-nmap <F8> :TagbarToggle<CR>
-
 nnoremap <C-\> :TerminalSplit bash<CR>
 
-" noremap <silent> <C-b> :Fern . -drawer -reveal=% -toggle -width=35<CR><C-w>=
-
-:set completeopt-=preview " For No Previews
-
-:colorscheme jellybeans
-
-let g:NERDTreeDirArrowExpandable="+"
-let g:NERDTreeDirArrowCollapsible="~"
+" NERDTree
+let NERDTreeShowHidden = 1
+let g:NERDTreeFileExtensionHighlightFullName = 1
+let g:NERDTreeExactMatchHighlightFullName = 1
+let g:NERDTreePatternMatchHighlightFullName = 1
+let g:NERDTreeHighlightFolders = 1
+let g:NERDTreeHighlightFoldersFullName = 1
+autocmd vimenter * NERDTree | wincmd p
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+let g:NERDTreeDirArrowExpandable = ''
+let g:NERDTreeDirArrowCollapsible = ''
 
 " Check if NERDTree is open or active
 function! IsNERDTreeOpen()
@@ -135,7 +152,6 @@ endfunction
 
 " Highlight currently open buffer in NERDTree
 autocmd BufRead * call SyncTree()
-
 
 " --- Just Some Notes ---
 " :PlugClean :PlugInstall :UpdateRemotePlugins
@@ -175,10 +191,6 @@ autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.org
 
 " --------------------- COC Configuration
 
-" Set internal encoding of vim, not needed on neovim, since coc.nvim using some
-" unicode characters in the file autoload/float.vim
-set encoding=utf-8
-
 " TextEdit might fail if hidden is not set.
 set hidden
 
@@ -191,7 +203,7 @@ set cmdheight=2
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
-set updatetime=300
+set updatetime=100
 
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
@@ -341,6 +353,9 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
+let g:coc_global_extensions = ['coc-prettier', 'coc-highlight', 'coc-go', 'coc-python']
+
+
 " --------------------- /COC Configuration
 
 let g:python_highlight_all = 1
@@ -396,3 +411,5 @@ let g:indentLine_color_dark = 1 " (default: 2)
 " Background (Vim, GVim)
 let g:indentLine_bgcolor_term = 202
 let g:indentLine_bgcolor_gui = '#FF5F00'
+
+:colorscheme gruvbox
