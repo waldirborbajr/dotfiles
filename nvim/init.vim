@@ -12,15 +12,10 @@ let mapleader = "\<Space>"
 
 set number
 set relativenumber
-set autoindent
-set tabstop=2
-set shiftwidth=2
-set smarttab
-set softtabstop=2
+" set smarttab
 set mouse=a
 set timeoutlen=1000
 set laststatus=2
-set expandtab
 set backupdir=~/.config/nvim/null
 set directory=~/.config/nvim/null
 set undodir=~/.config/nvim/null
@@ -34,6 +29,14 @@ syntax on
 set encoding=utf-8
 set completeopt-=preview " For No Previews
 set tabpagemax=50
+
+" indentation with 2 or 4 spaces
+set expandtab       " use spaces instead of tabs
+set autoindent      " autoindent based on line above
+set smartindent     " smarter indent for C-like languages
+set shiftwidth=2    " when using Shift + > or <
+set softtabstop=2   " in insert mode
+set tabstop=2       " set the space occupied by a regular tab
 
 " Search
 set hlsearch
@@ -91,17 +94,23 @@ call plug#end()
 vnoremap > >gv
 vnoremap < <gv
 
-" Abbreviations
+" no one is really happy until you have this shortcuts
+cnoreabbrev W w
 cnoreabbrev W! w!
+cnoreabbrev Q q
 cnoreabbrev Q! q!
-cnoreabbrev Qall! qall!
+cnoreabbrev Qa qa
+cnoreabbrev Qa! qa!
 cnoreabbrev Wq wq
 cnoreabbrev Wa wa
-cnoreabbrev wQ wq
 cnoreabbrev WQ wq
-cnoreabbrev W w
-cnoreabbrev Q q
-cnoreabbrev Qall qall
+cnoreabbrev Wqa wqa
+
+" buffer nav
+noremap <leader>z :bp<CR>
+noremap <leader>x :bn<CR>
+noremap <leader>q :bw<CR>
+noremap <leader>qa :bufdo bw<CR>
 
 " Edit vimr configuration file
 nnoremap <Leader>vve :e $MYVIMRC<CR>
@@ -184,6 +193,10 @@ let g:airline_right_alt_sep = ''
 let g:airline_symbols.branch = ''
 let g:airline_symbols.readonly = ''
 let g:airline_symbols.linenr = ''
+
+" Tab
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
 
 inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
 
