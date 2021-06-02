@@ -90,6 +90,15 @@ call plug#begin(expand('~/.config/nvim/plugged'))
   Plug 'https://github.com/terryma/vim-multiple-cursors' " CTRL + N for multiple cursors
 call plug#end()
 
+" Disable relative number on Insert mode
+autocmd InsertEnter * :set relativenumber
+autocmd FocusGained * :set relativenumber
+autocmd BufEnter * :set relativenumber
+
+autocmd InsertLeave * :set norelativenumber
+autocmd BufLeave * :set norelativenumber
+autocmd FocusLost * :set norelativenumber
+
 " Text shifting
 vnoremap > >gv
 vnoremap < <gv
