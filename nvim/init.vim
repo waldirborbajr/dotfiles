@@ -4,7 +4,7 @@
 " _/ // / / / / /__| |/ / / / / / / /
 "/___/_/ /_/_/\__(_)___/_/_/ /_/ /_/
 "
-" version 1.0.2
+" version 1.0.3
 "
 
 " let mapleader=" "
@@ -14,7 +14,7 @@ set number
 set relativenumber
 " set smarttab
 set mouse=a
-set timeoutlen=1000
+set timeoutlen=500
 set laststatus=2
 set backupdir=~/.config/nvim/null
 set directory=~/.config/nvim/null
