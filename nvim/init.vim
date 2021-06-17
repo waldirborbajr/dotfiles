@@ -4,7 +4,7 @@
 " _/ // / / / / /__| |/ / / / / / / /
 "/___/_/ /_/_/\__(_)___/_/_/ /_/ /_/
 "
-" version 1.0.4
+" version 1.0.5
 "
 " ============= Vim-Plug ============== "{{{
 
@@ -38,18 +38,15 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }     " fzf itself
 Plug 'junegunn/fzf.vim'                                 " fuzzy search integration
 Plug 'honza/vim-snippets'                               " actual snippets
 Plug 'Yggdroot/indentLine'                              " show indentation lines
-Plug 'tpope/vim-liquid'                                 " liquid language support
 Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}  " better python
 Plug 'tpope/vim-commentary'                             " better commenting
 Plug 'mhinz/vim-startify'                               " cool start up screen
 Plug 'tpope/vim-fugitive'                               " git support
 Plug 'psliwka/vim-smoothie'                             " some very smooth ass scrolling
 Plug 'wellle/tmux-complete.vim'                         " complete words from a tmux panes
-Plug 'tpope/vim-eunuch'                                 " run common Unix commands inside Vim
-Plug 'machakann/vim-sandwich'                           " make sandwiches
 Plug 'christoomey/vim-tmux-navigator'                   " seamless vim and tmux navigation
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
-Plug 'TovarishFin/vim-solidity'
+Plug 'TovarishFin/vim-solidity'                         " contract-oriented language for Ethereum.
 call plug#end()
 
 "}}}
@@ -95,6 +92,7 @@ set synmaxcol=180
 set re=1
 set ttyfast
 set complete-=i
+set timeoutlen=500
 
 " required by coc
 set hidden
@@ -134,7 +132,7 @@ let g:omni_sql_no_default_maps = 1                      " disable sql omni compl
 let g:loaded_python_provider = 0
 let g:loaded_perl_provider = 0
 let g:loaded_ruby_provider = 0
-let g:python3_host_prog = expand('/usr/bin/python3')
+let g:python3_host_prog = expand('/usr/local/bin/python3')
 
 " Airline
 let g:airline_theme='material'
@@ -167,8 +165,6 @@ let g:coc_global_extensions = [
             \'coc-yank',
             \'coc-pairs',
             \'coc-json',
-            \'coc-css',
-            \'coc-html',
             \'coc-tsserver',
             \'coc-yaml',
             \'coc-lists',
@@ -272,7 +268,7 @@ au BufWritePre * :%s/\s\+$//e                           " remove trailing whites
 au CursorHold * silent call CocActionAsync('highlight') " highlight match on cursor hold
 
 " enable spell only if file type is normal text
-let spellable = ['markdown', 'gitcommit', 'txt', 'text', 'liquid', 'rst']
+let spellable = ['markdown', 'gitcommit', 'txt', 'text']
 autocmd BufEnter * if index(spellable, &ft) < 0 | set nospell | else | set spell | endif
 
 
@@ -470,9 +466,9 @@ nmap <leader>a <Plug>(coc-codeaction-line)
 xmap <leader>a <Plug>(coc-codeaction-selected)
 
 " flutter mappings
-nnoremap <F3> :CocCommand flutter.devices<CR>
-nnoremap <F4> :CocCommand flutter.emulators<CR>
-nnoremap <F5> :CocCommand flutter.run<CR>
+"nnoremap <F3> :CocCommand flutter.devices<CR>
+"nnoremap <F4> :CocCommand flutter.emulators<CR>
+"nnoremap <F5> :CocCommand flutter.run<CR>
 
 " fugitive mappings
 nmap <leader>gd :Gdiffsplit<CR>
