@@ -3,7 +3,14 @@
   "coc.preferences.extensionUpdateCheck": "daily",
   "coc.preferences.colorSupport": true,
   "coc.preferences.snippetStatusText": "Ⓢ ",
-  "coc.preferences.formatOnSaveFiletypes": ["go", "json", "markdown", "python"],
+  "coc.preferences.formatOnSaveFiletypes": [
+    "go",
+    "json",
+    "markdown",
+    "python",
+    "yaml"
+  ],
+  "coc.preferences.hoverTarget": "preview",
 
   "codeLens.enable": true,
 
@@ -68,6 +75,21 @@
   "git.addedSign.text": "▌",
   "git.changedSign.text": "▌",
 
+  "json.enable": true,
+  "json.format.enable": true,
+
+  "python.autoComplete.addBrackets": true,
+  "python.jediEnabled": false,
+  "python.pipenvPath": "/usr/local/bin/pipenv",
+  "python.pythonPath": "/usr/local/bin/python3",
+  "python.venvPath": "~/.virtualenvs",
+  "python.linting.enabled": false,
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Args": ["--max-line-length 160"],
+  "python.formatting.provider": "black",
+  "python.formatting.blackArgs": ["--line-length 160"],
+
   // other language specific settings
   "prettier.proseWrap": "always",
 
@@ -75,10 +97,21 @@
     "golang": {
       "command": "gopls",
       "rootPatterns": ["go.mod"],
-      "disableWorkspaceFolders": true,
-      "filetypes": ["go"]
+      "filetypes": ["go"],
+      "initializationOptions": {
+        "gocodeCompletionEnabled": true,
+        "diagnosticsEnabled": true,
+        "lintTool": "golint"
+      }
     }
+    // "golang": {
+    //   "command": "gopls",
+    //   "rootPatterns": ["go.mod"],
+    //   "disableWorkspaceFolders": true,
+    //   "filetypes": ["go"]
+    // }
   },
+
   "go.goplsOptions": {
     "staticcheck": true
   }
