@@ -1,39 +1,85 @@
 {
-  "suggest.noselect": false,
-  "diagnostic.errorSign": "✘",
-  "diagnostic.warningSign": "⚠",
-  "diagnostic.infoSign": "ℹ",
-  "diagnostic.hintSign": "➤",
-  "suggest.autoTrigger": "always",
-  "suggest.timeout": 300,
-  "diagnostic.checkCurrentLine": true,
+  // normal settings
+  "coc.preferences.extensionUpdateCheck": "daily",
+  "coc.preferences.colorSupport": true,
+  "coc.preferences.snippetStatusText": "Ⓢ ",
+  "coc.preferences.formatOnSaveFiletypes": ["go", "json", "markdown", "python"],
+
+  "codeLens.enable": true,
+
+  // suggest settings
   "suggest.floatEnable": true,
   "suggest.enablePreview": false,
-  "coc.preferences.hoverTarget": "float",
-  "codeLens.enable": true,
-  "coc.preferences.extensionUpdateCheck": "daily",
+  "suggest.autoTrigger": "always",
+  "suggest.noselect": false,
+  "suggest.detailField": "abbr",
+  "suggest.snippetIndicator": "",
+  "suggest.removeDuplicateItems": true,
+  "suggest.triggerAfterInsertEnter": true,
+  "suggest.timeout": 500,
+  "suggest.minTriggerInputLength": 1,
+  "suggest.completionItemKindLabels": {
+    "function": "\uf794",
+    "method": "\uf6a6",
+    "variable": "\uf71b",
+    "constant": "\uf8ff",
+    "struct": "\ufb44",
+    "class": "\uf0e8",
+    "interface": "\ufa52",
+    "text": "\ue612",
+    "enum": "\uf435",
+    "enumMember": "\uf02b",
+    "module": "\uf668",
+    "color": "\ue22b",
+    "property": "\ufab6",
+    "field": "\uf93d",
+    "unit": "\uf475",
+    "file": "\uf471",
+    "value": "\uf8a3",
+    "event": "\ufacd",
+    "folder": "\uf115",
+    "keyword": "\uf893",
+    "snippet": "\uf64d",
+    "operator": "\uf915",
+    "reference": "\uf87a",
+    "typeParameter": "\uf278",
+    "default": "\uf29c"
+  },
+
+  // diagnostic settings
+  "diagnostic.displayByAle": false,
+  "diagnostic.refreshOnInsertMode": true,
+  "diagnostic.errorSign": "✘",
+  "diagnostic.warningSign": "⚠",
+  "diagnostic.infoSign": "",
+  "diagnostic.hintSign": "ஐ",
+  "diagnostic.checkCurrentLine": true,
+  "diagnostic.virtualTextPrefix": " ❯❯❯ ",
+  "diagnostic.virtualText": true,
+  "diagnostic.enableMessage": "never",
+
+  // list settings
+  "list.source.grep.command": "rg",
+
+  // git settings
+  "git.topRemovedSign.text": "▌",
+  "git.changeRemovedSign.text": "▌",
+  "git.removedSign.text": "▌",
+  "git.addedSign.text": "▌",
+  "git.changedSign.text": "▌",
+
+  // other language specific settings
+  "prettier.proseWrap": "always",
+
   "languageserver": {
     "golang": {
       "command": "gopls",
       "rootPatterns": ["go.mod"],
       "disableWorkspaceFolders": true,
       "filetypes": ["go"]
-      // "initializationOptions": {
-      //   "gocodeCompletionEnabled": true,
-      //   "diagnosticsEnabled": true,
-      //   "lintTool": "golint",
-      //   "usePlaceholders": true
-      // }
     }
   },
   "go.goplsOptions": {
     "staticcheck": true
-  },
-  "coc.preferences.formatOnSaveFiletypes": [
-    "go",
-    "json",
-    "graphql",
-    "pyhton",
-    "markdown"
-  ]
+  }
 }

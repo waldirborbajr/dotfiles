@@ -38,7 +38,6 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }     " fzf itself
 Plug 'junegunn/fzf.vim'                                 " fuzzy search integration
 Plug 'honza/vim-snippets'                               " actual snippets
 Plug 'Yggdroot/indentLine'                              " show indentation lines
-Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}  " better python
 Plug 'tpope/vim-commentary'                             " better commenting
 Plug 'mhinz/vim-startify'                               " cool start up screen
 Plug 'tpope/vim-fugitive'                               " git support
@@ -234,9 +233,6 @@ let g:rainbow_active = 1
 " tmux navigator
 let g:tmux_navigator_no_mappings = 1
 
-" semshi settings
-let g:semshi#error_sign	= v:false                       " let ms python lsp handle this
-
 "" FZF
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
@@ -301,9 +297,6 @@ autocmd BufReadPost *
      \ if line("'\"") > 0 && line("'\"") <= line("$") |
      \   exe "normal! g`\"" |
      \ endif
-
-" python renaming
-autocmd FileType python nnoremap <leader>rn :Semshi rename <CR>
 
 " format with available file format formatter
 command! -nargs=0 Format :call CocAction('format')
