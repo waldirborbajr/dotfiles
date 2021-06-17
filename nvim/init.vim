@@ -423,13 +423,6 @@ nmap <F1> <plug>(fzf-maps-n)
 imap <F1> <plug>(fzf-maps-i)
 vmap <F1> <plug>(fzf-maps-x)
 
-" MvVis
-g:MvVis_mappings=0
-vmap H <Plug>(MvVisLeft)
-vmap J <Plug>(MvVisDown)
-vmap K <Plug>(MvVisUp)
-vmap L <Plug>(MvVisRight)
-
 "" coc
 
 " use tab to navigate snippet placeholders
