@@ -4,7 +4,7 @@
 " _/ // / / / / /__| |/ / / / / / / /
 "/___/_/ /_/_/\__(_)___/_/_/ /_/ /_/
 "
-" version 1.0.5
+" version 1.0.6
 "
 " ============= Vim-Plug ============== "{{{
 
@@ -25,7 +25,6 @@ Plug 'vim-airline/vim-airline'                          " airline status bar
 Plug 'ryanoasis/vim-devicons'                           " pretty icons everywhere
 Plug 'luochen1990/rainbow'                              " rainbow parenthesis
 Plug 'hzchirs/vim-material'                             " material color themes
-Plug 'gregsexton/MatchTag'                              " highlight matching html tags
 Plug 'Jorengarenar/vim-MvVis'                           " move visual selection
 Plug 'https://github.com/rafi/awesome-vim-colorschemes' " Retro Scheme
 "}}}
@@ -131,7 +130,7 @@ let g:omni_sql_no_default_maps = 1                      " disable sql omni compl
 let g:loaded_python_provider = 0
 let g:loaded_perl_provider = 0
 let g:loaded_ruby_provider = 0
-let g:python3_host_prog = expand('/usr/local/bin/python3')
+let g:python3_host_prog = expand('/usr/bin/python3')
 
 " Airline
 let g:airline_theme='material'
@@ -243,7 +242,7 @@ let g:fzf_layout = {'up':'~90%', 'window': { 'width': 0.8, 'height': 0.8,'yoffse
 let g:fzf_tags_command = 'ctags -R'
 
 let $FZF_DEFAULT_OPTS = '--layout=reverse --inline-info'
-let $FZF_DEFAULT_COMMAND = "rg --files --hidden --glob '!.git/**' --glob '!build/**' --glob '!.dart_tool/**' --glob '!.idea' --glob '!node_modules'"
+let $FZF_DEFAULT_COMMAND = "rg --files --hidden --glob '!.git/**' --glob '!build/**' --glob '!var/logs/**' --glob '!.idea' --glob '!node_modules' --glob '!var/cache/**'"
 
 "}}}
 
@@ -353,14 +352,16 @@ let mapleader = "\<Space>"
 nnoremap ; :
 nmap \ <leader>q
 map <F6> :Startify <CR>
-nmap <leader>r :so ~/.config/nvim/init.vim<CR>
+" Open the vimrc file anytime
+nmap <leader>rl :so ~/.config/nvim/init.vim<CR>
+nmap <leader>re :e ~/.config/nvim/init.vim<CR>
 nmap <leader>q :bd<CR>
-nmap <leader>w :w<CR>
+" nmap <leader>w :w<CR>
 map <leader>s :Format<CR>
 nmap <Tab> :bnext<CR>
 nmap <S-Tab> :bprevious<CR>
-noremap <leader>e :PlugInstall<CR>
-noremap <C-q> :q<CR>
+" noremap <leader>e :PlugInstall<CR>
+" noremap <C-q> :q<CR>
 
 " no one is really happy until you have this shortcuts
 cnoreabbrev W w
@@ -414,7 +415,8 @@ nmap <leader>b :Buffers<CR>
 nmap <leader>c :Commands<CR>
 nmap <leader>t :BTags<CR>
 nmap <leader>/ :Rg<CR>
-nmap <leader>gc :Commits<CR>
+" nmap <leader>gc :Commits<CR>
+" nmap <leader>gc :GBranches<CR>
 nmap <leader>gs :GFiles?<CR>
 nmap <leader>sh :History/<CR>
 
