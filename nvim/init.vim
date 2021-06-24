@@ -4,7 +4,7 @@
 " _/ // / / / / /__| |/ / / / / / / /
 "/___/_/ /_/_/\__(_)___/_/_/ /_/ /_/
 "
-" version 1.0.6
+" version 1.0.7
 "
 " ============= Vim-Plug ============== "{{{
 
@@ -43,7 +43,6 @@ Plug 'tpope/vim-fugitive'                               " git support
 Plug 'psliwka/vim-smoothie'                             " some very smooth ass scrolling
 Plug 'wellle/tmux-complete.vim'                         " complete words from a tmux panes
 Plug 'christoomey/vim-tmux-navigator'                   " seamless vim and tmux navigation
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'TovarishFin/vim-solidity'                         " contract-oriented language for Ethereum.
 call plug#end()
 
@@ -173,7 +172,6 @@ let g:coc_global_extensions = [
             \'coc-xml',
             \'coc-syntax',
             \'coc-git',
-            \'coc-marketplace',
             \'coc-highlight',
             \]
 
