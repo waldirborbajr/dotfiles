@@ -4,7 +4,7 @@
 " _/ // / / / / /__| |/ / / / / / / /
 "/___/_/ /_/_/\__(_)___/_/_/ /_/ /_/
 "
-" version 1.0.7
+" version 1.0.8
 "
 " ============= Vim-Plug ============== "{{{
 
@@ -24,7 +24,6 @@ call plug#begin(expand('~/.config/nvim/plugged'))
 Plug 'vim-airline/vim-airline'                          " airline status bar
 Plug 'ryanoasis/vim-devicons'                           " pretty icons everywhere
 Plug 'luochen1990/rainbow'                              " rainbow parenthesis
-Plug 'hzchirs/vim-material'                             " material color themes
 Plug 'Jorengarenar/vim-MvVis'                           " move visual selection
 Plug 'https://github.com/rafi/awesome-vim-colorschemes' " Retro Scheme
 "}}}
@@ -101,7 +100,6 @@ set shortmess+=c
 set signcolumn=yes
 
 " Themeing
-let g:material_style = 'oceanic'
 colorscheme gruvbox                                     " vim-material
 hi Pmenu guibg='#00010a' guifg=white                    " popup menu colors
 hi Comment gui=italic cterm=italic                      " italic comments
@@ -132,7 +130,7 @@ let g:loaded_ruby_provider = 0
 let g:python3_host_prog = expand('/usr/local/bin/python3')
 
 " Airline
-let g:airline_theme='material'
+let g:airline_theme='gruvbox'
 let g:airline_skip_empty_sections = 1
 let g:airline_section_warning = ''
 let g:airline_section_x=''
