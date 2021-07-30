@@ -463,11 +463,6 @@ nnoremap <silent> K :call <SID>show_documentation()<CR>
 nmap <leader>a <Plug>(coc-codeaction-line)
 xmap <leader>a <Plug>(coc-codeaction-selected)
 
-" flutter mappings
-"nnoremap <F3> :CocCommand flutter.devices<CR>
-"nnoremap <F4> :CocCommand flutter.emulators<CR>
-"nnoremap <F5> :CocCommand flutter.run<CR>
-
 " fugitive mappings
 nmap <leader>gd :Gdiffsplit<CR>
 nmap <leader>gb :Git blame<CR>
@@ -479,3 +474,27 @@ nnoremap <silent> <C-j> :TmuxNavigateDown<cr>
 nnoremap <silent> <C-k> :TmuxNavigateUp<cr>
 
 "}}}
+
+" Behave Vim
+nnoremap Y y$
+
+" Keep centered
+nnoremap n nzzzv
+nnoremap N Nzzzv
+nnoremap J mzJ`z
+
+" Undo break points
+inoremap , ,<c-g>u
+inoremap . .<c-g>u
+inoremap ! !<c-g>u
+inoremap , ,<c-g>u
+inoremap ? ?<c-g>u
+
+" Movin text
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+inoremap <C-j> <esc>:m .+1<CR>==
+inoremap <C-k> <esc>:m .-2<CR>==
+nnoremap <leader>k :m .+1<CR>==
+nnoremap <leader>j :m .-2<CR>==
+
