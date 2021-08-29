@@ -43,6 +43,8 @@ Plug 'psliwka/vim-smoothie'                             " some very smooth ass s
 Plug 'wellle/tmux-complete.vim'                         " complete words from a tmux panes
 Plug 'christoomey/vim-tmux-navigator'                   " seamless vim and tmux navigation
 Plug 'TovarishFin/vim-solidity'                         " contract-oriented language for Ethereum.
+
+Plug 'farfanoide/vim-kivy'                              " Kivy
 call plug#end()
 
 "}}}
@@ -498,3 +500,20 @@ inoremap <C-k> <esc>:m .-2<CR>==
 nnoremap <leader>k :m .+1<CR>==
 nnoremap <leader>j :m .-2<CR>==
 
+" Define Kivy syntax
+syn match kivyPreProc   /#:.*/
+syn match kivyComment   /#.*/
+syn match kivyRule      /<\I\i*\(,\s*\I\i*\)*>:/
+syn match kivyAttribute /\<\I\i*\>/ nextgroup=kivyValue
+
+syn region kivyValue start=":" end=/$/  contains=@pyth skipwhite
+
+syn region kivyAttribute matchgroup=kivyIdent start=/[\a_][\a\d_]*:/ end=/$/ contains=@pyth skipwhite
+
+hi def link kivyPreproc   PreProc
+hi def link kivyComment   Comment
+hi def link kivyRule      Function
+hi def link kivyIdent     Statement
+hi def link kivyAttribute Label
+
+let b:current_syntax = "kivy"
