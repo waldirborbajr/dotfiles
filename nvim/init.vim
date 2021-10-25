@@ -53,6 +53,12 @@ Plug 'Yggdroot/indentLine'
 Plug 'avelino/vim-bootstrap-updater'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-rhubarb' " required by fugitive to :Gbrowse
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+nmap <silent> ggd <Plug>(coc-definition)
+nmap <silent> ggt <Plug>(coc-type-definition)
+nmap <silent> ggi <Plug>(coc-implementation)
+nmap <silent> ggr <Plug>(coc-references)
+nmap <silent> ggR <Plug>(coc-rename)
 
 if isdirectory('/usr/local/opt/fzf')
   Plug '/usr/local/opt/fzf' | Plug 'junegunn/fzf.vim'
@@ -66,7 +72,7 @@ if exists('make')
 endif
 Plug 'Shougo/vimproc.vim', {'do': g:make}
 
-"" Vim-Session
+"" Vim-Sessiol
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-session'
 
@@ -118,8 +124,8 @@ set shiftwidth=2
 set expandtab
 
 "" Map leader to ,
-"let mapleader=','
-let mapleader = "\<Space>"
+let mapleader=','
+" let mapleader = "\<Space>"
 
 "" Enable hidden buffers
 set hidden
@@ -201,6 +207,7 @@ set laststatus=2
 set redrawtime=10000
 set timeoutlen=500
 set updatetime=100
+set relativenumber
 " Open the vimrc file anytime
 nmap <leader>rl :so ~/.config/nvim/init.vim<CR>
 nmap <leader>re :e ~/.config/nvim/init.vim<CR>
@@ -211,8 +218,7 @@ autocmd BufEnter * :set relativenumber
 autocmd InsertLeave * :set norelativenumber
 autocmd BufLeave * :set norelativenumber
 autocmd FocusLost * :set norelativenumber
-
-
+map <F6> :Startify <CR>
 
 "" Use modeline overrides
 set modeline
@@ -598,3 +604,28 @@ let g:startify_commands = [
     \ {'h':  ['Help', ':help']},
     \ ]
 
+"go specific binds
+au FileType go nmap gos :!speed<Space>
+au FileType go nmap gop :!probe<Space>
+au FileType go nmap <silent> gob :GoBuild<CR>
+au FileType go nmap <silent> goi :GoImports<CR>
+au FileType go nmap <silent> gor :GoRename<CR>
+let g:go_fmt_command = "gofmt"
+
+"" Organize imports
+command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
+
+au BufWritePre * :%s/\s\+$//e " trailing spaces
+
+" list of the extensions to make sure are always installed
+let g:coc_global_extensions = [
+            \'coc-go',
+            \'coc-yank',
+            \'coc-pairs',
+            \'coc-json',
+            \'coc-yaml',
+            \'coc-xml',
+            \'coc-syntax',
+            \'coc-git',
+            \'coc-highlight',
+            \]
