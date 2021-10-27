@@ -475,10 +475,18 @@ endfunction
 let g:go_list_type = "quickfix"
 let g:go_fmt_command = "goimports"
 let g:go_fmt_fail_silently = 1
+" disable all linters as that is taken care of by coc.nvim
+let g:go_diagnostics_enabled = 0
+let g:go_metalinter_enabled = []
+" run go imports on file save
+let g:go_fmt_command = "goimports"
+" automatically highlight variable your cursor is on
+let g:go_auto_sameids = 0
 
 let g:go_highlight_types = 1
 let g:go_highlight_fields = 1
 let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
@@ -610,12 +618,12 @@ au FileType go nmap gop :!probe<Space>
 au FileType go nmap <silent> gob :GoBuild<CR>
 au FileType go nmap <silent> goi :GoImports<CR>
 au FileType go nmap <silent> gor :GoRename<CR>
-let g:go_fmt_command = "gofmt"
 
 "" Organize imports
 command! -nargs=0 OR :call CocAction('runCommand', 'editor.action.organizeImport')
 
 au BufWritePre * :%s/\s\+$//e " trailing spaces
+au FileType go au BufWritePre <buffer> Fmt
 
 " list of the extensions to make sure are always installed
 let g:coc_global_extensions = [
@@ -629,3 +637,9 @@ let g:coc_global_extensions = [
             \'coc-git',
             \'coc-highlight',
             \]
+
+autocmd ColorScheme * highlight CocErrorFloat guifg=#ffffff
+autocmd ColorScheme * highlight CocInfoFloat guifg=#ffffff
+autocmd ColorScheme * highlight CocWarningFloat guifg=#ffffff
+autocmd ColorScheme * highlight SignColumn guibg=#adadad
+
