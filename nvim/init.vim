@@ -6,6 +6,8 @@
 "
 " version 1.1.0
 "
+" Waldir Borba Junior
+"
 
 " vim-bootstrap
 
@@ -238,14 +240,6 @@ nnoremap N Nzzzv
 if exists("*fugitive#statusline")
   set statusline+=%{fugitive#statusline()}
 endif
-
-" vim-airline
-let g:airline_theme = 'powerlineish'
-let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#ale#enabled = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tagbar#enabled = 1
-let g:airline_skip_empty_sections = 1
 
 "*****************************************************************************
 "" Abbreviations
@@ -548,6 +542,16 @@ endif
 "*****************************************************************************
 
 " vim-airline
+let g:airline_theme = 'gruvbox'
+let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#ale#enabled = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tagbar#enabled = 1
+let g:airline_skip_empty_sections = 1
+
+let airline#extensions#coc#error_symbol = '✘:'
+let airline#extensions#coc#warning_symbol = '⚠:'
+
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
 endif
