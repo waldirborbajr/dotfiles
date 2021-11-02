@@ -19,7 +19,9 @@ call plug#begin(expand('~/.config/nvim/plugged'))
 "}}}
 
 " ================= looks and GUI stuff ================== "{{{
-
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'airblade/vim-gitgutter'
 Plug 'ryanoasis/vim-devicons'                           " pretty icons everywhere
 Plug 'luochen1990/rainbow'                              " rainbow parenthesis
 Plug 'Jorengarenar/vim-MvVis'                           " move visual selection
@@ -38,9 +40,12 @@ Plug 'tpope/vim-commentary'                             " better commenting
 Plug 'mhinz/vim-startify'                               " cool start up screen
 Plug 'tpope/vim-fugitive'                               " git support
 Plug 'psliwka/vim-smoothie'                             " some very smooth ass scrolling
+
 call plug#end()
 
 "}}}
+
+set completeopt=menu,menuone,noselect
 
 " ==================== general config ======================== "{{{
 
@@ -56,7 +61,6 @@ set wrap breakindent                                    " wrap long lines to the
 set encoding=utf-8                                      " text encoding
 set number                                              " enable numbers on the left
 set relativenumber                                      " current line is 0
-set title                                               " tab title as file name
 set noshowmode                                          " dont show current mode below statusline
 set noshowcmd                                           " to get rid of display of last command
 set conceallevel=2                                      " set this so we wont break indentation plugin
@@ -94,6 +98,14 @@ set updatetime=100
 set shortmess+=c
 set signcolumn=yes
 
+"" Use modeline overrides
+set modeline
+set modelines=10
+
+set title
+set titleold="Terminal"
+set titlestring=%F
+
 " Themeing
 colorscheme gruvbox                                     " vim-material
 hi Pmenu guibg='#00010a' guifg=white                    " popup menu colors
@@ -116,19 +128,7 @@ hi CocCursorRange guibg=#b16286 guifg=#ebdbb2
 
 " ======================== Plugin Configurations ======================== "{{{
 
-"" built in plugins
-let loaded_netrw = 0                                    " diable netew
-let g:omni_sql_no_default_maps = 1                      " disable sql omni completion
-let g:loaded_python_provider = 0
-let g:loaded_perl_provider = 0
-let g:loaded_ruby_provider = 0
-let g:python3_host_prog = expand('/usr/local/bin/python3')
-
 "" coc
-
-" Navigate snippet placeholders using tab
-let g:coc_snippet_next = '<Tab>'
-let g:coc_snippet_prev = '<S-Tab>'
 
 " list of the extensions to make sure are always installed
 let g:coc_global_extensions = [
@@ -215,6 +215,9 @@ au BufEnter * set fo-=c fo-=r fo-=o                     " stop annoying auto com
 au FileType help wincmd L                               " open help in vertical split
 au BufWritePre * :%s/\s\+$//e                           " remove trailing whitespaces before saving
 au CursorHold * silent call CocActionAsync('highlight') " highlight match on cursor hold
+
+" remove trailing whitespaces
+command! FixWhitespace :%s/\s\+$//e
 
 " enable spell only if file type is normal text
 let spellable = ['markdown', 'gitcommit', 'txt', 'text']
@@ -305,20 +308,16 @@ endfunction
 let mapleader = "," " \<Space>
 nnoremap ; :
 nmap \ <leader>q
+
 " Open the vimrc file anytime
-nmap <leader>rl :so ~/.config/nvim/init.vim<CR>
-nmap <leader>re :e ~/.config/nvim/init.vim<CR>
-nmap <leader>q :bd<CR>
-" nmap <leader>w :w<CR>
+nmap <leader>sc :so ~/.config/nvim/init.vim<CR>
+nmap <leader>ec :tabnew ~/.config/nvim/init.vim<CR>
+
 map <leader>s :Format<CR>
-nmap <Tab> :bnext<CR>
-nmap <S-Tab> :bprevious<CR>
-" noremap <leader>e :PlugInstall<CR>
-" noremap <C-q> :q<CR>
+nmap <tab> :bn<CR>
+nmap <S-tab> :bp<CR>
 vnoremap > >gv
 vnoremap < <gv
-"nnoremap <Tab> >>_
-"nnoremap <S-Tab> <<_
 inoremap <S-Tab> <C-D>
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
@@ -369,6 +368,10 @@ nnoremap <F2> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 
 "" FZF
 nnoremap <silent> <leader>f :Files<CR>
+let Grep_Default_Options = '-IR'
+let Grep_Skip_Files = '*.log *.db'
+let Grep_Skip_Dirs = '.git node_modules'
+
 nmap <leader>b :Buffers<CR>
 nmap <leader>c :Commands<CR>
 nmap <leader>t :BTags<CR>
@@ -382,10 +385,10 @@ imap <F1> <plug>(fzf-maps-i)
 vmap <F1> <plug>(fzf-maps-x)
 
 "" Buffer nav
-noremap <leader>z :bp<CR>
-noremap <leader>q :bp<CR>
-noremap <leader>x :bn<CR>
-noremap <leader>w :bn<CR>
+" noremap <leader>z :bp<CR>
+" noremap <leader>q :bp<CR>
+" noremap <leader>x :bn<CR>
+" noremap <leader>w :bn<CR>
 
 "" Close buffer
 noremap <leader>c :bd<CR>
@@ -440,6 +443,9 @@ xmap <leader>a <Plug>(coc-codeaction-selected)
 " fugitive mappings
 nmap <leader>gd :Gdiffsplit<CR>
 nmap <leader>gb :Git blame<CR>
+if exists("*fugitive#statusline")
+  set statusline+=%{fugitive#statusline()}
+endif
 
 
 "}}}
@@ -505,6 +511,7 @@ let g:go_auto_sameids = 0
 let g:go_auto_type_info = 1
 
 autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=2 shiftwidth=2 softtabstop=2
+autocmd Filetype go setlocal tabstop=2 shiftwidth=2 softtabstop=2
 
 augroup go
 
@@ -532,4 +539,68 @@ augroup go
 
 augroup END
 
+" Airline
+let g:airline_powerline_fonts = 1
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+" unicode symbols
+let g:airline_left_sep = '»'
+let g:airline_left_sep = '▶'
+let g:airline_right_sep = '«'
+let g:airline_right_sep = '◀'
+let g:airline_symbols.linenr = '␊'
+let g:airline_symbols.linenr = '␤'
+let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.branch = '⎇'
+let g:airline_symbols.paste = 'ρ'
+let g:airline_symbols.paste = 'Þ'
+let g:airline_symbols.paste = '∥'
+let g:airline_symbols.whitespace = 'Ξ'
+
+" airline symbols
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = ''
+" let g:airline#extensions#tabline#left_sep = ' '
+" let g:airline#extensions#tabline#left_alt_sep = '|'
+" let g:airline#extensions#tabline#formatter = 'default'
+
+" GitGutter
+let g:gitgutter_max_signs = 500  " default value (Vim < 8.1.0614, Neovim < 0.4.0)
+let g:gitgutter_max_signs = -1   " default value (otherwise)
+let g:gitgutter_show_msg_on_hunk_jumping = 0
+let g:gitgutter_sign_added = 'xx'
+let g:gitgutter_sign_modified = 'yy'
+let g:gitgutter_sign_removed = 'zz'
+let g:gitgutter_sign_removed_first_line = '^^'
+let g:gitgutter_sign_removed_above_and_below = '{'
+let g:gitgutter_sign_modified_removed = 'ww'
+nmap ]h <Plug>(GitGutterNextHunk)
+nmap [h <Plug>(GitGutterPrevHunk)
+
+" terminal emulation
+nnoremap <silent> <leader>sh :terminal<CR>
+
+"" Split
+noremap <Leader>h :<C-u>split<CR>
+noremap <Leader>v :<C-u>vsplit<CR>
+
+"" Set working directory
+nnoremap <leader>. :lcd %:p:h<CR>
+
+"" Opens an edit command with the path of the currently edited file filled in
+noremap <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
+
+"" Opens a tab edit command with the path of the currently edited file filled
+noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
+
+function! go#def#Jump(mode, type) abort
+  let l:fname = fnamemodify(expand("%"), ':p:gs?\\?/?')
+  let l:fname = fnamemodify(l:fname, ':gs?fugitive?file?')
+endfunction
 
