@@ -9,9 +9,7 @@
     "markdown",
     "yaml"
   ],
-
   "codeLens.enable": true,
-
   // suggest settings
   "suggest.floatEnable": true,
   "suggest.enablePreview": false,
@@ -50,7 +48,6 @@
     "typeParameter": "\uf278",
     "default": "\uf29c"
   },
-
   // diagnostic settings
   "diagnostic.displayByAle": false,
   "diagnostic.refreshOnInsertMode": true,
@@ -62,28 +59,28 @@
   "diagnostic.virtualTextPrefix": " ❯❯❯ ",
   "diagnostic.virtualText": true,
   "diagnostic.enableMessage": "never",
-
   // list settings
   "list.source.grep.command": "rg",
-
   // git settings
-  "git.topRemovedSign.text": "▌",
-  "git.changeRemovedSign.text": "▌",
-  "git.removedSign.text": "▌",
-  "git.addedSign.text": "▌",
-  "git.changedSign.text": "▌",
-
+  "git.enableGutters": true,
+  "git.addedSign.text": "┃",
+  "git.changedSign.text": "┃",
+  "git.removedSign.text": "▁",
+  "git.topRemovedSign.text": "▔",
+  "git.changeRemovedSign.text": "▔",
   "json.enable": true,
   "json.format.enable": true,
-
   // other language specific settings
   "prettier.proseWrap": "always",
-
   "languageserver": {
     "golang": {
       "command": "gopls",
-      "rootPatterns": ["go.mod"],
-      "filetypes": ["go"],
+      "rootPatterns": [
+        "go.mod"
+      ],
+      "filetypes": [
+        "go"
+      ],
       "initializationOptions": {
         "gocodeCompletionEnabled": true,
         "diagnosticsEnabled": true,
@@ -91,7 +88,6 @@
       }
     }
   },
-
   "go.goplsOptions": {
     "staticcheck": true
   }

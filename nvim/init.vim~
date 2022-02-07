@@ -117,8 +117,7 @@ source ~/.config/nvim/plugins/vim-go.vim
 source ~/.config/nvim/plugins/commentary.vim
 source ~/.config/nvim/plugins/context-commentstring.vim
 source ~/.config/nvim/plugins/dispatch.vim
-"source ~/.config/nvim/plugins/dracula.vim
-source ~/.config/nvim/plugins/nord.vim
+source ~/.config/nvim/plugins/dracula.vim
 source ~/.config/nvim/plugins/editorconfig.vim
 source ~/.config/nvim/plugins/eunuch.vim
 source ~/.config/nvim/plugins/exchange.vim
