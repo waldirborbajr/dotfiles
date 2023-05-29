@@ -1,0 +1,104 @@
+#
+#  █████╗ ██╗      █████╗  ██████╗██████╗ ██╗████████╗████████╗██╗   ██╗
+# ██╔══██╗██║     ██╔══██╗██╔════╝██╔══██╗██║╚══██╔══╝╚══██╔══╝╚██╗ ██╔╝
+# ███████║██║     ███████║██║     ██████╔╝██║   ██║      ██║    ╚████╔╝
+# ██╔══██║██║     ██╔══██║██║     ██╔══██╗██║   ██║      ██║     ╚██╔╝
+# ██║  ██║███████╗██║  ██║╚██████╗██║  ██║██║   ██║      ██║      ██║
+# ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝   ╚═╝      ╚═╝      ╚═╝
+# A cross-platform, OpenGL terminal emulator.
+# https://alacritty.org
+
+import:
+  # uncomment the flavour you want below:
+  # - ~/.config/alacritty/catppuccin/catppuccin-mocha.yml
+  #  - ~/.config/alacritty/catppuccin/catppuccin-macchiato.yml
+  - ~/.config/alacritty/catppuccin/catppuccin-frappe.yml
+    #  - ~/.config/alacritty/catppuccin/catppuccin-latte.yml
+
+live_config_reload: true
+
+env:
+  # TERM: xterm-256color
+  TERM: alacritty
+
+selection:
+  save_to_clipboard: true
+  text: CellBackground
+
+window:
+  opacity: 0.95
+  # padding:
+  #   x: 2
+  #   y: 2
+  # dynamic_padding: false
+  # dynamic_title: true
+  decoration: none 
+
+mouse:
+  hide_when_typing: true
+
+font:
+  normal:
+    family: "FiraCode Nerd Font"
+    style: Regular
+  # bold:
+  #   family: "JetBrainsMono Nerd Font"
+  #   style: Bold
+  # italic:
+  #   family: "JetBrainsMono Nerd Font"
+  #   style: Italic
+  # bold_italic:
+  #   family: "JetBrainsMono Nerd Font"
+  #   style: Bold Italic
+  size: 10.5
+  # offset:
+  #   y: 2
+  # glyph_offset:
+  #   y: 2
+
+scrolling:
+  history: 2000
+  auto_scroll: true
+
+cursor:
+  unfocused_hollow: true
+  style:
+    blinking: Never
+
+# draw_bold_text_with_bright_colors: false
+
+shell:
+  program: /usr/bin/zsh
+  # args:
+  #   - -c
+  #   - zellij a -c 'B+ DevOps'
+
+key_bindings:
+  - { key: N, mods: Command|Control, action: CreateNewWindow }
+  # - { key: N,      mods: Command|Control,         action: SpawnNewInstance }
+  - { key: Q, mods: Command|Control, action: Quit }
+  - { key: W, mods: Command|Control, action: Quit }
+  - { key: F11, action: ToggleFullscreen }
+  - { key: V, mods: Control|Shift, action: Paste }
+  - { key: C, mods: Control|Shift, action: Copy }
+  - { key: Insert, mods: Shift, action: PasteSelection }
+  - { key: Key0, mods: Control, action: ResetFontSize }
+  - { key: Equals, mods: Control, action: IncreaseFontSize }
+  - { key: Paste, action: Paste }
+  - { key: Copy, action: Copy }
+  - { key: L, mods: Control, action: ClearLogNotice }
+  - { key: L, mods: Control, chars: "\x0c" }
+
+  # ----------------------------------------
+  # Tmux Integration
+  # ----------------------------------------
+  # Create new window
+  - { key: T, mods: Command|Control, chars: "\x01\x63" }
+  # Create new window with -> btm
+  - { key: B, mods: Command|Control, chars: "\x01\x62" }
+  # Create new window with -> lazygit
+  - { key: Z, mods: Command|Control, chars: "\x01\x7a" }
+  #  Tmux Sessions
+  - { key: S, mods: Command|Control, chars: "\x01\x30" }
+  # Create new window with -> lf
+  - { key: E, mods: Command|Control, chars: "\x01\x65" }

@@ -1,0 +1,17 @@
+{ pkgs ? import <nixpkgs> {} }:
+
+with pkgs;
+
+mkShell {
+  shellHook = ''
+    alias ll="ls -la"
+  '';
+
+  buildInputs = [
+   mariadb
+   sqlite
+   bottom
+   htop
+  ];
+
+}
