@@ -1,6 +1,6 @@
 export ZSH="$HOME/.oh-my-zsh"
 
-ZSH_THEME=""
+ZSH_THEME="simple"
 
 # Which plugins would you like to load?
 plugins=(
@@ -75,9 +75,7 @@ setopt HIST_NO_STORE  ## Do not add history and fc commands to the history
 setopt HIST_FIND_NO_DUPS
 setopt HIST_SAVE_NO_DUPS
 
-source $HOME/git.zsh
-source $HOME/aliases.generic.zsh
-source $HOME/aliases.git.zsh
+source $HOME/alias.generic.zsh
 
 #------- NVIM -------
 #--------------------
