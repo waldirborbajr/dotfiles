@@ -41,6 +41,7 @@ symblink .curlrc
 symblink .ripgreprc
 
 symblink rustfmt
+symblink bin
 
 # symblink .gitcompletion.bash
 # symblink .kubecompletion.bash

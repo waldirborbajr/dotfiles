@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+# touch ~/.local/bin/lf-pick
+# chmod +x ~/.local/bin/lf-pick
+
+function lfp() {
+  local TEMP=$(mktemp)
+  $HOME/go/bin/lf -selection-path=$TEMP
+  cat $TEMP
+}
+
+lfp

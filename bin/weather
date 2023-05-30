@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+curl "https://wttr.in/${1}"
+

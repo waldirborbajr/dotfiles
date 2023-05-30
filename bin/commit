@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+[[ ! -z "$*" ]] && _commit_message="$*" || _commit_message="feat: update"
+git add -p
+git commit -m "$_commit_message"
+git push origin HEAD
