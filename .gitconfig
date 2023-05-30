@@ -23,10 +23,10 @@
   branch = auto
   interactive = auto
   grep = auto
-  ui = true
+  ui = auto
 
-[hub]
-  protocol = https
+#[hub]
+#  protocol = https
 
 [github]
 	user = waldirborbajr
@@ -59,6 +59,8 @@
 	ps = "!git push origin $(git rev-parse --abbrev-ref HEAD)"
 	pl = "!git pull origin $(git rev-parse --abbrev-ref HEAD)"
 	st = status
+	swc = switch -c ${1}
+	swm = switch main
 	br = branch
 	ba = branch -a
 	bm = branch --merged
