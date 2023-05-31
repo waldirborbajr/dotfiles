@@ -35,13 +35,13 @@ runIfExists "brew" "brew update"
 runIfExists "brew" "brew upgrade"
 
 # nvm is a bash function, not a builtin, file or alias
-if [ -d .nvm ] && [ -s .nvm/nvm.sh ]; then
-  NVM_DIR="$HOME/.nvm"
-  source .nvm/nvm.sh
-  run "nvm install lts/*"
-  run "nvm alias default lts/*"
-  run "nvm use default"
-fi
+# if [ -d .nvm ] && [ -s .nvm/nvm.sh ]; then
+#   NVM_DIR="$HOME/.nvm"
+#   source .nvm/nvm.sh
+#   run "nvm install --lts"
+#   run "nvm alias default --lts"
+#   run "nvm use default"
+# fi
 
 # runIfExists "npm" "npm install -g npm"
 runIfExists "pnpm" "pnpm install -g pnpm"
