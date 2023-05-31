@@ -59,7 +59,7 @@
 	ps = "!git push origin $(git rev-parse --abbrev-ref HEAD)"
 	pl = "!git pull origin $(git rev-parse --abbrev-ref HEAD)"
 	st = status
-	swc = "switch -c ${1}"
+	swc =switch -c 
 	swm = switch main
 	br = branch
 	ba = branch -a
