@@ -9,6 +9,9 @@ cargo install ripgrep
 cargo install irust
 cargo install bacon
 cargo install cargo-info
+cargo install cargo-watch
+# cargo install diesel_cli
+cargo install diesel_cli --no-default-features --features sqlite
 cargo install ncspot
 cargo install porsmo
 cargo install speedtest-rs
