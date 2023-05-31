@@ -32,14 +32,13 @@ export HISTORY_IGNORE="(ls|cd|pwd|exit|sudo reboot|history|cd -|cd ..)"
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export GOPATH=$HOME/go
-# export GOROOT=/usr/local/go
+export GOROOT=/usr/local/go
 # export TINYGO=/usr/local/tinygo
 # export SCRIPTS=$HOME/.config/scripts
 # export SNAP=/snap
 #
-export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
 export PATH=$PATH:$HOME/.local/share/nvim/lspinstall/lua-language-server/bin/
-export PATH=$PATH:$GOBINARY
 export PATH=$PATH:$HOME/bin:$HOME/.local/bin:$HOME/go/bin:$HOME/.cargo/bin
 # Settings
 export HISTCONTROL="ignorespace"
