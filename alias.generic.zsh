@@ -58,7 +58,7 @@ alias tmks='tmux kill-server'
 alias r='reset'
 alias c='clear'
 # alias syshealth='sudo nala update && sudo nala upgrade -y && sudo nala autoremove -y && sudo nala autopurge -y && sudo nala clean && flatpak update && flatpak upgrade'
-alias syshealth='sudo nala update && sudo nala upgrade -y && sudo nala autoremove -y && sudo nala autopurge -y && sudo nala clean'
+# alias syshealth='sudo nala update && sudo nala upgrade -y && sudo nala autoremove -y && sudo nala autopurge -y && sudo nala clean'
 alias du='du -hsx * | sort -rh | head -20'
 # install tealdeer - tldr --update
 alias tldrf='tldr --list | fzf --preview "tldr {1} --color=always" --preview-window=right,70% | xargs tldr'
