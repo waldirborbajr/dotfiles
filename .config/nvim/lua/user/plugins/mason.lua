@@ -1,59 +1,46 @@
+-- customize mason plugins
 return {
-	'williamboman/mason.nvim',
-	dependencies = {
-		'williamboman/mason-lspconfig.nvim',
-		'jayp0521/mason-null-ls.nvim',
-	},
-	config = function()
-		local mason = require('mason')
-		local mason_lspconfig = require('mason-lspconfig')
-		-- local mason_null_ls = require('mason-null-ls')
-		-- enable mason
-		mason.setup({
-			ui = {
-				icons = {
-					package_installed = '✓',
-					package_pending = '➜',
-					package_uninstalled = '✗',
-				},
-			},
-		})
-
-		mason_lspconfig.setup({
-			ensure_installed = {
-				'tsserver',
-				'html',
-				'bashls',
-				'cssls',
-				'dockerls',
-				'eslint',
-				'jsonls',
-        'vuels',
-        'volar',
-				'marksman',
-				'yamlls',
-				'tailwindcss',
-				'lua_ls',
-				'emmet_ls',
-        "gopls",
-        "golangci_lint_ls",
-        "rust_analyzer",
-        "taplo",
-			},
-			-- auto-install configured servers (with lspconfig)
-			automatic_installation = true, -- not the same as ensure_installed
-		})
-
-		-- mason_null_ls.setup({
-		-- 	-- list of formatters & linters for mason to install
-		-- 	ensure_installed = {
-		-- 		'prettier', -- ts/js formatter
-		-- 		'stylua', -- lua formatter
-		-- 		'eslint_d', -- ts/js linter
-		-- 		'markdownlint', -- markdown linter
-		-- 	},
-		-- 	-- auto-install configured formatters & linters (with null-ls)
-		-- 	automatic_installation = true,
-		-- })
-	end,
+  -- use mason-lspconfig to configure LSP installations
+  {
+    "williamboman/mason-lspconfig.nvim",
+    -- overrides `require("mason-lspconfig").setup(...)`
+    opts = function(_, opts)
+      -- add more things to the ensure_installed table protecting against community packs modifying it
+      opts.ensure_installed = require("astronvim.utils").list_insert_unique(opts.ensure_installed, {
+        -- "cssls",            -- CSS
+        -- "eslint",           -- ESLint
+        -- "html",             -- HTML
+        -- "tailwindcss",      -- Taiwind CSS
+        -- "tsserver",         -- JavaScript and TypeScript
+        -- "emmet_ls",
+        -- "volar",            -- VueJs
+        -- "yamlls", -- YAML
+        -- "gopls",            -- GO
+        -- "golangci_lint_ls", -- GO Lint
+        -- "rust_analyzer", -- Rust
+        -- "taplo",
+        "lua_ls",
+        -- "omnisharp",
+      })
+    end,
+  },
+  -- use mason-null-ls to configure Formatters/Linter installation for null-ls sources
+  {
+    "jay-babu/mason-null-ls.nvim",
+    -- overrides `require("mason-null-ls").setup(...)`
+    opts = function(_, opts)
+      -- add more things to the ensure_installed table protecting against community packs modifying it
+      opts.ensure_installed = require("astronvim.utils").list_insert_unique(opts.ensure_installed, {
+      })
+    end,
+  },
+  {
+    "jay-babu/mason-nvim-dap.nvim",
+    -- overrides `require("mason-nvim-dap").setup(...)`
+    opts = function(_, opts)
+      -- add more things to the ensure_installed table protecting against community packs modifying it
+      opts.ensure_installed = require("astronvim.utils").list_insert_unique(opts.ensure_installed, {
+      })
+    end,
+  },
 }

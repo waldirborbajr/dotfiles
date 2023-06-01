@@ -1,15 +1,17 @@
-return {
+local prefix = "<leader>x"
 
-    "folke/trouble.nvim",
-  keys={
-    "<leader>xx","<cmd>TroubleToggle<cr>"
+return {
+  "folke/trouble.nvim",
+  cmd = { "TroubleToggle", "Trouble" },
+  keys = {
+    { prefix,        desc = "Trouble" },
+    { prefix .. "q", "<cmd>TroubleToggle quickfix<cr>", desc = "Quickfix List (Trouble)" },
   },
-    dependencies = "nvim-tree/nvimweb-devicons",
-    config = function()
-      require("trouble").setup {
-        -- your configuration comes here
-        -- or leave it empty to use the default settings
-        -- refer to the configuration section below
-      }
-    end
+  opts = {
+    use_diagnostic_signs = true,
+    action_key = {
+      close = { "q", "<esc>" },
+      cancel = "c-e",
+    },
+  },
 }
