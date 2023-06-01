@@ -28,6 +28,8 @@ return {
 				'dockerls',
 				'eslint',
 				'jsonls',
+        'vuels',
+        'volar',
 				'marksman',
 				'yamlls',
 				'tailwindcss',
