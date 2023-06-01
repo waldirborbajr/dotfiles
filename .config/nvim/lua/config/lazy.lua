@@ -1,3 +1,4 @@
+
 -- Lazy bootstrap
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -48,15 +49,15 @@ require("lazy").setup('plugins', {
     -- try to load one of these colorschemes when starting an installation during startup
     colorscheme = { "catppuccin" }
   },
-	change_detection = {
-		enabled = true,
-		notify = false,
-	},
+  change_detection = {
+    enabled = true,
+    notify = false,
+  },
   checker = {
-    notify = false,   -- integrated with lualine. Lazy will show a number of available updates on the lualine
+    enabled = true,
+    notify = false,  -- integrated with lualine. Lazy will show a number of available updates on the lualine
     frequency = 86400, -- every 24 hours
-    enabled = true
-  },                  -- automatically check for plugin updates
+  },
   performance = {
     cache = {
       enabled = true,
