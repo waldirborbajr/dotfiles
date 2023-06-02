@@ -5,7 +5,7 @@
 //   - detach (Default)
 //   - quit
 //
-// on_force_close "quit"
+on_force_close "detach"
 
 //  Send a request for a simplified ui (without arrow fonts) to plugins
 //  Options:
@@ -17,7 +17,7 @@
 // Choose the path to the default shell that zellij will use for opening new panes
 // Default: $SHELL
 //
-// default_shell "zsh"
+default_shell "zsh"
 
 // Toggle between having pane frames around the panes
 // Options:
@@ -109,6 +109,11 @@ scroll_buffer_size 20000
 // The folder in which Zellij will look for themes
 //
 // theme_dir "/path/to/my/theme_dir"
+
+// uncomment this and adjust key if using copy_on_select=false
+normal {
+bind "Ctrl q" { session "Detach"; }
+  }
 
 plugins {
     tab-bar { path "tab-bar"; }
