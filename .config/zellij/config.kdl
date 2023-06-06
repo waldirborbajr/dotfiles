@@ -33,7 +33,6 @@ pane_frames false
 //
 // auto_layout true
 
-
 // Choose the theme that is specified in the themes section.
 // Default: default
 //
@@ -114,9 +113,13 @@ scroll_buffer_size 20000
 
 // keybindins clear-defaults=true{
 keybinds{
-// normal {
-    unbind "Ctrl q" // { session "Detach"; }
-//   }
+    unbind "Ctrl q" 
+}
+
+ui {
+    pane_frames {
+        rounded_corners true
+    }
 }
 
 plugins {
