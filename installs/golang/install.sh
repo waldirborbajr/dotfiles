@@ -25,5 +25,6 @@ go install github.com/kyleconroy/sqlc/cmd/sqlc@latest
 go install github.com/spf13/cobra-cli@latest
 env CGO_ENABLED=0 go install -ldflags="-s -w" github.com/gokcehan/lf@latest
 go install github.com/dundee/gdu/v5/cmd/gdu@latest
+go install -v github.com/incu6us/goimports-reviser/v3@latest
 
 

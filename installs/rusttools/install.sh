@@ -19,3 +19,4 @@ cargo install rtx-cli
 cargo install bottom --locked
 cargo install zoxide --locked
 cargo install tealdeer --locked
+cargo install rm-improved

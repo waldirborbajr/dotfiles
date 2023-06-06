@@ -111,9 +111,13 @@ scroll_buffer_size 20000
 // theme_dir "/path/to/my/theme_dir"
 
 // uncomment this and adjust key if using copy_on_select=false
-normal {
-bind "Ctrl q" { session "Detach"; }
-  }
+
+// keybindins clear-defaults=true{
+keybinds{
+// normal {
+    unbind "Ctrl q" // { session "Detach"; }
+//   }
+}
 
 plugins {
     tab-bar { path "tab-bar"; }
