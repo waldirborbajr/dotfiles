@@ -1,5 +1,9 @@
 // Keyboard config
-
+keybinds {
+		normal {
+				unbind "Ctrl q"
+			}
+	}
 
 // General config 
 
