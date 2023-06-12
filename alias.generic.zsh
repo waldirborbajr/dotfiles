@@ -79,6 +79,12 @@ alias rmf="rm -rf"
 
 alias tree="ll --tree --level=4 -a -I=.git --git-ignore"
 
+alias loc="wc -l"
+alias mkvenv="python -m venv .venv"
+alias tree="exa --tree --all --icons --ignore-glob='.git' --git-ignore"
+alias dateiso="date +%Y-%m-%dT%H:%M:%S%z"
+alias top="btop --utf-force"
+
 alias pbcopy='xclip -selection clipboard'
 alias pbpaste='xclip -selection clipboard -o'
 
