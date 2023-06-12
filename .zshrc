@@ -10,6 +10,7 @@ plugins=(
   fast-syntax-highlighting
   zsh-autosuggestions
   zsh-syntax-highlighting
+  zsh-completions
   # zsh-peco-history
   # tmux
 	command-not-found
