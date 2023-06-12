@@ -68,7 +68,7 @@ if [[ -x "$(command -v exa)" ]]; then
   alias l='exa -l --icons -a'
   alias ls="exa --tree --level=2 --long --icons "
   # alias ll="exa --long --header --icons"
-  alias ll="exa --long --all --classify --icons --git --ignore-glob='.git'"
+  alias ll="exa --long --all --classify --icons"
 else
   alias l="ls -lah ${colorflag}"
   alias ll="ls -lFh ${colorflag}"
@@ -81,7 +81,7 @@ alias tree="ll --tree --level=4 -a -I=.git --git-ignore"
 
 alias loc="wc -l"
 alias mkvenv="python -m venv .venv"
-alias tree="exa --tree --all --icons --ignore-glob='.git' --git-ignore"
+alias tree="exa --tree --all --icons --ignore-glob='.git'"
 alias dateiso="date +%Y-%m-%dT%H:%M:%S%z"
 alias top="btop --utf-force"
 
