@@ -57,7 +57,7 @@ INSTALL=(
     bc
     peco
 #    podman
-#    exa
+   exa
 #    bat
     fzf
 #    acpi

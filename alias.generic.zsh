@@ -67,7 +67,8 @@ alias tldrf='tldr --list | fzf --preview "tldr {1} --color=always" --preview-win
 if [[ -x "$(command -v exa)" ]]; then
   alias l='exa -l --icons -a'
   alias ls="exa --tree --level=2 --long --icons "
-  alias ll="exa --long --header --icons"
+  # alias ll="exa --long --header --icons"
+  alias ll="exa --long --all --classify --icons --git --ignore-glob='.git'"
 else
   alias l="ls -lah ${colorflag}"
   alias ll="ls -lFh ${colorflag}"
