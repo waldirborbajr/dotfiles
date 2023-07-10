@@ -23,7 +23,6 @@ env:
 
 selection:
   save_to_clipboard: true
-  text: CellBackground
 
 window:
   opacity: 0.95
@@ -32,7 +31,6 @@ window:
   #   y: 2
   # dynamic_padding: false
   # dynamic_title: true
-  decoration: full 
   dynamic_title: true
 
 mouse:
