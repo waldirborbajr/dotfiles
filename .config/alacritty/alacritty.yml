@@ -54,7 +54,7 @@ font:
   # only works on mac
   # use_thin_strokes: true
 
-draw_bold_text_with_bright_colors: false
+draw_bold_text_with_bright_colors: true
 
 scrolling:
   history: 2000
