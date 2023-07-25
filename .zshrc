@@ -42,6 +42,8 @@ export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
 export PATH=$PATH:$HOME/.local/share/nvim/lspinstall/lua-language-server/bin/
 export PATH=$PATH:$HOME/bin:$HOME/.local/bin:$HOME/go/bin:$HOME/.cargo/bin
 export PATH="$PATH:`pwd`/flutter/bin"
+CHROME_EXECUTABLE=/snap/bin/chromium
+export CHROME_EXECUTABLE
 # Settings
 export HISTCONTROL="ignorespace"
 export HISTFILESIZE=1000000
