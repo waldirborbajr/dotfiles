@@ -1,70 +1,131 @@
+# If you come from bash you might have to change your $PATH.
+# export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+# Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-ZSH_THEME="simple"
+# Set name of the theme to load --- if set to "random", it will
+# load a random theme each time oh-my-zsh is loaded, in which case,
+# to know which specific one was loaded, run: echo $RANDOM_THEME
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+# ZSH_THEME="robbyrussell"
+
+# Set list of themes to pick from when loading at random
+# Setting this variable when ZSH_THEME=random will cause zsh to load
+# a theme from this variable instead of looking in $ZSH/themes/
+# If set to an empty array, this variable will have no effect.
+# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+
+# Uncomment the following line to use case-sensitive completion.
+# CASE_SENSITIVE="true"
+
+# Uncomment the following line to use hyphen-insensitive completion.
+# Case-sensitive completion must be off. _ and - will be interchangeable.
+# HYPHEN_INSENSITIVE="true"
+
+# Uncomment one of the following lines to change the auto-update behavior
+# zstyle ':omz:update' mode disabled  # disable automatic updates
+# zstyle ':omz:update' mode auto      # update automatically without asking
+# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
+
+# Uncomment the following line to change how often to auto-update (in days).
+# zstyle ':omz:update' frequency 13
+
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS="true"
+
+# Uncomment the following line to disable colors in ls.
+# DISABLE_LS_COLORS="true"
+
+# Uncomment the following line to disable auto-setting terminal title.
+# DISABLE_AUTO_TITLE="true"
+
+# Uncomment the following line to enable command auto-correction.
+# ENABLE_CORRECTION="true"
+
+# Uncomment the following line to display red dots whilst waiting for completion.
+# You can also set it to another string to have that shown instead of the default red dots.
+# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
+# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
+# COMPLETION_WAITING_DOTS="true"
+
+# Uncomment the following line if you want to disable marking untracked files
+# under VCS as dirty. This makes repository status check for large repositories
+# much, much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+
+# Uncomment the following line if you want to change the command execution time
+# stamp shown in the history command output.
+# You can set one of the optional three formats:
+# "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
+# or set a custom format using the strftime function format specifications,
+# see 'man strftime' for details.
+# HIST_STAMPS="mm/dd/yyyy"
+
+# Would you like to use another custom folder than $ZSH/custom?
+# ZSH_CUSTOM=/path/to/new-custom-folder
 
 # Which plugins would you like to load?
-plugins=(
-  # git
-  z
-  wd
-  fast-syntax-highlighting
-  zsh-autosuggestions
-  zsh-syntax-highlighting
-  zsh-completions
-  # zsh-peco-history
-  # tmux
-	command-not-found
-	# dotenv
-  # web-search
-  fzf
-)
+# Standard plugins can be found in $ZSH/plugins/
+# Custom plugins may be added to $ZSH_CUSTOM/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(git z zsh-autosuggestions zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
-# Exports
-export USER="${USER:-$(whoami)}"
-export GITUSER="$USER"
-export VISUAL='nvim'
-export EDITOR=$VISUAL
-export GNUTERM="sixelgd size 1600,300 truecolor font arial 16"
-export TERM="xterm-256color"
-export HISTORY_IGNORE="(ls|cd|pwd|exit|sudo reboot|history|cd -|cd ..)"
-# export TERM=screen-256color
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
-export GOPATH=$HOME/go
-export GOROOT=/usr/local/go
-# export TINYGO=/usr/local/tinygo
-# export SCRIPTS=$HOME/.config/scripts
-# export SNAP=/snap
+# User configuration
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
+
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
+
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
+
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
 #
-export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
-export PATH=$PATH:$HOME/.local/share/nvim/lspinstall/lua-language-server/bin/
-export PATH=$PATH:$HOME/bin:$HOME/.local/bin:$HOME/go/bin:$HOME/.cargo/bin
-# -- Flutter / Dart
-export PATH="$PATH:`pwd`/flutter/bin"
-CHROME_EXECUTABLE=/snap/bin/chromium
-export CHROME_EXECUTABLE
-export PATH=$PATH:/opt/android-studio/bin
-# Settings
-export HISTCONTROL="ignorespace"
-export HISTFILESIZE=1000000
-export HISTSIZE=1000000
-export VISUAL=vim
-export EDITOR=nvim
-export FZF_DEFAULT_OPTS=--reverse
-export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
-    --color=fg:-1,bg:-1,fg+:-1,bg+:-1,hl+:4,hl:4
-    --color=spinner:-1,info:-1,prompt:-1,pointer:1'
-export RIPGREP_CONFIG_PATH=$HOME/.ripgreprc
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# Peco config
-ZSH_PECO_HISTORY_OPTS="--layout=bottom-up --initial-filter=Fuzzy"
+alias v=nvim
+alias vi=nvim
+alias r=reset
+alias rmvim="rm -rf ~/.local/share/nvim && rm -rf ~/.cache/nvim && rm -rf ~/.local/state/nvim "
 
-# Do not save ZSH duplicate history
-[ -z "$HISTFILE" ] && HISTFILE="$HOME/.zsh_history"
-[ "$HISTSIZE" -lt 50000 ] && HISTSIZE=50000
-[ "$SAVEHIST" -lt 10000 ] && SAVEHIST=10000
+## Zellij
+alias zj="zellij a -c 'B+ DevOps'"
+alias zjrust="zellij --layout $HOME/.config/zellij/zelliRUST.kdl a -c 'B+ DevRust'"
+alias zjgo="zellij --layout $HOME/.config/zellij/zelliGO.kdl a -c 'B+ DeviGO'"
+alias zka="zellij ka -y"
+alias zrn="zellij r -- $1"
+
+export OPT_PATH=/opt
+export CHROME_EXECUTABLE=/snap/bin/chromium
+export FLUTTER_HOME=/opt/flutter
+export ANDROID_STUDIO=/opt/android-studio
+export GOPATH=/usr/local/go
+export GOBIN=/home/borba/go
+export DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
+export STARSHIP_CONFIG=$HOME/.config/starship/starship.toml
+
+export PATH=$PATH:$ANDROID_STUDIO/bin:$FLUTTER_HOME/bin:$OPT_PATH/bin:$GOPATH/bin:$GOBIN/bin:$DOCKER_CONFIG/cli-plugins
+
+# used at docker-compose to avoid create volume as root
+export UID=$(id -u)
+export GID=$(id -g)
 
 ## History command configuration
 setopt share_history
@@ -80,36 +141,17 @@ setopt HIST_NO_STORE  ## Do not add history and fc commands to the history
 setopt HIST_FIND_NO_DUPS
 setopt HIST_SAVE_NO_DUPS
 
-source $HOME/alias.generic.zsh
+function createVenv(){
+  # dest="${PWD##*/}"
+  dest="$1"
 
-#------- NVIM -------
-#--------------------
-alias nvim-astro="NVIM_APPNAME=AstroNvim nvim"
-
-function nvims() {
-  items=("default" "AstroNvim")
-  config=$(printf "%s\n" "${items[@]}" | fzf --prompt=" Neovim Config  " --layout=reverse --border --exit-0)
-  if [[ -z $config ]]; then
-    echo "Nothing selected"
-    return 0
-  elif [[ $config == "default" ]]; then
-    config=""
+  if python3 -m venv "$dest" ; then
+    cd "$dest"
+    source "./bin/activate"
+    [ ! -f "./requirements.txt" ] || pip install -r requirements.txt
+  else
+     echo "Failed to create 'venv' environment" >&2
   fi
-  NVIM_APPNAME=$config nvim $@
 }
 
-bindkey -s ^\\ "nvims\n"
-#------- NVIM -------
-#--------------------
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# pnpm
-export PNPM_HOME="/home/borba/.local/share/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
+eval "$(starship init zsh)"
