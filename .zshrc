@@ -121,14 +121,15 @@ alias zrn="zellij r -- $1"
 
 export OPT_PATH=/opt
 export CHROME_EXECUTABLE=/snap/bin/chromium
-export FLUTTER_HOME=/opt/flutter
-export ANDROID_STUDIO=/opt/android-studio
+# export FLUTTER_HOME=/opt/flutter
+# export ANDROID_STUDIO=/opt/android-studio
 export GOPATH=/usr/local/go
 export GOBIN=/home/borba/go
-export DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
+# export DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
 export STARSHIP_CONFIG=$HOME/.config/starship/starship.toml
 
-export PATH=$PATH:$ANDROID_STUDIO/bin:$FLUTTER_HOME/bin:$OPT_PATH/bin:$GOPATH/bin:$GOBIN/bin:$DOCKER_CONFIG/cli-plugins
+# export PATH=$PATH:$ANDROID_STUDIO/bin:$FLUTTER_HOME/bin:$OPT_PATH/bin:$GOPATH/bin:$GOBIN/bin:$DOCKER_CONFIG/cli-plugins
+export PATH=$PATH:$OPT_PATH/bin:$GOPATH/bin:$GOBIN/bin
 
 # used at docker-compose to avoid create volume as root
 export UID=$(id -u)
@@ -159,6 +160,13 @@ function createVenv(){
   else
      echo "Failed to create 'venv' environment" >&2
   fi
+}
+
+function getgo(){
+  version="$1"
+  wget https://go.dev/dl/go${version}.linux-amd64.tar.gz
+  sudo rm -rf /usr/local/go
+  sudo tar -C /usr/local -xzf go${version}.linux-amd64.tar.gz
 }
 
 eval "$(starship init zsh)"
