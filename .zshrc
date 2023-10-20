@@ -100,6 +100,8 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+alias '?'=searchOnDuck
+alias '??'=searchOnGoogle
 alias v=nvim
 alias vi=nvim
 alias r=reset
