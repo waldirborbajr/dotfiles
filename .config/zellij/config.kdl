@@ -2,10 +2,11 @@
 keybinds {
 		normal {
 				unbind "Ctrl q"
+				unbind "Ctrl g"
 			}
 	}
 
-// General config 
+// General config
 
 plugins {
 	tab-bar { path "tab-bar"; }
@@ -25,5 +26,4 @@ default_shell "zsh"
 theme "catppuccin-frappe"
 
 // default_layout "compact"
-
 
