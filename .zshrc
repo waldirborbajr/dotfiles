@@ -106,6 +106,11 @@ alias v=nvim
 alias vi=nvim
 alias r=reset
 alias rmvim="rm -rf ~/.local/share/nvim && rm -rf ~/.cache/nvim && rm -rf ~/.local/state/nvim "
+alias cargoupdate="cargo install $(cargo install --list | egrep '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ') --force"
+# reload zsh config
+alias reload!='RELOAD=1 source ~/.zshrc'
+# remove broken symlinks
+alias clsym="find -L . -name . -o -type d -prune -o -type l -exec rm {} +"
 
 ## Zellij
 alias zj="zellij a -c 'B+ DevOps'"
