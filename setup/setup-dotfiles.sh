@@ -24,10 +24,11 @@ symblink() {
 symblink .config/alacritty
 symblink .config/bat
 symblink .config/htop
-symblink .config/nvim
+# symblink .config/nvim
 symblink .config/peco
 symblink .config/tealdeer
 symblink .config/zellij
+symblink .config/starship
 
 symblink .zshrc
 symblink .zshenv
