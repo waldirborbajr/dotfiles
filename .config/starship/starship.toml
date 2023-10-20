@@ -1,4 +1,4 @@
-# format
+# format = '$all$directory$character'
 add_newline = false
 # A minimal left prompt
 format = """$directory$character"""
@@ -12,12 +12,21 @@ style='bold blue'
 symbol = "0"
 
 [golang]
-format = "[ﳑ $version](bold cyan)"
+format = '[ $version](bold cyan) '
 style='bold blue'
 
 [docker_context]
 format = "docker: [🐋 $context](blue bold)"
 disabled = false
+
+[kubernetes]
+symbol = '☸'
+disabled = false
+detect_files = ['k8s', 'Dockerfile']
+detect_extensions = ['yaml']
+format = '[$symbol$context( \($namespace\))]($style) '
+[kubernetes.context_aliases]
+'arn:aws:eks:us-west-2:123:cluster/gal-kub-demo-cluster' = 'gal'
 
 [git_branch]
 symbol = ' '
