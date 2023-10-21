@@ -1,5 +1,8 @@
 use-grammars = { only = [ "rust", "go", "toml", "sql", "dockerfile", "python" ] }
 
+[[language]]
+name = "rust"
+
 [language.config]
 cargo = { buildScripts = { enable = true }, features = "all" }
 procMacro = { enable = true }
@@ -12,9 +15,6 @@ procMacro = { enable = true }
 '`' = '`'
 '<' = '>'
 
-[[language]]
-name = "rust"
-
 [language-server.rust-analyzer.config]
 check = { command = "clippy", features = "all" }
 diagnostics = { experimental = { enable = true } }
@@ -23,7 +23,7 @@ typing = { autoClosingAngleBrackets = { enable = true } }
 cargo = { allFeatures = true }
 procMacro = { enable = true }
 
-[[languages]]
+[[language]]
 name = "go"
 auto-format = true
 formatter = { command = "goimports" }
