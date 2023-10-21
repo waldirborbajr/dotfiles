@@ -43,3 +43,9 @@ skip-levels = 1
 [keys.normal]
 C-j = ["extend_to_line_bounds", "delete_selection", "paste_after"]
 C-k = ["extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before"]
+C-o = ":open ~/.config/helix/config.toml" # Maps the Control-o to opening of the helix config file
+"C-S-esc" = "extend_line" # Maps Control-Shift-Escape to extend_line
+g = { a = "code_action" } # Maps `ga` to show possible code actions
+"ret" = ["open_below", "normal_mode"] # Maps the enter key to open_below then re-enter normal mode
+"tab" = ":bn"
+"S-tab" = ":bp"
