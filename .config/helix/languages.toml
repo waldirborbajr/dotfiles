@@ -1,0 +1,16 @@
+use-grammars = { only = [ "rust", "go", "toml", "sql", "dockerfile", "python" ] }
+
+[[language]]
+name = "rust"
+
+[language.config]
+cargo = { buildScripts = { enable = true }, features = "all" }
+procMacro = { enable = true }
+
+[language.auto-pairs]
+'(' = ')'
+'{' = '}'
+'[' = ']'
+'"' = '"'
+'`' = '`'
+'<' = '>'
