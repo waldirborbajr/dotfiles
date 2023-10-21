@@ -127,9 +127,10 @@ export GOPATH=/usr/local/go
 export GOBIN=/home/borba/go
 # export DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
 export STARSHIP_CONFIG=$HOME/.config/starship/starship.toml
+export LOCALBIN=$HOME/.local/bin
 
 # export PATH=$PATH:$ANDROID_STUDIO/bin:$FLUTTER_HOME/bin:$OPT_PATH/bin:$GOPATH/bin:$GOBIN/bin:$DOCKER_CONFIG/cli-plugins
-export PATH=$PATH:$OPT_PATH/bin:$GOPATH/bin:$GOBIN/bin
+export PATH=$PATH:$OPT_PATH/bin:$GOPATH/bin:$GOBIN/bin:$LOCALBIN
 
 # used at docker-compose to avoid create volume as root
 export UID=$(id -u)
