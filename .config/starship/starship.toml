@@ -12,12 +12,21 @@ style='bold blue'
 symbol = "0"
 
 [golang]
-format = '[ $version](bold cyan) '
+format = "[${symbol} $version](bold cyan)"
+symbol = ""
 style='bold blue'
 
 [docker_context]
-format = "docker: [🐋 $context](blue bold)"
+format = "[🐋 $context](blue bold)"
 disabled = false
+
+[python]
+format = "[${symbol} $version](white)"
+symbol = " "
+
+[rust]
+format = "[${symbol} $version](white)"
+symbol = " "
 
 [kubernetes]
 symbol = '☸'
