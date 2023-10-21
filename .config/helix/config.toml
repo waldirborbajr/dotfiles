@@ -1,4 +1,5 @@
-theme = "tokyonight"
+# theme = "tokyonight"
+theme = "catppuccin_frappe"
 
 [editor]
 line-number = "relative"
@@ -12,9 +13,32 @@ insert = "bar"
 normal = "block"
 select = "underline"
 
+[editor.search]
+smart-case = false
+
+[editor.file-picker]
+hidden = false
+git-global = false # show files hidden by git globally
+max-depth = 20
+
+[editor.whitespace.characters]
+space = "·"
+nbsp = "⍽"
+tab = "→"
+newline = "⏎"
+tabpad = "·"  # Tabs will look like "→···" (depending on tab width)
+
 [editor.lsp]
-display-signature-help-docs = false
+enable = true
+display-messages = true
 display-inlay-hints = true
+auto-signature-help = true
+
+[editor.indent-guides]
+render = true
+character = "▏" # Some characters that work well: "▏", "┆", "┊", "⸽"
+skip-levels = 1
+
 
 [keys.normal]
 C-j = ["extend_to_line_bounds", "delete_selection", "paste_after"]

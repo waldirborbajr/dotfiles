@@ -2,6 +2,8 @@ use-grammars = { only = [ "rust", "go", "toml", "sql", "dockerfile", "python" ] 
 
 [[language]]
 name = "rust"
+auto-format = true
+indent = { tab-width = 2, unit = "  " }
 
 [language.config]
 cargo = { buildScripts = { enable = true }, features = "all" }
@@ -27,23 +29,28 @@ procMacro = { enable = true }
 name = "go"
 auto-format = true
 formatter = { command = "goimports" }
+indent = { tab-width = 2, unit = "  " }
 
 [[language]]
 name = "markdown"
 auto-format = true
 formatter = { command = "dprint", args = ["fmt", "--stdin", "md"]}
+indent = { tab-width = 2, unit = "  " }
 
 [[language]]
 name = "toml"
 auto-format = true
 formatter = { command = "dprint", args = ["fmt", "--stdin", "toml"]}
+indent = { tab-width = 2, unit = "  " }
 
 [[language]]
 name = "yaml"
 auto-format = true
 formatter = { command = "dprint", args = ["fmt", "--stdin", "yaml"] }
+indent = { tab-width = 2, unit = "  " }
 
 [[language]]
 name = "json"
 auto-format = true
 formatter = { command = 'dprint', args = ["fmt", "--stdin", "json"] }
+indent = { tab-width = 2, unit = "  " }
