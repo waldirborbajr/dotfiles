@@ -1,5 +1,5 @@
 # theme = "tokyonight"
-theme = "catppuccin_mocha"
+theme = "catppuccin_frappe"
 
 [editor]
 line-number = "relative"
@@ -7,6 +7,7 @@ cursorline = true
 color-modes = true
 auto-save = true
 bufferline = "multiple"
+true-color = true
 
 [editor.cursor-shape]
 insert = "bar"
@@ -49,3 +50,8 @@ g = { a = "code_action" } # Maps `ga` to show possible code actions
 "ret" = ["open_below", "normal_mode"] # Maps the enter key to open_below then re-enter normal mode
 "tab" = ":bn"
 "S-tab" = ":bp"
+
+[keys.normal."+"]
+m = ":run-shell-command make"
+c = ":run-shell-command cargo build"
+t = ":run-shell-command cargo check"

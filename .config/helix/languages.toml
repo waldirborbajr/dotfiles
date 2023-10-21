@@ -38,6 +38,9 @@ procMacro = { enable = true }
 name = "go"
 auto-format = true
 formatter = { command = "goimports" }
+roots = ["go.mod"]
+comment-token = "//"
+language-server = { command = "gopls" }
 indent = { tab-width = 2, unit = "  " }
 
 [[language]]
