@@ -29,6 +29,7 @@ symblink .config/peco
 symblink .config/tealdeer
 symblink .config/zellij
 symblink .config/starship
+symblink .config/helix
 
 symblink .zshrc
 symblink .zshenv
