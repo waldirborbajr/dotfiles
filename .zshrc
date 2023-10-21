@@ -102,15 +102,31 @@ source $ZSH/oh-my-zsh.sh
 
 alias '?'=searchOnDuck
 alias '??'=searchOnGoogle
+
 alias v=nvim
 alias vi=nvim
-alias r=reset
 alias rmvim="rm -rf ~/.local/share/nvim && rm -rf ~/.cache/nvim && rm -rf ~/.local/state/nvim "
+
+alias r=reset
+
+# Cargo
+alias cr='cargo run --'
+alias ccr='clear && cr'
+alias cargo-install='cargo install --path .'
+alias cargo-upgrade='cargo install-update -a'
 alias cargoupdate="cargo install $(cargo install --list | egrep '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ') --force"
+
 # reload zsh config
 alias reload!='RELOAD=1 source ~/.zshrc'
+
 # remove broken symlinks
 alias clsym="find -L . -name . -o -type d -prune -o -type l -exec rm {} +"
+
+alias cleanapt="df -h && sudo apt autoremove -y && sudo apt autoclean && sudo apt clean && df -h"
+
+# Rebinding
+alias ls='eza -a --icons'
+alias cat='bat'
 
 ## Zellij
 alias zj="zellij a -c 'B+ DevOps'"
@@ -163,11 +179,23 @@ function createVenv(){
   fi
 }
 
-function getgo(){
+# Download and Instlal GO
+getgo(){
   version="$1"
   wget https://go.dev/dl/go${version}.linux-amd64.tar.gz
   sudo rm -rf /usr/local/go
   sudo tar -C /usr/local -xzf go${version}.linux-amd64.tar.gz
+}
+
+# Clean system.
+clean-system () {
+	rm -rf ~/.cache
+}
+
+# Restart a program.
+refresh () {
+	killall $1
+	$1 &
 }
 
 eval "$(starship init zsh)"
