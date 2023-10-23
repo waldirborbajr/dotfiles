@@ -125,7 +125,7 @@ alias clsym="find -L . -name . -o -type d -prune -o -type l -exec rm {} +"
 alias cleanapt="df -h && sudo apt autoremove -y && sudo apt autoclean && sudo apt clean && df -h"
 
 # Rebinding
-alias ls='eza -a --icons'
+alias ls='exa -a --icons'
 alias cat='bat'
 
 ## Zellij
