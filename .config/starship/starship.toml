@@ -12,7 +12,7 @@ style='bold blue'
 symbol = "0"
 
 [golang]
-format = "[${symbol} $version](bold cyan)"
+format = "[${symbol} $version](bold blue)"
 symbol = ""
 style='bold blue'
 
