@@ -151,6 +151,7 @@ export PATH=$PATH:$OPT_PATH/bin:$GOPATH/bin:$GOBIN/bin:$LOCALBIN
 # used at docker-compose to avoid create volume as root
 export UID=$(id -u)
 export GID=$(id -g)
+export DOCKER_HOST=unix:///run/user/1000/docker.sock
 
 ## History command configuration
 setopt share_history

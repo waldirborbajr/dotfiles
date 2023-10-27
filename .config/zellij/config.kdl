@@ -47,4 +47,4 @@ default_shell "zsh"
 
 theme "catppuccin-frappe"
 
-// default_layout "compact"
+default_layout "compact"
