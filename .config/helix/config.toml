@@ -3,17 +3,37 @@ theme = "catppuccin_frappe"
 
 [editor]
 line-number = "relative"
+# bufferline = "multiple"
+scrolloff = 6
+mouse = true
+middle-click-paste = true
+scroll-lines = 3
+shell = [ "zsh", "-c" ]
 cursorline = true
-color-modes = true
-auto-save = true
-bufferline = "multiple"
+cursorcolumn = false
+gutters = [ "diff", "line-numbers", "spacer", ]
+auto-completion = true
+auto-format = true
+auto-save = false
+idle-timeout = 0
+completion-trigger-len = 2
+auto-info = true
 true-color = true
-gutters = []
+rulers = []
+bufferline = "always"
+color-modes = true
+auto-pairs = true
 
-# [editor.statusline]
-# left = []
-# center = []
-# right = []
+[editor.statusline]
+left = [ "mode", "file-name", "separator", "spacer", "diagnostics", ]
+center = []
+right = [
+  "position", "separator",  "spacer", "position-percentage", "spacer", "separator", 
+  "total-line-numbers", "separator",  "file-line-ending", "separator",  "file-type", ]
+separator = "\uE0B3"
+mode.normal = "NORMAL"
+mode.select = "SELECT"
+mode.insert = "INSERT"
 
 [editor.soft-wrap]
 enable = true
@@ -61,6 +81,11 @@ g = { a = "code_action" } # Maps `ga` to show possible code actions
 "ret" = ["open_below", "normal_mode"] # Maps the enter key to open_below then re-enter normal mode
 "tab" = ":bn"
 "S-tab" = ":bp"
+"$" = [ "goto_line_end", ]
+"^" = [ "goto_first_nonwhitespace", ]
+"0" = [ "goto_line_start", ]
+"G" = [ "goto_last_line", ]
+"M" = [ "goto_window_center", ]
 
 [keys.normal."+"]
 m = ":run-shell-command make"
