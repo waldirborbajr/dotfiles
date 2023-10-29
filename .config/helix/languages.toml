@@ -182,7 +182,7 @@ roots = ["Cargo.toml", "Cargo.lock"]
 auto-format = true
 comment-token = "//"
 language-servers = [ "rust-analyzer" ]
-indent = { tab-width = 4, unit = "    " }
+indent = { tab-width = 2, unit = " " }
 
 [language.auto-pairs]
 '(' = ')'
@@ -497,7 +497,7 @@ auto-format = true
 comment-token = "//"
 language-servers = [ "gopls" ]
 # TODO: gopls needs utf-8 offsets?
-indent = { tab-width = 4, unit = "\t" }
+indent = { tab-width = 2, unit = " " }
 
 [language.debugger]
 name = "go"
@@ -578,7 +578,7 @@ roots = []
 auto-format = true
 comment-token = "//"
 language-servers = [ "gopls" ]
-indent = { tab-width = 4, unit = "\t" }
+indent = { tab-width = 2, unit = " " }
 
 [[grammar]]
 name = "gowork"
