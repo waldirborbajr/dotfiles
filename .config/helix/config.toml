@@ -11,7 +11,8 @@ scroll-lines = 3
 shell = [ "zsh", "-c" ]
 cursorline = true
 cursorcolumn = false
-gutters = [ "diff", "line-numbers", "spacer", ]
+# gutters = [ "diff", "line-numbers", "spacer", ]
+gutters = ["diagnostics", "spacer", "diff", "line-numbers", "spacer", "spacer"]
 auto-completion = true
 auto-format = true
 auto-save = false
@@ -24,19 +25,46 @@ bufferline = "always"
 color-modes = true
 auto-pairs = true
 
+# [editor.statusline]
+# left = [ "mode", "file-name", "separator", "spacer", "diagnostics", ]
+# center = []
+# right = [
+#   "position", "separator",  "spacer", "position-percentage", "spacer", "separator", 
+#   "total-line-numbers", "separator",  "file-line-ending", "separator",  "file-type", ]
+# separator = "\uE0B3"
+# mode.normal = "NORMAL"
+# mode.select = "SELECT"
+# mode.insert = "INSERT"
+
 [editor.statusline]
-left = [ "mode", "file-name", "separator", "spacer", "diagnostics", ]
-center = []
+left = [
+  "mode",
+  "spacer",
+  "version-control",
+  "spacer",
+  "separator",
+  "file-name",
+  "file-modification-indicator"
+]
 right = [
-  "position", "separator",  "spacer", "position-percentage", "spacer", "separator", 
-  "total-line-numbers", "separator",  "file-line-ending", "separator",  "file-type", ]
-separator = "\uE0B3"
+  "spinner",
+  "spacer",
+  "workspace-diagnostics",
+  "separator",
+  "spacer",
+  "diagnostics",
+  "position",
+  "file-encoding",
+  "file-line-ending",
+  "file-type"
+]
+separator = "╎"
 mode.normal = "NORMAL"
-mode.select = "SELECT"
 mode.insert = "INSERT"
+mode.select = "SELECT"
 
 [editor.soft-wrap]
-enable = true
+enable = false
 wrap-indicator = ""
 max-indent-retain = 0
 wrap-at-text-width = true
@@ -73,6 +101,9 @@ character = "▏" # Some characters that work well: "▏", "┆", "┊", "⸽"
 skip-levels = 1
 
 [keys.normal]
+"C-d" = ["half_page_down", "goto_window_center"]
+"C-u" = ["half_page_up", "goto_window_center"]
+
 C-j = ["extend_to_line_bounds", "delete_selection", "paste_after"]
 C-k = ["extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before"]
 C-o = ":open ~/.config/helix/config.toml" # Maps the Control-o to opening of the helix config file
@@ -81,11 +112,22 @@ g = { a = "code_action" } # Maps `ga` to show possible code actions
 "ret" = ["open_below", "normal_mode"] # Maps the enter key to open_below then re-enter normal mode
 "tab" = ":bn"
 "S-tab" = ":bp"
-"$" = [ "goto_line_end", ]
-"^" = [ "goto_first_nonwhitespace", ]
-"0" = [ "goto_line_start", ]
-"G" = [ "goto_last_line", ]
+
+# Muscle memory
+"{" = ["goto_prev_paragraph", "collapse_selection"]
+"}" = ["goto_next_paragraph", "collapse_selection"]
+0 = "goto_line_start"
+"$" = "goto_line_end"
+"^" = "goto_first_nonwhitespace"
+G = "goto_file_end"
+"%" = "match_brackets"
+V = ["select_mode", "extend_to_line_bounds"]
+C = ["extend_to_line_end", "yank_main_selection_to_clipboard", "delete_selection", "insert_mode"]
+D = ["extend_to_line_end", "yank_main_selection_to_clipboard", "delete_selection"]
+S = "surround_add" # Would be nice to be able to do something after this but it isn't chainable
 "M" = [ "goto_window_center", ]
+u = ["switch_to_lowercase", "collapse_selection", "normal_mode"]
+U = ["switch_to_uppercase", "collapse_selection", "normal_mode"]
 
 [keys.normal."+"]
 m = ":run-shell-command make"
@@ -93,3 +135,77 @@ c = ":run-shell-command cargo build"
 t = ":run-shell-command cargo check"
 r = ":run-shell-command cargo build --release"
 i = ":run-shell-command cargo install --path ."
+
+[keys.normal.space.c]
+r = ":config-reload"
+o = ":config-open"
+l = ":o ~/.config/helix/languages.toml"
+i = ":indent-style 2"
+
+[keys.normal."]"]
+"]" = "goto_next_paragraph"
+
+[keys.normal."["]
+"[" = "goto_prev_paragraph"
+
+[keys.select."]"]
+"]" = "goto_next_paragraph"
+
+[keys.select."["]
+"[" = "goto_prev_paragraph"
+
+[keys.normal.space]
+# Add comma to the end of the line
+"," = [
+    "save_selection",
+    "goto_line_end",
+    ":append-output echo ','",
+    "collapse_selection",
+    "delete_selection",
+    "jump_backward",
+]
+# Add semicolumn to the end of the line
+";" = [
+    "save_selection",
+    "goto_line_end",
+    ":append-output echo ';'",
+    "collapse_selection",
+    "delete_selection",
+    "jump_backward",
+]
+# o = ":sh zellij action new-pane -f"
+s = ":sh zellij run -cf -n lf -- lf"
+F = "file_picker_in_current_buffer_directory" # useful for accessing sibling files rather than a file tree
+"." = ":toggle-option file-picker.git-ignore" # toggle seeing files hidden with the .gitignore in file pickers
+"=" = ":format"
+"+" = ":indent-style 2"
+"q" = ":q"
+Q = ":quit-all!"
+U = ":reload-all"
+W = ":write!"
+X = ":buffer-close!"
+e = ":reset-diff-change"
+n = ":new"
+o = ":buffer-close-others"
+u = ":reload"
+w = ":write"
+x = ":buffer-close"
+
+# Extend and select commands that expect a manual input can't be chained
+# I've kept d[X] commands here because it's better to at least have the stuff you want to delete
+# selected so that it's just a keystroke away to delete
+[keys.normal.d]
+d = ["extend_to_line_bounds", "yank_main_selection_to_clipboard", "delete_selection"]
+t = ["extend_till_char"]
+s = ["surround_delete"]
+i = ["select_textobject_inner"]
+a = ["select_textobject_around"]
+j = ["select_mode", "extend_to_line_bounds", "extend_line_below", "yank_main_selection_to_clipboard", "delete_selection", "normal_mode"]
+down = ["select_mode", "extend_to_line_bounds", "extend_line_below", "yank_main_selection_to_clipboard", "delete_selection", "normal_mode"]
+k = ["select_mode", "extend_to_line_bounds", "extend_line_above", "yank_main_selection_to_clipboard", "delete_selection", "normal_mode"]
+up = ["select_mode", "extend_to_line_bounds", "extend_line_above", "yank_main_selection_to_clipboard", "delete_selection", "normal_mode"]
+G = ["select_mode", "extend_to_line_bounds", "goto_last_line", "extend_to_line_bounds", "yank_main_selection_to_clipboard", "delete_selection", "normal_mode"]
+w = ["move_next_word_start", "yank_main_selection_to_clipboard", "delete_selection"]
+W = ["move_next_long_word_start", "yank_main_selection_to_clipboard", "delete_selection"]
+g = { g = ["select_mode", "extend_to_line_bounds", "goto_file_start", "extend_to_line_bounds", "yank_main_selection_to_clipboard", "delete_selection", "normal_mode"] }
+
