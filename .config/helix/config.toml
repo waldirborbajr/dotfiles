@@ -109,7 +109,7 @@ C-k = ["extend_to_line_bounds", "delete_selection", "move_line_up", "paste_befor
 C-o = ":open ~/.config/helix/config.toml" # Maps the Control-o to opening of the helix config file
 "C-S-esc" = "extend_line" # Maps Control-Shift-Escape to extend_line
 g = { a = "code_action" } # Maps `ga` to show possible code actions
-"ret" = ["open_below", "normal_mode"] # Maps the enter key to open_below then re-enter normal mode
+# "ret" = ["open_below", "normal_mode"] # Maps the enter key to open_below then re-enter normal mode
 "tab" = ":bn"
 "S-tab" = ":bp"
 
@@ -175,7 +175,7 @@ i = ":indent-style 2"
 ]
 # o = ":sh zellij action new-pane -f"
 s = ":sh zellij run -cf -n lf -- lf"
-F = "file_picker_in_current_buffer_directory" # useful for accessing sibling files rather than a file tree
+# F = "file_picker_in_current_buffer_directory" # useful for accessing sibling files rather than a file tree
 "." = ":toggle-option file-picker.git-ignore" # toggle seeing files hidden with the .gitignore in file pickers
 "=" = ":format"
 "+" = ":indent-style 2"
