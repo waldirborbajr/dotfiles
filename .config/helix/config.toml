@@ -126,8 +126,8 @@ C = ["extend_to_line_end", "yank_main_selection_to_clipboard", "delete_selection
 D = ["extend_to_line_end", "yank_main_selection_to_clipboard", "delete_selection"]
 S = "surround_add" # Would be nice to be able to do something after this but it isn't chainable
 "M" = [ "goto_window_center", ]
-u = ["switch_to_lowercase", "collapse_selection", "normal_mode"]
-U = ["switch_to_uppercase", "collapse_selection", "normal_mode"]
+# u = ["switch_to_lowercase", "collapse_selection", "normal_mode"]
+# U = ["switch_to_uppercase", "collapse_selection", "normal_mode"]
 
 [keys.normal."+"]
 m = ":run-shell-command make"
