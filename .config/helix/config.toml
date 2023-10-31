@@ -34,14 +34,9 @@ left = [
     "separator",
     "file-name",
     "file-modification-indicator",
-    "diagnostics", 
 ]
 
 center = []
-
-# right = [
-#   "position", "separator",  "spacer", "position-percentage", "spacer", "separator", 
-#   "total-line-numbers", "separator",  "file-line-ending", "separator",  "file-type", ]
 
 right = [
   "spinner",
