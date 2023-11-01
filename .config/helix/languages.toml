@@ -560,6 +560,7 @@ name = "gotmpl"
 scope = "source.gotmpl"
 injection-regex = "gotmpl"
 file-types = ["gotmpl"]
+auto-format = true
 roots = []
 comment-token = "//"
 language-servers = [ "gopls" ]
