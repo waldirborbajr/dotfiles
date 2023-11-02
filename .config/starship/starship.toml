@@ -1,4 +1,3 @@
-# format = '$all$directory$character'
 add_newline = false
 # A minimal left prompt
 format = """$directory$character"""
@@ -6,18 +5,44 @@ palette = "catppuccin_mocha"
 # move the rest of the prompt to the right
 right_format = """$all"""
 
+# [os.symbols]
+# Ubuntu = "ubnt "
+# Macos = "mac "
+# Linux = "lnx "
+# Pop = "pop "
+
+# [os]
+# format = " on [$name]($style)"
+# style = "bold blue"
+# disabled = false
+
+# # Change the default prompt characters
+# [character]
+# success_symbol = "[>](bold green)"
+# error_symbol = "[x](bold red)"
+# vimcmd_symbol = "[<](bold green)"
+
+[directory]
+truncation_length = 3
+truncation_symbol = "…/"
+# home_symbol = " ~"
+read_only_style = "197"
+read_only = "  "
+format = "[$path]($style)[$read_only]($read_only_style) "
+
 [aws]
 format = 'on [$symbol($profile )(\($region\) )]($style)'
 style='bold blue'
-symbol = "0"
+symbol = "aws "
 
 [golang]
 format = "[${symbol} $version](bold blue)"
 symbol = ""
+# symbol = "go "
 style='bold blue'
 
 [docker_context]
-format = "[🐋 $context](blue bold)"
+format = "via [ $context](bold blue) "
 disabled = false
 
 [python]
@@ -26,7 +51,7 @@ symbol = " "
 
 [rust]
 format = "[${symbol} $version](white)"
-symbol = " "
+symbol = ""
 
 [kubernetes]
 symbol = '☸'
@@ -34,14 +59,17 @@ disabled = false
 detect_files = ['k8s', 'Dockerfile']
 detect_extensions = ['yaml']
 format = '[$symbol$context( \($namespace\))]($style) '
+
 [kubernetes.context_aliases]
 'arn:aws:eks:us-west-2:123:cluster/gal-kub-demo-cluster' = 'gal'
 
 [git_branch]
 symbol = ' '
+format = "on [$symbol$branch]($style) "
 truncation_length = 4
-truncation_symbol = ''
-ignore_branches = ['master', 'main']
+truncation_symbol = "…/"
+# ignore_branches = ['master', 'main']
+style = "bold green"
 
 [git_commit]
 commit_hash_length = 4
@@ -56,12 +84,20 @@ added_style = 'bold blue'
 format = '[+$added]($added_style)/[-$deleted]($deleted_style) '
 
 [git_status]
-conflicted = '🏳'
-ahead = '⇡${count}'
-diverged = '⇕⇡${ahead_count}⇣${behind_count}'
-behind = '⇣${count}'
-up_to_date = '✓'
+format = '[\($all_status$ahead_behind\)]($style) '
+# format = ''
+style = "bold green"
+conflicted = "🏳"
+up_to_date = " "
+untracked = " "
+ahead = "⇡${count}"
+diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+behind = "⇣${count}"
+stashed = " "
+modified = " "
 staged = '[++\($count\)](green)'
+renamed = "襁 "
+deleted = " "
 
 [palettes.catppuccin_mocha]
 rosewater = "#f5e0dc"
