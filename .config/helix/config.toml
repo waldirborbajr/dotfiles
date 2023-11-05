@@ -1,9 +1,7 @@
-# theme = "tokyonight"
 theme = "catppuccin_frappe"
 
 [editor]
 line-number = "relative"
-# bufferline = "multiple"
 scrolloff = 6
 mouse = true
 middle-click-paste = true
@@ -11,7 +9,6 @@ scroll-lines = 3
 shell = [ "zsh", "-c" ]
 cursorline = true
 cursorcolumn = false
-# gutters = [ "diff", "line-numbers", "spacer", ]
 gutters = ["diagnostics", "spacer", "diff", "line-numbers", "spacer", "spacer"]
 auto-completion = true
 auto-format = true
@@ -96,16 +93,8 @@ skip-levels = 1
 [keys.normal]
 "C-d" = ["half_page_down", "goto_window_center"]
 "C-u" = ["half_page_up", "goto_window_center"]
-
-C-j = ["extend_to_line_bounds", "delete_selection", "paste_after"]
-C-k = ["extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before"]
-C-o = ":open ~/.config/helix/config.toml" # Maps the Control-o to opening of the helix config file
-"C-S-esc" = "extend_line" # Maps Control-Shift-Escape to extend_line
-g = { a = "code_action" } # Maps `ga` to show possible code actions
 "tab" = ":bn"
 "S-tab" = ":bp"
-
-# Muscle memory
 "{" = ["goto_prev_paragraph", "collapse_selection"]
 "}" = ["goto_next_paragraph", "collapse_selection"]
 0 = "goto_line_start"
@@ -113,70 +102,3 @@ g = { a = "code_action" } # Maps `ga` to show possible code actions
 "^" = "goto_first_nonwhitespace"
 G = "goto_file_end"
 "%" = "match_brackets"
-V = ["select_mode", "extend_to_line_bounds"]
-C = ["extend_to_line_end", "yank_main_selection_to_clipboard", "delete_selection", "insert_mode"]
-D = ["extend_to_line_end", "yank_main_selection_to_clipboard", "delete_selection"]
-S = "surround_add" # Would be nice to be able to do something after this but it isn't chainable
-"M" = [ "goto_window_center", ]
-
-[keys.normal."+"]
-m = ":run-shell-command make"
-c = ":run-shell-command cargo build"
-t = ":run-shell-command cargo check"
-r = ":run-shell-command cargo build --release"
-i = ":run-shell-command cargo install --path ."
-
-[keys.normal.space.c]
-r = ":config-reload"
-o = ":config-open"
-l = ":o ~/.config/helix/languages.toml"
-i = ":indent-style 2"
-
-[keys.normal."]"]
-"]" = "goto_next_paragraph"
-
-[keys.normal."["]
-"[" = "goto_prev_paragraph"
-
-[keys.select."]"]
-"]" = "goto_next_paragraph"
-
-[keys.select."["]
-"[" = "goto_prev_paragraph"
-
-[keys.normal.space]
-# Add comma to the end of the line
-"," = [
-    "save_selection",
-    "goto_line_end",
-    ":append-output echo ','",
-    "collapse_selection",
-    "delete_selection",
-    "jump_backward",
-]
-# Add semicolumn to the end of the line
-";" = [
-    "save_selection",
-    "goto_line_end",
-    ":append-output echo ';'",
-    "collapse_selection",
-    "delete_selection",
-    "jump_backward",
-]
-# o = ":sh zellij action new-pane -f"
-s = ":sh zellij run -cf -n lf -- lf"
-# F = "file_picker_in_current_buffer_directory" # useful for accessing sibling files rather than a file tree
-"." = ":toggle-option file-picker.git-ignore" # toggle seeing files hidden with the .gitignore in file pickers
-"=" = ":format"
-"+" = ":indent-style 2"
-"q" = ":q"
-Q = ":quit-all!"
-U = ":reload-all"
-W = ":write!"
-X = ":buffer-close!"
-e = ":reset-diff-change"
-n = ":new"
-o = ":buffer-close-others"
-u = ":reload"
-w = ":write"
-x = ":buffer-close"
