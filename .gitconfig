@@ -21,7 +21,7 @@
   status = auto
   diff = auto
   branch = auto
-  interactive = auto
+  ; interactive = auto
   grep = auto
   ui = auto
 
@@ -59,7 +59,7 @@
 	ps = "!git push origin $(git rev-parse --abbrev-ref HEAD)"
 	pl = "!git pull origin $(git rev-parse --abbrev-ref HEAD)"
 	st = status
-	swc =switch -c 
+	swc = switch -c
 	swm = switch main
 	br = branch
 	ba = branch -a
