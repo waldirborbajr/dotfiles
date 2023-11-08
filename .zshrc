@@ -105,7 +105,7 @@ alias '??'=searchOnGoogle
 
 alias v=nvim
 alias vi=nvim
-alias rmvim="rm -rf ~/.local/share/nvim && rm -rf ~/.cache/nvim && rm -rf ~/.local/state/nvim "
+alias rmvim="rm -rf ~/.local/share/nvim && rm -rf ~/.cache/nvim && rm -rf ~/.local/state/nvim"
 
 alias r=reset
 
