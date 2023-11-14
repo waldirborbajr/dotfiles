@@ -110,11 +110,15 @@ alias rmvim="rm -rf ~/.local/share/nvim && rm -rf ~/.cache/nvim && rm -rf ~/.loc
 alias r=reset
 
 # Cargo
+# cargo install cargo-cache
+# cargo install cargo-update
 alias cr='cargo run --'
 alias ccr='clear && cr'
 alias cargo-install='cargo install --path .'
 alias cargo-upgrade='cargo install-update -a'
 alias cargoupdate="cargo install $(cargo install --list | egrep '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ') --force"
+alias cargofullcache="cargo-cache -r all"
+alias cargocache="cargo cache -a"
 
 # reload zsh config
 alias reload!='RELOAD=1 source ~/.zshrc'
