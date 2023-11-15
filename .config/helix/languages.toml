@@ -33,35 +33,53 @@ indent = { tab-width = 2, unit = "  " }
 '"' = '"'
 '`' = '`'
 
+# [language.debugger]
+# name = "lldb-vscode"
+# transport = "stdio"
+# command = "lldb-vscode"
+
 [language.debugger]
-name = "lldb-vscode"
-transport = "stdio"
-command = "lldb-vscode"
+command = "codelldb"
+name = "codelldb"
+port-arg = "--port {}"
+transport = "tcp"
 
 [[language.debugger.templates]]
 name = "binary"
 request = "launch"
-completion = [ { name = "binary", completion = "filename" } ]
-args = { program = "{0}", initCommands = [ "command script import /usr/local/etc/lldb_vscode_rustc_primer.py" ] }
-# args = { program = "{0}" }
 
-[[language.debugger.templates]]
-name = "binary (terminal)"
-request = "launch"
-completion = [ { name = "binary", completion = "filename" } ]
-args = { program = "{0}", runInTerminal = true }
+[[language.debugger.templates.completion]]
+completion = "filename"
+name = "binary"
 
-[[language.debugger.templates]]
-name = "attach"
-request = "attach"
-completion = [ "pid" ]
-args = { pid = "{0}" }
+[language.debugger.templates.args]
+program = "{0}"
+runInTerminal = true
 
-[[language.debugger.templates]]
-name = "gdbserver attach"
-request = "attach"
-completion = [ { name = "lldb connect url", default = "connect://localhost:3333" }, { name = "file", completion = "filename" }, "pid" ]
-args = { attachCommands = [ "platform select remote-gdb-server", "platform connect {0}", "file {1}", "attach {2}" ] }
+# [[language.debugger.templates]]
+# name = "binary"
+# request = "launch"
+# completion = [ { name = "binary", completion = "filename" } ]
+# args = { program = "{0}", initCommands = [ "command script import /usr/local/etc/lldb_vscode_rustc_primer.py" ] }
+# # args = { program = "{0}" }
+
+# [[language.debugger.templates]]
+# name = "binary (terminal)"
+# request = "launch"
+# completion = [ { name = "binary", completion = "filename" } ]
+# args = { program = "{0}", runInTerminal = true }
+
+# [[language.debugger.templates]]
+# name = "attach"
+# request = "attach"
+# completion = [ "pid" ]
+# args = { pid = "{0}" }
+
+# [[language.debugger.templates]]
+# name = "gdbserver attach"
+# request = "attach"
+# completion = [ { name = "lldb connect url", default = "connect://localhost:3333" }, { name = "file", completion = "filename" }, "pid" ]
+# args = { attachCommands = [ "platform select remote-gdb-server", "platform connect {0}", "file {1}", "attach {2}" ] }
 
 [[grammar]]
 name = "rust"
