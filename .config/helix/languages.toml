@@ -42,7 +42,8 @@ command = "lldb-vscode"
 name = "binary"
 request = "launch"
 completion = [ { name = "binary", completion = "filename" } ]
-args = { program = "{0}" }
+args = { program = "{0}", initCommands = [ "command script import /usr/local/etc/lldb_vscode_rustc_primer.py" ] }
+# args = { program = "{0}" }
 
 [[language.debugger.templates]]
 name = "binary (terminal)"
