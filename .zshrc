@@ -142,6 +142,13 @@ alias zjgo="zellij --layout $HOME/.config/zellij/zelliGO.kdl a -c 'B+ DeviGO'"
 alias zka="zellij ka -y"
 alias zrn="zellij r -- $1"
 
+# Linux version of OSX pbcopy and pbpaste.
+# sudo apt install xclip xsel
+# alias pbcopy='xclip -selection clipboard'
+# alias pbpaste='xclip -selection clipboard -o'
+alias pbcopy='xsel --clipboard --input'
+alias pbpaste='xsel --clipboard --output'
+
 export OPT_PATH=/opt
 export CHROME_EXECUTABLE=/snap/bin/chromium
 # export FLUTTER_HOME=/opt/flutter
