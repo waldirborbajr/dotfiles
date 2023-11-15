@@ -132,6 +132,9 @@ alias cleanapt="df -h && sudo apt autoremove -y && sudo apt autoclean && sudo ap
 alias ls='eza -a --icons'
 alias cat='bat'
 
+# Find Files
+alias ff="rg --files | sk --preview='bat {} --color=always'"
+
 ## Zellij
 alias zj="zellij a -c 'B+ DevOps'"
 alias zjrust="zellij --layout $HOME/.config/zellij/zelliRUST.kdl a -c 'B+ DevRust'"
