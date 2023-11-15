@@ -38,6 +38,8 @@ indent = { tab-width = 2, unit = "  " }
 # transport = "stdio"
 # command = "lldb-vscode"
 
+# https://github.com/helix-editor/helix/wiki/Debugger-Configurations#configure-debuggers
+
 [language.debugger]
 command = "codelldb"
 name = "codelldb"
