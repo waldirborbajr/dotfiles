@@ -32,9 +32,12 @@ symblink .config/starship
 symblink .config/helix
 
 symblink .zshrc
-symblink .zshenv
-symblink alias.generic.zsh
-symblink alias.git.zsh
+symblink aliases.zsh
+symblink functions.zsh
+symblink options.zsh
+# symblink .zshenv
+# symblink alias.generic.zsh
+# symblink alias.git.zsh
 
 symblink .gitconfig
 # symblink .gitignore

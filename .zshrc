@@ -100,54 +100,9 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-alias '?'=searchOnDuck
-alias '??'=searchOnGoogle
-
-alias v=nvim
-alias vi=nvim
-alias rmvim="rm -rf ~/.local/share/nvim && rm -rf ~/.cache/nvim && rm -rf ~/.local/state/nvim"
-
-alias r=reset
-
-# Cargo
-# cargo install cargo-cache
-# cargo install cargo-update
-alias cr='cargo run --'
-alias ccr='clear && cr'
-alias cargo-install='cargo install --path .'
-alias cargo-upgrade='cargo install-update -a'
-alias cargoupdate="cargo install $(cargo install --list | egrep '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ') --force"
-alias cargofullcache="cargo-cache -r all"
-alias cargocache="cargo cache -a"
-
-# reload zsh config
-alias reload!='RELOAD=1 source ~/.zshrc'
-
-# remove broken symlinks
-alias clsym="find -L . -name . -o -type d -prune -o -type l -exec rm {} +"
-
-alias cleanapt="df -h && sudo apt autoremove -y && sudo apt autoclean && sudo apt clean && df -h"
-
-# Rebinding
-alias ls='eza -a --icons'
-alias cat='bat'
-
-# Find Files
-alias ff="rg --files | sk --preview='bat {} --color=always'"
-
-## Zellij
-alias zj="zellij a -c 'B+ DevOps'"
-alias zjrust="zellij --layout $HOME/.config/zellij/zelliRUST.kdl a -c 'B+ DevRust'"
-alias zjgo="zellij --layout $HOME/.config/zellij/zelliGO.kdl a -c 'B+ DeviGO'"
-alias zka="zellij ka -y"
-alias zrn="zellij r -- $1"
-
-# Linux version of OSX pbcopy and pbpaste.
-# sudo apt install xclip xsel
-# alias pbcopy='xclip -selection clipboard'
-# alias pbpaste='xclip -selection clipboard -o'
-alias pbcopy='xsel --clipboard --input'
-alias pbpaste='xsel --clipboard --output'
+source "$HOME/options.zsh"
+source "$HOME/functions.zsh"
+source "$HOME/aliases.zsh"
 
 export OPT_PATH=/opt
 export CHROME_EXECUTABLE=/snap/bin/chromium
@@ -166,64 +121,5 @@ export PATH=$PATH:$OPT_PATH/bin:$GOPATH/bin:$GOBIN/bin:$LOCALBIN
 export UID=$(id -u)
 export GID=$(id -g)
 export DOCKER_HOST=unix:///run/user/1000/docker.sock
-
-## History command configuration
-setopt share_history
-setopt extended_history       # record timestamp of command in HISTFILE
-setopt hist_expire_dups_first # delete duplicates first when HISTFILE size exceeds HISTSIZE
-setopt hist_ignore_dups       # ignore duplicated commands history list
-setopt hist_ignore_space      # ignore commands that start with space
-setopt hist_verify            # show command with history expansion to user before running it
-setopt INC_APPEND_HISTORY # append into history file
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_REDUCE_BLANKS  ## Delete empty lines from history file
-setopt HIST_NO_STORE  ## Do not add history and fc commands to the history
-setopt HIST_FIND_NO_DUPS
-setopt HIST_SAVE_NO_DUPS
-
-function createVenv(){
-  # dest="${PWD##*/}"
-  dest="$1"
-
-  if python3 -m venv "$dest" ; then
-    cd "$dest"
-    source "./bin/activate"
-    [ ! -f "./requirements.txt" ] || pip install -r requirements.txt
-  else
-     echo "Failed to create 'venv' environment" >&2
-  fi
-}
-
-# Download and Instlal GO
-getgo(){
-  version="$1"
-  wget https://go.dev/dl/go${version}.linux-amd64.tar.gz
-  sudo rm -rf /usr/local/go
-  sudo tar -C /usr/local -xzf go${version}.linux-amd64.tar.gz
-}
-
-# Clean system.
-clean-system () {
-	rm -rf ~/.cache
-}
-
-# Choose Zellij Session
-zjsession() {
-  ZJ_SESSIONS=$(zellij list-sessions)
-  NO_SESSIONS=$(echo "${ZJ_SESSIONS}" | wc -l)
-
-  if [ "${NO_SESSIONS}" -ge 2 ]; then
-      zellij attach \
-      "$(echo "${ZJ_SESSIONS}" | sk)"
-  else
-     zellij attach -c
-  fi
-}
-
-# Restart a program.
-refresh () {
-	killall $1
-	$1 &
-}
 
 eval "$(starship init zsh)"

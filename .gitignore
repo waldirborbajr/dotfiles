@@ -3,3 +3,4 @@ Thumbs.db
 ./config/nvim-*
 bin/pocketbase
 bin
+/home/borba/dotfiles/.config/helix/runtime/grammars
