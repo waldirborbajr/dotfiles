@@ -199,14 +199,14 @@ plugins {
 //   - detach (Default)
 //   - quit
 //
-// on_force_close "quit"
+on_force_close "detach"
 
 //  Send a request for a simplified ui (without arrow fonts) to plugins
 //  Options:
 //    - true
 //    - false (Default)
 //
-// simplified_ui true
+simplified_ui true
 
 // Choose the path to the default shell that zellij will use for opening new panes
 // Default: $SHELL
@@ -274,7 +274,6 @@ pane_frames false
 // Default: default
 //
 // theme "default"
-
 theme "catppuccin-frappe"
 
 // The name of the default layout to load on startup
