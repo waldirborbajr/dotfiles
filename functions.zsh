@@ -19,7 +19,7 @@ function getgo(){
   wget https://go.dev/dl/go${version}.linux-amd64.tar.gz
   sudo rm -rf /usr/local/go
   sudo tar -C /usr/local -xzf go${version}.linux-amd64.tar.gz
-  sudo chown borba:borba -R /usr/local/go/
+  sudo chown $(id -u):$(id -g) -R /usr/local/go/
   rm go${version}.linux-amd64.tar.gz
 }
 
