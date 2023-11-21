@@ -98,7 +98,6 @@ alias s='source ~/.zshrc'
 
 alias pf="fzf --preview='less {}' --bind shift-up:preview-page-up,shift-down:preview-page-down"
 
-
 ## Zellij - alternative to TMUx
 alias zj="zellij a -c 'B+ DevOps'"
 alias zjrust="zellij --layout $HOME/.config/zellij/zelliRUST.kdl a -c 'B+ DevRust'"
