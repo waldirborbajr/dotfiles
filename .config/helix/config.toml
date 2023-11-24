@@ -12,13 +12,13 @@ cursorcolumn = false
 gutters = ["diagnostics", "spacer", "diff", "line-numbers", "spacer", "spacer"]
 auto-completion = true
 auto-format = true
-auto-save = false
+auto-save = true
 idle-timeout = 0
 completion-trigger-len = 2
 auto-info = true
 true-color = true
 rulers = []
-bufferline = "always"
+bufferline = "multiple"
 color-modes = true
 auto-pairs = true
 
