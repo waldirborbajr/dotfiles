@@ -11,6 +11,13 @@ inlayHints.closureReturnTypeHints.enable = "with_block"
 inlayHints.discriminantHints.enable = "fieldless"
 inlayHints.lifetimeElisionHints.enable = "skip_trivial"
 inlayHints.typeHints.hideClosureInitialization = false
+check = { command = "clippy", features = "all" }
+diagnostics = { experimental = { enable = true } }
+hover = { actions = { enable = true } }
+typing = { autoClosingAngleBrackets = { enable = true } }
+# cargo = { allFeatures = true }
+cargo = { buildScripts = { enable = true }, features = "all" }
+procMacro = { enable = true }
 
 [language-server.gopls]
 command = "gopls"
@@ -23,7 +30,7 @@ file-types = ["rs"]
 roots = ["Cargo.toml", "Cargo.lock"]
 auto-format = true
 comment-token = "//"
-language-servers = [ "rust-analyzer" ]
+language-servers = ["rust-analyzer"]
 indent = { tab-width = 2, unit = "  " }
 
 [language.auto-pairs]
@@ -93,8 +100,10 @@ scope = "source.toml"
 injection-regex = "toml"
 file-types = ["toml", "poetry.lock", "Cargo.lock"]
 comment-token = "#"
-language-servers = [ "taplo" ]
+language-servers = ["taplo"]
 indent = { tab-width = 2, unit = "  " }
+auto-format = true
+formatter = { command = "dprint", args = ["fmt", "--stdin", "toml"] }
 
 [[grammar]]
 name = "toml"
@@ -108,11 +117,23 @@ functionTypeParameters = true
 parameterNames = true
 rangeVariableTypes = true
 
+[[language]]
+name = "go"
+auto-format = true
+formatter = { command = "goimports" }
+# config = { analyses = { "unusedparams" = true }, staticcheck = true }
+
 [language-server.golangci-lint-lsp]
 command = "golangci-lint-langserver"
 
 [language-server.golangci-lint-lsp.config]
-command = ["golangci-lint", "run", "--out-format", "json", "--issues-exit-code=1"]
+command = [
+  "golangci-lint",
+  "run",
+  "--out-format",
+  "json",
+  "--issues-exit-code=1",
+]
 
 [[grammar]]
 name = "go"
@@ -125,7 +146,7 @@ injection-regex = "gomod"
 file-types = ["go.mod"]
 auto-format = true
 comment-token = "//"
-language-servers = [ "gopls" ]
+language-servers = ["gopls"]
 indent = { tab-width = 2, unit = "  " }
 
 [[grammar]]
@@ -138,7 +159,7 @@ scope = "source.gotmpl"
 injection-regex = "gotmpl"
 file-types = ["gotmpl"]
 comment-token = "//"
-language-servers = [ "gopls" ]
+language-servers = ["gopls"]
 indent = { tab-width = 2, unit = "  " }
 
 [[grammar]]
@@ -152,9 +173,19 @@ injection-regex = "gowork"
 file-types = ["go.work"]
 auto-format = true
 comment-token = "//"
-language-servers = [ "gopls" ]
+language-servers = ["gopls"]
 indent = { tab-width = 2, unit = "  " }
 
 [[grammar]]
 name = "gowork"
 source = { git = "https://github.com/omertuc/tree-sitter-go-work", rev = "6dd9dd79fb51e9f2abc829d5e97b15015b6a8ae2" }
+
+[[language]]
+name = "yaml"
+auto-format = true
+formatter = { command = "dprint", args = ["fmt", "--stdin", "yaml"] }
+
+[[language]]
+name = "json"
+auto-format = true
+formatter = { command = 'dprint', args = ["fmt", "--stdin", "json"] }
