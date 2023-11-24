@@ -6,7 +6,7 @@ scrolloff = 6
 mouse = true
 middle-click-paste = true
 scroll-lines = 3
-shell = [ "zsh", "-c" ]
+shell = ["zsh", "-c"]
 cursorline = true
 cursorcolumn = false
 gutters = ["diagnostics", "spacer", "diff", "line-numbers", "spacer", "spacer"]
@@ -23,14 +23,14 @@ color-modes = true
 auto-pairs = true
 
 [editor.statusline]
-left = [ 
-    "mode", 
-    "spacer", 
-    "version-control", 
-    "spacer",
-    "separator",
-    "file-name",
-    "file-modification-indicator",
+left = [
+  "mode",
+  "spacer",
+  "version-control",
+  "spacer",
+  "separator",
+  "file-name",
+  "file-modification-indicator",
 ]
 
 center = []
@@ -45,7 +45,7 @@ right = [
   "position",
   "file-encoding",
   "file-line-ending",
-  "file-type"
+  "file-type",
 ]
 
 separator = "\uE0B3"
@@ -84,6 +84,7 @@ enable = true
 display-messages = true
 display-inlay-hints = true
 auto-signature-help = true
+display-signature-help-docs = true
 
 [editor.indent-guides]
 render = true
