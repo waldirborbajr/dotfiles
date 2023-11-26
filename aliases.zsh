@@ -53,7 +53,7 @@ alias zjrust="zellij --layout $HOME/.config/zellij/zelliRUST.kdl a -c 'B+ DevRus
 alias zjgo="zellij --layout $HOME/.config/zellij/zelliGO.kdl a -c 'B+ DeviGO'"
 alias zka="zellij ka -y"
 alias zrn="zellij r -- $1"
-alias freezj="rm -rf /home/borba/.cache/zellij"
+alias zjfree="rm -rf /home/borba/.cache/zellij"
 
 # Linux version of OSX pbcopy and pbpaste.
 # sudo apt install xclip xsel

@@ -1,4 +1,4 @@
-use-grammars = { only = ["rust", "go", "toml", "sql", "dockerfile"] }
+use-grammars = { only = ["rust", "go", "toml", "sql", "dockerfile", "yaml"] }
 
 [language-server]
 taplo = { command = "taplo", args = ["lsp", "stdio"] }

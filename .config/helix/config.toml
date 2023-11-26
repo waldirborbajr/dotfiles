@@ -2,12 +2,13 @@ theme = "catppuccin_frappe"
 
 [editor]
 line-number = "relative"
+completion-replace = true
+cursorline = true
 scrolloff = 6
 mouse = true
 middle-click-paste = true
 scroll-lines = 3
 shell = ["zsh", "-c"]
-cursorline = true
 cursorcolumn = false
 gutters = ["diagnostics", "spacer", "diff", "line-numbers", "spacer", "spacer"]
 auto-completion = true
@@ -91,6 +92,9 @@ render = true
 # character = "▏" # Some characters that work well: "▏", "┆", "┊", "⸽" 
 character = "┊"
 skip-levels = 1
+
+# [editor.whitespace]
+# render = "all"
 
 [keys.normal]
 "C-d" = ["half_page_down", "goto_window_center"]
