@@ -1,5 +1,3 @@
-use-grammars = { only = ["rust", "go", "toml", "sql", "dockerfile", "yaml"] }
-
 [language-server]
 taplo = { command = "taplo", args = ["lsp", "stdio"] }
 
@@ -191,3 +189,51 @@ formatter = { command = "dprint", args = ["fmt", "--stdin", "yaml"] }
 name = "json"
 auto-format = true
 formatter = { command = 'dprint', args = ["fmt", "--stdin", "json"] }
+
+[[language]]
+name = "markdown"
+scope = "source.md"
+injection-regex = "md|markdown"
+file-types = [
+  "md",
+  "markdown",
+  "PULLREQ_EDITMSG",
+  "mkd",
+  "mdwn",
+  "mdown",
+  "markdn",
+  "mdtxt",
+  "mdtext",
+  "workbook",
+]
+roots = [".marksman.toml"]
+language-servers = ["marksman"]
+indent = { tab-width = 2, unit = "  " }
+
+[[grammar]]
+name = "markdown"
+source = { git = "https://github.com/MDeiml/tree-sitter-markdown", rev = "aaf76797aa8ecd9a5e78e0ec3681941de6c945ee", subpath = "tree-sitter-markdown" }
+
+[[language]]
+name = "markdown.inline"
+scope = "source.markdown.inline"
+injection-regex = "markdown\\.inline"
+file-types = []
+grammar = "markdown_inline"
+
+[[grammar]]
+name = "markdown_inline"
+source = { git = "https://github.com/MDeiml/tree-sitter-markdown", rev = "aaf76797aa8ecd9a5e78e0ec3681941de6c945ee", subpath = "tree-sitter-markdown-inline" }
+
+[[language]]
+name = "yaml"
+scope = "source.yaml"
+file-types = ["yml", "yaml"]
+comment-token = "#"
+indent = { tab-width = 2, unit = "  " }
+language-servers = ["yaml-language-server", "ansible-language-server"]
+injection-regex = "yml|yaml"
+
+[[grammar]]
+name = "yaml"
+source = { git = "https://github.com/ikatyang/tree-sitter-yaml", rev = "0e36bed171768908f331ff7dff9d956bae016efb" }
