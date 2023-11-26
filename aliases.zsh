@@ -33,9 +33,9 @@ alias cleanapt="df -h && sudo apt autoremove -y && sudo apt autoclean && sudo ap
 if [[ $(command -v "exa") ]]; then
   # alias ls="exa --icons"
   alias ls='eza -a --icons'
-  alias ll="exa -lh --icons"
+  alias ll="exa -lha --icons"
   alias l="exa -lh --icons"
-  alias la="exa -lah"
+  # alias la="exa -lah"
   alias tree="exa --tree --level 2"
 fi
 
