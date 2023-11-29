@@ -80,8 +80,8 @@ tab = "→"
 newline = "⏎"
 tabpad = "·"  # Tabs will look like "→···" (depending on tab width)
 
-[editor.whitespace]
-render = "all"
+# [editor.whitespace]
+# render = "all"
 
 [editor.lsp]
 enable = true
