@@ -89,6 +89,8 @@ display-messages = true
 display-inlay-hints = true
 auto-signature-help = true
 display-signature-help-docs = true
+# inline-diagnostics = { max-warp = 1 }
+
 
 # [editor.indent-guides]
 # render = true
