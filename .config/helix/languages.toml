@@ -5,19 +5,25 @@ taplo = { command = "taplo", args = ["lsp", "stdio"] }
 command = "rust-analyzer"
 
 [language-server.rust-analyzer.config]
-inlayHints.bindingModeHints.enable = false
-inlayHints.closingBraceHints.minLines = 10
-inlayHints.closureReturnTypeHints.enable = "with_block"
-inlayHints.discriminantHints.enable = "fieldless"
-inlayHints.lifetimeElisionHints.enable = "skip_trivial"
-inlayHints.typeHints.hideClosureInitialization = false
 check = { command = "clippy", features = "all" }
 diagnostics = { experimental = { enable = true } }
 hover = { actions = { enable = true } }
 typing = { autoClosingAngleBrackets = { enable = true } }
-# cargo = { allFeatures = true }
 cargo = { buildScripts = { enable = true }, features = "all" }
 procMacro = { enable = true }
+
+[language-server.rust-analyzer.config.inlayHints]
+bindingModeHints.enable = false
+closingBraceHints.minLines = 10
+closureReturnTypeHints.enable = "with_block"
+discriminantHints.enable = "fieldless"
+# lifetimeElisionHints.enable = "skip_trivial"
+# typeHints.hideClosureInitialization = false
+lifetimeElisionHints = { enable = false, useParameterNames = false }
+renderColons = false
+typeHints = { hideNamedConstructor = true, hideClosureInitialization = true }
+parameterHints = { enable = false }
+chainingHints = { enable = false }
 
 [language-server.gopls]
 command = "gopls"
