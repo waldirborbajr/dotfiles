@@ -1,5 +1,5 @@
-[language-server]
-taplo = { command = "taplo", args = ["lsp", "stdio"] }
+# [language-server]
+# taplo = { command = "taplo", args = ["lsp", "stdio"] }
 
 [language-server.rust-analyzer]
 command = "rust-analyzer"
