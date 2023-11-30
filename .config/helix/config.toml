@@ -55,7 +55,7 @@ mode.insert = "INSERT"
 mode.select = "SELECT"
 
 [editor.soft-wrap]
-enable = false
+enable = true
 wrap-indicator = ""
 max-indent-retain = 0
 wrap-at-text-width = true
