@@ -73,12 +73,12 @@ hidden = false
 git-global = false # show files hidden by git globally
 max-depth = 20
 
-[editor.whitespace.characters]
-space = "·"
-nbsp = "⍽"
-tab = "→"
-newline = "⏎"
-tabpad = "·"  # Tabs will look like "→···" (depending on tab width)
+# [editor.whitespace.characters]
+# space = "·"
+# nbsp = "⍽"
+# tab = "→"
+# newline = "⏎"
+# tabpad = "·"  # Tabs will look like "→···" (depending on tab width)
 
 # [editor.whitespace]
 # render = "all"
@@ -90,11 +90,11 @@ display-inlay-hints = true
 auto-signature-help = true
 display-signature-help-docs = true
 
-[editor.indent-guides]
-render = true
-# character = "▏" # Some characters that work well: "▏", "┆", "┊", "⸽" 
-character = "┊"
-skip-levels = 1
+# [editor.indent-guides]
+# render = true
+# # character = "▏" # Some characters that work well: "▏", "┆", "┊", "⸽" 
+# character = "┊"
+# skip-levels = 1
 
 # [editor.whitespace]
 # render = "all"
