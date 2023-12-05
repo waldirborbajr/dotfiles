@@ -49,11 +49,13 @@ alias ff="rg --files | sk --preview='bat {} --color=always'"
 
 ## Zellij
 alias zj="zellij a -c 'B+ DevOps'"
-alias zjrust="zellij --layout $HOME/.config/zellij/zelliRUST.kdl a -c 'B+ DevRust'"
+alias zjrs="zellij --layout $HOME/.config/zellij/zelliRUST.kdl a -c 'B+ DevRust'"
 alias zjgo="zellij --layout $HOME/.config/zellij/zelliGO.kdl a -c 'B+ DeviGO'"
-alias zka="zellij ka -y"
-alias zrn="zellij r -- $1"
-alias zjfree="rm -rf /home/borba/.cache/zellij"
+alias zjkl="zellij ka -y"
+alias zjrn="zellij r -- $1"
+alias zjrm="rm -rf /home/borba/.cache/zellij"
+alias zjls="zellij ls"
+alias zjat="zellij a"
 
 # Linux version of OSX pbcopy and pbpaste.
 # sudo apt install xclip xsel
