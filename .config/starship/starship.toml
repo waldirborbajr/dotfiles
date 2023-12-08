@@ -37,18 +37,19 @@ min_time_to_notify = 60_000
 
 [aws]
 format = 'on [$symbol($profile )(\($region\) )]($style)'
-style='bold blue'
+style = 'bold blue'
 symbol = "aws "
 
 [golang]
 format = "[${symbol} $version](bold blue)"
 symbol = ""
 # symbol = "go "
-style='bold blue'
+style = 'bold blue'
 
 [docker_context]
-format = "via [ $context](bold blue) "
-disabled = false
+format = "[${symbol} $context](bold blue) "
+symbol = "  "
+disabled = true
 
 [python]
 format = "[${symbol} $version](white)"
@@ -59,11 +60,11 @@ format = "[${symbol} $version](white)"
 symbol = ""
 
 [kubernetes]
-symbol = '☸'
+symbol = '☸ '
 disabled = false
 detect_files = ['k8s', 'Dockerfile']
 detect_extensions = ['yaml']
-format = '[$symbol$context( \($namespace\))]($style) '
+format = '[$context(\[$namespace\])]($style) '
 
 [kubernetes.context_aliases]
 'arn:aws:eks:us-west-2:123:cluster/gal-kub-demo-cluster' = 'gal'
@@ -109,7 +110,7 @@ red = "#f38ba8"
 maroon = "#eba0ac"
 peach = "#fab387"
 yellow = "#f9e2af"
-green= "#a6e3a1"
+green = "#a6e3a1"
 teal = "#94e2d5"
 sky = "# 89dceb"
 sapphire = "#74c7ec"
