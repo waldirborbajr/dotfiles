@@ -54,12 +54,6 @@ mode.normal = "NORMAL"
 mode.insert = "INSERT"
 mode.select = "SELECT"
 
-[editor.soft-wrap]
-enable = true
-wrap-indicator = ""
-max-indent-retain = 0
-wrap-at-text-width = true
-
 [editor.cursor-shape]
 insert = "bar"
 normal = "block"
