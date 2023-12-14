@@ -4,7 +4,7 @@ alias '??'=searchOnGoogle
 alias v='nvim'
 alias vi='nvim'
 alias vim='nvim'
-aias h='hx'
+alias h='hx'
 
 alias chmox="chmod +x"
 
