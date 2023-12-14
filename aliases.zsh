@@ -1,8 +1,10 @@
 alias '?'=searchOnDuck
 alias '??'=searchOnGoogle
 
-alias v=nvim
-alias vi=nvim
+alias v='nvim'
+alias vi='nvim'
+alias vim='nvim'
+aias h='hx'
 
 alias chmox="chmod +x"
 
@@ -50,7 +52,8 @@ fi
 alias ff="rg --files | sk --preview='bat {} --color=always'"
 
 ## Zellij
-alias zj="zellij a -c 'B+ DevOps'"
+# alias zj="zellij a -c 'B+ DevOps'"
+alias zj="zellij"
 alias zjrs="zellij --layout $HOME/.config/zellij/zelliRUST.kdl a -c 'B+ DevRust'"
 alias zjgo="zellij --layout $HOME/.config/zellij/zelliGO.kdl a -c 'B+ DeviGO'"
 alias zjkl="zellij ka -y"
@@ -65,3 +68,17 @@ alias zjat="zellij a"
 # alias pbpaste='xclip -selection clipboard -o'
 alias pbcopy='xsel --clipboard --input'
 alias pbpaste='xsel --clipboard --output'
+
+# Colored output
+#alias ls='ls -laGH --color=auto'
+alias diff='diff --color=auto'
+alias grep='grep --color=auto'
+alias ip='ip --color=auto'
+
+alias gs='git status'
+alias ga='git add -A'
+alias gc='git commit'
+alias gpll='git pull'
+alias gpsh='git push'
+alias gd='git diff'
+alias gl='git log --stat --graph --decorate --oneline'
