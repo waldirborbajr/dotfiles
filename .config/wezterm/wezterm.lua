@@ -193,6 +193,37 @@ local config = {
 			}),
 		},
 	},
+
+	launch_menu = {
+		{
+			label = "M2-wired",
+			args = { "ssh", "-b", "10.0.0.1", "-t", "martins3@10.0.0.2", "zellij attach || zellij" },
+		},
+		{
+			label = "Mi-wired",
+			args = { "ssh", "-b", "10.0.0.1", "-t", "martins3@10.0.0.2", "zellij attach || zellij" },
+		},
+		{
+			label = "M2",
+			args = { "ssh", "-t", "martins3@192.168.11.99", "zellij attach || zellij" },
+		},
+		{
+			label = "Mi",
+			args = { "ssh", "-t", "martins3@192.168.11.17", "zellij attach || zellij" },
+		},
+		{
+			label = "zellij",
+			args = { "/bin/sh", "-l", "-c", "zellij attach || zellij" },
+		},
+		{
+			label = "QEMU",
+			args = { "ssh", "-t", "-p5556", "root@localhost", "zellij attach || zellij" },
+		},
+		{
+			label = "bare",
+			args = { "zsh" },
+		},
+	},
 }
 
 return config
