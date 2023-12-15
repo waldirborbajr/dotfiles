@@ -144,6 +144,36 @@ local config = {
 			}),
 		},
 
+		{ mods = "CTRL|SHIFT", key = "-", action = "DecreaseFontSize" }, -- Ctrl-Shift-- (key with -)
+		{ mods = "CTRL|SHIFT", key = "+", action = "IncreaseFontSize" }, -- Ctrl-Shift-+ (key with =)
+		{
+			key = "LeftArrow",
+			mods = "CTRL|SHIFT",
+			action = wezterm.action.DisableDefaultAssignment,
+		},
+		{
+			key = "RightArrow",
+			mods = "CTRL|SHIFT",
+			action = wezterm.action.DisableDefaultAssignment,
+		},
+		{
+			key = "t",
+			mods = "CTRL|SHIFT",
+			action = wezterm.action.SpawnCommandInNewTab({
+				args = { "zsh", "-l", "-c", "zellij attach || zellij" },
+			}),
+			-- action = wezterm.action.ShowLauncher
+		},
+		{
+			key = "m",
+			mods = "CTRL",
+			action = wezterm.action.SpawnCommandInNewTab({
+				args = { "ssh", "-t", "-p5556", "root@localhost", "zellij attach || zellij" },
+			}),
+			-- action = wezterm.action.ShowLauncher
+		},
+		{ key = "F2", mods = "", action = wezterm.action.ShowLauncher },
+
 		-- FIX: disable binding
 		-- {
 		-- 	mods = "CMD",
