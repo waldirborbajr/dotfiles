@@ -1,102 +1,168 @@
+--
+-- ██╗    ██╗███████╗███████╗████████╗███████╗██████╗ ███╗   ███╗
+-- ██║    ██║██╔════╝╚══███╔╝╚══██╔══╝██╔════╝██╔══██╗████╗ ████║
+-- ██║ █╗ ██║█████╗    ███╔╝    ██║   █████╗  ██████╔╝██╔████╔██║
+-- ██║███╗██║██╔══╝   ███╔╝     ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║
+-- ╚███╔███╔╝███████╗███████╗   ██║   ███████╗██║  ██║██║ ╚═╝ ██║
+--  ╚══╝╚══╝ ╚══════╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝
+-- A GPU-accelerated cross-platform terminal emulator
+-- https://wezfurlong.org/wezterm/
+
+local b = require("utils/background")
+local cs = require("utils/color_scheme")
+local f = require("utils/font")
+local h = require("utils/helpers")
+local k = require("utils/keys")
+local w = require("utils/wallpaper")
+
 local wezterm = require("wezterm")
+local act = wezterm.action
 
 local config = {
-	term = "wezterm",
-	color_scheme = "Catppuccin Mocha",
-	font = wezterm.font("JetBrainsMono Nerd Font"),
+	-- background
+	background = {
+		w.get_wallpaper(),
+		b.get_background(),
+	},
+
+	-- font
+	font = f.get_font(),
 	font_size = 10.5,
-	-- line_height = 1.6,
-	underline_position = -7,
+
+	-- colors
+	color_scheme = cs.get_color_scheme(),
+
+	-- padding
 	window_padding = {
-		left = "1.5cell",
-		right = "1.5cell",
-		top = "0.4cell",
-		bottom = "0.4cell",
+		left = 30,
+		right = 30,
+		top = 20,
+		bottom = 10,
 	},
-	window_decorations = "RESIZE",
-	window_close_confirmation = "NeverPrompt",
-	enable_tab_bar = false,
+
+	set_environment_variables = {
+		-- THEME_FLAVOUR = "latte",
+		BAT_THEME = h.is_dark() and "Catppuccin-mocha" or "Catppuccin-latte",
+	},
+
+	-- general options
 	adjust_window_size_when_changing_font_size = false,
+	debug_key_events = false,
+	enable_tab_bar = false,
+	native_macos_fullscreen_mode = false,
+	window_close_confirmation = "NeverPrompt",
+	window_decorations = "RESIZE",
+
+	-- keys
 	keys = {
-		{ key = "f", mods = "CTRL", action = wezterm.action.ToggleFullScreen },
-		{ key = "t", mods = "SUPER", action = wezterm.action.Nop },
-		{ key = "\\", mods = "CTRL", action = wezterm.action.ShowDebugOverlay },
+		k.cmd_key(".", k.multiple_actions(":ZenMode")),
+		k.cmd_key("[", act.SendKey({ mods = "CTRL", key = "o" })),
+		k.cmd_key("]", act.SendKey({ mods = "CTRL", key = "i" })),
+		k.cmd_key("f", k.multiple_actions(":Grep")),
+		k.cmd_key("H", act.SendKey({ mods = "CTRL", key = "h" })),
+		k.cmd_key("i", k.multiple_actions(":SmartGoTo")),
+		k.cmd_key("J", act.SendKey({ mods = "CTRL", key = "j" })),
+		k.cmd_key("K", act.SendKey({ mods = "CTRL", key = "k" })),
+		k.cmd_key("L", act.SendKey({ mods = "CTRL", key = "l" })),
+		k.cmd_key("P", k.multiple_actions(":GoToCommand")),
+		k.cmd_key("p", k.multiple_actions(":GoToFile")),
+		k.cmd_key("q", k.multiple_actions(":qa!")),
+		k.cmd_to_tmux_prefix("1", "1"),
+		k.cmd_to_tmux_prefix("2", "2"),
+		k.cmd_to_tmux_prefix("3", "3"),
+		k.cmd_to_tmux_prefix("4", "4"),
+		k.cmd_to_tmux_prefix("5", "5"),
+		k.cmd_to_tmux_prefix("6", "6"),
+		k.cmd_to_tmux_prefix("7", "7"),
+		k.cmd_to_tmux_prefix("8", "8"),
+		k.cmd_to_tmux_prefix("9", "9"),
+		k.cmd_to_tmux_prefix("`", "n"),
+		k.cmd_to_tmux_prefix("b", "B"),
+		k.cmd_to_tmux_prefix("C", "C"),
+		k.cmd_to_tmux_prefix("d", "D"),
+		k.cmd_to_tmux_prefix("G", "G"),
+		k.cmd_to_tmux_prefix("g", "g"),
+		k.cmd_to_tmux_prefix("j", "O"),
+		k.cmd_to_tmux_prefix("k", "T"),
+		k.cmd_to_tmux_prefix("l", "L"),
+		k.cmd_to_tmux_prefix("n", '"'),
+		k.cmd_to_tmux_prefix("N", "%"),
+		k.cmd_to_tmux_prefix("o", "u"),
+		k.cmd_to_tmux_prefix("T", "!"),
+		k.cmd_to_tmux_prefix("t", "c"),
+		k.cmd_to_tmux_prefix("w", "x"),
+		k.cmd_to_tmux_prefix("z", "z"),
+
+		k.cmd_key(
+			"R",
+			act.Multiple({
+				act.SendKey({ key = "\x1b" }), -- escape
+				k.multiple_actions(":source %"),
+			})
+		),
+
+		k.cmd_key(
+			"s",
+			act.Multiple({
+				act.SendKey({ key = "\x1b" }), -- escape
+				k.multiple_actions(":w"),
+			})
+		),
+
+		{
+			mods = "CMD|SHIFT",
+			key = "}",
+			action = act.Multiple({
+				act.SendKey({ mods = "CTRL", key = "b" }),
+				act.SendKey({ key = "n" }),
+			}),
+		},
+		{
+			mods = "CMD|SHIFT",
+			key = "{",
+			action = act.Multiple({
+				act.SendKey({ mods = "CTRL", key = "b" }),
+				act.SendKey({ key = "p" }),
+			}),
+		},
+
+		{
+			mods = "CTRL",
+			key = "Tab",
+			action = act.Multiple({
+				act.SendKey({ mods = "CTRL", key = "b" }),
+				act.SendKey({ key = "n" }),
+			}),
+		},
+
+		{
+			mods = "CTRL|SHIFT",
+			key = "Tab",
+			action = act.Multiple({
+				act.SendKey({ mods = "CTRL", key = "b" }),
+				act.SendKey({ key = "n" }),
+			}),
+		},
+
+		-- FIX: disable binding
+		-- {
+		-- 	mods = "CMD",
+		-- 	key = "`",
+		-- 	action = act.Multiple({
+		-- 		act.SendKey({ mods = "CTRL", key = "b" }),
+		-- 		act.SendKey({ key = "n" }),
+		-- 	}),
+		-- },
+
+		{
+			mods = "CMD",
+			key = "~",
+			action = act.Multiple({
+				act.SendKey({ mods = "CTRL", key = "b" }),
+				act.SendKey({ key = "p" }),
+			}),
+		},
 	},
-	front_end = "WebGpu", -- Temp: This is new default in nightly, can remove later!
 }
 
--- This doesn't work well on a dual screen setup, and is hopefully a temporary solution to the font rendering oddities
--- shown in https://github.com/wez/wezterm/issues/4096. Ideally I'll switch to using `dpi_by_screen` at some point,
--- but for now 11pt @ 109dpi seems to be the most stable for font rendering on my 38" ultrawide LG monitor here.
-wezterm.on("window-config-reloaded", function(window)
-	if wezterm.gui.screens().active.name == "LG HDR WQHD" then
-		window:set_config_overrides({
-			dpi = 109,
-			font_size = 11,
-		})
-	end
-end)
-
--- Important for screencasting...
-wezterm.on("window-config-reloaded", function(window)
-	if wezterm.gui.screens().active.name == "24GL600F" then
-		local dpi = 92
-		local font_size = 13
-
-		-- For 1280x720 HiDPI specifically, which will have height of 1440
-		if wezterm.gui.screens().active.height == 1440 then
-			dpi = 144
-			font_size = 15.5
-		end
-
-		window:set_config_overrides({
-			dpi = dpi,
-			font_size = font_size,
-			line_height = 1.6,
-			underline_position = -12,
-			window_padding = {
-				top = "0.7cell",
-				bottom = "0.3cell",
-			},
-		})
-	end
-end)
-
 return config
-
--- return {
--- 	-- color_scheme = 'termnial.sexy',
--- 	color_scheme = "Catppuccin Mocha",
--- 	enable_tab_bar = false,
--- 	-- FONT
--- 	font = wezterm.font("JetBrainsMono Nerd Font"),
--- 	font_size = 10.5,
--- 	--	macos_window_background_blur = 30,
-
--- 	-- window_background_image = '/Users/omerhamerman/Downloads/3840x1080-Wallpaper-041.jpg',
--- 	-- window_background_image_hsb = {
--- 	-- 	brightness = 0.01,
--- 	-- 	hue = 1.0,
--- 	-- 	saturation = 0.5,
--- 	-- },
--- 	-- window_background_opacity = 0.92,
--- 	window_background_opacity = 1.0,
--- 	-- window_background_opacity = 0.78,
--- 	-- window_background_opacity = 0.20,
--- 	window_decorations = "RESIZE",
--- 	keys = {
--- 		{
--- 			key = "f",
--- 			mods = "CTRL",
--- 			action = wezterm.action.ToggleFullScreen,
--- 		},
--- 	},
--- 	mouse_bindings = {
--- 		-- Ctrl-click will open the link under the mouse cursor
--- 		{
--- 			event = { Up = { streak = 1, button = "Left" } },
--- 			mods = "CTRL",
--- 			action = wezterm.action.OpenLinkAtMouseCursor,
--- 		},
--- 	},
--- }
