@@ -7,7 +7,7 @@
 # ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝   ╚═╝      ╚═╝      ╚═╝
 # A cross-platform, OpenGL terminal emulator.
 # https://alacritty.org
-#                                                                       
+#
 # Alacritty Config File by Waldir Borba Junior
 
 import:
@@ -33,9 +33,11 @@ window:
   #   - Fullscreen
   startup_mode: Maximized
 
-  opacity: 0.95
   dynamic_title: true
   title: Terminal
+  # decorations: buttonless
+  dynamic_padding: false
+  opacity: 0.9
 
 # Display tabs using this many cells
 tabspaces: 2
@@ -55,7 +57,7 @@ mouse:
      binding:
        key: U
        mods: Control|Shift
-        
+
 font:
   normal:
     family: JetBrainsMono Nerd Font
