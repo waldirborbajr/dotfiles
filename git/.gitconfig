@@ -1,11 +1,9 @@
-; vim: sw=8 ts=8 noexpandtab
-
-[include]
-	path = ~/.gituser
+; [include]
+; 	path = ~/.gituser
 ; @example for file .gituser
-; [user]
-; 	name = "User Name"
-; 	email = "user.name@gmail.com"
+[user]
+	name = "Waldir Borba Junior"
+	email = "wborbajr@gmail.com"
 ; 	signingkey = 3F00K0FF3D7CB632
 ; [credential "https://github.com"]
 ; 	username = githubUser
@@ -30,7 +28,6 @@
 	rp = checkout HEAD -- package-lock.json
 	prune-origin = remote prune origin
 	branch-list-remote = for-each-ref --format='%(color:cyan)%(authordate:format:%m/%d/%Y %I:%M %p)    %(align:25,left)%(color:yellow)%(authorname)%(end) %(color:reset)%(refname:strip=3)' --sort=authordate refs/remotes
-
 
 [diff]
 	tool = vimdiff
