@@ -32,6 +32,19 @@ right_format = """$all"""
 # error_symbol = "[x](bold red)"
 # vimcmd_symbol = "[<](bold green)"
 
+[username]
+show_always = false
+style_user = "#b16286 bold"
+style_root = "#cc241d bold"
+format = "[$user]($style)"
+disabled = false
+
+[hostname]
+ssh_only = false
+format = "@[$hostname](bold #f65d0e) "
+ssh_symbol = '🌐 '
+disabled = true
+
 [directory]
 truncation_length = 3
 truncation_symbol = "…/"
@@ -39,6 +52,7 @@ truncation_symbol = "…/"
 read_only_style = "197"
 read_only = "  "
 format = "[$path]($style)[$read_only]($read_only_style) "
+style = "#8ec07c bold"
 
 [cmd_duration]
 format = " took [$duration]($style)"
@@ -100,16 +114,20 @@ added_style = 'bold blue'
 format = '[+$added]($added_style)/[-$deleted]($deleted_style) '
 
 [git_status]
-conflicted = "= "
-ahead = "⇡×${count} "
-behind = "⇣×${count} "
-diverged = "${ahead_count}×⇕×${behind_count} "
-untracked = "?×${count} "
-stashed = "\\$×${count} "
-modified = "!×${count} "
-staged = "+×${count} "
-renamed = "»×${count} "
-deleted = "✘×${count} "
+style = "bold white"
+format = '([\($all_status$ahead_behind\)]($style) )'
+conflicted = "[=](#cc241d bold)"
+ahead = "[⇡](#98971a bold)"
+behind = "[⇣](#cc241d bold)"
+diverged = "[⇕](#cc241d bold)"
+up_to_date = ""
+untracked = "[?](#cc241d bold)"
+stashed = "[$](#f65d0e bold)"
+modified = "[!](#cc241d bold)"
+renamed = "[»](#cc241d bold)"
+deleted = "[✘](#cc241d bold)"
+staged = "[+](#98971a bold)"
+disabled = false
 
 [palettes.catppuccin_mocha]
 rosewater = "#f5e0dc"
