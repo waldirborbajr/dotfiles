@@ -98,8 +98,8 @@ symbol = ' '
 format = "on [$symbol$branch]($style) "
 truncation_length = 4
 truncation_symbol = "…/"
-# ignore_branches = ['master', 'main']
-style = "bold green"
+# style = "bold green"
+style = "#458588 bold"
 
 [git_commit]
 commit_hash_length = 4
