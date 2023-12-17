@@ -92,8 +92,8 @@ fi
 alias ff="rg --files | sk --preview='bat {} --color=always'"
 
 ## Zellij
-# alias zj="zellij a -c 'B+ DevOps'"
 if hash zellij 2>/dev/null; then
+  # alias zj="zellij a -c 'B+ DevOps'"
   alias zj="zellij"
   alias zjrs="zellij --layout $HOME/.config/zellij/zelliRUST.kdl a -c 'B+ DevRust'"
   alias zjgo="zellij --layout $HOME/.config/zellij/zelliGO.kdl a -c 'B+ DeviGO'"
