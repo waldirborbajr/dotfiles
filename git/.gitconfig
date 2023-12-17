@@ -45,22 +45,29 @@
 
 [mergetool]
 	trustExitCode = true
+
 [rebase]
 	abbreviateCommands = true
+
 [pull]
 	ff = only
 	rebase = true
+
 [init]
 	defaultBranch = master
+
 [submodule]
 	recurse = true
+
 [pager]
 	diff = delta
 	log = delta
 	reflog = delta
 	show = delta
+
 [interactive]
 	fdiffFilter = delta --color-only
+
 [push]
 	followTags = true
 	autoSetupRemote = true
