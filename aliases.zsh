@@ -126,3 +126,22 @@ alias gpll='git pull'
 alias gpsh='git push'
 alias gd='git diff'
 alias gl='git log --stat --graph --decorate --oneline'
+
+if hash gh 2>/dev/null; then
+  alias gh-create='gh pr create -t $(git branch --show-current)'
+  alias gh-create-web='gh pr create -w -t $(git branch --show-current)'
+  # alias gh-complete='gh pr merge --auto --delete-branch --squash'
+  # alias gh-complete='gh pr merge --auto --delete-branch --squash -t $(git branch --show-current)'
+
+else
+  echo "gh is missing"
+  # install github-cli
+fi
+
+if hash lazygit 2>/dev/null; then
+  alias lg='lazygit'
+  alias gg='lazygit'
+else
+  echo "lazygit is missing"
+  # install lazygit
+fi
