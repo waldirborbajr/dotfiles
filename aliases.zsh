@@ -1,10 +1,39 @@
+#!/usr/bin/env zsh
+
+hinstall() {
+  if hash pacman 2>/dev/null; then
+    echo "Installing $1"
+    # sudo pacman -S $1
+    yay -S $1
+  elif hash pkg 2>/dev/null; then
+    case $1 in
+      xclip | fping)
+        return
+        ;;
+    esac
+    echo "Installing $1"
+    pkg install $1
+  fi
+  zsh
+}
+
 alias '?'=searchOnDuck
 alias '??'=searchOnGoogle
 
-alias v='nvim'
-alias vi='nvim'
-alias vim='nvim'
-alias h='hx'
+if hash nvim 2>/dev/null; then
+  alias vim="nvim"
+  alias v="nvim"
+  alias vi='nvim'
+else
+  echo "neovim is missing"
+  # install neovim
+fi
+
+if hash hx 2>/dev/null; then
+  alias h='hx'
+else
+  echo "helix is missing"
+fi
 
 alias chmox="chmod +x"
 
@@ -34,13 +63,24 @@ alias clsym="find -L . -name . -o -type d -prune -o -type l -exec rm {} +"
 alias cleanapt="df -h && sudo apt autoremove -y && sudo apt autoclean && sudo apt clean && df -h"
 
 # Rebinding -> ls
-if [[ $(command -v "exa") ]]; then
-  # alias ls="exa --icons"
-  alias ls='eza -a --icons'
-  alias ll="exa -lha --icons"
-  alias l="exa -lh --icons"
-  # alias la="exa -lah"
-  alias tree="exa --tree --level 2"
+# if [[ $(command -v "exa") ]]; then
+#   # alias ls="exa --icons"
+#   alias ls='eza -a --icons'
+#   alias ll="exa -lha --icons"
+#   alias l="exa -lh --icons"
+#   # alias la="exa -lah"
+#   alias tree="exa --tree --level 2"
+# fi
+
+if command -v eza &>/dev/null; then
+  alias l='eza'
+  alias ls='eza --group-directories-first --icons --git'
+  alias ll='ls -lah --git'
+  alias la='eza -a'
+  alias tree='ll --tree --level=2'
+else
+  echo "eza is not installed."
+  # install eza
 fi
 
 # Rebinding -> cat
@@ -53,14 +93,18 @@ alias ff="rg --files | sk --preview='bat {} --color=always'"
 
 ## Zellij
 # alias zj="zellij a -c 'B+ DevOps'"
-alias zj="zellij"
-alias zjrs="zellij --layout $HOME/.config/zellij/zelliRUST.kdl a -c 'B+ DevRust'"
-alias zjgo="zellij --layout $HOME/.config/zellij/zelliGO.kdl a -c 'B+ DeviGO'"
-alias zjkl="zellij ka -y"
-alias zjrn="zellij r -- $1"
-alias zjrm="rm -rf /home/borba/.cache/zellij"
-alias zjls="zellij ls"
-alias zjat="zellij a"
+if hash zellij 2>/dev/null; then
+  alias zj="zellij"
+  alias zjrs="zellij --layout $HOME/.config/zellij/zelliRUST.kdl a -c 'B+ DevRust'"
+  alias zjgo="zellij --layout $HOME/.config/zellij/zelliGO.kdl a -c 'B+ DeviGO'"
+  alias zjkl="zellij ka -y"
+  alias zjrn="zellij r -- $1"
+  alias zjrm="rm -rf /home/borba/.cache/zellij"
+  alias zjls="zellij ls"
+  alias zjat="zellij a"
+else
+  echo "helix is missing"
+fi
 
 # Linux version of OSX pbcopy and pbpaste.
 # sudo apt install xclip xsel
