@@ -10,9 +10,8 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
 
--- local shell = "/usr/bin/zsh"
-
 local config = {}
+
 -- Use config builder object if possible
 if wezterm.config_builder then config = wezterm.config_builder() end
 
@@ -21,12 +20,15 @@ if wezterm.config_builder then config = wezterm.config_builder() end
 config.default_prog = { '/usr/bin/env', 'zsh' }
 
 config.color_scheme = "Catppuccin Frappe"
-config.font = wezterm.font_with_fallback({
-  { family = "JetBrainsMono Nerd Font" },
+
+-- config.font = wezterm.font_with_fallback({
+  -- { family = "JetBrainsMono Nerd Font" },
   -- { family = "Iosevka Nerd Font",  scale = 1.24, weight = "Medium", },
   -- { family = "CaskaydiaCove Nerd Font",  scale = 1.2 },
-})
+-- })
+config.font = wezterm.font("JetBrainsMono Nerd Font", {weight="Medium", stretch="Normal", style="Normal"})
 config.font_size = 10.5
+
 config.window_background_opacity = 0.9
 config.window_decorations = "RESIZE"
 config.window_close_confirmation = "AlwaysPrompt"
@@ -93,6 +95,25 @@ config.keys = {
 
   { key = "M", mods = "CTRL|SHIFT",  action = wezterm.action.ShowLauncher },
 
+   -- https://wezfurlong.org/wezterm/config/lua/keyassignment/QuickSelectArgs.html
+   {
+      key = 'f',
+      mods = 'CTRL',
+      action = wezterm.action.QuickSelectArgs {
+         label = 'open url',
+         patterns = {
+            'https?://\\S+',
+            -- doesn't work (open_with doesn't detect as should be opened in
+            -- browser or something else?)
+            -- 'www\\.\\S+',
+         },
+         action = wezterm.action_callback(function(window, pane)
+               local url = window:get_selection_text_for_pane(pane)
+               wezterm.log_info('opening: ' .. url)
+               wezterm.open_with(url)
+         end),
+      },
+   },
 
 }
 -- I can use the tab navigator (LDR t), but I also want to quickly navigate tabs with index
