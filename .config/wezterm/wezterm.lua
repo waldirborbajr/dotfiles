@@ -16,7 +16,6 @@ local config = {}
 if wezterm.config_builder then config = wezterm.config_builder() end
 
 -- Settings
--- config.default_prog = { shell, "-l" }
 config.default_prog = { '/usr/bin/env', 'zsh' }
 
 config.color_scheme = "Catppuccin Frappe"
@@ -28,6 +27,8 @@ config.color_scheme = "Catppuccin Frappe"
 -- })
 config.font = wezterm.font("JetBrainsMono Nerd Font", {weight="Medium", stretch="Normal", style="Normal"})
 config.font_size = 10.5
+
+config.hide_mouse_cursor_when_typing = true
 
 config.window_background_opacity = 0.9
 config.window_decorations = "RESIZE"
