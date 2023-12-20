@@ -133,6 +133,6 @@ export UID=$(id -u)
 export GID=$(id -g)
 export DOCKER_HOST=unix:///run/user/1000/docker.sock
 
-eval "$(starship init zsh)"
-
 neofetch
+
+eval "$(starship init zsh)"
