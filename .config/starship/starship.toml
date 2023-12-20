@@ -113,21 +113,33 @@ cherry_pick = '[🍒 PICKING](bold red)'
 added_style = 'bold blue'
 format = '[+$added]($added_style)/[-$deleted]($deleted_style) '
 
+# [git_status]
+# style = "bold white"
+# format = '([\($all_status$ahead_behind\)]($style) )'
+# conflicted = "[=](#cc241d bold)"
+# ahead = "[⇡](#98971a bold)"
+# behind = "[⇣](#cc241d bold)"
+# diverged = "[⇕](#cc241d bold)"
+# up_to_date = ""
+# untracked = "[?](#cc241d bold)"
+# stashed = "[$](#f65d0e bold)"
+# modified = "[!](#cc241d bold)"
+# renamed = "[»](#cc241d bold)"
+# deleted = "[✘](#cc241d bold)"
+# staged = "[+](#98971a bold)"
+# disabled = false
+
 [git_status]
-style = "bold white"
-format = '([\($all_status$ahead_behind\)]($style) )'
-conflicted = "[=](#cc241d bold)"
-ahead = "[⇡](#98971a bold)"
-behind = "[⇣](#cc241d bold)"
-diverged = "[⇕](#cc241d bold)"
-up_to_date = ""
-untracked = "[?](#cc241d bold)"
-stashed = "[$](#f65d0e bold)"
-modified = "[!](#cc241d bold)"
-renamed = "[»](#cc241d bold)"
-deleted = "[✘](#cc241d bold)"
-staged = "[+](#98971a bold)"
-disabled = false
+conflicted = "= "
+ahead = "⇡×${count} "
+behind = "⇣×${count} "
+diverged = "${ahead_count}×⇕×${behind_count} "
+untracked = "?×${count} "
+stashed = "\\$×${count} "
+modified = "!×${count} "
+staged = "+×${count} "
+renamed = "»×${count} "
+deleted = "✘×${count} "
 
 [palettes.catppuccin_mocha]
 rosewater = "#f5e0dc"

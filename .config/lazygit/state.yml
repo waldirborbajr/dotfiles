@@ -1,5 +1,6 @@
 lastupdatecheck: 0
 recentrepos:
+- /home/borba/wks/rust/advent-of-code
 - /home/borba/wks/rust/gitpushup
 - /home/borba/dotfiles
 - /home/borba/.config/nvim/lua/user
