@@ -130,25 +130,6 @@ config.keys = {
   { key = "c",          mods = "LEADER",      action = act.ActivateCopyMode },
   { key = "phys:Space", mods = "LEADER",      action = act.ActivateCommandPalette },
 
-  -- Pane keybindings
-  { key = "s",          mods = "LEADER",      action = act.SplitVertical { domain = "CurrentPaneDomain" } },
-  { key = "v",          mods = "LEADER",      action = act.SplitHorizontal { domain = "CurrentPaneDomain" } },
-  { key = "h",          mods = "LEADER",      action = act.ActivatePaneDirection("Left") },
-  { key = "j",          mods = "LEADER",      action = act.ActivatePaneDirection("Down") },
-  { key = "k",          mods = "LEADER",      action = act.ActivatePaneDirection("Up") },
-  { key = "l",          mods = "LEADER",      action = act.ActivatePaneDirection("Right") },
-  { key = "q",          mods = "LEADER",      action = act.CloseCurrentPane { confirm = true } },
-  { key = "z",          mods = "LEADER",      action = act.TogglePaneZoomState },
-  { key = "o",          mods = "LEADER",      action = act.RotatePanes "Clockwise" },
-  -- We can make separate keybindings for resizing panes
-  -- But Wezterm offers custom "mode" in the name of "KeyTable"
-  { key = "r",          mods = "LEADER",      action = act.ActivateKeyTable { name = "resize_pane", one_shot = false } },
-
-  -- Tab keybindings
-  { key = "t",          mods = "LEADER",      action = act.SpawnTab("CurrentPaneDomain") },
-  { key = "[",          mods = "LEADER",      action = act.ActivateTabRelative(-1) },
-  { key = "]",          mods = "LEADER",      action = act.ActivateTabRelative(1) },
-  { key = "n",          mods = "LEADER",      action = act.ShowTabNavigator },
   {
     key = "e",
     mods = "LEADER",
