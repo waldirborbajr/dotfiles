@@ -110,10 +110,6 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-source "$HOME/options.zsh"
-source "$HOME/functions.zsh"
-source "$HOME/aliases.zsh"
-
 export OPT_PATH=/opt
 export CHROME_EXECUTABLE=/snap/bin/chromium
 # export FLUTTER_HOME=/opt/flutter
@@ -132,6 +128,10 @@ export PATH=$PATH:$OPT_PATH/bin:$GOPATH/bin:$GOBIN:$LOCALBIN:$CARGOBIN
 export UID=$(id -u)
 export GID=$(id -g)
 export DOCKER_HOST=unix:///run/user/1000/docker.sock
+
+source "$HOME/options.zsh"
+source "$HOME/functions.zsh"
+source "$HOME/aliases.zsh"
 
 neofetch
 

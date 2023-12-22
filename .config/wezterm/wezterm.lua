@@ -11,6 +11,8 @@ local wezterm = require("wezterm")
 local platform = require('utils.platform')()
 local act = wezterm.action
 
+local session_manager = require("wezterm-session-manager/session-manager")
+
 local config = {}
 
 local mod = {}
@@ -41,6 +43,13 @@ config.font_size = 10.5
 
 config.hide_mouse_cursor_when_typing = true
 
+config.window_padding = {
+  left = '0.5cell',
+  right = '0.5cell',
+  top = '0.5cell',
+  bottom = '0cell',
+}
+
 config.window_background_opacity = 0.9
 config.window_decorations = "RESIZE"
 config.window_close_confirmation = "AlwaysPrompt"
@@ -69,6 +78,11 @@ config.keys = {
   { key = 'c', mods = 'CTRL|SHIFT', action = act.CopyTo('Clipboard') },
   { key = 'v', mods = 'CTRL|SHIFT', action = act.PasteFrom('Clipboard') },
 
+  -- saving, restoring and loading sessions
+  { key = 'S', mods = mod.SUPER_REV, action = wezterm.action{EmitEvent = "save_session"} },
+  { key = 'L', mods = mod.SUPER_REV, action = wezterm.action{EmitEvent = "load_session"} },
+  { key = 'R', mods = mod.SUPER_REV, action = wezterm.action{EmitEvent = "restore_session"} },
+  
   -- tabs --
   -- tabs: spawn+close
   { key = 't', mods = mod.SUPER, action = act.SpawnTab('DefaultDomain') },
@@ -305,5 +319,29 @@ config.window_padding = {
 
 }
 --]]
+
+wezterm.on("save_session", function(window) session_manager.save_state(window) end)
+wezterm.on("load_session", function(window) session_manager.load_state(window) end)
+wezterm.on("restore_session", function(window) session_manager.restore_state(window) end)
+
+wezterm.on("user-var-changed", function(window, pane, name, value)
+	local overrides = window:get_config_overrides() or {}
+	if name == "ZEN_MODE" then
+		local incremental = value:find("+")
+		local number_value = tonumber(value)
+		if incremental ~= nil then
+			while number_value > 0 do
+				window:perform_action(wezterm.action.IncreaseFontSize, pane)
+				number_value = number_value - 1
+			end
+		elseif number_value < 0 then
+			window:perform_action(wezterm.action.ResetFontSize, pane)
+			overrides.font_size = nil
+		else
+			overrides.font_size = number_value
+		end
+	end
+	window:set_config_overrides(overrides)
+end)
 
 return config
