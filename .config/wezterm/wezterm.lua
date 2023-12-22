@@ -79,9 +79,12 @@ config.keys = {
   { key = 'v', mods = 'CTRL|SHIFT', action = act.PasteFrom('Clipboard') },
 
   -- saving, restoring and loading sessions
-  { key = 'S', mods = mod.SUPER_REV, action = wezterm.action{EmitEvent = "save_session"} },
-  { key = 'L', mods = mod.SUPER_REV, action = wezterm.action{EmitEvent = "load_session"} },
-  { key = 'R', mods = mod.SUPER_REV, action = wezterm.action{EmitEvent = "restore_session"} },
+  -- { key = 'S', mods = 'LEADER', action = wezterm.action{EmitEvent = "save_session"} },
+  -- { key = 'L', mods = 'LEADER', action = wezterm.action{EmitEvent = "load_session"} },
+  -- { key = 'R', mods = 'LEADER', action = wezterm.action{EmitEvent = "restore_session"} },
+  { key = 'S', mods = 'CTRL|SHIFT', action = wezterm.action{EmitEvent = "save_session"} },
+  { key = 'L', mods = 'CTRL|SHIFT', action = wezterm.action{EmitEvent = "load_session"} },
+  { key = 'R', mods = 'CTRL|SHIFT', action = wezterm.action{EmitEvent = "restore_session"} },
   
   -- tabs --
   -- tabs: spawn+close
