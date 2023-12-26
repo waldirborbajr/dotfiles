@@ -225,8 +225,8 @@ config.key_tables = {
 
 config.launch_menu = {
 	{
-		label = "M2-wired",
-		args = { "ssh", "-b", "10.0.0.1", "-t", "martins3@10.0.0.2", "zellij attach || zellij" },
+		label = "Pi4-wired",
+		args = { "ssh", "borba@192.168.1.19" },
 	},
 	{
 		label = "Mi-wired",
