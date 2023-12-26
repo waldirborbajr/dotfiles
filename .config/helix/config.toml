@@ -86,7 +86,7 @@ D = "kill_to_line_end"
 "$" = "goto_line_end"
 "^" = "goto_first_nonwhitespace"
 G = "goto_file_end"
-"%" = "match_brackets"
+# "%" = "match_brackets"
 
 [keys.insert]
 C-space = "completion"

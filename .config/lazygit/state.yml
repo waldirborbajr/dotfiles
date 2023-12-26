@@ -1,7 +1,7 @@
 lastupdatecheck: 0
 recentrepos:
-- /home/borba/dotfiles
 - /home/borba/wks/rust/advent-of-code
+- /home/borba/dotfiles
 - /home/borba/wks/rust/gitpushup
 - /home/borba/.config/nvim/lua/user
 startuppopupversion: 5
