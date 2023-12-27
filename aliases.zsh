@@ -51,7 +51,7 @@ alias ccr='clear && cr'
 alias cargo-install='cargo install --path .'
 alias cargo-upgrade='cargo install-update -a'
 alias cargoupdate="cargo install $(cargo install --list | egrep '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ') --force"
-alias cargofullcache="cargo-cache -r all"
+alias cargoclearcache="cargo-cache -r all"
 alias cargocache="cargo cache -a"
 
 # reload zsh config
