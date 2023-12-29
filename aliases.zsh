@@ -118,7 +118,7 @@ alias reload!='RELOAD=1 source ~/.zshrc'
 alias clsym="find -L . -name . -o -type d -prune -o -type l -exec rm {} +"
 
 alias cleanapt="df -h && sudo apt autoremove -y && sudo apt autoclean && sudo apt clean && df -h"
-
+alias sysupdate="sudo apt update && sudo apt dist-upgrade -y && sudo apt autoremove -y && sudo apt autoclean && sudo apt clean"
 
 # Find Files
 alias ff="rg --files | sk --preview='bat {} --color=always'"
