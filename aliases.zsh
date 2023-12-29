@@ -17,8 +17,35 @@ hinstall() {
   zsh
 }
 
-alias '?'=searchOnDuck
-alias '??'=searchOnGoogle
+if hash gh 2>/dev/null; then
+  alias gh-create='gh pr create -t $(git branch --show-current)'
+  alias gh-create-web='gh pr create -w -t $(git branch --show-current)'
+  # alias gh-complete='gh pr merge --auto --delete-branch --squash'
+  # alias gh-complete='gh pr merge --auto --delete-branch --squash -t $(git branch --show-current)'
+
+else
+  echo "gh is missing"
+  # install github-cli
+fi
+
+if hash lazygit 2>/dev/null; then
+  alias lg='lazygit'
+  alias gg='lazygit'
+else
+  echo "lazygit is missing"
+  # install lazygit
+fi
+
+if command -v eza &>/dev/null; then
+  alias l='eza'
+  alias ls='eza --group-directories-first --icons --git'
+  alias ll='ls -lah --git'
+  alias la='eza -a'
+  alias tree='ll --tree --level=2'
+else
+  echo "eza is not installed."
+  # install eza
+fi
 
 if hash nvim 2>/dev/null; then
   alias vim="nvim"
@@ -31,6 +58,36 @@ fi
 
 if hash hx 2>/dev/null; then
   alias h='hx'
+else
+  echo "helix is missing"
+fi
+
+# Rebinding -> ls
+# if [[ $(command -v "exa") ]]; then
+#   # alias ls="exa --icons"
+#   alias ls='eza -a --icons'
+#   alias ll="exa -lha --icons"
+#   alias l="exa -lh --icons"
+#   # alias la="exa -lah"
+#   alias tree="exa --tree --level 2"
+# fi
+
+# Rebinding -> cat
+if [[ $(command -v "bat") ]]; then
+  alias cat='bat'
+fi
+
+## Zellij
+if hash zellij 2>/dev/null; then
+  # alias zj="zellij a -c 'B+ DevOps'"
+  alias zj="zellij"
+  alias zjrs="zellij --layout $HOME/.config/zellij/zelliRUST.kdl a -c 'B+ DevRust'"
+  alias zjgo="zellij --layout $HOME/.config/zellij/zelliGO.kdl a -c 'B+ DeviGO'"
+  alias zjkl="zellij ka -y"
+  alias zjrn="zellij r -- $1"
+  alias zjrm="rm -rf /home/borba/.cache/zellij"
+  alias zjls="zellij ls"
+  alias zjat="zellij a"
 else
   echo "helix is missing"
 fi
@@ -62,49 +119,9 @@ alias clsym="find -L . -name . -o -type d -prune -o -type l -exec rm {} +"
 
 alias cleanapt="df -h && sudo apt autoremove -y && sudo apt autoclean && sudo apt clean && df -h"
 
-# Rebinding -> ls
-# if [[ $(command -v "exa") ]]; then
-#   # alias ls="exa --icons"
-#   alias ls='eza -a --icons'
-#   alias ll="exa -lha --icons"
-#   alias l="exa -lh --icons"
-#   # alias la="exa -lah"
-#   alias tree="exa --tree --level 2"
-# fi
-
-if command -v eza &>/dev/null; then
-  alias l='eza'
-  alias ls='eza --group-directories-first --icons --git'
-  alias ll='ls -lah --git'
-  alias la='eza -a'
-  alias tree='ll --tree --level=2'
-else
-  echo "eza is not installed."
-  # install eza
-fi
-
-# Rebinding -> cat
-if [[ $(command -v "bat") ]]; then
-  alias cat='bat'
-fi
 
 # Find Files
 alias ff="rg --files | sk --preview='bat {} --color=always'"
-
-## Zellij
-if hash zellij 2>/dev/null; then
-  # alias zj="zellij a -c 'B+ DevOps'"
-  alias zj="zellij"
-  alias zjrs="zellij --layout $HOME/.config/zellij/zelliRUST.kdl a -c 'B+ DevRust'"
-  alias zjgo="zellij --layout $HOME/.config/zellij/zelliGO.kdl a -c 'B+ DeviGO'"
-  alias zjkl="zellij ka -y"
-  alias zjrn="zellij r -- $1"
-  alias zjrm="rm -rf /home/borba/.cache/zellij"
-  alias zjls="zellij ls"
-  alias zjat="zellij a"
-else
-  echo "helix is missing"
-fi
 
 # Linux version of OSX pbcopy and pbpaste.
 # sudo apt install xclip xsel
@@ -127,21 +144,5 @@ alias gpsh='git push'
 alias gd='git diff'
 alias gl='git log --stat --graph --decorate --oneline'
 
-if hash gh 2>/dev/null; then
-  alias gh-create='gh pr create -t $(git branch --show-current)'
-  alias gh-create-web='gh pr create -w -t $(git branch --show-current)'
-  # alias gh-complete='gh pr merge --auto --delete-branch --squash'
-  # alias gh-complete='gh pr merge --auto --delete-branch --squash -t $(git branch --show-current)'
-
-else
-  echo "gh is missing"
-  # install github-cli
-fi
-
-if hash lazygit 2>/dev/null; then
-  alias lg='lazygit'
-  alias gg='lazygit'
-else
-  echo "lazygit is missing"
-  # install lazygit
-fi
+alias '?'=searchOnDuck
+alias '??'=searchOnGoogle

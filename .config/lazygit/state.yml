@@ -1,9 +1,9 @@
 lastupdatecheck: 0
 recentrepos:
-- /home/borba/wks/go/htmx-chat
+- /home/borba/.config/nvim/lua/user
+- /home/borba/wks/2ndBrain
 - /home/borba/wks/rust/gitpushup
 - /home/borba/dotfiles
-- /home/borba/.config/nvim/lua/user
 startuppopupversion: 5
 customcommandshistory:
 - q
