@@ -1,7 +1,10 @@
 lastupdatecheck: 0
 recentrepos:
-- /home/borba/.config/nvim/lua/user
+- /home/borba/wks/rust/tbir
+- /home/borba/wks/rust/hackerrank
 - /home/borba/wks/2ndBrain
+- /home/borba/wks/tokens
+- /home/borba/.config/nvim/lua/user
 - /home/borba/wks/rust/gitpushup
 - /home/borba/dotfiles
 startuppopupversion: 5

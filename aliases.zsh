@@ -110,6 +110,7 @@ alias cargo-upgrade='cargo install-update -a'
 alias cargoupdate="cargo install $(cargo install --list | egrep '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ') --force"
 alias cargoclearcache="cargo-cache -r all"
 alias cargocache="cargo cache -a"
+alias rustupfull="rustup update && rustup component add rust-analyzer && rustup component list"
 
 # reload zsh config
 alias reload!='RELOAD=1 source ~/.zshrc'
