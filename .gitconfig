@@ -25,9 +25,6 @@
   grep = auto
   ui = auto
 
-#[hub]
-#  protocol = https
-
 [github]
 	user = waldirborbajr
 

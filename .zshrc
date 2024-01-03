@@ -124,9 +124,13 @@ export FZF_DEFAULT_OPTS="--color=dark"
 # export FZF_CTRL_T_OPTS="--preview='bat --color=always {}' --height=100% --bind shift-up:preview-page-up,shift-down:preview-page-down"
 export FZF_CTRL_T_OPTS="--preview='less {}' --height=100% --bind shift-up:preview-page-up,shift-down:preview-page-down"
 
-source "$HOME/options.zsh"
-source "$HOME/functions.zsh"
-source "$HOME/aliases.zsh"
+[[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
+[[ -f ~/.zsh/functions.zsh ]] && source ~/.zsh/functions.zsh
+# [[ -f ~/.zsh/starship.zsh ]] && source ~/.zsh/starship.zsh
+# [[ -f ~/.zsh/nvm.zsh ]] && source ~/.zsh/nvm.zsh
+[[ -f ~/.zsh/options.zsh ]] && source ~/.zsh/options.zsh
+# [[ -f ~/.zsh/goto.zsh ]] && source ~/.zsh/goto.zsh
+
 
 neofetch
 
