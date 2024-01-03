@@ -14,15 +14,14 @@ hinstall() {
     echo "Installing $1"
     pkg install $1
   fi
-  zsh
+ zsh
 }
 
-if hash gh 2>/dev/null; then
+if command -v gh > /dev/null 2>&1; then
   alias gh-create='gh pr create -t $(git branch --show-current)'
   alias gh-create-web='gh pr create -w -t $(git branch --show-current)'
-  # alias gh-complete='gh pr merge --auto --delete-branch --squash'
-  # alias gh-complete='gh pr merge --auto --delete-branch --squash -t $(git branch --show-current)'
-
+  alias gh-complete='gh pr merge --auto --delete-branch --squash'
+  alias gh-complete='gh pr merge --auto --delete-branch --squash -t $(git branch --show-current)'
 else
   echo "gh is missing"
   # install github-cli
@@ -103,15 +102,17 @@ alias r=reset
 # Cargo
 # cargo install cargo-cache
 # cargo install cargo-update
-alias cr='cargo run --'
-alias ccr='clear && cr'
-alias cargo-install='cargo install --path .'
-alias cargo-upgrade='cargo install-update -a'
-alias cargoupdate="cargo install $(cargo install --list | egrep '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ') --force"
-alias cargoclearcache="cargo-cache -r all"
-alias cargocache="cargo cache -a"
-alias rustupfull="rustup update && rustup component add rust-analyzer && rustup component list"
-
+if command -v cargo > /dev/null 2>&1; then
+  alias cr='cargo run --'
+  alias ccr='clear && cr'
+  alias cargo-install='cargo install --path .'
+  alias cargo-upgrade='cargo install-update -a'
+  alias cargoupdate="cargo install $(cargo install --list | egrep '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ') --force"
+  alias cargoclearcache="cargo-cache -r all"
+  alias cargocache="cargo cache -a"
+  alias rustupfull="rustup update && rustup component add rust-analyzer && rustup component list"
+fi
+  
 # reload zsh config
 alias reload!='RELOAD=1 source ~/.zshrc'
 
@@ -148,3 +149,6 @@ alias gl='git log --stat --graph --decorate --oneline'
 
 alias '?'=searchOnDuck
 alias '??'=searchOnGoogle
+
+alias pf="fzf ${FZF_CTRL_T_OPTS}"
+
