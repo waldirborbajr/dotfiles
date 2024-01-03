@@ -97,6 +97,8 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+. "/usr/share/doc/fzf/examples/key-bindings.zsh"
+
 export OPT_PATH=/opt
 export CHROME_EXECUTABLE=/snap/bin/chromium
 # export FLUTTER_HOME=/opt/flutter
@@ -119,6 +121,7 @@ export DOCKER_HOST=unix:///run/user/1000/docker.sock
 # Configure FZF.
 export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git'"
 export FZF_DEFAULT_OPTS="--color=dark"
+# export FZF_CTRL_T_OPTS="--preview='bat --color=always {}' --height=100% --bind shift-up:preview-page-up,shift-down:preview-page-down"
 export FZF_CTRL_T_OPTS="--preview='less {}' --height=100% --bind shift-up:preview-page-up,shift-down:preview-page-down"
 
 source "$HOME/options.zsh"
