@@ -14,10 +14,10 @@ hinstall() {
     echo "Installing $1"
     pkg install $1
   fi
- zsh
+  zsh
 }
 
-if command -v gh > /dev/null 2>&1; then
+if command -v gh >/dev/null 2>&1; then
   alias gh-create='gh pr create -t $(git branch --show-current)'
   alias gh-create-web='gh pr create -w -t $(git branch --show-current)'
   alias gh-complete='gh pr merge --auto --delete-branch --squash'
@@ -78,13 +78,10 @@ fi
 
 ## Zellij
 if hash zellij 2>/dev/null; then
-  # alias zj="zellij a -c 'B+ DevOps'"
-  alias zj="zellij"
-  alias zjrs="zellij --layout $HOME/.config/zellij/zelliRUST.kdl a -c 'B+ DevRust'"
-  alias zjgo="zellij --layout $HOME/.config/zellij/zelliGO.kdl a -c 'B+ DeviGO'"
+  alias zj="zellij a -c 'B+ DevOps'"
   alias zjkl="zellij ka -y"
   alias zjrn="zellij r -- $1"
-  alias zjrm="rm -rf /home/borba/.cache/zellij"
+  alias zjrm="rm -rf ${HOME}/.cache/zellij"
   alias zjls="zellij ls"
   alias zjat="zellij a"
 else
@@ -102,7 +99,7 @@ alias r=reset
 # Cargo
 # cargo install cargo-cache
 # cargo install cargo-update
-if command -v cargo > /dev/null 2>&1; then
+if command -v cargo >/dev/null 2>&1; then
   alias cr='cargo run --'
   alias ccr='clear && cr'
   alias cargo-install='cargo install --path .'
@@ -112,7 +109,7 @@ if command -v cargo > /dev/null 2>&1; then
   alias cargocache="cargo cache -a"
   alias rustupfull="rustup update && rustup component add rust-analyzer && rustup component list"
 fi
-  
+
 # reload zsh config
 alias reload!='RELOAD=1 source ~/.zshrc'
 
@@ -151,4 +148,3 @@ alias '?'=searchOnDuck
 alias '??'=searchOnGoogle
 
 alias pf="fzf ${FZF_CTRL_T_OPTS}"
-
