@@ -35,7 +35,7 @@ else
   # install lazygit
 fi
 
-if command -v eza &>/dev/null; then
+if command -v eza >/dev/null 2>&1; then
   alias l='eza'
   alias ls='eza --group-directories-first --icons --git'
   alias ll='ls -lah --git'
@@ -60,16 +60,6 @@ if hash hx 2>/dev/null; then
 else
   echo "helix is missing"
 fi
-
-# Rebinding -> ls
-# if [[ $(command -v "exa") ]]; then
-#   # alias ls="exa --icons"
-#   alias ls='eza -a --icons'
-#   alias ll="exa -lha --icons"
-#   alias l="exa -lh --icons"
-#   # alias la="exa -lah"
-#   alias tree="exa --tree --level 2"
-# fi
 
 # Rebinding -> cat
 if [[ $(command -v "bat") ]]; then
