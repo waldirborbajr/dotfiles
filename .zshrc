@@ -109,9 +109,10 @@ export GOBIN=/home/borba/go/bin
 export STARSHIP_CONFIG=$HOME/.config/starship/starship.toml
 export LOCALBIN=$HOME/.local/bin
 export CARGOBIN=$HOME/.cargo/bin
+export BINS=$HOME
 
 # export PATH=$PATH:$ANDROID_STUDIO/bin:$FLUTTER_HOME/bin:$OPT_PATH/bin:$GOPATH/bin:$GOBIN/bin:$DOCKER_CONFIG/cli-plugins
-export PATH=$PATH:$OPT_PATH/bin:$GOPATH/bin:$GOBIN:$LOCALBIN:$CARGOBIN
+export PATH=$PATH:$OPT_PATH/bin:$GOPATH/bin:$GOBIN:$LOCALBIN:$CARGOBIN:$BINS/bins
 
 # used at docker-compose to avoid create volume as root
 export UID=$(id -u)
@@ -135,3 +136,7 @@ export FZF_CTRL_T_OPTS="--preview='less {}' --height=100% --bind shift-up:previe
 neofetch
 
 eval "$(starship init zsh)"
+
+. "$HOME/.cargo/env"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
