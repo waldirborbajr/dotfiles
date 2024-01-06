@@ -133,9 +133,13 @@ export FZF_CTRL_T_OPTS="--preview='less {}' --height=100% --bind shift-up:previe
 # [[ -f ~/.zsh/goto.zsh ]] && source ~/.zsh/goto.zsh
 
 
-neofetch
+if command -v neofetch >/dev/null 2>&1; then
+  neofetch
+fi
 
-eval "$(starship init zsh)"
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi
 
 . "$HOME/.cargo/env"
 
