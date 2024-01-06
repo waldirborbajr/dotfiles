@@ -138,3 +138,5 @@ alias '?'=searchOnDuck
 alias '??'=searchOnGoogle
 
 alias pf="fzf ${FZF_CTRL_T_OPTS}"
+
+alias xterm="sudo update-alternatives --config x-terminal-emulator"
