@@ -97,8 +97,6 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-. "/usr/share/doc/fzf/examples/key-bindings.zsh"
-
 export OPT_PATH=/opt
 export CHROME_EXECUTABLE=/snap/bin/chromium
 # export FLUTTER_HOME=/opt/flutter
