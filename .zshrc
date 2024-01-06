@@ -135,10 +135,10 @@ if command -v neofetch >/dev/null 2>&1; then
   neofetch
 fi
 
-if command -v starship >/dev/null 2>&1; then
-  eval "$(starship init zsh)"
-fi
-
 . "$HOME/.cargo/env"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init zsh)"
+fi

@@ -1,6 +1,8 @@
 import = ["/home/borba/.config/alacritty/catppuccin/catppuccin-mocha.toml"]
 live_config_reload = true
 
+selection.save_to_clipboard = true
+
 [colors]
 draw_bold_text_with_bright_colors = true
 
@@ -33,9 +35,14 @@ family = "FiraCode Nerd Font"
 style = "Regular"
 
 [[keyboard.bindings]]
-action = "CreateNewWindow"
-key = "N"
-mods = "Command|Control"
+key = 'n'
+mods = 'Control'
+action = 'CreateNewWindow'
+
+[[keyboard.bindings]]
+key = 'p'
+mods = 'Control'
+action = 'SpawnNewInstance'
 
 [[keyboard.bindings]]
 action = "Quit"
@@ -122,30 +129,8 @@ mods = "Command|Control"
 [mouse]
 hide_when_typing = true
 
-# regex = "(ipfs:|ipns:|magnet:|mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)[^\u0000-\u001F\u007F-<>\"\\s{-}\\^⟨⟩`]+"# [[mouse.enabled]]
-# command = "xdg-open"
-# hyperlinks = true
-# post_processing = true
-#
-# [mouse.enabled.binding]
-# key = "U"
-# mods = "Control|Shift"
-#
-# [mouse.enabled.mouse]
-# mods = "None"
-
 [scrolling]
 history = 2000
 
-[selection]
-save_to_clipboard = true
-
 [shell]
 program = "/usr/bin/zsh"
-
-[window]
-dynamic_padding = false
-dynamic_title = true
-opacity = 0.9
-startup_mode = "Maximized"
-title = "Terminal"
