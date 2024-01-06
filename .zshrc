@@ -125,7 +125,7 @@ export FZF_CTRL_T_OPTS="--preview='less {}' --height=100% --bind shift-up:previe
 
 [[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
 [[ -f ~/.zsh/functions.zsh ]] && source ~/.zsh/functions.zsh
-# [[ -f ~/.zsh/starship.zsh ]] && source ~/.zsh/starship.zsh
+[[ -f ~/.zsh/node.zsh ]] && source ~/.zsh/node.zsh
 # [[ -f ~/.zsh/nvm.zsh ]] && source ~/.zsh/nvm.zsh
 [[ -f ~/.zsh/options.zsh ]] && source ~/.zsh/options.zsh
 # [[ -f ~/.zsh/goto.zsh ]] && source ~/.zsh/goto.zsh

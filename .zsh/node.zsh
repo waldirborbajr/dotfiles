@@ -1,0 +1,1 @@
+export PATH=/usr/local/lib/nodejs/node-v20.10.0-linux-x64/bin:/home/borba/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/opt/bin:/usr/local/go/bin:/home/borba/go/bin:/home/borba/.local/bin:/home/borba/.cargo/bin:/home/borba/bins:/home/borba/.fzf/bin
