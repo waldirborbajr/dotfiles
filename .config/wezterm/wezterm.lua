@@ -11,8 +11,6 @@ local wezterm = require("wezterm")
 local platform = require("utils.platform")()
 local act = wezterm.action
 
--- local session_manager = require("wezterm-session-manager/session-manager")
-
 local config = {}
 
 local mod = {}
@@ -35,7 +33,7 @@ config.default_prog = { "/usr/bin/env", "zsh" }
 
 config.color_scheme = "Catppuccin Frappe"
 
-config.font = wezterm.font("FiraCode Nerd Font", { weight = "Medium", stretch = "Normal", style = "Normal" })
+config.font = wezterm.font("FiraCode Nerd Font Mono", { weight = "Medium", stretch = "Normal", style = "Normal" })
 config.font_size = 10.5
 
 config.hide_mouse_cursor_when_typing = true
@@ -74,14 +72,6 @@ config.keys = {
 	-- copy/paste --
 	{ key = "c", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") },
 	{ key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") },
-
-	-- saving, restoring and loading sessions
-	-- { key = 'S', mods = 'LEADER', action = wezterm.action{EmitEvent = "save_session"} },
-	-- { key = 'L', mods = 'LEADER', action = wezterm.action{EmitEvent = "load_session"} },
-	-- { key = 'R', mods = 'LEADER', action = wezterm.action{EmitEvent = "restore_session"} },
-	-- { key = "S",          mods = "CTRL|SHIFT",  action = wezterm.action({ EmitEvent = "save_session" }) },
-	-- { key = "L",          mods = "CTRL|SHIFT",  action = wezterm.action({ EmitEvent = "load_session" }) },
-	-- { key = "R",          mods = "CTRL|SHIFT",  action = wezterm.action({ EmitEvent = "restore_session" }) },
 
 	-- tabs --
 	-- tabs: spawn+close
@@ -255,98 +245,5 @@ config.launch_menu = {
 config.use_fancy_tab_bar = false
 config.status_update_interval = 1000
 config.tab_bar_at_bottom = false
--- wezterm.on("update-status", function(window, pane)
--- 	-- Workspace name
--- 	local stat = window:active_workspace()
--- 	local stat_color = "#f7768e"
--- 	-- It's a little silly to have workspace name all the time
--- 	-- Utilize this to display LDR or current key table name
--- 	if window:active_key_table() then
--- 		stat = window:active_key_table()
--- 		stat_color = "#7dcfff"
--- 	end
--- 	if window:leader_is_active() then
--- 		stat = "LDR"
--- 		stat_color = "#bb9af7"
--- 	end
-
--- Current working directory
--- local basename = function(s)
--- 	-- Nothing a little regex can't fix
--- 	return string.gsub(s, "(.*[/\\])(.*)", "%2")
--- end
--- -- CWD and CMD could be nil (e.g. viewing log using Ctrl-Alt-l). Not a big deal, but check in case
--- local cwd = pane:get_current_working_dir()
--- cwd = cwd and basename(cwd) or ""
--- -- Current command
--- local cmd = pane:get_foreground_process_name()
--- cmd = cmd and basename(cmd) or ""
-
--- Time
--- local time = wezterm.strftime("%H:%M")
-
--- Left status (left of the tab line)
--- window:set_left_status(wezterm.format({
--- 	{ Foreground = { Color = stat_color } },
--- 	{ Text = "  " },
--- 	{ Text = wezterm.nerdfonts.oct_table .. "  " .. stat },
--- 	{ Text = " |" },
--- }))
-
--- Right status
--- 	window:set_right_status(wezterm.format({
--- 		-- Wezterm has a built-in nerd fonts
--- 		-- https://wezfurlong.org/wezterm/config/lua/wezterm/nerdfonts.html
--- 		{ Text = wezterm.nerdfonts.md_folder .. "  " .. cwd },
--- 		{ Text = " | " },
--- 		{ Foreground = { Color = "#e0af68" } },
--- 		{ Text = wezterm.nerdfonts.fa_code .. "  " .. cmd },
--- 		"ResetAttributes",
--- 		{ Text = " | " },
--- 		{ Text = wezterm.nerdfonts.md_clock .. "  " .. time },
--- 		{ Text = "  " },
--- 	}))
--- end)
-
---[[ Appearance setting for when I need to take pretty screenshots
-config.enable_tab_bar = false
-config.window_padding = {
-  left = '0.5cell',
-  right = '0.5cell',
-  top = '0.5cell',
-  bottom = '0cell',
-
-}
---]]
-
--- wezterm.on("save_session", function(window)
--- 	session_manager.save_state(window)
--- end)
--- wezterm.on("load_session", function(window)
--- 	session_manager.load_state(window)
--- end)
--- wezterm.on("restore_session", function(window)
--- 	session_manager.restore_state(window)
--- end)
-
--- wezterm.on("user-var-changed", function(window, pane, name, value)
--- 	local overrides = window:get_config_overrides() or {}
--- 	if name == "ZEN_MODE" then
--- 		local incremental = value:find("+")
--- 		local number_value = tonumber(value)
--- 		if incremental ~= nil then
--- 			while number_value > 0 do
--- 				window:perform_action(wezterm.action.IncreaseFontSize, pane)
--- 				number_value = number_value - 1
--- 			end
--- 		elseif number_value < 0 then
--- 			window:perform_action(wezterm.action.ResetFontSize, pane)
--- 			overrides.font_size = nil
--- 		else
--- 			overrides.font_size = number_value
--- 		end
--- 	end
--- 	window:set_config_overrides(overrides)
--- end)
 
 return config
