@@ -1,20 +1,12 @@
 #!/usr/bin/env zsh
 
-hinstall() {
-  if hash pacman 2>/dev/null; then
-    echo "Installing $1"
-    # sudo pacman -S $1
-    yay -S $1
-  elif hash pkg 2>/dev/null; then
-    case $1 in
-      xclip | fping)
-        return
-        ;;
-    esac
-    echo "Installing $1"
-    pkg install $1
-  fi
-  zsh
+ghinstall() {
+  type -p curl >/dev/null || (sudo nala update && sudo nala install curl -y)
+  curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+  && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+  && sudo nala update \
+  && sudo nala install gh -y
 }
 
 if command -v gh >/dev/null 2>&1; then
@@ -23,8 +15,7 @@ if command -v gh >/dev/null 2>&1; then
   alias gh-complete='gh pr merge --auto --delete-branch --squash'
   alias gh-complete='gh pr merge --auto --delete-branch --squash -t $(git branch --show-current)'
 else
-  echo "gh is missing"
-  # install github-cli
+  ghinstall
 fi
 
 if hash lazygit 2>/dev/null; then
