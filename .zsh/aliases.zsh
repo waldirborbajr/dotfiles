@@ -55,11 +55,11 @@ else
   # install neovim
 fi
 
-if hash hx 2>/dev/null; then
-  alias h='hx'
-else
-  echo "helix is missing"
-fi
+# if hash hx 2>/dev/null; then
+#   alias h='hx'
+# else
+#   echo "helix is missing"
+# fi
 
 # Rebinding -> cat
 if [[ $(command -v "bat") ]]; then
