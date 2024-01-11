@@ -111,8 +111,11 @@ export OPT_PATH=/opt
 export CHROME_EXECUTABLE=/snap/bin/chromium
 # export FLUTTER_HOME=/opt/flutter
 # export ANDROID_STUDIO=/opt/android-studio
-export GOPATH=/usr/local/go
-export GOBIN=/home/borba/go/bin
+
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/go # your-go-workspace
+export GOBIN=$GOPATH/bin  # where go-generate-executable-binaries
+
 # export DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
 export STARSHIP_CONFIG=$HOME/.config/starship/starship.toml
 export LOCALBIN=$HOME/.local/bin
