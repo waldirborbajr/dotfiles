@@ -62,6 +62,15 @@ zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p
 zstyle ':completion:*' use-compctl false
 zstyle ':completion:*' verbose true
 
+if [[ ! -d  ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions ]]; then
+  echo "Installing zsh-autosuggestions"
+  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+fi
+
+if [[ ! -d  ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting ]]; then
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+fi
+
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
@@ -130,7 +139,6 @@ export FZF_CTRL_T_OPTS="--preview='less {}' --height=100% --bind shift-up:previe
 [[ -f ~/.zsh/options.zsh ]] && source ~/.zsh/options.zsh
 # [[ -f ~/.zsh/goto.zsh ]] && source ~/.zsh/goto.zsh
 
-
 if command -v neofetch >/dev/null 2>&1; then
   neofetch
 fi
@@ -139,8 +147,8 @@ fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+if [ -e /home/borba/.nix-profile/etc/profile.d/nix.sh ]; then . /home/borba/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
 fi
-
-if [ -e /home/borba/.nix-profile/etc/profile.d/nix.sh ]; then . /home/borba/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer

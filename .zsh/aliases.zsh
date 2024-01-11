@@ -9,6 +9,13 @@ ghinstall() {
   && sudo nala install gh -y
 }
 
+lazygitinstall() {
+  LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+  curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+  tar xf lazygit.tar.gz lazygit
+  sudo install lazygit /usr/local/bin
+}
+
 if command -v gh >/dev/null 2>&1; then
   alias gh-create='gh pr create -t $(git branch --show-current)'
   alias gh-create-web='gh pr create -w -t $(git branch --show-current)'
@@ -22,8 +29,7 @@ if hash lazygit 2>/dev/null; then
   alias lg='lazygit'
   alias gg='lazygit'
 else
-  echo "lazygit is missing"
-  # install lazygit
+  lazygitinstall
 fi
 
 if command -v eza >/dev/null 2>&1; then
@@ -34,6 +40,8 @@ if command -v eza >/dev/null 2>&1; then
   alias tree='ll --tree --level=2'
 else
   echo "eza is not installed."
+  echo "Please run cargo install exa"
+  echo "cargo install exa"
   # install eza
 fi
 
