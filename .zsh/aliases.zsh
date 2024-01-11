@@ -39,10 +39,11 @@ if command -v eza >/dev/null 2>&1; then
   alias la='eza -a'
   alias tree='ll --tree --level=2'
 else
-  echo "eza is not installed."
-  echo "Please run cargo install exa"
+  echo "eza is missing"
+  echo "Please run:"
+  echo ""
   echo "cargo install exa"
-  # install eza
+  echo ""
 fi
 
 if hash nvim 2>/dev/null; then
@@ -51,14 +52,7 @@ if hash nvim 2>/dev/null; then
   alias vi='nvim'
 else
   echo "neovim is missing"
-  # install neovim
 fi
-
-# if hash hx 2>/dev/null; then
-#   alias h='hx'
-# else
-#   echo "helix is missing"
-# fi
 
 # Rebinding -> cat
 if [[ $(command -v "bat") ]]; then

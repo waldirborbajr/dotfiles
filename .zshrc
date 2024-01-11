@@ -68,6 +68,7 @@ if [[ ! -d  ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions ]]; t
 fi
 
 if [[ ! -d  ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting ]]; then
+  echo "Installing zsh-syntax-highlighting"
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 fi
 
@@ -115,7 +116,7 @@ export GOBIN=/home/borba/go/bin
 # export DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
 export STARSHIP_CONFIG=$HOME/.config/starship/starship.toml
 export LOCALBIN=$HOME/.local/bin
-export CARGOBIN=$HOME/.cargo/bin
+# export CARGOBIN=$HOME/.cargo/bin
 export BINS=$HOME/bins
 
 # export PATH=$PATH:$ANDROID_STUDIO/bin:$FLUTTER_HOME/bin:$OPT_PATH/bin:$GOPATH/bin:$GOBIN/bin:$DOCKER_CONFIG/cli-plugins
@@ -132,18 +133,11 @@ export FZF_DEFAULT_OPTS="--color=dark"
 # export FZF_CTRL_T_OPTS="--preview='bat --color=always {}' --height=100% --bind shift-up:preview-page-up,shift-down:preview-page-down"
 export FZF_CTRL_T_OPTS="--preview='less {}' --height=100% --bind shift-up:preview-page-up,shift-down:preview-page-down"
 
-[[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
-[[ -f ~/.zsh/functions.zsh ]] && source ~/.zsh/functions.zsh
-[[ -f ~/.zsh/node.zsh ]] && source ~/.zsh/node.zsh
-# [[ -f ~/.zsh/nvm.zsh ]] && source ~/.zsh/nvm.zsh
-[[ -f ~/.zsh/options.zsh ]] && source ~/.zsh/options.zsh
-# [[ -f ~/.zsh/goto.zsh ]] && source ~/.zsh/goto.zsh
+. "$HOME/.cargo/env"
 
 if command -v neofetch >/dev/null 2>&1; then
   neofetch
 fi
-
-. "$HOME/.cargo/env"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -152,3 +146,8 @@ if [ -e /home/borba/.nix-profile/etc/profile.d/nix.sh ]; then . /home/borba/.nix
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"
 fi
+
+[[ -f ~/.zsh/functions.zsh ]] && source ~/.zsh/functions.zsh
+[[ -f ~/.zsh/node.zsh ]] && source ~/.zsh/node.zsh
+[[ -f ~/.zsh/options.zsh ]] && source ~/.zsh/options.zsh
+[[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
