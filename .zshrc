@@ -141,7 +141,9 @@ fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-if [ -e /home/borba/.nix-profile/etc/profile.d/nix.sh ]; then . /home/borba/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+if [ -e /home/borba/.nix-profile/etc/profile.d/nix.sh ]; then
+  . /home/borba/.nix-profile/etc/profile.d/nix.sh;
+fi # added by Nix installer
 
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init zsh)"

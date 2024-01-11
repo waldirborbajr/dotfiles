@@ -32,7 +32,7 @@ else
   lazygitinstall
 fi
 
-if command -v eza >/dev/null 2>&1; then
+if [[ -e $HOME/.cargo/bin/exa ]]; then
   alias l='eza'
   alias ls='eza --group-directories-first --icons --git'
   alias ll='ls -lah --git'
