@@ -99,6 +99,17 @@ if command -v cargo >/dev/null 2>&1; then
   alias rustupfull="rustup update && rustup component add rust-analyzer && rustup component list"
 fi
 
+
+if command -v fzf >/dev/null 2>&1; then
+  alias pf="fzf ${FZF_CTRL_T_OPTS}"
+else
+  echo "fzf is missing"
+  echo "Please install fzf"
+  echo ""
+  echo "git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf"
+  echo "~/.fzf/install"
+fi
+
 # reload zsh config
 alias reload!='RELOAD=1 source ~/.zshrc'
 
@@ -136,6 +147,5 @@ alias gl='git log --stat --graph --decorate --oneline'
 alias '?'=searchOnDuck
 alias '??'=searchOnGoogle
 
-alias pf="fzf ${FZF_CTRL_T_OPTS}"
 
 alias xterm="sudo update-alternatives --config x-terminal-emulator"
