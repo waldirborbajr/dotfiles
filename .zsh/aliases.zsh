@@ -32,7 +32,7 @@ else
   lazygitinstall
 fi
 
-if [[ -e $HOME/.cargo/bin/exa ]]; then
+if command -v eza >/dev/null 2>&1; then
   alias l='eza'
   alias ls='eza --group-directories-first --icons --git'
   alias ll='ls -lah --git'
@@ -42,7 +42,7 @@ else
   echo "eza is missing"
   echo "Please run:"
   echo ""
-  echo "cargo install exa"
+  echo "cargo install eza"
   echo ""
 fi
 
