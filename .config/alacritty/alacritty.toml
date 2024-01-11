@@ -35,16 +35,6 @@ family = "FiraCode Nerd Font Mono"
 style = "Regular"
 
 [[keyboard.bindings]]
-key = 'n'
-mods = 'Control'
-action = 'CreateNewWindow'
-
-[[keyboard.bindings]]
-key = 'p'
-mods = 'Control'
-action = 'SpawnNewInstance'
-
-[[keyboard.bindings]]
 action = "Quit"
 key = "Q"
 mods = "Command|Control"
