@@ -77,7 +77,7 @@ fi
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git z zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(git z zsh-autosuggestions zsh-syntax-highlighting rust docker golang)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -128,7 +128,7 @@ export PATH=$PATH:$OPT_PATH/bin:$GOPATH/bin:$GOBIN:$LOCALBIN:$CARGOBIN:$BINS
 # used at docker-compose to avoid create volume as root
 export UID=$(id -u)
 export GID=$(id -g)
-export DOCKER_HOST=unix:///run/user/1000/docker.sock
+# export DOCKER_HOST=unix:///run/user/1000/docker.sock
 
 # Configure FZF.
 export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git'"
@@ -136,7 +136,9 @@ export FZF_DEFAULT_OPTS="--color=dark"
 # export FZF_CTRL_T_OPTS="--preview='bat --color=always {}' --height=100% --bind shift-up:preview-page-up,shift-down:preview-page-down"
 export FZF_CTRL_T_OPTS="--preview='less {}' --height=100% --bind shift-up:preview-page-up,shift-down:preview-page-down"
 
-. "$HOME/.cargo/env"
+source "$HOME/.cargo/env"
+# Rust debug for tracing and other logging
+export RUST_LOG=debug
 
 if command -v neofetch >/dev/null 2>&1; then
   neofetch

@@ -33,11 +33,10 @@ else
 fi
 
 if command -v eza >/dev/null 2>&1; then
-  alias l='eza'
-  alias ls='eza --group-directories-first --icons --git'
-  alias ll='ls -lah --git'
-  alias la='eza -a'
-  alias tree='ll --tree --level=2'
+  alias ls='eza'
+  alias ll='ls -l'
+  alias la='eza -la'
+  alias lt='exa --tree --level=2'
 else
   echo "eza is missing"
   echo "Please run:"
