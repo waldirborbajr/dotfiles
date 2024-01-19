@@ -111,7 +111,7 @@ alias clsym="find -L . -name . -o -type d -prune -o -type l -exec rm {} +"
 
 alias cleanapt="df -h && sudo apt autoremove -y && sudo apt autoclean && sudo apt clean && df -h"
 alias sysupdate="sudo apt update && sudo apt dist-upgrade -y && sudo apt upgrade -y && sudo apt autoremove -y && sudo apt autopurge && sudo apt autoclean && sudo apt clean && flatpak update -y && flatpak uninstall --unused -y"
-alias syshealth='sudo nala update && sudo nala upgrade -y && sudo nala autoremove -y && sudo nala autopurge -y && sudo nala clean && flatpak update -y && flatpak uninstall --unused -y'
+alias syshealth='sudo nala update && sudo nala upgrade -y && sudo nala autoremove -y && sudo nala autopurge -y && sudo nala clean && flatpak update -y && flatpak uninstall --unused -y && sudo snap refresh'
 
 # Find Files
 alias ff="rg --files | sk --preview='bat {} --color=always'"
