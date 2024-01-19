@@ -1,16 +1,46 @@
 #!/usr/bin/env bash
 
 set -e
+set -o pipefail
 
-skip_system_packages="${1}"
+apt_pre_install() {
+    apt_pre_packages="nala"
+    sudo apt update
+    sudo apt install -y ${apt_pre_packages}
+}
+
+install_rust() {
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+}
+
+install_nix() {
+    sh <(curl -L https://nixos.org/nix/install) --daemon
+}
+
+install_golang() {
+    curl -L https://go.dev/dl/go${_VER}.linux-amd64.tar.gz | sudo tar -C /usr/local -xz
+}
+
+purge_unwanted_packages() {
+    purge_packages="libreoffice*"
+    sudo nala autoremove -y ${purge_packages}
+}
+
+nala_install_packages() {
+    nala_packages="firmware-b43-installer htop arronax arronax-nautilus gh curl wget python3-pip zsh flameshot cmake libssl-dev"
+    sudo nala install -y ${nala_packages}
+}
+
+if command -v nala &>/dev/null; then
+    apt_pre_install
+fi
+
+if command -v nala &>/dev/null; then
+    nala_install_packages
+fi
+
 
 os_type="$(uname -s)"
-
-apt_packages="curl git iproute2 python3-pip ripgrep tmux vim-gtk wl-clipboard zsh"
-apt_packages_optional="gnupg htop inotify-tools jq pass pwgen rsync shellcheck unzip"
-
-brew_packages="diffutils git python ripgrep tmux vim zsh"
-brew_packages_optional="gnupg htop jq pass pwgen rsync shellcheck"
 
 install_asdf_version="v0.11.0"
 install_node_version="18.17.0"
