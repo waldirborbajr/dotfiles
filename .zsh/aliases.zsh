@@ -85,11 +85,11 @@ if command -v cargo >/dev/null 2>&1; then
   alias cr='cargo run --'
   alias ccr='clear && cr'
   alias cargo-install='cargo install --path .'
-  alias cargo-upgrade='cargo install-update -a'
+  alias cargoupgrade='cargo install-update -a'
   alias cargoupdate="cargo install $(cargo install --list | egrep '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ') --force"
   alias cargoclearcache="cargo-cache -r all"
-  alias cargocache="cargo cache -a"
-  alias rustupfull="rustup update && rustup component add rust-analyzer && rustup component list"
+  # alias cargocache="cargo cache -a"
+  alias rustupupdate="rustup update && rustup component add rust-analyzer && rustup component list"
 fi
 
 
