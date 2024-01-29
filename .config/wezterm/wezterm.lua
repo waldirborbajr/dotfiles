@@ -33,7 +33,7 @@ config.default_prog = { "/usr/bin/env", "zsh" }
 
 config.color_scheme = "Catppuccin Frappe"
 
-config.font = wezterm.font("FiraCode Nerd Font Mono", { weight = "Medium", stretch = "Normal", style = "Normal" })
+config.font = wezterm.font("FiraCode Nerd Font", { weight = "Medium", stretch = "Normal", style = "Normal" })
 config.font_size = 10.5
 
 config.hide_mouse_cursor_when_typing = true
