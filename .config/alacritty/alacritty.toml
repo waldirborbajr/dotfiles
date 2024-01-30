@@ -48,88 +48,6 @@ style = "Italic"
 family = "FiraCode Nerd Font"
 style = "Regular"
 
-[[keyboard.bindings]]
-action = "Quit"
-key = "Q"
-mods = "Command|Control"
-
-[[keyboard.bindings]]
-action = "Quit"
-key = "W"
-mods = "Command|Control"
-
-[[keyboard.bindings]]
-action = "ToggleFullscreen"
-key = "F11"
-
-[[keyboard.bindings]]
-action = "Paste"
-key = "V"
-mods = "Control|Shift"
-
-[[keyboard.bindings]]
-action = "Copy"
-key = "C"
-mods = "Control|Shift"
-
-[[keyboard.bindings]]
-action = "PasteSelection"
-key = "Insert"
-mods = "Shift"
-
-[[keyboard.bindings]]
-action = "ResetFontSize"
-key = "Key0"
-mods = "Control"
-
-[[keyboard.bindings]]
-action = "IncreaseFontSize"
-key = "Equals"
-mods = "Control"
-
-[[keyboard.bindings]]
-action = "Paste"
-key = "Paste"
-
-[[keyboard.bindings]]
-action = "Copy"
-key = "Copy"
-
-[[keyboard.bindings]]
-action = "ClearLogNotice"
-key = "L"
-mods = "Control"
-
-[[keyboard.bindings]]
-chars = "\f"
-key = "L"
-mods = "Control"
-
-[[keyboard.bindings]]
-chars = "\u0001c"
-key = "T"
-mods = "Command|Control"
-
-[[keyboard.bindings]]
-chars = "\u0001b"
-key = "B"
-mods = "Command|Control"
-
-[[keyboard.bindings]]
-chars = "\u0001z"
-key = "Z"
-mods = "Command|Control"
-
-[[keyboard.bindings]]
-chars = "\u00010"
-key = "S"
-mods = "Command|Control"
-
-[[keyboard.bindings]]
-chars = "\u0001e"
-key = "E"
-mods = "Command|Control"
-
 [mouse]
 hide_when_typing = true
 
@@ -139,18 +57,3 @@ history = 2000
 [shell]
 program = "/usr/bin/zsh"
 
-[hints]
-alphabet = "jfkdls;ahgurieowpq"
-
-[[hints.enabled]]
-command = "xdg-open"
-post_processing = true
-regex = "(ipfs:|ipns:|magnet:|mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)[^\u0000-\u001F\u007F-<>\"\\s{-}\\^⟨⟩`]+"
-
-[hints.enabled.binding]
-key = "O"
-mods = "Control|Shift"
-
-[hints.enabled.mouse]
-enabled = true
-mods = "None"
