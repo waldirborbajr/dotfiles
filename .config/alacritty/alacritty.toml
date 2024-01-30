@@ -1,4 +1,7 @@
-import = ["/home/borba/.config/alacritty/catppuccin/catppuccin-mocha.toml"]
+import = [
+  "~/.config/alacritty/themes/themes/catppuccin_frappe.toml"
+]
+
 live_config_reload = true
 
 selection.save_to_clipboard = true
