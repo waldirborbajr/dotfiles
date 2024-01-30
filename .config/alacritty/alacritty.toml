@@ -57,3 +57,7 @@ history = 2000
 [shell]
 program = "/usr/bin/zsh"
 
+[[keyboard.bindings]]
+action = "SpawnNewInstance"
+key = "Return"
+mods = "Control|Shift"
