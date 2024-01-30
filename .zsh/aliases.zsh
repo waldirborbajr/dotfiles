@@ -74,7 +74,7 @@ alias chmox="chmod +x"
 
 ## Clean NVim
 alias rmvim="rm -rf ~/.local/share/nvim && rm -rf ~/.cache/nvim && rm -rf ~/.local/state/nvim"
-alias resetvim="nvim --headless '+Lazy! sync' +qa"
+alias bootvim="nvim --headless '+Lazy! sync' +qa"
 
 alias r=reset
 
