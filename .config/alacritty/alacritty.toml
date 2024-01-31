@@ -28,8 +28,8 @@ thickness = 0.3
 [cursor.style]
 blinking = "Never"
 
-# [env]
-# TERM = "xterm-256color"
+[env]
+TERM = "xterm-256color"
 
 [font]
 size = 11.0
