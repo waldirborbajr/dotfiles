@@ -2,11 +2,11 @@
 
 ghinstall() {
   type -p curl >/dev/null || (sudo nala update && sudo nala install curl -y)
-  curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-  && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-  && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-  && sudo nala update \
-  && sudo nala install gh -y
+  curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg &&
+    sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg &&
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null &&
+    sudo nala update &&
+    sudo nala install gh -y
 }
 
 lazygitinstall() {
@@ -92,7 +92,6 @@ if command -v cargo >/dev/null 2>&1; then
   alias rustupupdate="rustup update && rustup component add rust-analyzer && rustup component list"
 fi
 
-
 if command -v fzf >/dev/null 2>&1; then
   alias pf="fzf ${FZF_CTRL_T_OPTS}"
 else
@@ -111,7 +110,7 @@ alias clsym="find -L . -name . -o -type d -prune -o -type l -exec rm {} +"
 
 alias cleanapt="df -h && sudo apt autoremove -y && sudo apt autoclean && sudo apt clean && df -h"
 alias sysupdate="sudo apt update && sudo apt dist-upgrade -y && sudo apt upgrade -y && sudo apt autoremove -y && sudo apt autopurge && sudo apt autoclean && sudo apt clean && flatpak update -y && flatpak uninstall --unused -y"
-alias syshealth='sudo nala update && sudo nala upgrade -y && sudo nala autoremove -y && sudo nala autopurge -y && sudo nala clean && flatpak update -y && flatpak uninstall --unused -y && sudo snap refresh'
+alias syshealth='sudo rm /var/lib/apt/lists/lock && sudo nala update && sudo nala upgrade -y && sudo nala autoremove -y && sudo nala autopurge -y && sudo nala clean && flatpak update -y && flatpak uninstall --unused -y && sudo snap refresh'
 
 # Find Files
 alias ff="rg --files | sk --preview='bat {} --color=always'"
@@ -139,6 +138,5 @@ alias gl='git log --stat --graph --decorate --oneline'
 
 alias '?'=searchOnDuck
 alias '??'=searchOnGoogle
-
 
 alias xterm="sudo update-alternatives --config x-terminal-emulator"
