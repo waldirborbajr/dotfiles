@@ -4,3 +4,4 @@ Thumbs.db
 bin/pocketbase
 bin
 /home/borba/dotfiles/.config/helix/runtime/grammars
+.config/lazygit/state.yml

@@ -1,11 +1,10 @@
 lastupdatecheck: 0
 recentrepos:
-- /home/borba/.config/nvim/lua/user
 - /home/borba/dotfiles
-- /home/borba/wks/tokens
 - /home/borba/wks/2ndBrain
 - /home/borba/wks/rust/gitpushup
 startuppopupversion: 5
 customcommandshistory:
 - q
 hidecommandlog: false
+ignorewhitespaceindiffview: false
