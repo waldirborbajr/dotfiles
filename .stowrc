@@ -1,4 +1,3 @@
---ignore=bin
 --ignore=containers
 --ignore=.genesis_20230529
 --ignore=README.md
