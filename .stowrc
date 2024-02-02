@@ -1,0 +1,16 @@
+--ignore=bin
+--ignore=containers
+--ignore=.genesis_20230529
+--ignore=README.md
+--ignore=.git
+--ignore=LICENSE
+--ignore=.gitignore
+--ignore=install-2024
+--ignore=installs
+--ignore=linux-hardware
+--ignore=rmbkp.sh
+--ignore=setup-dotfiles
+--ignore=ssh
+--ignore=tmux
+--ignore=zsh
+--ignore=.DS_Store
