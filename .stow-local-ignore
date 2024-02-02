@@ -1,1 +1,16 @@
 bin
+containers
+.genesis_20230529
+README.md
+.git
+LICENSE
+.gitignore
+install-2024
+installs
+linux-hardware
+rmbkp.sh
+setup-dotfiles
+ssh
+tmux
+zsh
+.DS_Store
