@@ -1,5 +1,6 @@
 lastupdatecheck: 0
 recentrepos:
+- /home/borba/.config/nvim
 - /home/borba/dotfiles
 - /home/borba/wks/2ndBrain
 - /home/borba/wks/rust/gitpushup
