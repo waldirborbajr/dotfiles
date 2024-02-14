@@ -140,3 +140,5 @@ alias '?'=searchOnDuck
 alias '??'=searchOnGoogle
 
 alias xterm="sudo update-alternatives --config x-terminal-emulator"
+
+alias poetryupdate="pipx upgrade poetry"
