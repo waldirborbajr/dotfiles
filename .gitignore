@@ -6,3 +6,4 @@ bin
 /home/borba/dotfiles/.config/helix/runtime/grammars
 .config/lazygit/state.yml
 .config/lazygit/state.yml
+installs/golang/update-golang
