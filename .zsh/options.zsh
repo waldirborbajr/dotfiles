@@ -1,8 +1,9 @@
 # History settings.
-export HISTFILE="${XDG_CACHE_HOME}/zsh/.history"
+# export HISTFILE="${XDG_CACHE_HOME}/zsh/.history"
+export HISTFILE=~/.zsh_history
 export HISTTIMEFORMAT="%Y/%m/%d %H:%M:%S:   "
-export HISTSIZE=50000        # History lines stored in mememory.
-export SAVEHIST=50000        # History lines stored on disk.
+export HISTSIZE=1000         # History lines stored in mememory.
+export SAVEHIST=1000         # History lines stored on disk.
 setopt INC_APPEND_HISTORY    # Immediately append commands to history file.
 setopt HIST_IGNORE_ALL_DUPS  # Never add duplicate entries.
 setopt HIST_IGNORE_SPACE     # Ignore commands that start with a space.
