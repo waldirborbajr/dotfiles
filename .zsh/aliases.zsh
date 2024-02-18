@@ -119,8 +119,14 @@ alias ff="rg --files | sk --preview='bat {} --color=always'"
 # sudo apt install xclip xsel
 # alias pbcopy='xclip -selection clipboard'
 # alias pbpaste='xclip -selection clipboard -o'
-alias pbcopy='xsel --clipboard --input'
-alias pbpaste='xsel --clipboard --output'
+if command -v xsel >/dev/null 2>&1; then
+  alias pbcopy='xsel --clipboard --input'
+  alias pbpaste='xsel --clipboard --output'
+fi
+
+if command -v pbpaste >/dev/null 2>&1; then
+  alias ccb='pbpaste|pbcopy' # clear clipboard
+fi
 
 # Colored output
 #alias ls='ls -laGH --color=auto'
