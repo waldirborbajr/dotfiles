@@ -14,6 +14,8 @@
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
+export LANG=en_US.UTF-8
+
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -130,10 +132,28 @@ export UID=$(id -u)
 export GID=$(id -g)
 # export DOCKER_HOST=unix:///run/user/1000/docker.sock
 
+# # this is what matters
+FZF_COMMON_OPTIONS="
+  --bind='?:toggle-preview'
+  --bind='ctrl-u:preview-page-up'
+  --bind='ctrl-d:preview-page-down'
+  --preview-window 'right:60%:hidden:wrap'
+  --height 100
+  --min-height 50
+  --preview '([[ -d {} ]] && tree -C {}) || ([[ -f {} ]] && bat --style=full --color=always {}) || echo {}'"
+
 # Configure FZF.
-export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git'"
-export FZF_DEFAULT_OPTS="--color=dark"
-export FZF_CTRL_T_OPTS="--preview='less {}' --height=100% --bind shift-up:preview-page-up,shift-down:preview-page-down"
+# export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git'"
+# export FZF_DEFAULT_OPTS="--color=dark"
+# export FZF_CTRL_T_OPTS="--preview='less {}' --height=100% --bind shift-up:preview-page-up,shift-down:preview-page-down"
+
+# cargo install fd-find
+# export FZF_TMUX=1
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd --type d . --hidden"
+export FZF_CTRL_T_OPTS="--preview 'bat --color=always {}' --height 50 --min-height 100"
+export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
 
 source "$HOME/.cargo/env"
 # Rust debug for tracing and other logging

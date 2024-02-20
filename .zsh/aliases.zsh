@@ -148,3 +148,6 @@ alias '??'=searchOnGoogle
 alias xterm="sudo update-alternatives --config x-terminal-emulator"
 
 alias poetryupdate="pipx upgrade poetry"
+
+alias mkdp='mkdir -p "$0" && cd "$0"'
+

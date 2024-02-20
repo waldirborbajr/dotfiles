@@ -1,6 +1,6 @@
 
 # Create python virtual environment
-function createVenv(){
+createVenv(){
   # dest="${PWD##*/}"
   dest="$1"
 
@@ -14,7 +14,7 @@ function createVenv(){
 }
 
 # Download and Instlal GO
-function getgo(){
+getgo(){
   version="$1"
   wget https://go.dev/dl/go${version}.linux-amd64.tar.gz
   sudo rm -rf /usr/local/go
@@ -24,12 +24,12 @@ function getgo(){
 }
 
 # Clean system.
-function clean-system () {
+clean-system () {
 	rm -rf ~/.cache
 }
 
 # Choose Zellij Session
-function zjsession() {
+zjsession() {
   ZJ_SESSIONS=$(zellij list-sessions)
   NO_SESSIONS=$(echo "${ZJ_SESSIONS}" | wc -l)
 
@@ -42,7 +42,41 @@ function zjsession() {
 }
 
 # Restart a program.
-function refresh () {
+refresh () {
 	killall $1
 	$1 &
+}
+
+fii() {
+  [[ -n $1 ]] && cd $1 # go to provided folder or noop
+  RG_DEFAULT_COMMAND="rg -i -l --hidden --no-ignore-vcs"
+
+  selected=$(
+  FZF_DEFAULT_COMMAND="rg --files" fzf \
+    -m \
+    -e \
+    --ansi \
+    --disabled \
+    --reverse \
+    --bind "ctrl-a:select-all" \
+    --bind "f12:execute-silent:(subl -b {})" \
+    --bind "change:reload:$RG_DEFAULT_COMMAND {q} || true" \
+    --preview "rg -i --pretty --context 2 {q} {}" | cut -d":" -f1,2
+  )
+  [[ -n $selected ]] && nvim $selected # open multiple files in editor
+}
+
+# fkill - kill processes - list only the ones you can kill. Modified the earlier script.
+fkill() {
+    local pid 
+    if [ "$UID" != "0" ]; then
+        pid=$(ps -f -u $UID | sed 1d | fzf -m | awk '{print $2}')
+    else
+        pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+    fi  
+
+    if [ "x$pid" != "x" ]
+    then
+        echo $pid | xargs kill -${1:-9}
+    fi  
 }
