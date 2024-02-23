@@ -14,15 +14,10 @@
 [core]
 	excludesfile = ~/.gitignore
 	editor = nvim
-	ignorecase = false
-	pager = delta
+	pager = diff-so-fancy | less --tabs=4 -RFX
+  whitespace = fix
 
 [color]
-  status = auto
-  diff = auto
-  branch = auto
-  interactive = auto
-  grep = auto
   ui = auto
 
 [github]
@@ -47,6 +42,11 @@
 [diff]
     colorMoved = default
 
+[filter "lfs"]
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+  required = true
+
 [alias]
 	a = "!git status --short | peco | awk '{print $2}' | xargs git add"
 	d = diff
@@ -56,7 +56,7 @@
 	ps = "!git push origin $(git rev-parse --abbrev-ref HEAD)"
 	pl = "!git pull origin $(git rev-parse --abbrev-ref HEAD)"
 	st = status
-	swc = switch -c
+	swc = switch -c $1
 	swm = switch main
 	br = branch
 	ba = branch -a
@@ -74,5 +74,13 @@
 	# add conflicted file on merge
 	add-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; git add `f`"
 	ac = commit -am
+
 [fetch]
 	prune = true
+
+[branch]
+	autosetuprebase = always
+
+[push]
+	default = current
+	followTags = true
