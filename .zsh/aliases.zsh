@@ -141,7 +141,6 @@ if command -v tmux >/dev/null 2>&1; then
   alias tmks='tmux kill-server'
 fi
 
-
 # Colored output
 #alias ls='ls -laGH --color=auto'
 alias diff='diff --color=auto'
@@ -161,4 +160,4 @@ alias '??'=searchOnGoogle
 
 alias xterm="sudo update-alternatives --config x-terminal-emulator"
 
-lias poetryupdate="pipx upgrade poetry"
+alias poetryupdate="pipx upgrade poetry"
