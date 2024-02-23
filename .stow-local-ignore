@@ -11,6 +11,5 @@ linux-hardware
 rmbkp.sh
 setup-dotfiles
 ssh
-tmux
 zsh
 .DS_Store
