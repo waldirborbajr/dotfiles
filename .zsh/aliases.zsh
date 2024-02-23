@@ -173,6 +173,15 @@ alias ......="cd ../../../../.."
 alias nm="nmap -sC -sV -oN nmap"
 
 # HTTP requests with xh!
-alias http="xh"
+if command -v xh >/dev/null 2>&1; then
+  alias http="xh"
+fi
 
-
+# Docker
+if command -v docker >/dev/null 2>&1; then
+  alias dco="docker compose"
+  alias dps="docker ps"
+  alias dpa="docker ps -a"
+  alias dl="docker ps -l -q"
+  alias dx="docker exec -it"
+fi
