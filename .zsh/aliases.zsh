@@ -128,6 +128,20 @@ if command -v pbpaste >/dev/null 2>&1; then
   alias ccb='pbpaste|pbcopy' # clear clipboard
 fi
 
+if command -v tmux >/dev/null 2>&1; then
+  alias tmr='tmux kill-session -a' # clear clipboard
+  alias tma='tmux attach'
+  alias tms='tmux ls'
+  alias tmt='tmux attach -t'
+  alias tmx='tmux new-session -s TmX'
+  alias tml='tmux list-sessions'
+  alias tmc='clear; tmux clear-history; clear'
+  alias tmd='tmux detach'
+  alias tmk='tmux kill-session'
+  alias tmks='tmux kill-server'
+fi
+
+
 # Colored output
 #alias ls='ls -laGH --color=auto'
 alias diff='diff --color=auto'
@@ -147,7 +161,4 @@ alias '??'=searchOnGoogle
 
 alias xterm="sudo update-alternatives --config x-terminal-emulator"
 
-alias poetryupdate="pipx upgrade poetry"
-
-alias mkdp='mkdir -p "$0" && cd "$0"'
-
+lias poetryupdate="pipx upgrade poetry"
