@@ -15,22 +15,47 @@
 # then uncomment the following line to make Meta + arrow keys mapping work
 #set -ga terminal-overrides "*:kUP3=\e[1;9A,*:kDN3=\e[1;9B,*:kRIT3=\e[1;9C,*:kLFT3=\e[1;9D"
 
-set-option -g default-terminal 'screen-254color'
-set-option -g terminal-overrides ',xterm-256color:RGB'
+# tmux display things in 256 colors
+set-option -g default-terminal "screen-256color"
+# set-option -g default-terminal "tmux-256color"
+set-option -g terminal-overrides ",xterm-256color:RGB"
 
-set -g base-index 1              # start indexing windows at 1 instead of 0
-set -g detach-on-destroy off     # don't exit from tmux when closing a session
-set -g escape-time 0             # zero-out escape time delay
-set -g history-limit 1000000     # increase history size (from 2,000)
-set -g renumber-windows on       # renumber all windows when any window is closed
-set -g set-clipboard on          # use system clipboard
 set -g default-terminal "${TERM}"
-setw -g mode-keys vi
-set -g pane-active-border-style 'fg=magenta,bg=default'
-set -g pane-border-style 'fg=brightblack,bg=default'
 
-set -g @fzf-url-fzf-options '-p 60%,30% --prompt="   " --border-label=" Open URL "'
-set -g @fzf-url-history-limit '2000'
+set -g base-index 1           # start indexing windows at 1 instead of 0
+set -g pane-base-index 1
+set-window-option -g pane-base-index 1
+set-option -g renumber-windows on    # renumber all windows when any window is closed
+
+set -g detach-on-destroy off  # don't exit from tmux when closing a session
+set -g escape-time 0          # zero-out escape time delay
+set -g mouse on               # enable mouse support
+set -g set-clipboard on       # use system clipboard
+set -g status-interval 2      # update status every 2 seconds
+
+# pane borders
+set -g pane-border-style 'fg=colour1'
+set -g pane-active-border-style 'fg=colour3'
+
+# statusbar
+set -g status-position bottom
+set -g status-justify left
+set -g status-style 'fg=colour1'
+set -g status-left ''
+set -g status-right '%Y-%m-%d %H:%M '
+set -g status-right-length 50
+set -g status-left-length 10
+
+setw -g window-status-current-style 'fg=colour0 bg=colour1 bold'
+setw -g window-status-current-format ' #I #W #F '
+
+setw -g window-status-style 'fg=colour1 dim'
+setw -g window-status-format ' #I #[fg=colour7]#W #[fg=colour1]#F '
+
+setw -g window-status-bell-style 'fg=colour2 bg=colour1 bold'
+
+# messages
+set -g message-style 'fg=colour2 bg=colour0 bold'
 
 # Change prefix from 'Ctrl+B' to 'Ctrl+A'
 unbind C-b
@@ -120,32 +145,15 @@ bind-key a set-window-option synchronize-panes
 # ============================
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
-set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
 set -g @plugin 'tmux-plugins/tmux-resurrect'
-set -g @plugin 'tmux-plugins/tmux-continuum'
-set -g @plugin 'sainnhe/tmux-fzf'
-set -g @plugin 'wfxr/tmux-fzf-url'
-set -g @plugin 'catppuccin/tmux'
+set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @plugin 'christoomey/vim-tmux-navigator'
+# set -g @plugin 'tmux-plugins/tmux-continuum'
 
-set -g @continuum-restore 'on'
-set -g @catppuccin_window_left_separator ""
-set -g @catppuccin_window_right_separator " "
-set -g @catppuccin_window_middle_separator " █"
-set -g @catppuccin_window_number_position "right"
-set -g @catppuccin_window_default_fill "number"
-set -g @catppuccin_window_default_text "#W"
-set -g @catppuccin_window_current_fill "number"
-set -g @catppuccin_window_current_text "#W#{?window_zoomed_flag,(),}"
-set -g @catppuccin_status_modules_right "directory meetings date_time"
-set -g @catppuccin_status_modules_left "session"
-set -g @catppuccin_status_left_separator  " "
-set -g @catppuccin_status_right_separator " "
-set -g @catppuccin_status_right_separator_inverse "no"
-set -g @catppuccin_status_fill "icon"
-set -g @catppuccin_status_connect_separator "no"
-set -g @catppuccin_directory_text "#{b:pane_current_path}"
-set -g @catppuccin_date_time_text "%H:%M"
-set -g @catppuccin_flavour 'frappe' # or frappe, macchiato, mocha
+# set -g @resurrect-capture-pane-contents 'on'
+# set -g @continuum-restore 'on'
+# set -g @continuum-save-interval '5'
 
 # Run all plugins' scripts
 run '~/.tmux/plugins/tpm/tpm || true'
