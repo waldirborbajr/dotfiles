@@ -161,3 +161,18 @@ alias '??'=searchOnGoogle
 alias xterm="sudo update-alternatives --config x-terminal-emulator"
 
 alias poetryupdate="pipx upgrade poetry"
+
+# Dirs
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
+
+# Nmap
+alias nm="nmap -sC -sV -oN nmap"
+
+# HTTP requests with xh!
+alias http="xh"
+
+
