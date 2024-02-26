@@ -133,7 +133,7 @@ if command -v tmux >/dev/null 2>&1; then
   alias tma='tmux attach'
   alias tms='tmux ls'
   alias tmt='tmux attach -t'
-  alias tmx='tmux new-session -s TmX'
+  alias tmx='tmux new -s $(pwd | sed "s/.*\///g")'
   alias tml='tmux list-sessions'
   alias tmc='clear; tmux clear-history; clear'
   alias tmd='tmux detach'
