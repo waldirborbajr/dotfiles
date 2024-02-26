@@ -36,7 +36,7 @@ if command -v eza >/dev/null 2>&1; then
   alias ls='eza'
   alias ll='ls -l'
   alias la='eza -la'
-  alias lt='exa --tree --level=2'
+  alias lt='eza --tree --level=2'
 else
   echo "eza is missing"
   echo "Please run:"
