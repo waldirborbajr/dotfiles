@@ -177,3 +177,5 @@ fi
 [[ -f ~/.zsh/node.zsh ]] && source ~/.zsh/node.zsh
 [[ -f ~/.zsh/options.zsh ]] && source ~/.zsh/options.zsh
 [[ -f ~/.zsh/aliases.zsh ]] && source ~/.zsh/aliases.zsh
+
+eval "$(zoxide init zsh)"
