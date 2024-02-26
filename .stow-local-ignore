@@ -6,6 +6,7 @@ README.md
 LICENSE
 .gitignore
 install-2024
+install.zsh
 installs
 linux-hardware
 rmbkp.sh
