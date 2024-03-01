@@ -1,0 +1,228 @@
+
+# ████████╗███╗   ███╗██╗   ██╗██╗  ██╗
+# ╚══██╔══╝████╗ ████║██║   ██║╚██╗██╔╝
+#    ██║   ██╔████╔██║██║   ██║ ╚███╔╝
+#    ██║   ██║╚██╔╝██║██║   ██║ ██╔██╗
+#    ██║   ██║ ╚═╝ ██║╚██████╔╝██╔╝ ██╗
+#    ╚═╝   ╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝
+# Terminal multiplexer
+# https://github.com/tmux/tmux
+
+# if you're running tmux within iTerm2
+#   - and tmux is 1.9 or 1.9a
+#   - and iTerm2 is configured to let option key act as +Esc
+#   - and iTerm2 is configured to send [1;9A -> [1;9D for option + arrow keys
+# then uncomment the following line to make Meta + arrow keys mapping work
+#set -ga terminal-overrides "*:kUP3=\e[1;9A,*:kDN3=\e[1;9B,*:kRIT3=\e[1;9C,*:kLFT3=\e[1;9D"
+
+set-option -g default-terminal 'screen-254color'
+set-option -g terminal-overrides ',xterm-256color:RGB'
+set -g default-terminal "${TERM}"
+
+# start index from 1
+# Start windows and panes at 1, not 0
+set -g base-index 1
+set -g pane-base-index 1
+set-window-option -g pane-base-index 1
+set-option -g renumber-windows On
+
+
+set -g detach-on-destroy off     # don't exit from tmux when closing a session
+set -g escape-time 0             # zero-out escape time delay
+set -g history-limit 1000000     # increase history size (from 2,000)
+set -g set-clipboard on          # use system clipboard
+
+set -g @fzf-url-fzf-options '-p 60%,30% --prompt="   " --border-label=" Open URL "'
+set -g @fzf-url-history-limit '2000'
+
+# Unbind <C-b> as the prefix key
+unbind C-b
+
+# Bind <C-a> as the prefix key
+unbind C-a
+set -g prefix C-a
+bind -r C-a send-prefix
+
+# Enable mouse support
+set -g mouse on
+
+# Enable vim keys for copy mode
+set-window-option -g mode-keys vi
+
+bind V copy-mode
+bind -T copy-mode-vi V send-keys -X cancel
+
+unbind -T copy-mode-vi v
+
+bind -T copy-mode-vi v \
+  send-keys -X begin-selection
+
+bind -T copy-mode-vi 'C-v' \
+  send-keys -X rectangle-toggle
+
+if-shell "uname | grep -q Darwin" "bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'pbcopy'"
+if-shell "uname | grep -q Darwin" "bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel 'pbcopy'"
+
+if-shell "uname | grep -q Linux" "bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel 'xsel'"
+if-shell "uname | grep -q Linux" "bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel 'xsel'"
+
+# copy mode incremental search
+bind-key -T copy-mode-vi / command-prompt -i -p "search down" "send -X search-forward-incremental \"%%%\""
+bind-key -T copy-mode-vi ? command-prompt -i -p "search up" "send -X search-backward-incremental \"%%%\""
+
+# set vi-mode
+set-window-option -g mode-keys vi
+
+# tile all windows
+unbind =
+bind = select-layout tiled
+
+# Reload settings
+bind r source-file ~/.config/tmux/tmux.conf \; display "Config reloaded 🚀"
+
+# Kill pane/window/session shortcuts
+bind x kill-pane
+bind X kill-window
+bind C-x confirm-before -p "kill other windows? (y/n)" "kill-window -a"
+bind Q confirm-before -p "kill-session #S? (y/n)" kill-session
+
+# split window and fix path for tmux 1.9
+bind v split-window -h -c "#{pane_current_path}"
+bind h split-window -v -c "#{pane_current_path}"
+bind c new-window -c "#{pane_current_path}"
+
+# Select pane and windows
+bind -n C-Left previous-window
+bind -n C-Right next-window
+
+bind -n S-Up move-pane -h -t '.{up-of}'
+bind -n S-Right move-pane -t '.{right-of}'
+bind -n S-Left move-pane -t '.{left-of}'
+bind -n S-Down move-pane -h -t '.{down-of}'
+
+bind -r C-h select-window -t :-
+bind -r C-l select-window -t :+
+
+# bind -r Tab last-window   # cycle thru MRU tabs
+bind -r C-o swap-pane -D
+
+# Resize
+bind -r H resize-pane -L 2
+bind -r J resize-pane -D 2
+bind -r K resize-pane -U 2
+bind -r L resize-pane -R 2
+
+# Pane navigation *almost* (vim-like)
+bind -n M-h select-pane -L
+bind -n M-j select-pane -D
+bind -n M-k select-pane -U
+bind -n M-l select-pane -R
+
+# sync pane
+bind-key a set-window-option synchronize-panes
+
+####
+
+# Configure nvim-tmux-navigation
+# Smart pane switching with awareness of Vim splits.
+# See: https://github.com/christoomey/vim-tmux-navigator
+
+# Decide whether we're in a Vim process
+is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
+    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|n?vim?x?)(diff)?$'"
+
+bind -n 'C-h' if-shell "$is_vim" 'send-keys C-h' 'select-pane -L'
+bind -n 'C-j' if-shell "$is_vim" 'send-keys C-j' 'select-pane -D'
+bind -n 'C-k' if-shell "$is_vim" 'send-keys C-k' 'select-pane -U'
+bind -n 'C-l' if-shell "$is_vim" 'send-keys C-l' 'select-pane -R'
+
+tmux_version='$(tmux -V | sed -En "s/^tmux ([0-9]+(.[0-9]+)?).*/\1/p")'
+
+if-shell -b '[ "$(echo "$tmux_version < 3.0" | bc)" = 1 ]' \
+    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l'"
+if-shell -b '[ "$(echo "$tmux_version >= 3.0" | bc)" = 1 ]' \
+    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l'"
+
+bind -n 'C-Space' if-shell "$is_vim" 'send-keys C-Space' 'select-pane -t:.+'
+
+# Enable switching panes while in copy-mode-vi
+bind -T copy-mode-vi 'C-h' select-pane -L
+bind -T copy-mode-vi 'C-j' select-pane -D
+bind -T copy-mode-vi 'C-k' select-pane -U
+bind -T copy-mode-vi 'C-l' select-pane -R
+bind -T copy-mode-vi 'C-\' select-pane -l
+bind -T copy-mode-vi 'C-Space' select-pane -t:.+
+
+#######
+
+#AutoInstall TPM #
+	# One of the first things we do on a new machine is cloning our dotfiles.
+	# Not everything comes with them though, so for example tpm most likely won't be installed.
+	# If you want to install tpm and plugins automatically when tmux is started, put the following snippet in .tmux.conf
+	# before the final run '~/.tmux/plugins/tpm/tpm':
+
+	if "test ! -d ~/.tmux/plugins/tpm" \
+   	"run 'git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm && ~/.tmux/plugins/tpm/bin/install_plugins'"
+
+# ============================
+# ===       Plugins        ===
+# ============================
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @plugin 'sainnhe/tmux-fzf'
+set -g @plugin 'wfxr/tmux-fzf-url'
+set -g @plugin 'catppuccin/tmux'
+
+set -g @continuum-restore 'on'
+
+set -g @catppuccin_flavour 'macchiato' 
+
+set -g @catppuccin_window_status_enable "yes"
+set -g @catppuccin_window_status_icon_enable "yes"
+
+set -g @catppuccin_icon_window_zoom " "
+set -g @catppuccin_icon_window_last "null"
+set -g @catppuccin_icon_window_current "null"
+set -g @catppuccin_icon_window_mark "null"
+set -g @catppuccin_icon_window_silent "null"
+set -g @catppuccin_icon_window_activity "null"
+set -g @catppuccin_icon_window_bell "null"
+
+set -g @catppuccin_window_middle_separator "null"
+
+set -g @catppuccin_window_default_fill "all"
+set -g @catppuccin_window_default_text "#W"
+
+set -g @catppuccin_window_current_fill "number"
+set -g @catppuccin_window_current_text "#W"
+
+set -g @catppuccin_status_modules_right "directory session"
+set -g @catppuccin_maximized_text "null"
+set -g @catppuccin_status_left_separator "█"
+set -g @catppuccin_status_right_separator "█"
+set -g @catppuccin_directory_color "#8aadf4"
+
+# set -g @catppuccin_window_left_separator ""
+# set -g @catppuccin_window_right_separator " "
+# set -g @catppuccin_window_middle_separator " █"
+# set -g @catppuccin_window_number_position "right"
+# set -g @catppuccin_window_default_fill "number"
+# set -g @catppuccin_window_default_text "#W"
+# set -g @catppuccin_window_current_fill "number"
+# set -g @catppuccin_window_current_text "#W#{?window_zoomed_flag,(),}"
+# set -g @catppuccin_status_modules_right "directory meetings date_time"
+# set -g @catppuccin_status_modules_left "session"
+# set -g @catppuccin_status_left_separator  " "
+# set -g @catppuccin_status_right_separator " "
+# set -g @catppuccin_status_right_separator_inverse "no"
+# set -g @catppuccin_status_fill "icon"
+# set -g @catppuccin_status_connect_separator "no"
+# set -g @catppuccin_directory_text "#{b:pane_current_path}"
+# set -g @catppuccin_date_time_text "%H:%M"
+# set -g @catppuccin_flavour 'frappe' # or frappe, macchiato, mocha
+
+# Run all plugins' scripts
+run '~/.tmux/plugins/tpm/tpm || true'
