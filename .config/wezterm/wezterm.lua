@@ -11,9 +11,15 @@ local wezterm = require('wezterm')
 local act = wezterm.action
 
 local config = {
+  color_scheme = 'catppuccin-frappe',
+
   font = wezterm.font('FiraCode Nerd Font', { weight = 'Medium', stretch = 'Normal', style = 'Normal' }),
   font_size = 12.0,
-  color_scheme = 'catppuccin-frappe',
+  freetype_load_flags = 'DEFAULT',
+  front_end = 'WebGpu',
+
+  max_fps = 75,
+  animation_fps = 75,
 
   default_prog = { '/usr/bin/env', 'zsh' },
 
@@ -34,6 +40,7 @@ local config = {
 
   window_background_opacity = 0.9,
   window_decorations = 'RESIZE',
+  -- window_decorations = 'RESIZE|TITLE',
   window_close_confirmation = 'AlwaysPrompt',
   scrollback_lines = 3000,
   default_workspace = 'main',
@@ -84,6 +91,7 @@ local config = {
     { key = '[', mods = 'ALT', action = act.ActivatePaneDirection('Prev') },
     { key = ']', mods = 'ALT', action = act.ActivatePaneDirection('Next') },
     { key = 't', mods = 'ALT', action = act.SpawnTab('CurrentPaneDomain') },
+    { key = 't', mods = 'CTRL|ALT', action = wezterm.action.ShowTabNavigator },
     { key = 'Z', mods = 'CTRL|SHIFT', action = act.TogglePaneZoomState },
     { key = 'F1', mods = 'NONE', action = 'ActivateCopyMode' },
     { key = 'F2', mods = 'NONE', action = act.ActivateCommandPalette },
@@ -91,25 +99,15 @@ local config = {
     { key = 'F4', mods = 'NONE', action = act.ShowTabNavigator },
     { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
     { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
-  },
 
-  key_tables = {
-    resize_pane = {
-      { key = 'h', action = act.AdjustPaneSize({ 'Left', 1 }) },
-      { key = 'j', action = act.AdjustPaneSize({ 'Down', 1 }) },
-      { key = 'k', action = act.AdjustPaneSize({ 'Up', 1 }) },
-      { key = 'l', action = act.AdjustPaneSize({ 'Right', 1 }) },
-      { key = 'Escape', action = 'PopKeyTable' },
-      { key = 'Enter', action = 'PopKeyTable' },
-    },
-    move_tab = {
-      { key = 'h', action = act.MoveTabRelative(-1) },
-      { key = 'j', action = act.MoveTabRelative(-1) },
-      { key = 'k', action = act.MoveTabRelative(1) },
-      { key = 'l', action = act.MoveTabRelative(1) },
-      { key = 'Escape', action = 'PopKeyTable' },
-      { key = 'Enter', action = 'PopKeyTable' },
-    },
+    { key = 'h', mods = 'CTRL', action = act.AdjustPaneSize({ 'Left', 1 }) },
+    { key = 'j', mods = 'CTRL', action = act.AdjustPaneSize({ 'Down', 1 }) },
+    { key = 'k', mods = 'CTRL', action = act.AdjustPaneSize({ 'Up', 1 }) },
+    { key = 'l', mods = 'CTRL', action = act.AdjustPaneSize({ 'Right', 1 }) },
+    -- { key = 'h', action = act.MoveTabRelative(-1) },
+    -- { key = 'j', action = act.MoveTabRelative(-1) },
+    -- { key = 'k', action = act.MoveTabRelative(1) },
+    -- { key = 'l', action = act.MoveTabRelative(1) },
   },
 }
 
