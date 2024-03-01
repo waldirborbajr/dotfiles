@@ -21,6 +21,10 @@ local config = {
 
   hide_tab_bar_if_only_one_tab = true,
 
+  use_fancy_tab_bar = false,
+  status_update_interval = 1000,
+  tab_bar_at_bottom = false,
+
   window_padding = {
     left = '0.5cell',
     right = '0.5cell',
@@ -87,6 +91,25 @@ local config = {
     { key = 'F4', mods = 'NONE', action = act.ShowTabNavigator },
     { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
     { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
+  },
+
+  key_tables = {
+    resize_pane = {
+      { key = 'h', action = act.AdjustPaneSize({ 'Left', 1 }) },
+      { key = 'j', action = act.AdjustPaneSize({ 'Down', 1 }) },
+      { key = 'k', action = act.AdjustPaneSize({ 'Up', 1 }) },
+      { key = 'l', action = act.AdjustPaneSize({ 'Right', 1 }) },
+      { key = 'Escape', action = 'PopKeyTable' },
+      { key = 'Enter', action = 'PopKeyTable' },
+    },
+    move_tab = {
+      { key = 'h', action = act.MoveTabRelative(-1) },
+      { key = 'j', action = act.MoveTabRelative(-1) },
+      { key = 'k', action = act.MoveTabRelative(1) },
+      { key = 'l', action = act.MoveTabRelative(1) },
+      { key = 'Escape', action = 'PopKeyTable' },
+      { key = 'Enter', action = 'PopKeyTable' },
+    },
   },
 }
 
