@@ -9,6 +9,7 @@
 
 local wezterm = require('wezterm')
 local act = wezterm.action
+-- local mod = 'SHIFT|SUPER'
 
 local config = {
   color_scheme = 'catppuccin-frappe',
@@ -16,10 +17,10 @@ local config = {
   font = wezterm.font('FiraCode Nerd Font', { weight = 'Medium', stretch = 'Normal', style = 'Normal' }),
   font_size = 12.0,
   freetype_load_flags = 'DEFAULT',
-  front_end = 'WebGpu',
+  -- front_end = 'WebGpu',
 
-  max_fps = 75,
-  animation_fps = 75,
+  -- max_fps = 75,
+  -- animation_fps = 75,
 
   default_prog = { '/usr/bin/env', 'zsh' },
 
@@ -40,7 +41,6 @@ local config = {
 
   window_background_opacity = 0.9,
   window_decorations = 'RESIZE',
-  -- window_decorations = 'RESIZE|TITLE',
   window_close_confirmation = 'AlwaysPrompt',
   scrollback_lines = 3000,
   default_workspace = 'main',
@@ -77,8 +77,8 @@ local config = {
   },
 
   keys = {
-    { key = 'd', mods = 'ALT', action = act.SplitHorizontal({ domain = 'CurrentPaneDomain' }) },
-    { key = 'd', mods = 'ALT|SHIFT', action = act.SplitVertical({ domain = 'CurrentPaneDomain' }) },
+    { key = 'h', mods = 'ALT', action = act.SplitHorizontal({ domain = 'CurrentPaneDomain' }) },
+    { key = 'v', mods = 'ALT', action = act.SplitVertical({ domain = 'CurrentPaneDomain' }) },
     { key = 'k', mods = 'ALT|SHIFT', action = act.CloseCurrentPane({ confirm = false }) },
     {
       key = 'k',
@@ -99,15 +99,10 @@ local config = {
     { key = 'F4', mods = 'NONE', action = act.ShowTabNavigator },
     { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
     { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
-
     { key = 'h', mods = 'CTRL', action = act.AdjustPaneSize({ 'Left', 1 }) },
     { key = 'j', mods = 'CTRL', action = act.AdjustPaneSize({ 'Down', 1 }) },
     { key = 'k', mods = 'CTRL', action = act.AdjustPaneSize({ 'Up', 1 }) },
     { key = 'l', mods = 'CTRL', action = act.AdjustPaneSize({ 'Right', 1 }) },
-    -- { key = 'h', action = act.MoveTabRelative(-1) },
-    -- { key = 'j', action = act.MoveTabRelative(-1) },
-    -- { key = 'k', action = act.MoveTabRelative(1) },
-    -- { key = 'l', action = act.MoveTabRelative(1) },
   },
 }
 
