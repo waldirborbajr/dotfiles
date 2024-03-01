@@ -11,7 +11,6 @@ local wezterm = require('wezterm')
 local act = wezterm.action
 
 local config = {
-  -- font = wezterm.font('JetBrainsMono Nerd Font'),
   font = wezterm.font('FiraCode Nerd Font', { weight = 'Medium', stretch = 'Normal', style = 'Normal' }),
   font_size = 12.0,
   color_scheme = 'catppuccin-frappe',
@@ -35,6 +34,37 @@ local config = {
   scrollback_lines = 3000,
   default_workspace = 'main',
 
+  launch_menu = {
+    {
+      label = 'Pi4-wired',
+      args = { 'ssh', 'borba@192.168.1.19' },
+    },
+    {
+      label = 'Mi-wired',
+      args = { 'ssh', '-b', '10.0.0.1', '-t', 'martins3@10.0.0.2', 'zellij attach || zellij' },
+    },
+    {
+      label = 'M2',
+      args = { 'ssh', '-t', 'martins3@192.168.11.99', 'zellij attach || zellij' },
+    },
+    {
+      label = 'Mi',
+      args = { 'ssh', '-t', 'martins3@192.168.11.17', 'zellij attach || zellij' },
+    },
+    {
+      label = 'zellij',
+      args = { '/bin/sh', '-l', '-c', 'zellij attach || zellij' },
+    },
+    {
+      label = 'QEMU',
+      args = { 'ssh', '-t', '-p5556', 'root@localhost', 'zellij attach || zellij' },
+    },
+    {
+      label = 'bare',
+      args = { 'zsh' },
+    },
+  },
+
   keys = {
     { key = 'd', mods = 'ALT', action = act.SplitHorizontal({ domain = 'CurrentPaneDomain' }) },
     { key = 'd', mods = 'ALT|SHIFT', action = act.SplitVertical({ domain = 'CurrentPaneDomain' }) },
@@ -50,7 +80,13 @@ local config = {
     { key = '[', mods = 'ALT', action = act.ActivatePaneDirection('Prev') },
     { key = ']', mods = 'ALT', action = act.ActivatePaneDirection('Next') },
     { key = 't', mods = 'ALT', action = act.SpawnTab('CurrentPaneDomain') },
-    { key = 'Enter', mods = 'CTRL|SHIFT', action = act.TogglePaneZoomState },
+    { key = 'Z', mods = 'CTRL|SHIFT', action = act.TogglePaneZoomState },
+    { key = 'F1', mods = 'NONE', action = 'ActivateCopyMode' },
+    { key = 'F2', mods = 'NONE', action = act.ActivateCommandPalette },
+    { key = 'F3', mods = 'NONE', action = act.ShowLauncher },
+    { key = 'F4', mods = 'NONE', action = act.ShowTabNavigator },
+    { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
+    { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
   },
 }
 
