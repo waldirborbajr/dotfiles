@@ -9,6 +9,7 @@ cargo install exa
 cargo install bottom
 cargo install cargo-cache
 cargo install zoxide --locked
+cargo install lsd
 
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install
@@ -17,4 +18,7 @@ git clone https://github.com/jesseduffield/lazygit.git
 cd lazygit
 go install
 
-
+git clone https://github.com/muesli/duf.git
+cd duf
+go build
+go install
