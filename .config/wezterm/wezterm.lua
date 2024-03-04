@@ -15,7 +15,7 @@ local config = {
   color_scheme = 'catppuccin-frappe',
 
   font = wezterm.font('FiraCode Nerd Font', { weight = 'Medium', stretch = 'Normal', style = 'Normal' }),
-  font_size = 12.0,
+  font_size = 10.5,
   freetype_load_flags = 'DEFAULT',
   -- front_end = 'WebGpu',
 
