@@ -22,3 +22,5 @@ git clone https://github.com/muesli/duf.git
 cd duf
 go build
 go install
+
+go install github.com/goreleaser/goreleaser@latest
