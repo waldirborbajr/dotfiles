@@ -57,12 +57,12 @@ style = "Regular"
 [mouse]
 hide_when_typing = true
 
-[shell]
-program = "/usr/bin/zsh"
-
 # [shell]
-# program = "/usr/local/bin/tmux"
-# args = ["new-session", "-A", "-s", "main"]
+# program = "/usr/bin/zsh"
+
+[shell]
+program = "/usr/bin/tmux"
+args = ["new-session", "-A", "-s", "main"]
 
 [[hints.enabled]]
 command = "xdg-open"
