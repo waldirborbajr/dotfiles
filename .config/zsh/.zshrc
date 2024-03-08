@@ -46,6 +46,7 @@ fi # added by Nix installer
 . "$ZDOTDIR/options.zsh"
 . "$ZDOTDIR/completions.zsh"
 . "$ZDOTDIR/fzf.zsh"
+. "$ZDOTDIR/node.zsh"
 . "$ZDOTDIR/aliases.zsh"
 . "$ZDOTDIR/plugins.zsh"
 . "$ZDOTDIR/starship.zsh"
