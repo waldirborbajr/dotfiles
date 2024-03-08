@@ -129,15 +129,15 @@ if command -v pbpaste >/dev/null 2>&1; then
 fi
 
 if command -v tmux >/dev/null 2>&1; then
-  alias tmr='tmux kill-session -a' # clear clipboard
-  alias tma='tmux attach'
+  alias tmx='tmux new -s $(pwd | sed "s/.*\///g")'
+  alias tma='tmux a'
   alias tms='tmux ls'
   alias tmt='tmux attach -t'
-  alias tmx='tmux new -s $(pwd | sed "s/.*\///g")'
   alias tml='tmux list-sessions'
   alias tmc='clear; tmux clear-history; clear'
   alias tmd='tmux detach'
   alias tmk='tmux kill-session'
+  alias tmr='tmux kill-session -a' # clear clipboard
   alias tmks='tmux kill-server'
 fi
 
