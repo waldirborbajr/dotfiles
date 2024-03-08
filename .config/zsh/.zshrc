@@ -36,26 +36,17 @@ source $ZSH/oh-my-zsh.sh
 
 source "$HOME/.cargo/env"
 
-if command -v neofetch >/dev/null 2>&1; then
-  neofetch
-fi
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 if [ -e /home/borba/.nix-profile/etc/profile.d/nix.sh ]; then
   . /home/borba/.nix-profile/etc/profile.d/nix.sh
 fi # added by Nix installer
-
-if command -v starship >/dev/null 2>&1; then
-  eval "$(starship init zsh)"
-fi
 
 # source
 # . "$ZSH/oh-my-zsh.sh"
 . "$ZDOTDIR/functions.zsh"
 . "$ZDOTDIR/options.zsh"
 . "$ZDOTDIR/completions.zsh"
+. "$ZDOTDIR/fzf.zsh"
 . "$ZDOTDIR/aliases.zsh"
 . "$ZDOTDIR/plugins.zsh"
-
-eval "$(zoxide init zsh)"
+. "$ZDOTDIR/starship.zsh"
+. "$ZDOTDIR/zoxide.zsh"

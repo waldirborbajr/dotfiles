@@ -31,10 +31,5 @@ export UID=$(id -u)
 export GID=$(id -g)
 # export DOCKER_HOST=unix:///run/user/1000/docker.sock
 
-# Configure FZF.
-# export FZF_DEFAULT_COMMAND="rg --files --hidden --follow --glob '!.git'"
-# export FZF_DEFAULT_OPTS="--color=dark"
-# export FZF_CTRL_T_OPTS="--preview='less {}' --height=100% --bind shift-up:preview-page-up,shift-down:preview-page-down"
-
 # Rust debug for tracing and other logging
 export RUST_LOG=debug
