@@ -4,4 +4,4 @@
 #   exit
 # fi
 
-eval "$(zoxide init zsh --cmd j)"
+eval "$(zoxide init zsh)"
