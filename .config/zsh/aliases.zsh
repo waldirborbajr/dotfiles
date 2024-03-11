@@ -175,3 +175,5 @@ if command -v docker >/dev/null 2>&1; then
   alias dl="docker ps -l -q"
   alias dx="docker exec -it"
 fi
+
+alias lazysrc="cd ~/.local/share/nvim/lazy/LazyVim/lua/lazyvim/"
