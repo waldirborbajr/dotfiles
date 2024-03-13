@@ -36,6 +36,8 @@ left = [
 
 center = []
 
+# right = ["version-control", "diagnostics", "selections", "position", "file-encoding"]
+
 right = [
   "spinner",
   "spacer",
@@ -73,6 +75,7 @@ display-messages = true
 display-inlay-hints = true
 auto-signature-help = true
 display-signature-help-docs = true
+# inline-diagnostics = { max-warp = 1 }
 
 [keys.normal]
 D = "kill_to_line_end"
