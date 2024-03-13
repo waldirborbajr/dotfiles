@@ -8,3 +8,4 @@ bin
 .config/lazygit/state.yml
 installs/golang/update-golang
 **.zcompdump*
+.config/tmux/plugins
