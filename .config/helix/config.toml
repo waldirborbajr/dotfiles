@@ -14,7 +14,7 @@ gutters = ["diagnostics", "spacer", "diff", "line-numbers", "spacer", "spacer"]
 auto-completion = true
 auto-format = true
 auto-save = true
-idle-timeout = 0
+idle-timeout = 60
 completion-trigger-len = 2
 auto-info = true
 true-color = true
@@ -65,7 +65,7 @@ smart-case = false
 [editor.file-picker]
 hidden = false
 git-global = false # show files hidden by git globally
-max-depth = 20
+# max-depth = 20
 
 [editor.lsp]
 enable = true
