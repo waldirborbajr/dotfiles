@@ -1,0 +1,170 @@
+
+# ███████╗████████╗ █████╗ ██████╗ ███████╗██╗  ██╗██╗██████╗
+# ██╔════╝╚══██╔══╝██╔══██╗██╔══██╗██╔════╝██║  ██║██║██╔══██╗
+# ███████╗   ██║   ███████║██████╔╝███████╗███████║██║██████╔╝
+# ╚════██║   ██║   ██╔══██║██╔══██╗╚════██║██╔══██║██║██╔═══╝
+# ███████║   ██║   ██║  ██║██║  ██║███████║██║  ██║██║██║
+# ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝╚═╝
+# The minimal, blazing-fast, and infinitely customizable prompt
+# https://starship.rs
+
+add_newline = false
+# A minimal left prompt
+format = """$directory$character"""
+palette = "catppuccin_mocha"
+# move the rest of the prompt to the right
+right_format = """$all"""
+
+# [os.symbols]
+# Ubuntu = "ubnt "
+# Macos = "mac "
+# Linux = "lnx "
+# Pop = "pop "
+
+# [os]
+# format = " on [$name]($style)"
+# style = "bold blue"
+# disabled = false
+
+# # Change the default prompt characters
+# [character]
+# success_symbol = "[>](bold green)"
+# error_symbol = "[x](bold red)"
+# vimcmd_symbol = "[<](bold green)"
+
+[username]
+show_always = false
+style_user = "#b16286 bold"
+style_root = "#cc241d bold"
+format = "[$user]($style)"
+disabled = false
+
+[hostname]
+ssh_only = false
+format = "@[$hostname](bold #f65d0e) "
+ssh_symbol = '🌐 '
+disabled = true
+
+[directory]
+truncation_length = 3
+truncation_symbol = "…/"
+# home_symbol = " ~"
+read_only_style = "197"
+read_only = "  "
+format = "[$path]($style)[$read_only]($read_only_style) "
+style = "#8ec07c bold"
+
+[cmd_duration]
+format = " took [$duration]($style)"
+show_notifications = true
+min_time_to_notify = 60_000
+
+[aws]
+format = 'on [$symbol($profile )(\($region\) )]($style)'
+style = 'bold blue'
+symbol = "aws "
+
+[golang]
+format = "[${symbol} $version](bold blue)"
+symbol = ""
+# symbol = "go "
+style = 'bold blue'
+
+[docker_context]
+format = "[${symbol} $context](bold blue) "
+symbol = "  "
+disabled = true
+
+[python]
+format = "[${symbol} $version](white)"
+symbol = " "
+
+[rust]
+format = "[${symbol} $version](white)"
+symbol = ""
+
+[kubernetes]
+symbol = '☸ '
+disabled = false
+detect_files = ['k8s', 'Dockerfile']
+detect_extensions = ['yaml']
+format = '[$context(\[$namespace\])]($style) '
+
+[kubernetes.context_aliases]
+'arn:aws:eks:us-west-2:123:cluster/gal-kub-demo-cluster' = 'gal'
+
+[git_branch]
+symbol = ' '
+format = "on [$symbol$branch]($style) "
+truncation_length = 4
+truncation_symbol = "…/"
+# style = "bold green"
+style = "#458588 bold"
+
+[git_commit]
+commit_hash_length = 4
+tag_symbol = '🔖 '
+
+[git_state]
+format = '[\($state( $progress_current of $progress_total)\)]($style) '
+cherry_pick = '[🍒 PICKING](bold red)'
+
+[git_metrics]
+added_style = 'bold blue'
+format = '[+$added]($added_style)/[-$deleted]($deleted_style) '
+
+# [git_status]
+# style = "bold white"
+# format = '([\($all_status$ahead_behind\)]($style) )'
+# conflicted = "[=](#cc241d bold)"
+# ahead = "[⇡](#98971a bold)"
+# behind = "[⇣](#cc241d bold)"
+# diverged = "[⇕](#cc241d bold)"
+# up_to_date = ""
+# untracked = "[?](#cc241d bold)"
+# stashed = "[$](#f65d0e bold)"
+# modified = "[!](#cc241d bold)"
+# renamed = "[»](#cc241d bold)"
+# deleted = "[✘](#cc241d bold)"
+# staged = "[+](#98971a bold)"
+# disabled = false
+
+[git_status]
+conflicted = "= "
+ahead = "⇡×${count} "
+behind = "⇣×${count} "
+diverged = "${ahead_count}×⇕×${behind_count} "
+untracked = "?×${count} "
+stashed = "\\$×${count} "
+modified = "!×${count} "
+staged = "+×${count} "
+renamed = "»×${count} "
+deleted = "✘×${count} "
+
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+mauve = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+sky = "# 89dceb"
+sapphire = "#74c7ec"
+blue = "#89b4fa"
+lavender = "#b4befe"
+text = "#cdd6f4"
+subtext1 = "#bac2de"
+subtext0 = "#a6adc8"
+overlay2 = "#9399b2"
+overlay1 = "#7f849c"
+overlay0 = "#6c7086"
+surface2 = "#585b70"
+surface1 = "#45475a"
+surface0 = "#313244"
+base = "#1e1e2e"
+mantle = "#181825"
+crust = "#11111b"
