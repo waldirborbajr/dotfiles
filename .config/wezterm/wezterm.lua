@@ -106,12 +106,12 @@ local config = {
   },
 }
 
-for i = 1, 8 do
-  table.insert(config.keys, {
-    key = tostring(i),
-    mods = 'ALT',
-    action = act.ActivateTab(i - 1),
-  })
-end
+-- for i = 1, 8 do
+--   table.insert(config.keys, {
+--     key = tostring(i),
+--     mods = 'ALT',
+--     action = act.ActivateTab(i - 1),
+--   })
+-- end
 
 return config
