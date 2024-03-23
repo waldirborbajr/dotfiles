@@ -39,7 +39,7 @@ local config = {
     bottom = '0cell',
   },
 
-  window_background_opacity = 0.9,
+  window_background_opacity = 0.95,
   window_decorations = 'RESIZE',
   window_close_confirmation = 'AlwaysPrompt',
   scrollback_lines = 3000,
