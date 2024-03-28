@@ -14,8 +14,8 @@ local act = wezterm.action
 local config = {
   color_scheme = 'catppuccin-frappe',
 
-  font = wezterm.font('FiraCode Nerd Font', { weight = 'Medium', stretch = 'Normal', style = 'Normal' }),
-  font_size = 10.5,
+  font = wezterm.font('CommitNerd Nerd Font', { weight = 'Medium', stretch = 'Normal', style = 'Normal' }),
+  font_size = 11,
   freetype_load_flags = 'DEFAULT',
   -- front_end = 'WebGpu',
 
