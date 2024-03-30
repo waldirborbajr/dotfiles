@@ -9,7 +9,13 @@
 
 local wezterm = require('wezterm')
 local act = wezterm.action
+local mux = wezterm.mux
 -- local mod = 'SHIFT|SUPER'
+
+wezterm.on('gui-startup', function()
+  local tab, pane, window = mux.spawn_window({})
+  window:gui_window():maximize()
+end)
 
 local config = {
   color_scheme = 'catppuccin-frappe',
