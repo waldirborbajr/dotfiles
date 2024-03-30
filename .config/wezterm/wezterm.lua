@@ -84,6 +84,7 @@ local config = {
     },
   },
 
+  -- Define leader key C-a
   leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 1000 },
 
   keys = {
@@ -130,13 +131,5 @@ local config = {
     { key = 'l', mods = 'CTRL', action = act.AdjustPaneSize({ 'Right', 1 }) },
   },
 }
-
--- for i = 1, 8 do
---   table.insert(config.keys, {
---     key = tostring(i),
---     mods = 'ALT',
---     action = act.ActivateTab(i - 1),
---   })
--- end
 
 return config
