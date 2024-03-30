@@ -13,7 +13,9 @@ local mux = wezterm.mux
 -- local mod = 'SHIFT|SUPER'
 
 wezterm.on('gui-startup', function()
-  local tab, pane, window = mux.spawn_window({})
+  local tab, pane, window = mux.spawn_window(cmd or {})
+  -- local gui_window = window:gui_window()
+  -- gui_window:perform_action(wezterm.action.ToggleFullScreen, pane)
   window:gui_window():maximize()
 end)
 
@@ -92,6 +94,20 @@ local config = {
       action = act.Multiple({
         act.ClearScrollback('ScrollbackAndViewport'),
         act.SendKey({ key = 'L', mods = 'CTRL' }),
+      }),
+    },
+    {
+      key = ',',
+      mods = 'ALT',
+      action = act.SpawnCommandInNewTab({
+        cwd = os.getenv('WEZTERM_CONFIG_DIR'),
+        set_environment_variables = {
+          TERM = 'screen-256color',
+        },
+        args = {
+          '/home/borba/bins/nvim',
+          os.getenv('WEZTERM_CONFIG_FILE'),
+        },
       }),
     },
     { key = '[', mods = 'ALT', action = act.ActivatePaneDirection('Prev') },
