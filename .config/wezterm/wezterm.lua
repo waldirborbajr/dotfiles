@@ -84,9 +84,15 @@ local config = {
     },
   },
 
+  leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 1000 },
+
   keys = {
-    { key = 'h', mods = 'ALT', action = act.SplitHorizontal({ domain = 'CurrentPaneDomain' }) },
-    { key = 'v', mods = 'ALT', action = act.SplitVertical({ domain = 'CurrentPaneDomain' }) },
+    { key = 'h', mods = 'LEADER', action = act.SplitHorizontal({ domain = 'CurrentPaneDomain' }) },
+    { key = 'v', mods = 'LEADER', action = act.SplitVertical({ domain = 'CurrentPaneDomain' }) },
+    { key = 'Z', mods = 'LEADER', action = act.TogglePaneZoomState },
+    { key = '[', mods = 'ALT', action = act.ActivatePaneDirection('Prev') },
+    { key = ']', mods = 'ALT', action = act.ActivatePaneDirection('Next') },
+
     { key = 'k', mods = 'ALT|SHIFT', action = act.CloseCurrentPane({ confirm = false }) },
     {
       key = 'k',
@@ -110,11 +116,8 @@ local config = {
         },
       }),
     },
-    { key = '[', mods = 'ALT', action = act.ActivatePaneDirection('Prev') },
-    { key = ']', mods = 'ALT', action = act.ActivatePaneDirection('Next') },
     { key = 't', mods = 'ALT', action = act.SpawnTab('CurrentPaneDomain') },
     { key = 't', mods = 'CTRL|ALT', action = wezterm.action.ShowTabNavigator },
-    { key = 'Z', mods = 'CTRL|SHIFT', action = act.TogglePaneZoomState },
     { key = 'F1', mods = 'NONE', action = 'ActivateCopyMode' },
     { key = 'F2', mods = 'NONE', action = act.ActivateCommandPalette },
     { key = 'F3', mods = 'NONE', action = act.ShowLauncher },
