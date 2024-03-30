@@ -6,6 +6,8 @@
 ---   \_/\_/\___/__|\__\___|_| |_|_|_|
 ---
 --- My Wezterm config file
+---
+--- https://www.florianbellmann.com/blog/switch-from-tmux-to-wezterm
 
 local wezterm = require('wezterm')
 local act = wezterm.action
