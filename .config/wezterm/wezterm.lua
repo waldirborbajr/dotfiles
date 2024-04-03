@@ -38,21 +38,38 @@ local config = {
 
   hide_tab_bar_if_only_one_tab = true,
 
-  use_fancy_tab_bar = false,
   status_update_interval = 1000,
-  tab_bar_at_bottom = false,
 
   window_padding = {
-    left = '0.5cell',
-    right = '0.5cell',
-    top = '0.5cell',
-    bottom = '0cell',
+    left = 2.5,
+    right = 2.5,
+    top = 2.5,
+    bottom = 4.5,
   },
+
+  -- Tab Bar
+  enable_tab_bar = true,
+  use_fancy_tab_bar = false,
+  tab_bar_at_bottom = false,
+  show_new_tab_button_in_tab_bar = false,
+
+  -- general options
+  adjust_window_size_when_changing_font_size = false,
+  debug_key_events = false,
+  native_macos_fullscreen_mode = false,
+  -- window_close_confirmation = 'NeverPrompt',
+  -- window_decorations = 'RESIZE',
 
   window_background_opacity = 0.95,
   window_decorations = 'RESIZE',
   window_close_confirmation = 'AlwaysPrompt',
   scrollback_lines = 3000,
+
+  set_environment_variables = {
+    TERM = 'xterm-256color',
+    LC_ALL = 'en_US.UTF-8',
+  },
+
   default_workspace = 'main',
 
   launch_menu = {
@@ -87,16 +104,53 @@ local config = {
   },
 
   -- Define leader key C-a
-  leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 1000 },
+  -- leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 1000 },
 
   keys = {
-    { key = 'h', mods = 'LEADER', action = act.SplitHorizontal({ domain = 'CurrentPaneDomain' }) },
-    { key = 'v', mods = 'LEADER', action = act.SplitVertical({ domain = 'CurrentPaneDomain' }) },
-    { key = 'Z', mods = 'LEADER', action = act.TogglePaneZoomState },
+    { key = 'V', mods = 'CTRL', action = wezterm.action.PasteFrom('Clipboard') },
+    { key = 'V', mods = 'CTRL', action = wezterm.action.PasteFrom('PrimarySelection') },
+    { key = 'w', mods = 'ALT', action = wezterm.action.ShowLauncherArgs({ flags = 'FUZZY|WORKSPACES' }) },
+    -- { key = 'h', mods = 'ALT', action = act.SplitHorizontal({ domain = 'CurrentPaneDomain' }) },
+    -- { key = 'v', mods = 'ALT', action = act.SplitVertical({ domain = 'CurrentPaneDomain' }) },
+    { key = '.', mods = 'ALT', action = wezterm.action({ SplitVertical = { domain = 'CurrentPaneDomain' } }) },
+    { key = '-', mods = 'ALT', action = wezterm.action({ SplitHorizontal = { domain = 'CurrentPaneDomain' } }) },
+    { key = 't', mods = 'ALT', action = act.SpawnTab('CurrentPaneDomain') },
+    { key = 't', mods = 'ALT|SHIFT', action = wezterm.action.ShowTabNavigator },
+    { key = 'f', mods = 'ALT', action = 'TogglePaneZoomState' },
     { key = '[', mods = 'ALT', action = act.ActivatePaneDirection('Prev') },
     { key = ']', mods = 'ALT', action = act.ActivatePaneDirection('Next') },
-
-    { key = 'k', mods = 'ALT|SHIFT', action = act.CloseCurrentPane({ confirm = false }) },
+    { key = 'h', mods = 'CTRL', action = act.AdjustPaneSize({ 'Left', 2 }) },
+    { key = 'j', mods = 'CTRL', action = act.AdjustPaneSize({ 'Down', 2 }) },
+    { key = 'k', mods = 'CTRL', action = act.AdjustPaneSize({ 'Up', 2 }) },
+    { key = 'l', mods = 'CTRL', action = act.AdjustPaneSize({ 'Right', 2 }) },
+    { key = 'h', mods = 'ALT', action = wezterm.action.ActivatePaneDirection('Left') },
+    { key = 'l', mods = 'ALT', action = wezterm.action.ActivatePaneDirection('Right') },
+    { key = 'j', mods = 'ALT', action = wezterm.action.ActivatePaneDirection('Down') },
+    { key = 'k', mods = 'ALT', action = wezterm.action.ActivatePaneDirection('Up') },
+    { key = 'n', mods = 'ALT', action = wezterm.action({ ActivateTabRelative = 1 }) },
+    { key = 'p', mods = 'ALT', action = wezterm.action({ ActivateTabRelative = -1 }) },
+    { key = '1', mods = 'ALT', action = wezterm.action({ ActivateTab = 0 }) },
+    { key = '2', mods = 'ALT', action = wezterm.action({ ActivateTab = 1 }) },
+    { key = '3', mods = 'ALT', action = wezterm.action({ ActivateTab = 2 }) },
+    { key = '4', mods = 'ALT', action = wezterm.action({ ActivateTab = 3 }) },
+    { key = '5', mods = 'ALT', action = wezterm.action({ ActivateTab = 4 }) },
+    { key = '6', mods = 'ALT', action = wezterm.action({ ActivateTab = 5 }) },
+    { key = '7', mods = 'ALT', action = wezterm.action({ ActivateTab = 6 }) },
+    { key = '8', mods = 'ALT', action = wezterm.action({ ActivateTab = 7 }) },
+    { key = '9', mods = 'ALT', action = wezterm.action({ ActivateTab = 8 }) },
+    { key = 'm', mods = 'ALT', action = wezterm.action.ActivateCopyMode },
+    { key = '&', mods = 'ALT|SHIFT', action = wezterm.action({ CloseCurrentTab = { confirm = true } }) },
+    { key = 'x', mods = 'ALT', action = wezterm.action({ CloseCurrentPane = { confirm = true } }) },
+    { key = 'n', mods = 'SHIFT|CTRL', action = 'ToggleFullScreen' },
+    -- {
+    --   mods = 'CMD|SHIFT',
+    --   key = '}',
+    --   action = act.Multiple({
+    --     act.SendKey({ mods = 'CTRL', key = 'b' }),
+    --     act.SendKey({ key = 'n' }),
+    --   }),
+    -- },
+    { key = 'k', mods = 'ALT|SHIFT', action = act.CloseCurrentPane({ confirm = true }) },
     {
       key = 'k',
       mods = 'ALT',
@@ -119,18 +173,12 @@ local config = {
         },
       }),
     },
-    { key = 't', mods = 'ALT', action = act.SpawnTab('CurrentPaneDomain') },
-    { key = 't', mods = 'CTRL|ALT', action = wezterm.action.ShowTabNavigator },
     { key = 'F1', mods = 'NONE', action = 'ActivateCopyMode' },
     { key = 'F2', mods = 'NONE', action = act.ActivateCommandPalette },
     { key = 'F3', mods = 'NONE', action = act.ShowLauncher },
     { key = 'F4', mods = 'NONE', action = act.ShowTabNavigator },
     { key = 'F11', mods = 'NONE', action = act.ToggleFullScreen },
     { key = 'F12', mods = 'NONE', action = act.ShowDebugOverlay },
-    { key = 'h', mods = 'CTRL', action = act.AdjustPaneSize({ 'Left', 1 }) },
-    { key = 'j', mods = 'CTRL', action = act.AdjustPaneSize({ 'Down', 1 }) },
-    { key = 'k', mods = 'CTRL', action = act.AdjustPaneSize({ 'Up', 1 }) },
-    { key = 'l', mods = 'CTRL', action = act.AdjustPaneSize({ 'Right', 1 }) },
   },
 }
 
