@@ -36,4 +36,5 @@ export RUST_LOG=debug
 
 # Podman fix permission
 # mkdir -p ~/.cache/podman
-export XDG_RUNTIME_DIR=$HOME/.cache/podman
+# export XDG_RUNTIME_DIR=$HOME/.cache/podman
+export XDG_RUNTIME_DIR=/run/user/$(id -u)
