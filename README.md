@@ -1,6 +1,6 @@
-## My dotfiles
+## W. Borba Jr's dotfiles
 
-This directory contains the dotfiles for my system
+This is the home of all my dotfiles. These are files that add custom configurations to my computer and applications, primarily the terminal.
 
 ## Requirements
 
@@ -51,3 +51,6 @@ $ stow . -t ~
 - Git: [lazygit](https://github.com/jesseduffield/lazygit)
 - Nala package manager: [nala]((https://github.com/volitank/nala)
 
+## Hardware
+
+Need a new one, ASAP. I'm currently on an old, but very old i5 1st Gen. Praying for an upgrade. 
