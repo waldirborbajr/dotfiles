@@ -8,13 +8,13 @@ Ensure you have the following installed on your system
 
 ### Git
 
-```
+```sh
 sudo nala install git
 ```
 
 ### Stow
 
-```
+```sh
 sudo nala install stow
 ```
 
@@ -24,14 +24,14 @@ sudo nala install stow
 
 3. Clone this repository
 
-```
+```sh
 $ git clone git@github.com/waldirborbajr/dotfiles.git
 $ cd dotfiles
 ```
 
 3. Run stow command
 
-```
+```sh
 $ stow . -t ~
 ```
 
