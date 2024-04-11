@@ -177,3 +177,5 @@ if command -v docker >/dev/null 2>&1; then
 fi
 
 alias lazysrc="cd ~/.local/share/nvim/lazy/LazyVim/lua/lazyvim/"
+
+alias alldate="rustupupdate && cargoupgrade && cargoclearcache && go-global-update && syshealth"
