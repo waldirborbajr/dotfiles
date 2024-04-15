@@ -180,5 +180,3 @@ alias lazysrc="cd ~/.local/share/nvim/lazy/LazyVim/lua/lazyvim/"
 
 alias alldate="rustupupdate && cargoupgrade && cargoclearcache && go-global-update && syshealth"
 alias updatevim="nvim --headless '+Lazy! sync' +qa"
-
-alias nvk='NVIM_APPNAME="nvim-kickstart" nvim'
