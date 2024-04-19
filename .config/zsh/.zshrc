@@ -51,3 +51,5 @@ fi # added by Nix installer
 . "$ZDOTDIR/plugins.zsh"
 . "$ZDOTDIR/starship.zsh"
 . "$ZDOTDIR/zoxide.zsh"
+
+export PATH=$PATH:$HOME/scripts/

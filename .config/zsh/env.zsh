@@ -21,10 +21,10 @@ export GOBIN=$GOPATH/bin # where go-generate-executable-binaries
 export STARSHIP_CONFIG=$HOME/.config/starship/starship.toml
 export LOCALBIN=$HOME/.local/bin
 # export CARGOBIN=$HOME/.cargo/bin
-export BINS=$HOME/scripts
+export SCRIPTS=$HOME/scripts
 
 # export PATH=$PATH:$ANDROID_STUDIO/bin:$FLUTTER_HOME/bin:$OPT_PATH/bin:$GOPATH/bin:$GOBIN/bin:$DOCKER_CONFIG/cli-plugins
-export PATH=$PATH:$OPT_PATH/bin:$GOPATH/bin:$GOBIN:$LOCALBIN:$CARGOBIN:$BINS
+export PATH=$PATH:$OPT_PATH/bin:$GOPATH/bin:$GOBIN:$LOCALBIN:$CARGOBIN:$SCRIPTS
 
 # used at docker-compose to avoid create volume as root
 export UID=$(id -u)
