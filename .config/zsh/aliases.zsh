@@ -180,3 +180,8 @@ alias lazysrc="cd ~/.local/share/nvim/lazy/LazyVim/lua/lazyvim/"
 
 alias alldate="rustupupdate && cargoupgrade && cargoclearcache && go-global-update && syshealth"
 alias updatevim="nvim --headless '+Lazy! sync' +qa"
+
+# Obsidian
+alias oo='cd $HOME/wks/2ndBrain/'
+alias or='nvim $HOME/wks/2ndBrain/inbox/*.md'
+alias ou='cd $HOME/notion-obsidian-sync-zazencodes && node batchUpload.js --lastmod-days-window 5'
