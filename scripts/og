@@ -2,9 +2,8 @@
 
 # Directory containing markdown files
 VAULT_DIR="$HOME/wks/2ndBrain"
-SOURCE_DIR="zettelkasten"
+SOURCE_DIR="borba"
 DEST_DIR="notes"
-
 
 # Iterate through all markdown files in the source directory
 find "$VAULT_DIR/$SOURCE_DIR" -type f -name "*.md" | while read -r file; do
