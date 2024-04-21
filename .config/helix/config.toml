@@ -90,7 +90,7 @@ D = "kill_to_line_end"
 "^" = "goto_first_nonwhitespace"
 G = "goto_file_end"
 # "%" = "match_brackets"
-C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
+"C-g" = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
 
 [keys.insert]
 C-space = "completion"
