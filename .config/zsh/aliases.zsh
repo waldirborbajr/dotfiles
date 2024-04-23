@@ -33,7 +33,8 @@ else
 fi
 
 if command -v eza >/dev/null 2>&1; then
-  alias ls="eza --color=always --long --git --no-filesize --icons=always --no-time --no-user --no-permissions"
+  alias ls="eza --color=always --long --git --icons=always"
+  # alias ls="eza --color=always --long --git --no-filesize --icons=always --no-time --no-user --no-permissions"
   alias ll='ls -l'
   alias la='eza -la'
   alias lt='eza --tree --level=2'
