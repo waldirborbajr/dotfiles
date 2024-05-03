@@ -198,3 +198,5 @@ alias ou='cd $HOME/notion-obsidian-sync-zazencodes && node batchUpload.js --last
 if check_command podman; then
   alias lazypodman='DOCKER_HOST=unix:///run/user/1000/podman/podman.sock lazydocker'
 fi
+
+alias python=python3
