@@ -2,12 +2,12 @@
 # export HISTFILE="${XDG_CACHE_HOME}/zsh/.history"
 export HISTFILE=~/.zsh_history
 export HISTTIMEFORMAT="%Y/%m/%d %H:%M:%S:   "
-export HISTSIZE=1000         # History lines stored in mememory.
-export SAVEHIST=1000         # History lines stored on disk.
-setopt INC_APPEND_HISTORY    # Immediately append commands to history file.
-setopt HIST_IGNORE_ALL_DUPS  # Never add duplicate entries.
-setopt HIST_IGNORE_SPACE     # Ignore commands that start with a space.
-setopt HIST_REDUCE_BLANKS    # Remove unnecessary blank lines.
+export HISTSIZE=1000        # History lines stored in mememory.
+export SAVEHIST=1000        # History lines stored on disk.
+setopt INC_APPEND_HISTORY   # Immediately append commands to history file.
+setopt HIST_IGNORE_ALL_DUPS # Never add duplicate entries.
+setopt HIST_IGNORE_SPACE    # Ignore commands that start with a space.
+setopt HIST_REDUCE_BLANKS   # Remove unnecessary blank lines.
 
 # DIRECTORY STACK
 setopt auto_pushd        # automatically push previous directory to the stack
@@ -33,10 +33,6 @@ SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
 # zsh-autosuggestions
 #
 
-# Disable automatic widget re-binding on each precmd. This can be set when
-# zsh-users/zsh-autosuggestions is the last module in your ~/.zimrc.
-ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-
 # Customize the style that the suggestions are shown with.
 # See https://github.com/zsh-users/zsh-autosuggestions/blob/master/README.md#suggestion-highlight-style
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='bold'
@@ -54,8 +50,9 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 typeset -A ZSH_HIGHLIGHT_STYLES
 ZSH_HIGHLIGHT_STYLES[comment]='fg=242'
 
-# zsh-autosuggestions settings.
-ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE='50'       # only show suggestions when the command is less than 50 characters long
+export ZSH_AUTOSUGGEST_MANUAL_REBIND='true'       # can be set to true for better performance.
+export ZSH_AUTOSUGGEST_HISTORY_IGNORE="?(#c200,)" # ignore history entries that are longer than 200 characters
 
 # Rust debug for tracing and other logging
 export RUST_LOG=debug
