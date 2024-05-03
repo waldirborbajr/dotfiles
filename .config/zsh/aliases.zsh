@@ -1,5 +1,12 @@
 #!/usr/bin/env zsh
 
+check_command() {
+  if ! command -v $1 >/dev/null 2>&1; then
+    echo "👻 command '$1' does not exist. Please install it first. $2"
+    return 1
+  fi
+}
+
 ghinstall() {
   type -p curl >/dev/null || (sudo nala update && sudo nala install curl -y)
   curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg &&
@@ -186,3 +193,8 @@ alias updatevim="nvim --headless '+Lazy! sync' +qa"
 alias oo='cd $HOME/wks/2ndBrain/'
 alias or='nvim $HOME/wks/2ndBrain/inbox/*.md'
 alias ou='cd $HOME/notion-obsidian-sync-zazencodes && node batchUpload.js --lastmod-days-window 5'
+
+# Podman
+if check_command podman; then
+  alias lazypodman='DOCKER_HOST=unix:///run/user/1000/podman/podman.sock lazydocker'
+fi
