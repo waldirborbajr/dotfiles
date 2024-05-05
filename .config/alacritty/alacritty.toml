@@ -10,12 +10,14 @@ transparent_background_colors = true
 
 [window]
 dynamic_padding = true
-opacity = 0.95
+opacity = 0.9
+blur = true
 startup_mode = "Windowed"
 # startup_mode = "Fullscreen"
 # startup_mode = "Maximized"
 decorations = "none"
-title = ""
+
+option_as_alt = "Both"
 
 [window.padding]
 x = 3

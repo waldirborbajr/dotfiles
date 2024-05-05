@@ -1,9 +1,19 @@
+# history setup
+HISTFILE=$HOME/.zhistory
+SAVEHIST=1000
+HISTSIZE=999
+setopt share_history
+setopt hist_expire_dups_first
+setopt hist_ignore_dups
+setopt hist_verify
+
+# completion using arrow keys (based on history)
+bindkey '^[[A' history-search-backward
+bindkey '^[[B' history-search-forward
+
 # History settings.
 # export HISTFILE="${XDG_CACHE_HOME}/zsh/.history"
-export HISTFILE=~/.zsh_history
 export HISTTIMEFORMAT="%Y/%m/%d %H:%M:%S:   "
-export HISTSIZE=1000        # History lines stored in mememory.
-export SAVEHIST=1000        # History lines stored on disk.
 setopt INC_APPEND_HISTORY   # Immediately append commands to history file.
 setopt HIST_IGNORE_ALL_DUPS # Never add duplicate entries.
 setopt HIST_IGNORE_SPACE    # Ignore commands that start with a space.
