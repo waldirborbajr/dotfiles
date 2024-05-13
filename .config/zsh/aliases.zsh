@@ -195,8 +195,8 @@ alias or='nvim $HOME/wks/2ndBrain/inbox/*.md'
 alias ou='cd $HOME/notion-obsidian-sync-zazencodes && node batchUpload.js --lastmod-days-window 5'
 
 # Podman
-if check_command podman; then
-  alias lazypodman='DOCKER_HOST=unix:///run/user/1000/podman/podman.sock lazydocker'
-fi
+# if check_command podman; then
+#   alias lazypodman='DOCKER_HOST=unix:///run/user/1000/podman/podman.sock lazydocker'
+# fi
 
 alias python=python3
