@@ -79,8 +79,8 @@ mods = "None"
 [keyboard]
 bindings = [
   { key = "F11",   action = "ToggleSimpleFullscreen" },
-  { key = "Right", mods = "Alt", chars = "\u001BF" },
-  { key = "Left",  mods = "Alt", chars = "\u001BB" },
+  # { key = "Right", mods = "Alt", chars = "\u001BF" },
+  # { key = "Left",  mods = "Alt", chars = "\u001BB" },
   { key = "Q",     mods = "Command",  action = "None" },
   { key = "N",     mods = "Control", action = "CreateNewWindow" },
 ]
