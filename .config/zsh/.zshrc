@@ -53,3 +53,5 @@ fi # added by Nix installer
 . "$ZDOTDIR/zoxide.zsh"
 
 export PATH=$PATH:$HOME/scripts/
+
+# source <(fzf --zsh)
