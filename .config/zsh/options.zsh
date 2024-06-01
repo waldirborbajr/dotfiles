@@ -1,7 +1,7 @@
 # history setup
 HISTFILE=$HOME/.zhistory
 SAVEHIST=1000
-HISTSIZE=999
+HISTSIZE=1000
 setopt share_history
 setopt hist_expire_dups_first
 setopt hist_ignore_dups
