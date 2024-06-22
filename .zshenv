@@ -8,3 +8,5 @@ export XDG_STATE_HOME="$HOME/.local/state"
 # ZSH
 export ZDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
 
+
+if [ -e /home/borba/.nix-profile/etc/profile.d/nix.sh ]; then . /home/borba/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
