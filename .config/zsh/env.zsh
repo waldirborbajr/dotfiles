@@ -1,4 +1,6 @@
 #!/bin/bash
+export XDG_CONFIG_HOME="$HOME"/.config
+
 export ZSH="$XDG_CONFIG_HOME/zsh/.oh-my-zsh"
 export ZSHZ_DATA="${XDG_CONFIG_HOME:-$HOME/.config}/z/.z"
 
