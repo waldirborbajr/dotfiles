@@ -63,6 +63,6 @@ fi # added by Nix installer
 
 export PATH=$PATH:$HOME/scripts/
 
-# source <(fzf --zsh)
-
 . /home/borba/.nix-profile/etc/profile.d/nix.sh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
