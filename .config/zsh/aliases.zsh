@@ -200,3 +200,6 @@ alias ou='cd $HOME/notion-obsidian-sync-zazencodes && node batchUpload.js --last
 # fi
 
 alias python=python3
+
+# fzf nvim
+alias inv='nvim $(fzf -m --preview="bat --color=always {}")'
