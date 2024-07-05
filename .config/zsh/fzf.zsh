@@ -45,7 +45,6 @@ export FZF_DEFAULT_OPTS="
   --exact
   --reverse
   --cycle
-  --height=50%
   --info=inline
   --prompt=❯\
   --pointer=→
