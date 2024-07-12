@@ -1,1 +1,3 @@
---ignore=.DS_Store
+--target=~/.config
+--ignore=.stowrc
+--ignore=DS_Store

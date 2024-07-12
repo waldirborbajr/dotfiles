@@ -1,0 +1,26 @@
+lastupdatecheck: 0
+recentrepos:
+    - /home/borba/dotfiles
+    - /home/borba/wks/n8n
+    - /home/borba/wks/pocketbase
+    - /home/borba/wks/2ndBrain
+    - /home/borba/wks/update-golang
+    - /home/borba/.config/nvim
+    - /home/borba/wks/go/brightmindbot
+    - /home/borba/wks/go/gossh
+    - /home/borba/wks/go/kollekt
+    - /home/borba/wks/go/distchat
+    - /home/borba/wks/go/BomBot
+    - /home/borba/wks/waldirborbajr.github.io
+    - /home/borba/wks/go/glink
+startuppopupversion: 5
+lastversion: unversioned
+customcommandshistory:
+    - q
+hidecommandlog: false
+ignorewhitespaceindiffview: false
+diffcontextsize: 3
+localbranchsortorder: recency
+remotebranchsortorder: alphabetical
+gitlogorder: topo-order
+gitlogshowgraph: when-maximised
