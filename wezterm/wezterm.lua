@@ -11,7 +11,7 @@ config.window_decorations = 'RESIZE' -- remove window decorations
 config.window_background_opacity = 0.95
 config.macos_window_background_blur = 22
 
-config.color_scheme = 'Catppuccin Mocha'
+config.color_scheme = 'Catppuccin Frappe'
 
 config.audible_bell = 'Disabled' -- disable sounds when at the end of doc
 
@@ -29,9 +29,11 @@ config.audible_bell = 'Disabled' -- disable sounds when at the end of doc
 -- config.color_scheme = scheme_for_apperance(wezterm.gui.get_apperanace()) -- get the current theme
 
 config.font = wezterm.font(' CommitMono Nerd Font', { weight = 'Medium', stretch = 'Normal', style = 'Normal' })
-config.font_size = 12
+config.font_size = 12.0
 -- config.font_weight
 config.cursor_blink_rate = 800
+
+config.enable_tab_bar = false
 
 config.inactive_pane_hsb = {
   saturation = 0.9,
@@ -40,15 +42,15 @@ config.inactive_pane_hsb = {
 
 -- config.window_background_image = "~/Documents/img-backgrounds/sacred-geometry.jpeg"
 --
-config.window_background_gradient = {
-  orientation = 'Vertical',
-  colors = {
-    '#1E1E2F',
-    '#1E1E2F',
-  },
-  blend = 'Rgb',
-  interpolation = 'Linear',
-}
+-- config.window_background_gradient = {
+--   orientation = 'Vertical',
+--   colors = {
+--     '#1E1E2F',
+--     '#1E1E2F',
+--   },
+--   blend = 'Rgb',
+--   interpolation = 'Linear',
+-- }
 
 config.window_padding = {
   left = 2.5,
