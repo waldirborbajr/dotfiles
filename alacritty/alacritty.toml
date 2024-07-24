@@ -38,19 +38,24 @@ thickness = 0.3
 blinking = "Never"
 
 [font]
-size = 12.0
+size = 12
 
 [font.normal]
-family = "CommitMono Nerd Font"
+# family = "CommitMono Nerd Font"
+family = "MesloLGS Nerd Font Mono"
+style = "Regular"
 
 [font.bold]
-family = "CommitMono Nerd Font"
+family = "MesloLGS Nerd Font Mono"
+style = "Bold"
 
 [font.bold_italic]
-family = "CommitMono Nerd Font"
+family = "MesloLGS Nerd Font Mono"
+style = "Bold Italic"
 
 [font.italic]
-family = "CommitMono Nerd Font"
+family = "MesloLGS Nerd Font Mono"
+style = "Italic"
 
 [mouse]
 hide_when_typing = true
