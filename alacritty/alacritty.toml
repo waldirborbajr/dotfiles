@@ -42,19 +42,19 @@ size = 12
 
 [font.normal]
 # family = "CommitMono Nerd Font"
-family = "MesloLGS Nerd Font Mono"
+family = "MesloLGS Nerd Font"
 style = "Regular"
 
 [font.bold]
-family = "MesloLGS Nerd Font Mono"
+family = "MesloLGS Nerd Font"
 style = "Bold"
 
 [font.bold_italic]
-family = "MesloLGS Nerd Font Mono"
+family = "MesloLGS Nerd Font"
 style = "Bold Italic"
 
 [font.italic]
-family = "MesloLGS Nerd Font Mono"
+family = "MesloLGS Nerd Font"
 style = "Italic"
 
 [mouse]
