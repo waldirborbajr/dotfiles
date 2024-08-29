@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-url="https://google.com/search?q=$(urlencode "$*")"
-exec lynx "https://google.com/search?q=$url"

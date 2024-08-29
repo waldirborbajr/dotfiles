@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-podclear
-podman images -q | xargs podman rmi -f
-podman volume rm $(podman volume ls |awk '{print $2}')
-# rm -rf ~/Library/Containers/com.podman.podman/Data/*
-podman system prune -a
