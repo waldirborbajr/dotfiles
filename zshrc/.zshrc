@@ -24,7 +24,6 @@ setopt hist_save_no_dups
 setopt hist_ignore_dups
 setopt hist_find_no_dups
 
-
 #
 # Input/output
 #
@@ -139,4 +138,31 @@ for key ('j') bindkey -M vicmd ${key} history-substring-search-down
 unset key
 # }}} End configuration added by Zim install
 
+
+# ZSH
+export ZDOTDIR="${HOME}/dotfiles/zshrc"
+
+# Nix!
+export NIX_CONF_DIR=$HOME/.config/nix
+
+# source
+# . "$ZSH/oh-my-zsh.sh"
+# . "$ZDOTDIR/functions.zsh"
+# . "$ZDOTDIR/options.zsh"
+# . "$ZDOTDIR/completions.zsh"
+# . "$ZDOTDIR/fzf.zsh"
+# . "$ZDOTDIR/node.zsh"
+. "$ZDOTDIR/aliases.zsh"
+# . "$ZDOTDIR/plugins.zsh"
+# . "$ZDOTDIR/starship.zsh"
+# . "$ZDOTDIR/zoxide.zsh"
+
 export PATH=$PATH:$HOME/.local/bin
+export PATH="$PATH:/home/borba/snap/multipass/common/bin"
+
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/go   # your-go-workspace
+export GOBIN=$GOPATH/bin # where go-generate-executable-binaries
+
+
+source "$HOME/.cargo/env"
