@@ -152,7 +152,7 @@ export NIX_CONF_DIR=$HOME/.config/nix
 # . "$ZDOTDIR/functions.zsh"
 # . "$ZDOTDIR/options.zsh"
 # . "$ZDOTDIR/completions.zsh"
-# . "$ZDOTDIR/fzf.zsh"
+. "$ZDOTDIR/fzf.zsh"
 # . "$ZDOTDIR/node.zsh"
 . "$ZDOTDIR/aliases.zsh"
 # . "$ZDOTDIR/plugins.zsh"

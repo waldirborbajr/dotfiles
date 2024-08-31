@@ -212,3 +212,6 @@ alias hmsf="home-manager switch --flake ~/dotfiles/nix-linux/home-manager#borba"
 alias hmp="home-manager packages"
 alias hmu="nix flake update ~/dotfiles/nix-linux && hms"
 alias hmg="home-manager generations"
+
+# zimfw
+alias zfc="zimfw clean"
