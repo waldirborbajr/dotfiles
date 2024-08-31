@@ -62,6 +62,7 @@
     ".zshrc".source = ~/dotfiles/zshrc/.zshrc;
     ".zshenv".source = ~/dotfiles/.zshenv;
     ".zimrc".source = ~/dotfiles/.zimrc;
+    ".ripgreprc".source = ~/dotfiles/.ripgreprc;
     ".config/wezterm".source = ~/dotfiles/wezterm;
     ".config/tmux".source = ~/dotfiles/tmux;
     ".config/htop".source = ~/dotfiles/htop;
