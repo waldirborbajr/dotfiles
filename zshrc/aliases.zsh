@@ -203,3 +203,12 @@ alias python=python3
 
 # fzf nvim
 alias inv='nvim $(fzf -m --preview="bat --color=always {}")'
+
+# home-manager
+alias hm="home-manager"
+alias hmd="cd ~/dotfiles/nix-linux/"
+alias hms="home-manager switch"
+alias hmsf="home-manager switch --flake ~/dotfiles/nix-linux/home-manager#borba"
+alias hmp="home-manager packages"
+alias hmu="nix flake update ~/dotfiles/nix-linux && hms"
+alias hmg="home-manager generations"

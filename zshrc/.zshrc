@@ -144,6 +144,8 @@ export ZDOTDIR="${HOME}/dotfiles/zshrc"
 
 # Nix!
 export NIX_CONF_DIR=$HOME/.config/nix
+. /home/borba/.nix-profile/etc/profile.d/nix.sh
+# Nix
 
 # source
 # . "$ZSH/oh-my-zsh.sh"
