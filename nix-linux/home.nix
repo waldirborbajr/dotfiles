@@ -21,6 +21,7 @@
     zellij
     neofetch
     fd
+    fzf
     ripgrep
     eza
     bat
@@ -59,6 +60,8 @@
     # ".screenrc".source = dotfiles/screenrc;
 
     ".zshrc".source = ~/dotfiles/zshrc/.zshrc;
+    ".zshenv".source = ~/dotfiles/.zshenv;
+    ".zimrc".source = ~/dotfiles/.zimrc;
     ".config/wezterm".source = ~/dotfiles/wezterm;
     ".config/tmux".source = ~/dotfiles/tmux;
     ".config/htop".source = ~/dotfiles/htop;
@@ -67,6 +70,7 @@
     ".config/gh".source = ~/dotfiles/gh;
     ".config/nix".source = ~/dotfiles/nix;
     ".config/yazi".source = ~/dotfiles/yazi;
+    ".config/zellij".source = ~/dotfiles/zellij;
     ".config/home-manager".source = ~/dotfiles/nix-linux;
 
     # # You can also set the file content immediately.
