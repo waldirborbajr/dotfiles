@@ -18,21 +18,21 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
-    zellij
-    neofetch
+    bat
+    bottom
+    eza
     fd
     fzf
-    ripgrep
-    eza
-    bat
-    tmux
-    htop
-    stow
-    yazi
-    lazygit
     gh
-    bottom
+    htop
+    lazygit
+    neofetch
     neovim
+    ripgrep
+    tmux
+    wezterm
+    yazi
+    zellij
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -41,7 +41,7 @@
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
     # # fonts?
-    (pkgs.nerdfonts.override { fonts = [ "MesloLGS Nerd Font" ]; })
+    # (pkgs.nerdfonts.override { fonts = [ "MesloLGS Nerd Font" ]; })
 
     # # You can also create simple shell scripts directly inside your
     # # configuration. For example, this adds a command 'my-hello' to your
@@ -51,7 +51,7 @@
     # '')
 
     # To ensure we have the correct version of nix installed
-    config.nix.package
+    # config.nix.package
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -101,7 +101,7 @@
   #  /etc/profiles/per-user/borba/etc/profile.d/hm-session-vars.sh
   #
   home.sessionVariables = {
-    # EDITOR = "emacs";
+    EDITOR = "nvim";
   };
 
   nixpkgs.config = {
@@ -121,6 +121,12 @@
   # (fixing local issues, settings XDG_DATA_DIRS, etc.):
   targets.genericLinux.enable = true;
 
+  programs.wezterm = {
+    enable = true;
+    enableZshIntegration = true;
+    enableBashIntegration = true;
+    # extraConfig = builtins.readFile ~/dotfiles/wezterm/wezterm.lua;
+  };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
