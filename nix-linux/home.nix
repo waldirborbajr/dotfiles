@@ -41,7 +41,7 @@
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
     # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+    (pkgs.nerdfonts.override { fonts = [ "MesloLGS Nerd Font" ]; })
 
     # # You can also create simple shell scripts directly inside your
     # # configuration. For example, this adds a command 'my-hello' to your
@@ -49,6 +49,9 @@
     # (pkgs.writeShellScriptBin "my-hello" ''
     #   echo "Hello, ${config.home.username}!"
     # '')
+
+    # To ensure we have the correct version of nix installed
+    config.nix.package
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -105,6 +108,19 @@
     allowUnfree = true;
     allowUnfreePredicate = _: true;
   };
+
+  # enable experimental features
+  nix = {
+    package = pkgs.nix;
+    settings.experimental-features = [ "nix-command" "flakes" ];
+    # settings.experimental-features = [ "nix-command" ];
+  };
+
+  # set some environment variables that will ease usage of software
+  # installed with nix on non-NixOS linux
+  # (fixing local issues, settings XDG_DATA_DIRS, etc.):
+  targets.genericLinux.enable = true;
+
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
