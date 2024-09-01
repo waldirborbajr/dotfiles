@@ -30,7 +30,6 @@
     neovim
     ripgrep
     tmux
-    wezterm
     yazi
     zellij
     # # Adds the 'hello' command to your environment. It prints a friendly
@@ -121,13 +120,24 @@
   # (fixing local issues, settings XDG_DATA_DIRS, etc.):
   targets.genericLinux.enable = true;
 
-  programs.wezterm = {
-    enable = true;
-    enableZshIntegration = true;
-    enableBashIntegration = true;
-    # extraConfig = builtins.readFile ~/dotfiles/wezterm/wezterm.lua;
-  };
+  # programs.wezterm = {
+  #   enable = true;
+  #   enableZshIntegration = true;
+  #   enableBashIntegration = true;
+  #   # extraConfig = builtins.readFile ~/dotfiles/wezterm/wezterm.lua;
+  # };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+
+  # programs.git = {
+  #   package = pkgs.gitAndTools.gitFull;
+  #   enable = true;
+  #   userName = "Waldir Borba Junior";
+  #   userEmail = "wborbajr@gmail.com";
+  #   signing = {
+  #     key = "wborbajr@gmail.com";
+  #     signByDefault = false;
+  #   };
+  # };
 }
