@@ -56,5 +56,7 @@ zmodule zsh-users/zsh-autosuggestions
 
 zmodule spaceship-prompt/spaceship-prompt --name spaceship --no-submodules
 
+zmodule fzf
+
 # Set to vi or emacs
 zinput_mode='vi'

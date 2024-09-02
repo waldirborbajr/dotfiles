@@ -117,6 +117,9 @@ in
   #
   home.sessionVariables = {
     EDITOR = "nvim";
+    LANG = "en_US.UTF-8";
+    LC_CTYPE = "en_US.UTF-8";
+    LC_ALL = "en_US.UTF-8";
   };
 
   nixpkgs.config = {
