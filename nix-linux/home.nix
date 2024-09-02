@@ -29,6 +29,7 @@ in
   home.packages = with pkgs; [
     bat
     bottom
+    delta
     eza
     fd
     fzf
@@ -40,6 +41,7 @@ in
     neovim
     ripgrep
     ripgrep-all
+    starship
     tmux
     yazi
     zellij
@@ -83,10 +85,10 @@ in
     ".config/htop".source = ~/dotfiles/htop;
     ".config/lazygit".source = ~/dotfiles/lazygit;
     # ".config/git".source = ~/dotfiles/git;
-    ".config/gh".source = ~/dotfiles/gh;
+    # ".config/gh".source = ~/dotfiles/gh;
     ".config/nix".source = ~/dotfiles/nix;
     ".config/yazi".source = ~/dotfiles/yazi;
-    ".config/zellij".source = ~/dotfiles/zellij;
+    # ".config/zellij".source = ~/dotfiles/zellij;
     ".config/home-manager".source = ~/dotfiles/nix-linux;
 
     # # You can also set the file content immediately.
@@ -143,62 +145,77 @@ in
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  programs.git = {
+  programs.starship = import ./starship/starship.nix;
+  programs.gh = import ./git/gh.nix;
+  programs.git = import ./git/git.nix;
+  programs.zellij = import ./zellij/zellij.nix;
+  # programs.zsh = import ./zsh/zsh.nix;
+
+  programs.bat = {
     enable = true;
-    userName = "Waldir Borba Junior";
-    userEmail = "wborbajr@gmail.com";
-    # delta.enable = true;
-    lfs.enable = false;
-    ignores = [
-      "tags"
-      ".vim.session"
-      "tags.lock"
-      "tags.temp"
-      "ayak.sh"
-      ".direnv"
-    ];
-    delta = {
-      enable = true;
-      # package = pkgs.delta;
-      options = {
-        navigate = true;
-        side-by-side = true;
-        line-numbers = true;
-      };
-    };
-    aliases = {
-      ignore = "!gi() { curl -sL https://www.toptal.com/developers/gitignore/api/$@ ;}; gi";
-      swc = "switch -c $1";
-      swm = "switch main";
-      co = "checkout";
-      ci = "commit";
-      cia = "commit --amend";
-      s = "status";
-      st = "status";
-      b = "branch";
-      p = "pull --rebase";
-      pu = "push";
-      d = "diff";
-    };
-    extraConfig = {
-      color.ui = "true";
-      init.defaultBranch = "main";
-      push.autoSetupRemote = true;
-      core.compression = 0;
-      http.postBuffer = 1048576000;
-      # protocol."https".allow = "always";
-      # url."https://github.com/".insteadOf = [ "gh:" "github:" ];
-      pull.rabase = "true";
+    config = {
+      theme = "OneHalfDark";
+      style = "numbers,changes,header,grid";
+      italic-text = "always";
+      pager = "less -FR";
+      map-syntax = [ "h:cpp" ".ignore:.gitignore" ];
     };
   };
+
+  # programs.git = {
+  #   enable = true;
+  #   userName = "Waldir Borba Junior";
+  #   userEmail = "wborbajr@gmail.com";
+  #   # delta.enable = true;
+  #   lfs.enable = false;
+  #   ignores = [
+  #     "tags"
+  #     ".vim.session"
+  #     "tags.lock"
+  #     "tags.temp"
+  #     "ayak.sh"
+  #     ".direnv"
+  #   ];
+  #   delta = {
+  #     enable = true;
+  #     # package = pkgs.delta;
+  #     options = {
+  #       navigate = true;
+  #       side-by-side = true;
+  #       line-numbers = true;
+  #     };
+  #   };
+  #   aliases = {
+  #     ignore = "!gi() { curl -sL https://www.toptal.com/developers/gitignore/api/$@ ;}; gi";
+  #     swc = "switch -c $1";
+  #     swm = "switch main";
+  #     co = "checkout";
+  #     ci = "commit";
+  #     cia = "commit --amend";
+  #     s = "status";
+  #     st = "status";
+  #     b = "branch";
+  #     p = "pull --rebase";
+  #     pu = "push";
+  #     d = "diff";
+  #   };
+  #   extraConfig = {
+  #     color.ui = "true";
+  #     init.defaultBranch = "main";
+  #     push.autoSetupRemote = true;
+  #     core.compression = 0;
+  #     http.postBuffer = 1048576000;
+  #     # protocol."https".allow = "always";
+  #     # url."https://github.com/".insteadOf = [ "gh:" "github:" ];
+  #     pull.rabase = "true";
+  #   };
+  # };
 
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
   };
 
-  programs.bat.enable = true;
-  
   # programs.neovim.enable = true;
 
   # programs.zsh = {
