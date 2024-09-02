@@ -62,9 +62,15 @@
     contributors = "!. ~/.config/git/githelpers.sh; git shortlog --summary --numbered | git_page_maybe";
   };
   extraConfig = {
-    init = {
-      defaultBranch = "main";
-    };
+    pull.rebase = "true";
+    diff.guitool = "meld";
+    difftool.meld.path = "${pkgs.meld}/bin/meld";
+    # difftool.prompt = "false";
+    merge.tool = "meld";
+    mergetool.meld.path = "${pkgs.meld}/bin/meld";
+
+    init.defaultBranch = "main";
+
     core = {
       editor = "vim";
       pager = "LESS='LRc --mouse' delta";

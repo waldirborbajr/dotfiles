@@ -37,6 +37,7 @@ in
     git-extras
     htop
     lazygit
+    meld
     neofetch
     neovim
     ripgrep
@@ -147,9 +148,24 @@ in
 
   programs.starship = import ./starship/starship.nix;
   programs.gh = import ./git/gh.nix;
-  programs.git = import ./git/git.nix;
+  # programs.git = import ./git/git.nix;
   programs.zellij = import ./zellij/zellij.nix;
   # programs.zsh = import ./zsh/zsh.nix;
+
+  programs.git = {
+    enable = true;
+    userName = "Larry";
+    userEmail = "larry@agendaless.com";
+    extraConfig = {
+      pull.rebase = "true";
+      diff.guitool = "meld";
+      difftool.meld.path = "${pkgs.meld}/bin/meld";
+      difftool.prompt = "false";
+      merge.tool = "meld";
+      mergetool.meld.path = "${pkgs.meld}/bin/meld";
+      safe.directory = [ "/etc/nixos" ];
+    };
+  };
 
   programs.bat = {
     enable = true;

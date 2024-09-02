@@ -208,7 +208,7 @@ alias inv='nvim $(fzf -m --preview="bat --color=always {}")'
 alias hm="home-manager"
 alias hmd="cd ~/dotfiles/nix-linux/"
 alias hmb="home-manager -f home.nix build"
-alias hms="home-manager -f home.nix switch && rm -rf result/"
+alias hms="home-manager -f home.nix switch && sudo rm -rf result/"
 alias hmsf="home-manager switch --flake ~/dotfiles/nix-linux/home-manager#borba"
 alias hmp="home-manager packages"
 alias hmu="nix flake update ~/dotfiles/nix-linux && hms"
