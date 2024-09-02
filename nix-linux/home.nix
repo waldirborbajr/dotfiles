@@ -1,10 +1,19 @@
 { config, pkgs, ... }:
 
+let
+  homeDirectory = if pkgs.stdenv.isLinux then "/home/borba" else "/Users/borba";
+in
+
 {
+
+  news.display = "show";
+
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "borba";
-  home.homeDirectory = "/home/borba";
+  # home.homeDirectory = "/home/borba";
+  home.homeDirectory = homeDirectory;
+
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -24,14 +33,18 @@
     fd
     fzf
     gh
+    git-extras
     htop
     lazygit
     neofetch
     neovim
     ripgrep
+    ripgrep-all
     tmux
     yazi
     zellij
+    # zsh
+
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello
@@ -69,7 +82,7 @@
     ".config/tmux".source = ~/dotfiles/tmux;
     ".config/htop".source = ~/dotfiles/htop;
     ".config/lazygit".source = ~/dotfiles/lazygit;
-    ".config/git".source = ~/dotfiles/git;
+    # ".config/git".source = ~/dotfiles/git;
     ".config/gh".source = ~/dotfiles/gh;
     ".config/nix".source = ~/dotfiles/nix;
     ".config/yazi".source = ~/dotfiles/yazi;
@@ -130,14 +143,124 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  # programs.git = {
-  #   package = pkgs.gitAndTools.gitFull;
+  programs.git = {
+    enable = true;
+    userName = "Waldir Borba Junior";
+    userEmail = "wborbajr@gmail.com";
+    # delta.enable = true;
+    lfs.enable = false;
+    ignores = [
+      "tags"
+      ".vim.session"
+      "tags.lock"
+      "tags.temp"
+      "ayak.sh"
+      ".direnv"
+    ];
+    delta = {
+      enable = true;
+      # package = pkgs.delta;
+      options = {
+        navigate = true;
+        side-by-side = true;
+        line-numbers = true;
+      };
+    };
+    aliases = {
+      ignore = "!gi() { curl -sL https://www.toptal.com/developers/gitignore/api/$@ ;}; gi";
+      swc = "switch -c $1";
+      swm = "switch main";
+      co = "checkout";
+      ci = "commit";
+      cia = "commit --amend";
+      s = "status";
+      st = "status";
+      b = "branch";
+      p = "pull --rebase";
+      pu = "push";
+      d = "diff";
+    };
+    extraConfig = {
+      color.ui = "true";
+      init.defaultBranch = "main";
+      push.autoSetupRemote = true;
+      core.compression = 0;
+      http.postBuffer = 1048576000;
+      # protocol."https".allow = "always";
+      # url."https://github.com/".insteadOf = [ "gh:" "github:" ];
+      pull.rabase = "true";
+    };
+  };
+
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
+  programs.bat.enable = true;
+  
+  # programs.neovim.enable = true;
+
+  # programs.zsh = {
   #   enable = true;
-  #   userName = "Waldir Borba Junior";
-  #   userEmail = "wborbajr@gmail.com";
-  #   signing = {
-  #     key = "wborbajr@gmail.com";
-  #     signByDefault = false;
-  #   };
+  #   enableAutosuggestions = true;
+  #   enableCompletion = true;
+  #
+  #   initExtra = ''
+  #   bindkey '^ ' autosuggest-accept
+  #   unsetopt beep
+  #   bindkey -e
+  #
+  #   autoload -Uz select-word-style
+  #   select-word-style bash
+  #
+  #   source ~/.zsh/prompt.zsh
+  #
+  #   autoload -U edit-command-line
+  #   zle -N edit-command-line
+  #   bindkey '\C-x\C-e' edit-command-line
+  #
+  #   export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+  #   # export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git --ignore "*.png" --ignore "*.jpg" --ignore "*.mp3" --ignore "*.import" --ignore "*.wav" --ignore "*.ogg" --ignore "*.aseprite" --ignore "*.ttf" --ignore "*.gif" --ignore "*.TTF" --ignore "*.afdesign" --ignore steam --ignore "*.afphoto" --ignore "*.tres" -l -g ""'
+  #   # export FZF_DEFAULT_COMMAND='
+  #   #   (git ls-tree -r --name-only HEAD ||
+  #   #    find . -path "*/\.*" -prune -o -type f -print -o -type l -print |
+  #   #       sed s/^..//) 2> /dev/null'
+  #
+  #
+  #   if [ -z "$VIM_VERSION" ]; then
+  #     VIM_VERSION="nvim"
+  #   fi
+  #
+  #   export EDITOR="$VIM_VERSION"
+  #   export VISUAL="$VIM_VERSION"
+  #
+  #   alias vim="$VIM_VERSION"
+  #   alias vi="vim"
+  #
+  #   stty sane
+  #
+  #   source ~/.zshrc.dot
+  #   '';
+  #
+  #   # zplug = {
+  #   #   enable = true;
+  #   #   plugins= [
+  #   #     {
+  #   #       name = "ytet5uy4/fzf-widgets";
+  #   #     }
+  #   #     {
+  #   #       name = "changyuheng/fz";
+  #   #     }
+  #   #     {
+  #   #       name = "rupa/z";
+  #   #     }
+  #   #   ];
+  #   # };
+  #
+  #   plugins = with pkgs; [
+  #
+  #   ];
   # };
+
 }
