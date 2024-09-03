@@ -1,19 +1,33 @@
 { config, pkgs, ... }:
 
 let
-  homeDirectory = if pkgs.stdenv.isLinux then "/home/borba" else "/Users/borba";
+  # homeDirectory = if pkgs.stdenv.isLinux then "/home/borba" else "/Users/borba";
+
+  homedir = builtins.getEnv "HOME";
+  username = builtins.getEnv "USER";
 in
 
 {
+
+  imports = [ 
+    ./modules/bat.nix
+    ./modules/eza.nix
+    ./modules/fzf.nix
+    ./modules/git.nix
+    ./modules/gpg.nix
+    ./modules/lazygit.nix
+  ];
 
   news.display = "show";
 
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
-  home.username = "borba";
+  # home.username = "borba";
   # home.homeDirectory = "/home/borba";
-  home.homeDirectory = homeDirectory;
+  # home.homeDirectory = homeDirectory;
 
+  home.username = username;
+  home.homeDirectory = homedir;
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -84,12 +98,8 @@ in
     ".config/wezterm".source = ~/dotfiles/wezterm;
     ".config/tmux".source = ~/dotfiles/tmux;
     ".config/htop".source = ~/dotfiles/htop;
-    ".config/lazygit".source = ~/dotfiles/lazygit;
-    # ".config/git".source = ~/dotfiles/git;
-    # ".config/gh".source = ~/dotfiles/gh;
     ".config/nix".source = ~/dotfiles/nix;
     ".config/yazi".source = ~/dotfiles/yazi;
-    # ".config/zellij".source = ~/dotfiles/zellij;
     ".config/home-manager".source = ~/dotfiles/nix-linux;
 
     # # You can also set the file content immediately.
@@ -117,6 +127,7 @@ in
   #
   home.sessionVariables = {
     EDITOR = "nvim";
+    VISUAL = "nvim";
     LANG = "en_US.UTF-8";
     LC_CTYPE = "en_US.UTF-8";
     LC_ALL = "en_US.UTF-8";
@@ -139,164 +150,10 @@ in
   # (fixing local issues, settings XDG_DATA_DIRS, etc.):
   targets.genericLinux.enable = true;
 
-  # programs.wezterm = {
-  #   enable = true;
-  #   enableZshIntegration = true;
-  #   enableBashIntegration = true;
-  #   # extraConfig = builtins.readFile ~/dotfiles/wezterm/wezterm.lua;
-  # };
-
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  programs.starship = import ./starship/starship.nix;
-  programs.gh = import ./git/gh.nix;
-  # programs.git = import ./git/git.nix;
-  programs.zellij = import ./zellij/zellij.nix;
-  # programs.zsh = import ./zsh/zsh.nix;
-
-  programs.git = {
-    enable = true;
-    userName = "Larry";
-    userEmail = "larry@agendaless.com";
-    extraConfig = {
-      pull.rebase = "true";
-      diff.guitool = "meld";
-      difftool.meld.path = "${pkgs.meld}/bin/meld";
-      difftool.prompt = "false";
-      merge.tool = "meld";
-      mergetool.meld.path = "${pkgs.meld}/bin/meld";
-      safe.directory = [ "/etc/nixos" ];
-    };
-  };
-
-  programs.bat = {
-    enable = true;
-    config = {
-      theme = "OneHalfDark";
-      style = "numbers,changes,header,grid";
-      italic-text = "always";
-      pager = "less -FR";
-      map-syntax = [ "h:cpp" ".ignore:.gitignore" ];
-    };
-  };
-
-  # programs.git = {
-  #   enable = true;
-  #   userName = "Waldir Borba Junior";
-  #   userEmail = "wborbajr@gmail.com";
-  #   # delta.enable = true;
-  #   lfs.enable = false;
-  #   ignores = [
-  #     "tags"
-  #     ".vim.session"
-  #     "tags.lock"
-  #     "tags.temp"
-  #     "ayak.sh"
-  #     ".direnv"
-  #   ];
-  #   delta = {
-  #     enable = true;
-  #     # package = pkgs.delta;
-  #     options = {
-  #       navigate = true;
-  #       side-by-side = true;
-  #       line-numbers = true;
-  #     };
-  #   };
-  #   aliases = {
-  #     ignore = "!gi() { curl -sL https://www.toptal.com/developers/gitignore/api/$@ ;}; gi";
-  #     swc = "switch -c $1";
-  #     swm = "switch main";
-  #     co = "checkout";
-  #     ci = "commit";
-  #     cia = "commit --amend";
-  #     s = "status";
-  #     st = "status";
-  #     b = "branch";
-  #     p = "pull --rebase";
-  #     pu = "push";
-  #     d = "diff";
-  #   };
-  #   extraConfig = {
-  #     color.ui = "true";
-  #     init.defaultBranch = "main";
-  #     push.autoSetupRemote = true;
-  #     core.compression = 0;
-  #     http.postBuffer = 1048576000;
-  #     # protocol."https".allow = "always";
-  #     # url."https://github.com/".insteadOf = [ "gh:" "github:" ];
-  #     pull.rabase = "true";
-  #   };
-  # };
-
-  programs.fzf = {
-    enable = true;
-    enableZshIntegration = true;
-  };
-
-  # programs.neovim.enable = true;
-
-  # programs.zsh = {
-  #   enable = true;
-  #   enableAutosuggestions = true;
-  #   enableCompletion = true;
-  #
-  #   initExtra = ''
-  #   bindkey '^ ' autosuggest-accept
-  #   unsetopt beep
-  #   bindkey -e
-  #
-  #   autoload -Uz select-word-style
-  #   select-word-style bash
-  #
-  #   source ~/.zsh/prompt.zsh
-  #
-  #   autoload -U edit-command-line
-  #   zle -N edit-command-line
-  #   bindkey '\C-x\C-e' edit-command-line
-  #
-  #   export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
-  #   # export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git --ignore "*.png" --ignore "*.jpg" --ignore "*.mp3" --ignore "*.import" --ignore "*.wav" --ignore "*.ogg" --ignore "*.aseprite" --ignore "*.ttf" --ignore "*.gif" --ignore "*.TTF" --ignore "*.afdesign" --ignore steam --ignore "*.afphoto" --ignore "*.tres" -l -g ""'
-  #   # export FZF_DEFAULT_COMMAND='
-  #   #   (git ls-tree -r --name-only HEAD ||
-  #   #    find . -path "*/\.*" -prune -o -type f -print -o -type l -print |
-  #   #       sed s/^..//) 2> /dev/null'
-  #
-  #
-  #   if [ -z "$VIM_VERSION" ]; then
-  #     VIM_VERSION="nvim"
-  #   fi
-  #
-  #   export EDITOR="$VIM_VERSION"
-  #   export VISUAL="$VIM_VERSION"
-  #
-  #   alias vim="$VIM_VERSION"
-  #   alias vi="vim"
-  #
-  #   stty sane
-  #
-  #   source ~/.zshrc.dot
-  #   '';
-  #
-  #   # zplug = {
-  #   #   enable = true;
-  #   #   plugins= [
-  #   #     {
-  #   #       name = "ytet5uy4/fzf-widgets";
-  #   #     }
-  #   #     {
-  #   #       name = "changyuheng/fz";
-  #   #     }
-  #   #     {
-  #   #       name = "rupa/z";
-  #   #     }
-  #   #   ];
-  #   # };
-  #
-  #   plugins = with pkgs; [
-  #
-  #   ];
-  # };
+  programs.starship = import ./modules/starship.nix;
+  programs.gh = import ./modules/gh.nix;
 
 }
