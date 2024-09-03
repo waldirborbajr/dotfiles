@@ -13,23 +13,19 @@ in
     ./modules/bat.nix
     ./modules/eza.nix
     ./modules/fzf.nix
+    ./modules/gh.nix
     ./modules/git.nix
     ./modules/gpg.nix
     ./modules/htop.nix
     ./modules/lazygit.nix
     ./modules/starship.nix
+    ./modules/zoxide.nix
     # ./modules/timezone.nix
   ];
 
   news.display = "show";
 
   fonts.fontconfig.enable = true;
-
-  # fonts.packages = with pkgs; [
-  #   font-awesome
-  #   fira-code
-  #   (nerdfonts.override { fonts = [ "FiraCode" "JetBrainsMono" ]; })
-  # ];
 
   # shellAliases = {
   #   "pr" = "poetry run";
@@ -89,7 +85,7 @@ in
     # # overrides. You can do that directly here, just don't forget the
     # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
     # # fonts?
-    # (pkgs.nerdfonts.override { fonts = [ "MesloLGS Nerd Font" ]; })
+    (pkgs.nerdfonts.override { fonts = [ "Meslo" ]; })
 
     # # You can also create simple shell scripts directly inside your
     # # configuration. For example, this adds a command 'my-hello' to your
@@ -164,8 +160,6 @@ in
     settings = {
       experimental-features = [ "nix-command" "flakes" "repl-flake" ];
       auto-optimise-store = true;
-      # trusted-users = [ "nclaud" ];
-      # access-tokens = [ config.sops.secrets.github-token.path ];
     };
   };
 
@@ -178,6 +172,6 @@ in
   programs.home-manager.enable = true;
 
   # programs.starship = import ./modules/starship.nix;
-  programs.gh = import ./modules/gh.nix;
+  # programs.gh = import ./modules/gh.nix;
 
 }

@@ -1,48 +1,23 @@
-## Borba Junior, W dotfiles
+# Nix config
 
-This is the home of all my dotfiles. These are files that add custom configurations to my computer and applications, primarily the terminal.
+I manage my systems with [nix](https://nixos.org):
 
-## Requirements
+* [home-manager](https://github.com/nix-community/home-manager)
 
-Ensure you have the following installed on your system
+I do not expect anyone else to use this system, but there may be useful information in the configs.
 
-### Git
+## Layout
 
-```sh
-sudo nala install git
-```
-
-### Stow
-
-```sh
-sudo nala install stow
-```
-
-## How to install
-
-1. Install [GNU Stow](https://www.gnu.org/software/stow/) (`sudo nala install stow`) or use my [GLink](https://github.com/waldirborbajr/glink) (`go install github.com/waldirborbajr/glink@latest`)
-
-3. Clone this repository
-
-```sh
-$ git clone git@github.com/waldirborbajr/dotfiles.git
-$ cd dotfiles
-```
-
-3. Run stow command
-
-```sh
-$ stow . -t ~
-```
+* home-manager configuration under [`home`](./home) with "top level" configuration at [`home/home.nix`](./home/home.nix) with imports to other sub-modules. I am trying to migrate to a more modular configuration as part of learning nix, but I'm not 100% there yet
 
 ## Software
 
 - Terminal:
   - [Wezterm](https://wezfurlong.org/wezterm)
   - [Alacritty](https://alacritty.org/)
-- Font: [Monaspace](https://monaspace.githubnext.com/)
+- Font: [Meslo](https://www.nerdfonts.com/)
 - Colors: [catppuccin](https://github.com/catppuccin/catppuccin)
-- Shell: [zsh](https://www.zsh.org/)  and [Oh My Zsh](https://ohmyz.sh/)
+- Shell: [zsh](https://www.zsh.org/)  and [ZimFM](https://zimfw.sh/)
 - Multiplexer:
   - [tmux](https://github.com/tmux/tmux/wiki)
   - [zellij](https://zellij.dev/)
