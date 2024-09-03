@@ -20,6 +20,8 @@ in
     ./modules/lazygit.nix
     ./modules/starship.nix
     ./modules/tmux.nix
+    ./modules/ripgrep.nix
+    ./modules/obsidian.nix
     # ./modules/wezterm.nix
     ./modules/yazi.nix
     ./modules/zoxide.nix
@@ -70,6 +72,7 @@ in
     neofetch
     neovim
     nerdfonts
+    obsidian
     ripgrep
     ripgrep-all
     starship
