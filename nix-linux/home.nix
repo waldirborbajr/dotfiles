@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 let
   # homeDirectory = if pkgs.stdenv.isLinux then "/home/borba" else "/Users/borba";

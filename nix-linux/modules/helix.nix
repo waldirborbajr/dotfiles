@@ -7,12 +7,39 @@
     # defaultEditor = true;
     languages = {
       language = [
+        # {
+        #   name = "nix";
+        #   language-servers = [ "nixd" ];
+        # }
         {
           name = "nix";
-          language-servers = [ "nixd" ];
+          auto-format = true;
+          formatter.command = "alejandra";
+          language-servers = ["nil"];
+          indent.tab-width = 2;
+          indent.unit = " ";
+        }
+        {
+          name = "rust";
+          auto-format = true;
+          indent = {
+            tab-width = 2;
+            unit = "\t";
+          };
+        }
+        {
+          name = "go";
+          auto-format = true;
+          indent = {
+            tab-width = 2;
+            unit = "\t";
+          };
         }
         {
           name = "markdown";
+          auto-format = true;
+          soft-wrap.enable = true;
+          soft-wrap.wrap-at-text-width = true;
           language-servers = [
             "markdown-oxide"
             "ltex-ls"
@@ -28,13 +55,28 @@
     settings = {
       theme = "catppuccin_mocha";
       editor = {
-        color-modes = true;
-        cursorline = true;
-        file-picker = {
-          hidden = false;
-        };
         line-number = "relative";
-        lsp = { display-inlay-hints = true; };
+        cursorline = true;
+        bufferline = "always";
+        color-modes = true;
+        cursor-shape.insert = "bar";
+        cursor-shape.normal = "block";
+        cursor-shape.select = "underline";
+        indent-guides.render = true;
+        indent-guides.character = "┊";
+        indent-guides.skip-levels = 1;
+        file-picker.hidden = false;
+        shell = ["zsh" "-c"];
+        scroll-lines = 6;
+        completion-trigger-len = 2;
+        text-width = 80;      
+        auto-completion = true;
+        auto-info = true;
+        # bufferline = "multiple";
+        lsp = { 
+          display-messages = true;
+          # display-inlay-hints = true;
+        };
         soft-wrap = {
           enable = false;
           wrap-at-text-width = true;
