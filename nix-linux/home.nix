@@ -21,6 +21,7 @@ in
     ./modules/htop.nix
     ./modules/lazygit.nix
     ./modules/obsidian.nix
+    ./modules/helix.nix
     ./modules/ripgrep.nix
     ./modules/starship.nix
     ./modules/tmux.nix
@@ -62,6 +63,7 @@ in
     # terminus-nerdfont
     # wezterm
     # zsh
+    # Things that I really need
     bat
     bottom
     delta
@@ -70,6 +72,7 @@ in
     fzf
     gh
     git-extras
+    helix
     htop
     lazygit
     meld
@@ -83,6 +86,16 @@ in
     yazi
     zellij
     zoxide
+    # langservers / Formatters
+    nil
+    gopls # go
+    rust-analyzer
+    rustfmt
+    taplo # toml
+    lldb
+    ltex-ls
+    markdown-oxide
+    # nixdo
 
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
@@ -154,6 +167,8 @@ in
     LC_ALL = "en_US.UTF-8";
     NIXPKGS_ALLOW_UNFREE = "1";
     NIXPKGS_ALLOW_INSECURE = "1";
+    TERM = "xterm-256color";
+    RUST_BACKTRACE = "full";
   };
 
   nixpkgs.config = {
