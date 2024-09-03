@@ -63,6 +63,7 @@ in
     tmux
     yazi
     zellij
+    zoxide
     # zsh
 
     # # Adds the 'hello' command to your environment. It prints a friendly
