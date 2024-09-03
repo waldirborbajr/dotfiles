@@ -20,6 +20,7 @@ in
     ./modules/lazygit.nix
     ./modules/starship.nix
     ./modules/zoxide.nix
+    ./modules/yazi.nix
     # ./modules/timezone.nix
   ];
 
@@ -113,7 +114,7 @@ in
     ".config/wezterm".source = ~/dotfiles/wezterm;
     ".config/tmux".source = ~/dotfiles/tmux;
     ".config/nix".source = ~/dotfiles/nix;
-    ".config/yazi".source = ~/dotfiles/yazi;
+    # ".config/yazi".source = ~/dotfiles/yazi;
     ".config/home-manager".source = ~/dotfiles/nix-linux;
 
     # # You can also set the file content immediately.
