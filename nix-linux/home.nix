@@ -10,6 +10,8 @@ in
 {
 
   imports = [ 
+    # ./modules/timezone.nix
+    # ./modules/wezterm.nix
     ./modules/bat.nix
     ./modules/eza.nix
     ./modules/fzf.nix
@@ -18,14 +20,12 @@ in
     ./modules/gpg.nix
     ./modules/htop.nix
     ./modules/lazygit.nix
+    ./modules/obsidian.nix
+    ./modules/ripgrep.nix
     ./modules/starship.nix
     ./modules/tmux.nix
-    ./modules/ripgrep.nix
-    ./modules/obsidian.nix
-    # ./modules/wezterm.nix
     ./modules/yazi.nix
     ./modules/zoxide.nix
-    # ./modules/timezone.nix
   ];
 
   news.display = "show";
@@ -58,6 +58,10 @@ in
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
+    # nerdfonts
+    # terminus-nerdfont
+    # wezterm
+    # zsh
     bat
     bottom
     delta
@@ -71,18 +75,14 @@ in
     meld
     neofetch
     neovim
-    nerdfonts
     obsidian
     ripgrep
     ripgrep-all
     starship
-    terminus-nerdfont
     tmux
     yazi
     zellij
     zoxide
-    # wezterm
-    # zsh
 
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
@@ -113,15 +113,15 @@ in
     # # symlink to the Nix store copy.
     # ".screenrc".source = dotfiles/screenrc;
 
-    ".zshrc".source = ~/dotfiles/zshrc/.zshrc;
-    ".zshenv".source = ~/dotfiles/.zshenv;
-    ".zimrc".source = ~/dotfiles/.zimrc;
-    ".ripgreprc".source = ~/dotfiles/.ripgreprc;
-    ".config/wezterm".source = ~/dotfiles/wezterm;
-    # ".config/tmux".source = ~/dotfiles/tmux;
-    ".config/nix".source = ~/dotfiles/nix;
-    # ".config/yazi".source = ~/dotfiles/yazi;
     ".config/home-manager".source = ~/dotfiles/nix-linux;
+    ".config/nix".source = ~/dotfiles/nix;
+    ".config/wezterm".source = ~/dotfiles/wezterm;
+    ".ripgreprc".source = ~/dotfiles/.ripgreprc;
+    ".zimrc".source = ~/dotfiles/.zimrc;
+    ".zshenv".source = ~/dotfiles/.zshenv;
+    ".zshrc".source = ~/dotfiles/zshrc/.zshrc;
+    # ".config/tmux".source = ~/dotfiles/tmux;
+    # ".config/yazi".source = ~/dotfiles/yazi;
 
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
