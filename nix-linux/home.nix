@@ -23,6 +23,19 @@ in
 
   news.display = "show";
 
+  fonts.fontconfig.enable = true;
+
+  # fonts.packages = with pkgs; [
+  #   font-awesome
+  #   fira-code
+  #   (nerdfonts.override { fonts = [ "FiraCode" "JetBrainsMono" ]; })
+  # ];
+
+  # shellAliases = {
+  #   "pr" = "poetry run";
+  #   "prpm" = "poetry run python3 manage.py";
+  # };
+
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   # home.username = "borba";
@@ -57,9 +70,11 @@ in
     meld
     neofetch
     neovim
+    nerdfonts
     ripgrep
     ripgrep-all
     starship
+    terminus-nerdfont
     tmux
     yazi
     zellij
@@ -134,6 +149,8 @@ in
     LANG = "en_US.UTF-8";
     LC_CTYPE = "en_US.UTF-8";
     LC_ALL = "en_US.UTF-8";
+    NIXPKGS_ALLOW_UNFREE = "1";
+    NIXPKGS_ALLOW_INSECURE = "1";
   };
 
   nixpkgs.config = {
@@ -142,10 +159,14 @@ in
   };
 
   # enable experimental features
-  nix = {
+  nix = { 
     package = pkgs.nix;
-    settings.experimental-features = [ "nix-command" "flakes" ];
-    # settings.experimental-features = [ "nix-command" ];
+    settings = {
+      experimental-features = [ "nix-command" "flakes" "repl-flake" ];
+      auto-optimise-store = true;
+      # trusted-users = [ "nclaud" ];
+      # access-tokens = [ config.sops.secrets.github-token.path ];
+    };
   };
 
   # set some environment variables that will ease usage of software
