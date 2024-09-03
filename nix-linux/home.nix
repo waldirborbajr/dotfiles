@@ -15,7 +15,10 @@ in
     ./modules/fzf.nix
     ./modules/git.nix
     ./modules/gpg.nix
+    ./modules/htop.nix
     ./modules/lazygit.nix
+    ./modules/starship.nix
+    # ./modules/timezone.nix
   ];
 
   news.display = "show";
@@ -97,7 +100,6 @@ in
     ".ripgreprc".source = ~/dotfiles/.ripgreprc;
     ".config/wezterm".source = ~/dotfiles/wezterm;
     ".config/tmux".source = ~/dotfiles/tmux;
-    ".config/htop".source = ~/dotfiles/htop;
     ".config/nix".source = ~/dotfiles/nix;
     ".config/yazi".source = ~/dotfiles/yazi;
     ".config/home-manager".source = ~/dotfiles/nix-linux;
@@ -153,7 +155,7 @@ in
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  programs.starship = import ./modules/starship.nix;
+  # programs.starship = import ./modules/starship.nix;
   programs.gh = import ./modules/gh.nix;
 
 }
