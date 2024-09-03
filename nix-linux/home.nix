@@ -19,8 +19,10 @@ in
     ./modules/htop.nix
     ./modules/lazygit.nix
     ./modules/starship.nix
-    ./modules/zoxide.nix
+    ./modules/tmux.nix
+    # ./modules/wezterm.nix
     ./modules/yazi.nix
+    ./modules/zoxide.nix
     # ./modules/timezone.nix
   ];
 
@@ -76,6 +78,7 @@ in
     yazi
     zellij
     zoxide
+    # wezterm
     # zsh
 
     # # Adds the 'hello' command to your environment. It prints a friendly
@@ -112,7 +115,7 @@ in
     ".zimrc".source = ~/dotfiles/.zimrc;
     ".ripgreprc".source = ~/dotfiles/.ripgreprc;
     ".config/wezterm".source = ~/dotfiles/wezterm;
-    ".config/tmux".source = ~/dotfiles/tmux;
+    # ".config/tmux".source = ~/dotfiles/tmux;
     ".config/nix".source = ~/dotfiles/nix;
     # ".config/yazi".source = ~/dotfiles/yazi;
     ".config/home-manager".source = ~/dotfiles/nix-linux;
