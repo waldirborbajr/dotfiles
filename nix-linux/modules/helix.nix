@@ -1,9 +1,10 @@
 
-{lib, pkgs, ...}:
+{pkgs, ...}:
 
 {
   programs.helix = {
     enable = true;
+    package = pkgs.helix;
     # defaultEditor = true;
     languages = {
       language = [
@@ -65,23 +66,40 @@
         indent-guides.render = true;
         indent-guides.character = "┊";
         indent-guides.skip-levels = 1;
-        file-picker.hidden = false;
         shell = ["zsh" "-c"];
         scroll-lines = 6;
         completion-trigger-len = 2;
         text-width = 80;      
         auto-completion = true;
+        auto-format = true;
+        completion-replace = true;
+        auto-save = {
+          focus-lost = true;
+          after-delay.enable = true;
+        };
         auto-info = true;
+        true-color = true;
+        popup-border = "all";
         # bufferline = "multiple";
-        lsp = { 
+        lsp = {
+          enable = true;
           display-messages = true;
-          # display-inlay-hints = true;
+          display-inlay-hints = true;
+          auto-signature-help = true;
+          snippets = true;
         };
         soft-wrap = {
           enable = false;
           wrap-at-text-width = true;
         };
-        true-color = true;
+        file-picker = {
+          hidden = true;
+          parents = false;
+          git-ignore = false;
+          git-exclude = false;
+          git-global = true;
+          max-depth = 4;
+        };
         whitespace.render = "all";
       };
       keys = {

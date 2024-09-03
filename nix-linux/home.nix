@@ -86,11 +86,15 @@ in
     yazi
     zellij
     zoxide
-    # langservers / Formatters
+    
+    # Runtimes and Libraries
     nil
     gopls # go
-    rust-analyzer
-    rustfmt
+    go
+    # rust-analyzer
+    # rustfmt
+    rustup
+    rustfilt
     taplo # toml
     lldb
     ltex-ls
@@ -169,6 +173,12 @@ in
     NIXPKGS_ALLOW_INSECURE = "1";
     TERM = "xterm-256color";
     RUST_BACKTRACE = "full";
+
+    XDG_CACHE_HOME = "$HOME/.cache";
+    # XDG_CONFIG_DIRS = "/etc/xdg";
+    XDG_CONFIG_HOME = "$HOME/.config";
+    XDG_DATA_HOME = "$HOME/.local/share";
+    XDG_STATE_HOME = "$HOME/.local/state";
   };
 
   nixpkgs.config = {
