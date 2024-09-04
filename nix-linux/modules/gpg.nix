@@ -1,34 +1,3 @@
-# { config, pkgs, ... }:
-
-# {
-#   programs.gpg = {
-#     enable = true;
-#     package = pkgs.gnupg;
-#     # homedir = "${config.xdg.dataHome}/.gnupg";
-#     homedir = "${config.home.homeDirectory}/.gnupg";
-#     settings = {
-#       use-agent = true;
-#       default-key = "A69A110979DF4E36";
-#     };
-#   };
-
-#   services.gpg-agent = let ttl = 180 * 24 * 60 * 60;
-#   in {
-#     extraConfig = ''
-#       pinentry-program ${pkgs.pinentry-curses}/bin/pinentry-curses;
-#       "allow-loopback-pinentry";
-#     '';
-#     enable = pkgs.stdenv.isLinux;
-#     enableSshSupport = true;
-#     enableZshIntegration = true;
-#     # pinentryPackage = pkgs.pinentry-gnome3;
-#     defaultCacheTtl = ttl;
-#     maxCacheTtl = ttl;
-#     defaultCacheTtlSsh = ttl;
-#     maxCacheTtlSsh = ttl;
-#   };
-# }
-
 { config, pkgs, ... }:
 
 let
@@ -59,7 +28,7 @@ let
       # Note: each key grip line need to have the flags field and a trailing
       # newline.
       ''
-      # Ed25519 key added on: 2023-02-19 03:48:15
+      # Ed25519 key added on: 2024-08-19 03:48:15
       # Fingerprints:  MD5:e0:3d:d8:df:65:37:71:81:55:64:26:04:bf:73:30:e1
       #                SHA256:1izFUbLJhlQts1tMgG4ZcXivcAx83DJdBmvSI4jK8fU
       AAAAC3NzaC1lZDI1NTE5AAAAIBPZIDW3PxYoeJem2ZKV0vbUJj2GEAX+pdL+VenmYRwT PopOS

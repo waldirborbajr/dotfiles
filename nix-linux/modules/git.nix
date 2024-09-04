@@ -16,7 +16,7 @@
       userName = "Waldir Borba Junior";
       userEmail = "wborbajr@gmail.com";
       # signing = {
-      #   key = "A69A110979DF4E36";
+      #   key = "FD9F89445E5EACD7";
       #   signByDefault = true;
       # };
 
