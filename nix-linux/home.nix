@@ -89,8 +89,7 @@ in
     
     # Runtimes and Libraries
     nil
-    gopls # go
-    go
+    gopls
     # rust-analyzer
     # rustfmt
     rustup
