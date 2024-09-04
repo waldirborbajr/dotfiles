@@ -1,11 +1,20 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 
 {
-  programs.gpg.enable = true;
+  programs.gpg = {
+    enable = true;
+    package = pkgs.gnupg;
+    homedir = "${config.xdg.dataHome}/.gnupg";
+  };
 
-  services.gpg-agent.enable = pkgs.stdenv.isLinux;
-  services.gpg-agent = {
-    defaultCacheTtl = 86400; # 24 hrs.
-    maxCacheTtl = 86400; # 24 hrs.
+  services = {
+    gpg-agent = {
+      enable = true;
+      enableSshSupport = true;
+      enableZshIntegration = true;
+      # pinentryPackage = pkgs.pinentry-gnome3;
+      defaultCacheTtl = 86400; # 24 hrs.
+      maxCacheTtl = 86400; # 24 hrs.
+    };
   };
 }

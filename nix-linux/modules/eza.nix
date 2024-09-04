@@ -5,6 +5,7 @@
       extraOptions = [
         "--group-directories-first"
         "--header"
+        "--icons"
       ];
     };
   };

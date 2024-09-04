@@ -17,6 +17,8 @@ in
     ./modules/fzf.nix
     ./modules/gh.nix
     ./modules/git.nix
+    ./modules/go.nix
+    # ./modules/rust.nix
     ./modules/gpg.nix
     ./modules/htop.nix
     ./modules/lazygit.nix
@@ -89,12 +91,6 @@ in
     
     # Runtimes and Libraries
     nil
-    gopls
-    # rust-analyzer
-    # rustfmt
-    rustup
-    rustfilt
-    taplo # toml
     lldb
     ltex-ls
     markdown-oxide
@@ -165,19 +161,28 @@ in
   home.sessionVariables = {
     EDITOR = "nvim";
     VISUAL = "nvim";
+
+    # Language
     LANG = "en_US.UTF-8";
     LC_CTYPE = "en_US.UTF-8";
     LC_ALL = "en_US.UTF-8";
+
+    # Nix
     NIXPKGS_ALLOW_UNFREE = "1";
     NIXPKGS_ALLOW_INSECURE = "1";
-    TERM = "xterm-256color";
-    RUST_BACKTRACE = "full";
 
+    # Term
+    TERM = "xterm-256color";
+
+    # XDG Setup
     XDG_CACHE_HOME = "$HOME/.cache";
     # XDG_CONFIG_DIRS = "/etc/xdg";
     XDG_CONFIG_HOME = "$HOME/.config";
     XDG_DATA_HOME = "$HOME/.local/share";
     XDG_STATE_HOME = "$HOME/.local/state";
+
+    # GO
+    # GOPATH = "$HOME/go";
   };
 
   nixpkgs.config = {
