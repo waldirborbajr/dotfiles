@@ -78,6 +78,7 @@ in
     htop
     lazygit
     meld
+    gnupg
     neofetch
     neovim
     obsidian

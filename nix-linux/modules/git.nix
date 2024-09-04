@@ -1,63 +1,3 @@
-# # https://nix-community.github.io/home-manager/options.html#opt-programs.git.enable
-
-# { config, pkgs, ... }:
-
-# {
-# programs.git = {
-#     enable = true;
-#     lfs.enable = true;
-#     userName = "Waldir Borba Junior";
-#     userEmail = "wborbajr@gmail.com";
-#     difftastic.enable = true;
-#     # signing = {
-#     #   key = "5C841D3CFDFEC4E0";
-#     #   signByDefault = true;
-#     # };
-#     aliases = {
-#       a = "add";
-#       c = "commit";
-#       ca = "commit --amend";
-#       can = "commit --amend --no-edit";
-#       cl = "clone";
-#       cm = "commit -m";
-#       co = "checkout";
-#       cp = "cherry-pick";
-#       cpx = "cherry-pick -x";
-#       d = "diff";
-#       f = "fetch";
-#       fo = "fetch origin";
-#       fu = "fetch upstream";
-#       lol = "log --graph --decorate --pretty=oneline --abbrev-commit";
-#       lola = "log --graph --decorate --pretty=oneline --abbrev-commit --all";
-#       pl = "pull";
-#       pr = "pull -r";
-#       ps = "push";
-#       psf = "push -f";
-#       rb = "rebase";
-#       rbi = "rebase -i";
-#       r = "remote";
-#       ra = "remote add";
-#       rr = "remote rm";
-#       rv = "remote -v";
-#       rs = "remote show";
-#       st = "status";
-#     };
-#     extraConfig = {
-#       init.defaultBranch = "main";
-#       merge = {
-#         tool = "vimdiff";
-#         conflictstyle = "diff3";
-#       };
-#       pull = {
-#         rebase=true;
-#       };
-#       mergetool.prompt = "false";
-#       git.path = toString pkgs.git;
-#     };
-#   };
-# }
-
-
 {pkgs, ...}: {
   home.packages = with pkgs; [
     act
@@ -116,7 +56,10 @@
         merge.stat = "true";
         core.whitespace = "fix,-indent-with-non-tab,trailing-space,cr-at-eol";
         repack.usedeltabaseoffset = "true";
-        pull.ff = "only";
+        pull = {
+          ff = "only";
+          rebase=true;
+        };
         rebase = {
           autoSquash = true;
           autoStash = true;
@@ -125,6 +68,7 @@
           enabled = true;
           autoupdate = true;
         };
+        git.path = toString pkgs.git;
       };
 
       ignores = [
