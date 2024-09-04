@@ -18,6 +18,7 @@ in
     ./modules/gh.nix
     ./modules/git.nix
     ./modules/go.nix
+    ./modules/nix.nix
     # ./modules/rust.nix
     ./modules/gpg.nix
     ./modules/htop.nix
@@ -91,7 +92,6 @@ in
     zoxide
     
     # Runtimes and Libraries
-    nil
     lldb
     ltex-ls
     markdown-oxide
