@@ -24,7 +24,7 @@ in
     ./modules/htop.nix
     ./modules/lazygit.nix
     ./modules/obsidian.nix
-    ./modules/helix.nix
+    # ./modules/helix.nix
     ./modules/ripgrep.nix
     ./modules/starship.nix
     ./modules/tmux.nix

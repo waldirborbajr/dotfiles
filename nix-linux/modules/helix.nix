@@ -3,7 +3,7 @@
 
 {
   programs.helix = {
-    enable = true;
+    enable = false;
     package = pkgs.helix;
     # defaultEditor = true;
     languages = {
