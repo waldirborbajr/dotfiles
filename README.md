@@ -1,20 +1,35 @@
-# Nix config
+# dotfiles
+This is my dotfile playground for learning nix as my reproducable setup for handling dotfiles on a macOS system
 
-I manage my systems with [nix](https://nixos.org):
+this repository will be updated & improved upon as I learn the nix language and ways of working
 
-* [home-manager](https://github.com/nix-community/home-manager)
 
-I do not expect anyone else to use this system, but there may be useful information in the configs.
+## Installation
+### nixOS:
 
-## Layout
+Taken directly from nxiOS.org:
+```shell
+  sh <(curl -L https://nixos.org/nix/install) --no-daemon
+````
+### Home manager
+read more: https://nix-community.github.io/home-manager/index.xhtml#sec-install-standalone
 
-* home-manager configuration under [`home`](./home) with "top level" configuration at [`home/home.nix`](./home/home.nix) with imports to other sub-modules. I am trying to migrate to a more modular configuration as part of learning nix, but I'm not 100% there yet
+```shell
+nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+nix-channel --update
 
+nix-shell '<home-manager>' -A install
+```
+
+### flake support
+add the following to ~/.config/nix/nix.config
+```shell
+experimental-features = nix-command flakes
+```
 ## Software
 
 - Terminal:
   - [Wezterm](https://wezfurlong.org/wezterm)
-  - [Alacritty](https://alacritty.org/)
 - Font: [Meslo](https://www.nerdfonts.com/)
 - Colors: [catppuccin](https://github.com/catppuccin/catppuccin)
 - Shell: [zsh](https://www.zsh.org/)  and [ZimFM](https://zimfw.sh/)
@@ -29,3 +44,4 @@ I do not expect anyone else to use this system, but there may be useful informat
 ## Hardware
 
 Need a new one, ASAP. I'm currently on an old, but very old i5 1st Gen. Praying for an upgrade. 
+
