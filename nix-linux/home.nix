@@ -5,6 +5,8 @@ let
 
   homedir = builtins.getEnv "HOME";
   username = builtins.getEnv "USER";
+
+  nvChad = import ./modules/nvchad.nix { inherit pkgs; };
 in
 
 {
@@ -50,6 +52,12 @@ in
   home.username = username;
   home.homeDirectory = homedir;
 
+  # Place the nvchad configuration in the right directory
+  home.file.".config/nvim" = {
+    source = "${nvChad}/nvchad";
+    recursive = true;  # copy files recursively
+  };
+
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
   # introduces backwards incompatible changes.
@@ -62,33 +70,67 @@ in
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = with pkgs; [
+    # productivity
+    tmux
+    zellij
+    obsidian
+    # hugo # static site generator
+    glow # markdown previewer in terminal
+
+    bottom # btop  # replacement of htop/nmon
+    iotop # io monitoring
+    iftop # network monitoring
+
+    # nix related
+    #
+    # it provides the command `nom` works just like `nix`
+    # with more details log output
+    nix-output-monitor
+
+    # utils
+    # file
+    # which
+    # tree
+    # gnused
+    # gnutar
+    # gawk
+    # zstd
+    # gnupg
+    # fastfetch
+    moar
+    # nnn # terminal file manager
+    ripgrep # recursively searches directories for a regex pattern
+    ripgrep-all
+    jq # A lightweight and flexible command-line JSON processor
+    # yq-go # yaml processor https://github.com/mikefarah/yq
+    eza # A modern replacement for ‘ls’
+    fzf # A command-line fuzzy finder
+    fd
+    bat
+    htop
+    neofetch
+    starship
+    yazi
+
+    # Git
+    delta
+    gh
+    git-extras
+    lazygit
+    meld
+
     # nerdfonts
     # terminus-nerdfont
     # wezterm
     # zsh
     # Things that I really need
-    bat
-    bottom
-    delta
-    eza
-    fd
-    fzf
-    gh
-    git-extras
-    htop
-    lazygit
-    meld
+
     gnupg
-    neofetch
     neovim
-    obsidian
-    ripgrep
-    ripgrep-all
-    starship
-    tmux
-    yazi
-    zellij
     zoxide
+
+    # Security
+    nmap
     
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
