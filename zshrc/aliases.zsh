@@ -208,14 +208,13 @@ alias inv='nvim $(fzf -m --preview="bat --color=always {}")'
 alias hm="home-manager"
 alias hmd="cd ~/dotfiles/nix-linux/"
 alias hmb="home-manager -f home.nix build"
-alias hms="home-manager -f home.nix switch && sudo rm -rf result/"
+alias hms="home-manager -f home.nix switch"
 alias hmsf="home-manager switch --flake ~/dotfiles/nix-linux/home-manager#borba"
 alias hmp="home-manager packages"
 alias hmu="nix flake update ~/dotfiles/nix-linux && hms"
 alias hmg="home-manager generations"
-alias hmgc="home-manager expire-generations '-2 days'"
 alias nxu="nix-channel --update"
-alias nxc="nix-store --gc"
+alias ngc="nix-store --gc && nix-collect-garbage -d && home-manager expire-generations '-2 days'"
 
 # zimfw
 alias zfc="zimfw clean"
