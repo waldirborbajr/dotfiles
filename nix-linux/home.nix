@@ -75,7 +75,6 @@ in
     fzf
     gh
     git-extras
-    helix
     htop
     lazygit
     meld
@@ -91,12 +90,6 @@ in
     zellij
     zoxide
     
-    # Runtimes and Libraries
-    lldb
-    ltex-ls
-    markdown-oxide
-    # nixdo
-
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
     # pkgs.hello

@@ -2,9 +2,21 @@
 {pkgs, ...}:
 
 {
+
+  home = {
+    packages = with pkgs; [
+      # Runtimes and Libraries
+      lldb
+      ltex-ls
+      markdown-oxide
+      nixdo
+      helix
+    ];
+  };
+
   programs.helix = {
     enable = false;
-    package = pkgs.helix;
+    # package = pkgs.helix;
     # defaultEditor = true;
     languages = {
       language = [
