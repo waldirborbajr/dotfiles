@@ -60,24 +60,3 @@ vim.cmd([[command! -nargs=0 GoToFile :Telescope smart_open]])
 vim.cmd([[command! -nargs=0 Grep :Telescope live_grep]])
 vim.cmd([[command! -nargs=0 SmartGoTo :Telescope smart_goto]])
 
---------------------------------------------------------------------------------
---- KeyMap
---------------------------------------------------------------------------------
----
--- files
-vim.keymap.set("n", "!!", ":qa!<enter>", { desc = "" })
-vim.keymap.set("n", "QQ", ":q!<enter>", { desc = "" })
-vim.keymap.set("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit all" })
-vim.keymap.set("n", "WW", ":w!<enter>", { desc = "" })
-vim.keymap.set("n", "E", "$", { desc = "" })
-vim.keymap.set("n", "B", "^", { desc = "" })
-vim.keymap.set("n", "td", ":TodoTelescope<CR>", { desc = "" })
-vim.keymap.set("n", "<leader>rs", ":%s/", { desc = "" })
-vim.keymap.set("n", "<leader>rw", ":%s/<<C-r><C-w>>/<C-r><C-w>/gI<Left><Left><Left>", { desc = "" })
-vim.keymap.set("n", "<leader>gH", "<cmd>OpenGithubRepo<cr>", { desc = "Open GitHub Repo" })
-
--- Custom navigation
-vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "" })
-vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "" })
-vim.keymap.set("n", "<C-f>", "<C-f>zz", { desc = "" })
-vim.keymap.set("n", "<C-b>", "<C-b>zz", { desc = "" })
