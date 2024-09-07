@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, lib, ... }:
 
 let
   # homeDirectory = if pkgs.stdenv.isLinux then "/home/borba" else "/Users/borba";
@@ -164,13 +164,17 @@ in
     ".config/home-manager".source = ~/dotfiles/nix-linux;
     ".config/nix".source = ~/dotfiles/nix;
     ".config/wezterm".source = ~/dotfiles/wezterm;
-    ".config/nvim".source = ~/dotfiles/nvim;
+    # ".config/nvim".source = ~/dotfiles/nvim;
     ".ripgreprc".source = ~/dotfiles/.ripgreprc;
     ".zimrc".source = ~/dotfiles/.zimrc;
     ".zshenv".source = ~/dotfiles/.zshenv;
     ".zshrc".source = ~/dotfiles/zshrc/.zshrc;
     # ".config/tmux".source = ~/dotfiles/tmux;
     # ".config/yazi".source = ~/dotfiles/yazi;
+    ".config/nvim" = {
+        source = config.lib.file.mkOutOfStoreSymlink "/home/borba/dotfiles/nvim/";
+        recursive = true;
+      };
 
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
