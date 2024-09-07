@@ -6,7 +6,7 @@ let
   homedir = builtins.getEnv "HOME";
   username = builtins.getEnv "USER";
 
-  nvChad = import ./modules/nvchad.nix { inherit pkgs; };
+  # nvChad = import ./modules/nvchad.nix { inherit pkgs; };
 in
 
 {
@@ -53,10 +53,10 @@ in
   home.homeDirectory = homedir;
 
   # Place the nvchad configuration in the right directory
-  home.file.".config/nvim" = {
-    source = "${nvChad}/nvchad";
-    recursive = true;  # copy files recursively
-  };
+  # home.file.".config/nvim" = {
+  #   source = "${nvChad}/nvchad";
+  #   recursive = true;  # copy files recursively
+  # };
 
   # This value determines the Home Manager release that your configuration is
   # compatible with. This helps avoid breakage when a new Home Manager release
@@ -164,6 +164,7 @@ in
     ".config/home-manager".source = ~/dotfiles/nix-linux;
     ".config/nix".source = ~/dotfiles/nix;
     ".config/wezterm".source = ~/dotfiles/wezterm;
+    ".config/nvim".source = ~/dotfiles/nvim;
     ".ripgreprc".source = ~/dotfiles/.ripgreprc;
     ".zimrc".source = ~/dotfiles/.zimrc;
     ".zshenv".source = ~/dotfiles/.zshenv;
