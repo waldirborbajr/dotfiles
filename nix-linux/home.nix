@@ -161,20 +161,17 @@ in
     # # symlink to the Nix store copy.
     # ".screenrc".source = dotfiles/screenrc;
 
-    ".config/home-manager".source = ~/dotfiles/nix-linux;
-    ".config/nix".source = ~/dotfiles/nix;
-    ".config/wezterm".source = ~/dotfiles/wezterm;
-    # ".config/nvim".source = ~/dotfiles/nvim;
-    ".ripgreprc".source = ~/dotfiles/.ripgreprc;
-    ".zimrc".source = ~/dotfiles/.zimrc;
-    ".zshenv".source = ~/dotfiles/.zshenv;
-    ".zshrc".source = ~/dotfiles/zshrc/.zshrc;
-    # ".config/tmux".source = ~/dotfiles/tmux;
-    # ".config/yazi".source = ~/dotfiles/yazi;
+    ".config/home-manager".source = "${config.home.homeDirectory}/dotfiles/nix-linux";
+    ".config/nix".source = "${config.home.homeDirectory}/dotfiles/nix";
+    ".config/wezterm".source = "${config.home.homeDirectory}/dotfiles/wezterm";
     ".config/nvim" = {
-        source = config.lib.file.mkOutOfStoreSymlink "/home/borba/dotfiles/nvim/";
-        recursive = true;
-      };
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nvim/";
+      recursive = true;
+    };
+    ".ripgreprc".source = "${config.home.homeDirectory}/dotfiles/.ripgreprc";
+    ".zimrc".source = "${config.home.homeDirectory}/dotfiles/.zimrc";
+    ".zshenv".source = "${config.home.homeDirectory}/dotfiles/.zshenv";
+    ".zshrc".source = "${config.home.homeDirectory}/dotfiles/zshrc/.zshrc";
 
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
