@@ -3,7 +3,6 @@ This is my dotfile playground for learning nix as my reproducable setup for hand
 
 this repository will be updated & improved upon as I learn the nix language and ways of working
 
-
 ## Installation
 ### nixOS:
 
