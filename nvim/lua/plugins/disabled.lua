@@ -19,7 +19,7 @@ return {
   -- snippets
   -- { "nvim-cmp", enabled = false },
   -- auto pairs
-  { "echasnovski/mini.pairs", enabled = false },
+  -- { "echasnovski/mini.pairs", enabled = false },
   -- comments
   { "folke/ts-comments.nvim", enabled = false },
   -- Better text-objects
