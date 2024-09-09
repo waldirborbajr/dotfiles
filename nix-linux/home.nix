@@ -21,7 +21,7 @@ in
     ./modules/git.nix
     ./modules/go.nix
     ./modules/nix.nix
-    # ./modules/rust.nix
+    ./modules/rust.nix
     ./modules/gpg.nix
     ./modules/htop.nix
     ./modules/lazygit.nix
