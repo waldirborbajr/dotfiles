@@ -48,7 +48,7 @@ return {
   -- better diagnostics list and others
   { "folke/trouble.nvim", enabled = false },
   -- todo comments
-  { "folke/todo-comments.nvim", enabled = false },
+  -- { "folke/todo-comments.nvim", enabled = false },
 
   -- formatting.lua
   -- { "stevearc/conform.nvim", enabled = false },
