@@ -214,7 +214,7 @@ alias hmp="home-manager packages"
 alias hmu="nix flake update ~/dotfiles/nix-linux && hms"
 alias hmg="home-manager generations"
 alias nxu="nix-channel --update"
-alias ngc="nix-store --gc && nix-collect-garbage -d && home-manager expire-generations '-2 days'"
+alias ngc="nix-store --gc && nix-collect-garbage -d && home-manager expire-generations '-2 days' && zimfw clean"
 
 # zimfw
 alias zfc="zimfw clean"
