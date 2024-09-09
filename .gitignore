@@ -10,3 +10,4 @@ installs/golang/update-golang
 **.zcompdump*
 .config/tmux/plugins
 nix-linux/result
+nvim/lazy-lock.json
