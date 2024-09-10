@@ -6,15 +6,17 @@
 
   programs.go = {
     enable = true;
+    package = pkgs.go_1_23;
   };
 
   home = {
     packages = with pkgs; [
+      air
       delve
-      go
       go-tools # staticcheck
       gofumpt
       golangci-lint
+      golangci-lint-langserver
       gomodifytags
       gopls
       gotests

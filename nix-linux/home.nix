@@ -19,11 +19,11 @@ in
     ./modules/fzf.nix
     ./modules/gh.nix
     ./modules/git.nix
-    ./modules/go.nix
+     ./modules/go.nix
     ./modules/nix.nix
     ./modules/rust.nix
     ./modules/node.nix
-    ./modules/gpg.nix
+    # ./modules/gpg.nix
     ./modules/htop.nix
     ./modules/lazygit.nix
     ./modules/obsidian.nix
@@ -126,7 +126,7 @@ in
     # zsh
     # Things that I really need
 
-    gnupg
+    # gnupg
     neovim
     zoxide
 
