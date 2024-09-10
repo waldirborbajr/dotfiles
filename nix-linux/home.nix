@@ -22,6 +22,7 @@ in
     ./modules/go.nix
     ./modules/nix.nix
     ./modules/rust.nix
+    ./modules/node.nix
     ./modules/gpg.nix
     ./modules/htop.nix
     ./modules/lazygit.nix
