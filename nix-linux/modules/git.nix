@@ -48,7 +48,7 @@
         s = "status --short";
         ss = "status";
         st = "status";
-        sha = "git rev-parse origin/main";
+        sha = "rev-parse origin/main";
       };
 
       extraConfig = {
