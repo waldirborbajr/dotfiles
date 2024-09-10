@@ -7,6 +7,10 @@ local map = vim.keymap.set
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 
+map("n", "<leader>fm", function()
+  require("conform").format()
+end, { desc = "File Format with conform" })
+
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
 
 map("n", "!!", ":qa!<enter>", { desc = "" })
@@ -25,3 +29,21 @@ map("n", "<C-d>", "<C-d>zz", { desc = "" })
 map("n", "<C-u>", "<C-u>zz", { desc = "" })
 map("n", "<C-f>", "<C-f>zz", { desc = "" })
 map("n", "<C-b>", "<C-b>zz", { desc = "" })
+
+map("n", "<C-h>", function()
+  vim.cmd "TmuxNavigateLeft"
+end, { desc = "window left" })
+map("n", "<C-l>", function()
+  vim.cmd "TmuxNavigateRight"
+end, { desc = "window right" })
+map("n", "<C-j>", function()
+  vim.cmd "TmuxNavigateDown"
+end, { desc = "window down" })
+map("n", "<C-k>", function()
+  vim.cmd "TmuxNavigateUp"
+end, { desc = "window up" })
+
+map("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down" })
+map("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line up" })
+
+map("n", "<leader>gg", "<cmd> LazyGit <cr>", { desc = "Lazygit" })

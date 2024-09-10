@@ -44,3 +44,6 @@ experimental-features = nix-command flakes
 
 Need a new one, ASAP. I'm currently on an old, but very old i5 1st Gen. Praying for an upgrade. 
 
+[!WARNING]
+
+
