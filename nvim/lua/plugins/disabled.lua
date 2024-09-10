@@ -5,11 +5,14 @@ local disabled_plugins = {
   "persistence.nvim",
   "mini.ai",
   "todo-comments.nvim",
+  "nvim-notify",
   "noice.nvim",
   "dressing.nvim",
   "ts-comments.nvim",
   "nui.nvim",
   "luvit-meta",
+  "neo-tree.nvim",
+  "render-markdown.nvim",
 }
 
 local lazy_disabled = {}
