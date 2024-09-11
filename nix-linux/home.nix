@@ -31,7 +31,7 @@ in
     # ./modules/helix.nix
     ./modules/ripgrep.nix
     ./modules/starship.nix
-    ./modules/tmux.nix
+    # ./modules/tmux.nix
     ./modules/yazi.nix
     ./modules/zoxide.nix
   ];
@@ -170,6 +170,10 @@ in
     ".config/home-manager".source = "${config.home.homeDirectory}/dotfiles/nix-linux";
     ".config/nix".source = "${config.home.homeDirectory}/dotfiles/nix";
     ".config/wezterm".source = "${config.home.homeDirectory}/dotfiles/wezterm";
+    ".config/tmux" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/tmux/";
+      recursive = true;
+    };
     ".config/nvim" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nvim/";
       recursive = true;
