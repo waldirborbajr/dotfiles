@@ -24,6 +24,7 @@
     ]);
 
     sessionVariables = {
+      RUST_BACKTRACE = 1;
       RUSTUP_HOME = "${config.xdg.dataHome}/rustup";
       CARGO_HOME = "${config.xdg.dataHome}/cargo";
       RUST_LOG = "debug";
