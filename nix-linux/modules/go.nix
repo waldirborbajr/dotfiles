@@ -20,9 +20,11 @@
       gomodifytags
       gopls
       gotests
+      gotestsum
       gotools # goimports
       impl
       revive
+      sqlc
     ];
 
     sessionVariables = rec {

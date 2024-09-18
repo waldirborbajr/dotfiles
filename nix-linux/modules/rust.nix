@@ -1,4 +1,3 @@
-
 {
   pkgs,
   config,
@@ -28,22 +27,21 @@
       cargo-make
       cargo-nextest
       cargo-outdated
-      cargo-outdated
-      cargo-outdated
       cargo-semver-checks
       cargo-supply-chain
       cargo-sweep
       cargo-udeps
-      cargo-udeps
       cargo-vet
       cargo-watch
-      cargo-watch
+      clippy
       openssl
+      pkg-config
       rust-analyzer
       rustc
       rustfilt
       rustfmt
       taplo # toml
+      udev
       wasm-bindgen-cli
     ] ++ lib.lists.optionals pkgs.stdenv.isLinux (with pkgs; [
       # binutils now conflicts with clang as well, turning this off for now...
@@ -51,16 +49,20 @@
       clang # Provides `cc` for any *-sys crates
       # Common C tools
       cmake
-      pkg-config
     ]);
 
     sessionVariables = {
-      RUSTUP_HOME = "${config.xdg.dataHome}/rustup";
-      CARGO_HOME = "${config.xdg.dataHome}/cargo";
+      # CARGO_HOME = "$HOME/.cargo";
+      # RUST_BACKTRACE = 1;
+      # RUSTUP_HOME = "$HOME/.rustup";
+      # PATH = "$CARGO_HOME/bin:$PATH";
+      PKG_CONFIG_PATH = "${pkgs.systemd.dev}/lib/pkgconfig:$PKG_CONFIG_PATH";
+      RUSTUP_HOME = "${config.xdg.dataHome}/.rustup";
+      CARGO_HOME = "${config.xdg.dataHome}/.cargo";
+      PATH = "$CARGO_HOME/bin:$PATH";
       RUST_LOG = "debug";
       RUST_BACKTRACE = 1;
-      # Some crates disable nightly feature detection when this is set
-      RUSTC_STAGE=1;
     };
   };
 }
+

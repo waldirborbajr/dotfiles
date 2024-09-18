@@ -12,7 +12,10 @@ in
 {
 
   imports = [ 
+    # ./modules/gpg.nix
+    # ./modules/helix.nix
     # ./modules/timezone.nix
+    # ./modules/tmux.nix
     # ./modules/wezterm.nix
     ./modules/bat.nix
     ./modules/eza.nix
@@ -20,18 +23,18 @@ in
     ./modules/gh.nix
     ./modules/git.nix
     ./modules/go.nix
-    ./modules/nix.nix
-    ./modules/rust.nix
-    ./modules/node.nix
-    ./modules/python.nix
-    # ./modules/gpg.nix
     ./modules/htop.nix
     ./modules/lazygit.nix
+    ./modules/lua.nix
+    ./modules/nix.nix
+    ./modules/node.nix
     ./modules/obsidian.nix
-    # ./modules/helix.nix
+    ./modules/python.nix
     ./modules/ripgrep.nix
+    ./modules/rust.nix
     ./modules/starship.nix
-    # ./modules/tmux.nix
+    # ./modules/typescript.nix
+    # ./modules/taplo.nix
     ./modules/yazi.nix
     ./modules/zoxide.nix
   ];
