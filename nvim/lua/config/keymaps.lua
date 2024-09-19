@@ -10,14 +10,13 @@ local Util = require("lazyvim.util")
 local map = Util.safe_keymap_set
 
 -- Tabs
-map("n", "<tab>", "<CMD>tabNext<CR>", { noremap = true, silent = true, desc = "Next Tab" })
-map("n", "<S-tab>", "<CMD>tabprevious<CR>", { noremap = true, silent = true, desc = "Prevous Tab" })
-map("n", "<C-tab>", "<CMD>tabclose<CR>", { noremap = true, silent = true, desc = "Close Tab" })
+map("n", "<Tab>", "<cmd>:bnext<CR>", { noremap = true, silent = true, desc = "Next Tab" })
+map("n", "<S-Tab>", "<cmd>:bprev<CR>", { noremap = true, silent = true, desc = "Prevous Tab" })
 
 map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
 
--- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
+map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
 
 map("n", "!!", ":qa!<enter>", { desc = "" })
 map("n", "QQ", ":q!<enter>", { desc = "" })
