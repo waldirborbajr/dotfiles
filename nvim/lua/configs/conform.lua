@@ -13,7 +13,7 @@ local options = {
     toml = { "taplo" },
     -- typescript = { "biome" },
     -- tyspt = { "typstyle" },
-    yaml = { "rubocop" },
+    -- yaml = { "rubocop" },
     -- css = { "prettier" },
     -- html = { "prettier" },
   },
