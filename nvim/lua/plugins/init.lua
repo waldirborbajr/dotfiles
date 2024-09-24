@@ -106,6 +106,13 @@ return {
     },
   },
 
+  {
+    "Exafunction/codeium.nvim",
+    cmd = "Codeium",
+    build = ":Codeium Auth",
+    opts = {},
+  },
+
   --   {
   --   "epwalsh/obsidian.nvim",
   --   version = "*", -- recommended, use latest release instead of latest commit

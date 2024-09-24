@@ -11,6 +11,7 @@ local options = {
     -- tyspt = { "typstyle" },
     -- yaml = { "rubocop" },
     bash = { "shfmt" },
+    go = { "goimports", "gofumpt" },
     latex = { "latexindent" },
     lua = { "stylua" },
     nix = { "nixfmt" },
