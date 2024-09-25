@@ -218,3 +218,5 @@ alias ngc="nix-store --gc && nix-collect-garbage -d && home-manager expire-gener
 
 # zimfw
 alias zfc="zimfw clean"
+
+alias tc="clear; tmux clear-history; clear"
