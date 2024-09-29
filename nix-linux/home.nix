@@ -12,10 +12,13 @@ in
 {
 
   imports = [ 
+    # ./modules/flutter.nix
     # ./modules/gpg.nix
     # ./modules/helix.nix
+    # ./modules/taplo.nix
     # ./modules/timezone.nix
     # ./modules/tmux.nix
+    # ./modules/typescript.nix
     # ./modules/wezterm.nix
     ./modules/bat.nix
     ./modules/eza.nix
@@ -33,8 +36,6 @@ in
     ./modules/ripgrep.nix
     ./modules/rust.nix
     ./modules/starship.nix
-    # ./modules/typescript.nix
-    # ./modules/taplo.nix
     ./modules/yazi.nix
     ./modules/zoxide.nix
   ];
