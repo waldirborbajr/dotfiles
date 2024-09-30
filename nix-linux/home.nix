@@ -173,7 +173,11 @@ in
 
     ".config/home-manager".source = "${config.home.homeDirectory}/dotfiles/nix-linux";
     ".config/nix".source = "${config.home.homeDirectory}/dotfiles/nix";
-    ".config/wezterm".source = "${config.home.homeDirectory}/dotfiles/wezterm";
+    # ".config/wezterm".source = "${config.home.homeDirectory}/dotfiles/wezterm";
+    ".config/wezterm" = {
+      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/wezterm/";
+      recursive = true;
+    };
     ".config/tmux" = {
       source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/tmux/";
       recursive = true;
