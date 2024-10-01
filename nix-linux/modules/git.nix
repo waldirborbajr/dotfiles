@@ -49,6 +49,7 @@
         ss = "status";
         st = "status";
         sha = "rev-parse origin/main";
+        sm = "switch main";
       };
 
       extraConfig = {
