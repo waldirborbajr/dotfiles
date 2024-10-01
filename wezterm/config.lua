@@ -15,7 +15,6 @@ config = {
   use_fancy_tab_bar = false,
   tab_bar_at_bottom = false,
   font_size = 12,
-  -- font = wezterm.font('JetBrains Mono', { weight = 'Bold' }),
   font = wezterm.font('MesloLGS Nerd Font', { weight = 'Medium', stretch = 'Normal', style = 'Normal' }),
   enable_tab_bar = false,
   window_padding = {
@@ -44,7 +43,7 @@ config = {
       },
       width = '100%',
       height = '100%',
-      opacity = 0.55,
+      opacity = 0.85,
     },
   },
   -- from: https://akos.ma/blog/adopting-wezterm/

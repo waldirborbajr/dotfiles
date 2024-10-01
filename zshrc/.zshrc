@@ -166,5 +166,7 @@ export GOROOT=/usr/local/go
 export GOPATH=$HOME/go   # your-go-workspace
 export GOBIN=$GOPATH/bin # where go-generate-executable-binaries
 
+export EDITOR=nvim
+
 
 source "$HOME/.cargo/env"
