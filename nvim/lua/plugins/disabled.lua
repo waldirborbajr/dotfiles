@@ -13,6 +13,7 @@ local disabled_plugins = {
   "luvit-meta",
   "neo-tree.nvim",
   "render-markdown.nvim",
+  "tokionight.nvim",
 }
 
 local lazy_disabled = {}
