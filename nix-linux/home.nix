@@ -1,15 +1,95 @@
 { pkgs, config, ... }:
 
 let
-  # homeDirectory = if pkgs.stdenv.isLinux then "/home/borba" else "/Users/borba";
+
+  pkgsUnstable = import <nixpkgs-unstable> {};
+  # nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs-unstable
+  # nix-channel --update
 
   homedir = builtins.getEnv "HOME";
   username = builtins.getEnv "USER";
 
+  unstable-packages = with pkgsUnstable; [
+    # FIXME: select your core binaries that you always want on the bleeding-edge
+    bat
+    bottom # btop  # replacement of htop/nmon
+    du-dust
+    eza
+    fd
+    findutils
+    fx
+    fzf
+    gh # for bootstrapping
+    delta
+    meld
+    git-crypt
+    git-extras
+    htop
+    iftop # network monitoring
+    iotop # io monitoring
+    jq # A lightweight and flexible command-line JSON processor
+    killall
+    lazygit
+    neofetch
+    neovim
+    procs
+    ripgrep # recursively searches directories for a regex pattern
+    ripgrep-all
+    sd
+    starship
+    tmux
+    zellij
+    tree
+    yazi
+  ];
+
+  stable-packages = with pkgs; [
+    # FIXME: customize these stable packages to your liking for the languages that you use key tools
+
+    obsidian
+    # it provides the command `nom` works just like `nix`
+    # with more details log output
+    nix-output-monitor
+    # nerdfonts
+    # terminus-nerdfont
+    # wezterm
+    # zsh
+
+    # core languages
+    # nodejs_22
+    # go
+    # typescript
+    # lua
+
+    # local dev stuff
+    mkcert
+    httpie
+
+    # treesitter
+    # tree-sitter
+
+    # language servers
+    # nodePackages.vscode-langservers-extracted # html, css, json, eslint
+    # nodePackages.yaml-language-server
+    # nil # nix
+    # golangci-lint-langserver # golang
+    # gopls # golang
+    # nodePackages.typescript-language-server # ts/js
+
+    # formatters and linters
+    # alejandra # nix
+    # deadnix # nix
+    # nodePackages.prettier
+    # shellcheck
+    # shfmt
+    # statix # nix
+    # golangci-lint # golang
+  ];
+
   # nvChad = import ./modules/nvchad.nix { inherit pkgs; };
 in
 
-{
+  {
 
   imports = [ 
     # ./modules/flutter.nix
@@ -73,98 +153,41 @@ in
   # release notes.
   home.stateVersion = "24.05"; # Please read the comment before changing.
 
+  home.packages =
+    stable-packages
+    ++ unstable-packages
+    ++
+    # FIXME: you can add anything else that doesn't fit into the above two lists in here
+    [
+      # pkgs.some-package
+      # pkgs.unstable.some-other-package
+    ];
+
+
   # The home.packages option allows you to install Nix packages into your
   # environment.
-  home.packages = with pkgs; [
-    # productivity
-    tmux
-    # zellij
-    obsidian
-    # hugo # static site generator
-    glow # markdown previewer in terminal
-
-    bottom # btop  # replacement of htop/nmon
-    iotop # io monitoring
-    iftop # network monitoring
-
-    # nix related
-    #
-    # it provides the command `nom` works just like `nix`
-    # with more details log output
-    nix-output-monitor
-
-    # utils
-    # file
-    # which
-    # tree
-    # gnused
-    # gnutar
-    # gawk
-    # zstd
-    # gnupg
-    # fastfetch
-    moar
-    # nnn # terminal file manager
-    ripgrep # recursively searches directories for a regex pattern
-    ripgrep-all
-    jq # A lightweight and flexible command-line JSON processor
-    # yq-go # yaml processor https://github.com/mikefarah/yq
-    eza # A modern replacement for ‘ls’
-    fzf # A command-line fuzzy finder
-    fd
-    bat
-    htop
-    neofetch
-    starship
-    yazi
-
-    # Git
-    delta
-    gh
-    git-extras
-    lazygit
-    meld
-
-    # nerdfonts
-    # terminus-nerdfont
-    # wezterm
-    # zsh
-    # Things that I really need
-
-    # gnupg
-    neovim
-    zoxide
-
-    # Security
-    nmap
-
-    # Lua
-    stylua
-    sumneko-lua-language-server
-
-    # Debuggers
-    vscode-extensions.vadimcn.vscode-lldb
-
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
-    # pkgs.hello
-
-    # # It is sometimes useful to fine-tune packages, for example, by applying
-    # # overrides. You can do that directly here, just don't forget the
-    # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-    # # fonts?
-    (pkgs.nerdfonts.override { fonts = [ "Meslo" ]; })
-
-    # # You can also create simple shell scripts directly inside your
-    # # configuration. For example, this adds a command 'my-hello' to your
-    # # environment:
-    # (pkgs.writeShellScriptBin "my-hello" ''
-    #   echo "Hello, ${config.home.username}!"
-    # '')
-
-    # To ensure we have the correct version of nix installed
-    # config.nix.package
-  ];
+  # home.packages = with pkgs; [
+  #
+  #   # # Adds the 'hello' command to your environment. It prints a friendly
+  #   # # "Hello, world!" when run.
+  #   # pkgs.hello
+  #
+  #   # # It is sometimes useful to fine-tune packages, for example, by applying
+  #   # # overrides. You can do that directly here, just don't forget the
+  #   # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
+  #   # # fonts?
+  #   (pkgs.nerdfonts.override { fonts = [ "Meslo" ]; })
+  #
+  #   # # You can also create simple shell scripts directly inside your
+  #   # # configuration. For example, this adds a command 'my-hello' to your
+  #   # # environment:
+  #   # (pkgs.writeShellScriptBin "my-hello" ''
+  #   #   echo "Hello, ${config.home.username}!"
+  #   # '')
+  #
+  #   # To ensure we have the correct version of nix installed
+  #   # config.nix.package
+  # ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
