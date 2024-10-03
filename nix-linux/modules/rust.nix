@@ -16,8 +16,8 @@
       cargo
       cargo-asm
       cargo-audit
+      cargo-cache
       cargo-deny
-      cargo-expand
       cargo-expand
       cargo-flamegraph
       cargo-fuzz
