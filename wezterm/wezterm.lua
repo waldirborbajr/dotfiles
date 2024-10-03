@@ -26,18 +26,18 @@ config = {
 
   -- term = 'wezterm',
 
-  default_prog = {
-    '/usr/bin/zsh',
-    '--login',
-    '-c',
-    [[
-    if command -v tmux >/dev/null 2>&1; then
-      tmux attach || tmux new;
-    else
-      exec zsh;
-    fi
-    ]],
-  },
+  -- default_prog = {
+  --   '/usr/bin/zsh',
+  --   '--login',
+  --   '-c',
+  --   [[
+  --   if command -v tmux >/dev/null 2>&1; then
+  --     tmux attach || tmux new;
+  --   else
+  --     exec zsh;
+  --   fi
+  --   ]],
+  -- },
 
   color_scheme = 'Catppuccin Frappe',
   default_cursor_style = 'SteadyBar',
@@ -48,8 +48,14 @@ config = {
   check_for_updates = false,
   use_fancy_tab_bar = false,
   tab_bar_at_bottom = false,
+
+  -- cursor_blink_ease_out = 'Constant',
+  -- cursor_blink_ease_in = 'Constant',
+  -- cursor_blink_rate = 400,
+
   font_size = 12,
   font = wezterm.font('MesloLGS Nerd Font', { weight = 'Medium', stretch = 'Normal', style = 'Normal' }),
+
   enable_tab_bar = false,
   window_padding = {
     left = 2,
