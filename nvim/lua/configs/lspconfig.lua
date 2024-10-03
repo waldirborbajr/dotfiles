@@ -5,7 +5,7 @@ local lspconfig = require "lspconfig"
 
 local servers = {
   "gopls",
-  "golangci_lint_ls",
+  -- "golangci_lint_ls",
   "lua_ls",
   "rust_analyzer",
   "taplo",
