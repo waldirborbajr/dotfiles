@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  pkgs-unstable,
   ...
 }: {
 
@@ -15,8 +16,10 @@
       delve
       go-tools # staticcheck
       gofumpt
-      golangci-lint
-      golangci-lint-langserver
+      # pkgs-unstable.golangci-lint
+      # pkgs-unstable.golangci-lint-langserver
+      # golangci-lint
+      # golangci-lint-langserver
       gomodifytags
       gopls
       gotests
