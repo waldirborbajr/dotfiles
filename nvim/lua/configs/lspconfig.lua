@@ -3,13 +3,14 @@ require("nvchad.configs.lspconfig").defaults()
 
 local lspconfig = require "lspconfig"
 
--- EXAMPLE
 local servers = {
   "gopls",
+  "golangci_lint_ls",
   "lua_ls",
   "rust_analyzer",
   "taplo",
   "nil_ls",
+  "dockerls",
 }
 local nvlsp = require "nvchad.configs.lspconfig"
 
