@@ -78,7 +78,7 @@ in
   home.packages = with pkgs; [
     # productivity
     tmux
-    zellij
+    # zellij
     obsidian
     # hugo # static site generator
     glow # markdown previewer in terminal
@@ -141,6 +141,9 @@ in
     # Lua
     stylua
     sumneko-lua-language-server
+
+    # Debuggers
+    vscode-extensions.vadimcn.vscode-lldb
 
     # # Adds the 'hello' command to your environment. It prints a friendly
     # # "Hello, world!" when run.
@@ -215,6 +218,8 @@ in
   #  /etc/profiles/per-user/borba/etc/profile.d/hm-session-vars.sh
   #
   home.sessionVariables = {
+    # CODELLDB_PATH = "${pkgs.vscode-extensions.vadimcn.vscode-lldb}/share/vscode/extensions/vadimcn.vscode-lldb/adapter/codelldb";
+
     EDITOR = "nvim";
     VISUAL = "nvim";
 
@@ -236,9 +241,6 @@ in
     XDG_CONFIG_HOME = "$HOME/.config";
     XDG_DATA_HOME = "$HOME/.local/share";
     XDG_STATE_HOME = "$HOME/.local/state";
-
-    # GO
-    # GOPATH = "$HOME/go";
   };
 
   nixpkgs.config = {
