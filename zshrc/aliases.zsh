@@ -75,7 +75,7 @@ if hash zellij 2>/dev/null; then
   alias zjls="zellij ls"
   alias zjat="zellij a"
 else
-  echo "helix is missing"
+  # echo "helix is missing"
 fi
 
 alias chmox="chmod +x"
