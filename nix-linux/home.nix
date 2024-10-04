@@ -2,7 +2,7 @@
 
 let
 
-  pkgsUnstable = import <nixpkgs-unstable> {};
+  pkgsUnstable = import <nixpkgs-unstable> { };
   # nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs-unstable
   # nix-channel --update
 
@@ -87,11 +87,10 @@ let
   ];
 
   # nvChad = import ./modules/nvchad.nix { inherit pkgs; };
-in
 
-  {
+in {
 
-  imports = [ 
+  imports = [
     # ./modules/flutter.nix
     # ./modules/gpg.nix
     # ./modules/helix.nix
@@ -118,6 +117,7 @@ in
     ./modules/starship.nix
     ./modules/yazi.nix
     ./modules/zoxide.nix
+    ./modules/zsh.nix
   ];
 
   news.display = "show";
@@ -153,16 +153,12 @@ in
   # release notes.
   home.stateVersion = "24.05"; # Please read the comment before changing.
 
-  home.packages =
-    stable-packages
-    ++ unstable-packages
-    ++
+  home.packages = stable-packages ++ unstable-packages ++
     # FIXME: you can add anything else that doesn't fit into the above two lists in here
     [
       # pkgs.some-package
       # pkgs.unstable.some-other-package
     ];
-
 
   # The home.packages option allows you to install Nix packages into your
   # environment.
@@ -197,25 +193,31 @@ in
     # # symlink to the Nix store copy.
     # ".screenrc".source = dotfiles/screenrc;
 
-    ".config/home-manager".source = "${config.home.homeDirectory}/dotfiles/nix-linux";
+    ".config/home-manager".source =
+      "${config.home.homeDirectory}/dotfiles/nix-linux";
     ".config/nix".source = "${config.home.homeDirectory}/dotfiles/nix";
     # ".config/wezterm".source = "${config.home.homeDirectory}/dotfiles/wezterm";
     ".config/wezterm" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/wezterm/";
+      source = config.lib.file.mkOutOfStoreSymlink
+        "${config.home.homeDirectory}/dotfiles/wezterm/";
       recursive = true;
     };
     ".config/tmux" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/tmux/";
+      source = config.lib.file.mkOutOfStoreSymlink
+        "${config.home.homeDirectory}/dotfiles/tmux/";
       recursive = true;
     };
     ".config/nvim" = {
-      source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/nvim/";
+      source = config.lib.file.mkOutOfStoreSymlink
+        "${config.home.homeDirectory}/dotfiles/nvim/";
       recursive = true;
     };
     ".ripgreprc".source = "${config.home.homeDirectory}/dotfiles/.ripgreprc";
-    ".zimrc".source = "${config.home.homeDirectory}/dotfiles/.zimrc";
-    ".zshenv".source = "${config.home.homeDirectory}/dotfiles/.zshenv";
-    ".zshrc".source = "${config.home.homeDirectory}/dotfiles/zshrc/.zshrc";
+
+    # modules/zsh
+    # ".zimrc".source = "${config.home.homeDirectory}/dotfiles/.zimrc";
+    # ".zshenv".source = "${config.home.homeDirectory}/dotfiles/.zshenv";
+    # ".zshrc".source = "${config.home.homeDirectory}/dotfiles/zshrc/.zshrc";
 
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
@@ -272,7 +274,7 @@ in
   };
 
   # enable experimental features
-  nix = { 
+  nix = {
     package = pkgs.nix;
     settings = {
       experimental-features = [ "nix-command" "flakes" "repl-flake" ];
