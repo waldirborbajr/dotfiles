@@ -19,7 +19,7 @@ local options = {
     -- python = { "black" },
     lua = { "stylua" },
     nix = { "nixfmt" },
-    terraform = { "terraform_fmt" },
+    -- terraform = { "terraform_fmt" },
     toml = { "taplo" },
   },
 
