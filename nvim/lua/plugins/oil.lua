@@ -1,5 +1,6 @@
 return {
   "stevearc/oil.nvim",
+  dependencies = { { "echasnovski/mini.icons", opts = {} } },
   cmd = { "Oil" },
   init = function()
     if vim.fn.argc() == 1 and vim.fn.isdirectory(vim.fn.argv(0)) == 1 then
