@@ -214,8 +214,10 @@
         "kubectx"
         "pass"
         "rust"
+        "starship"
         "sudo"
         "tmux"
+        "z"
       ];
     };
 
