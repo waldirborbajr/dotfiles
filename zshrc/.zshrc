@@ -162,9 +162,9 @@ export NIX_CONF_DIR=$HOME/.config/nix
 export PATH=$PATH:$HOME/.local/bin
 export PATH="$PATH:/home/borba/snap/multipass/common/bin"
 
-export GOROOT=/usr/local/go
-export GOPATH=$HOME/go   # your-go-workspace
-export GOBIN=$GOPATH/bin # where go-generate-executable-binaries
+# export GOROOT=/usr/local/go
+# export GOPATH=$HOME/go   # your-go-workspace
+# export GOBIN=$GOPATH/bin # where go-generate-executable-binaries
 
 export EDITOR=nvim
 

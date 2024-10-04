@@ -33,6 +33,8 @@
     sessionVariables = rec {
       GOPATH = "${config.xdg.dataHome}/go";
       GOBIN = "${GOPATH}/bin";
+      GOROOT = "${pkgs.go}/share/go";
+      # GOMODCACHE = "${config.xdg.cacheHome}/go/pkg/mod";
     };
   };
 }
