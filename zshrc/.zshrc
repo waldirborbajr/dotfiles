@@ -162,11 +162,20 @@ export NIX_CONF_DIR=$HOME/.config/nix
 export PATH=$PATH:$HOME/.local/bin
 export PATH="$PATH:/home/borba/snap/multipass/common/bin"
 
+# moved to Nix
 # export GOROOT=/usr/local/go
 # export GOPATH=$HOME/go   # your-go-workspace
 # export GOBIN=$GOPATH/bin # where go-generate-executable-binaries
 
 export EDITOR=nvim
 
+export FZF_DEFAULT_COMMAND="fd --type f --hidden --exclude .git"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND --no-ignore"
+export FZF_DEFAULT_OPTS='--bind ctrl-y:preview-up,ctrl-e:preview-down,left:toggle+up,right:toggle+down'
+export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+--color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
+--color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
+--color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
+eval "$(fzf --zsh)"
 
 source "$HOME/.cargo/env"
