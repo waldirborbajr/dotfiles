@@ -1,4 +1,4 @@
-{ pkgs, config, themes, ... }: {
+{ pkgs, config, ... }: {
   programs.zsh = {
 
     enable = true;
@@ -62,7 +62,6 @@
       gg = "lazygit";
       syshealth =
         "sudo nala update && sudo rm /var/lib/apt/lists/lock && sudo nala upgrade -y && sudo nala autoremove -y && sudo nala autopurge -y && sudo nala clean && flatpak update -y && flatpak uninstall --unused -y && sudo snap refresh";
-      tmx = "tmux new -s $(pwd | sed 's/.*///g')";
       tmk = "tmux kill-session -a"; # clear clipboard
       tmks = "tmux kill-server";
     };
