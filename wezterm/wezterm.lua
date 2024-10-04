@@ -1,12 +1,27 @@
 -- Pull in the wezterm API
 local wezterm = require('wezterm')
 
+local mux = wezterm.mux
+
 -- This will hold the configuration.
 local config = wezterm.config_builder()
 
 -- This is where you actually apply your config choices
 
-config.color_scheme = 'Catppuccin Frappe'
+-- Open Maximized
+wezterm.on('gui-startup', function()
+  local tab, pane, window = mux.spawn_window({})
+  window:gui_window():maximize()
+end)
+
+-- Open FullScreen without option to minimize
+-- wezterm.on('gui-startup', function(window)
+--   local tab, pane, window = mux.spawn_window(cmd or {})
+--   local gui_window = window:gui_window()
+--   gui_window:perform_action(wezterm.action.ToggleFullScreen, pane)
+-- end)
+
+config.color_scheme = 'Catppuccin Macchiato'
 config.window_decorations = 'RESIZE' -- remove window decorations
 config.check_for_updates = false
 config.use_fancy_tab_bar = false
