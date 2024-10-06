@@ -1,10 +1,10 @@
-{ config, pkgs, ... }:
+{ ... }:
 
 {
   programs.bat = {
     enable = true;
     config = {
-      theme = "OneHalfDark";
+      theme = "base16";
       style = "numbers,changes,header,grid";
       italic-text = "always";
       pager = "less -FR";

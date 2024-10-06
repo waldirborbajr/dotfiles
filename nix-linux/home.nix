@@ -98,7 +98,7 @@ in {
     # ./modules/timezone.nix
     # ./modules/tmux.nix
     # ./modules/typescript.nix
-    # ./modules/wezterm.nix
+    ./modules/wezterm.nix
     ./modules/bat.nix
     ./modules/eza.nix
     ./modules/fzf.nix
@@ -197,11 +197,11 @@ in {
       "${config.home.homeDirectory}/dotfiles/nix-linux";
     ".config/nix".source = "${config.home.homeDirectory}/dotfiles/nix";
     # ".config/wezterm".source = "${config.home.homeDirectory}/dotfiles/wezterm";
-    ".config/wezterm" = {
-      source = config.lib.file.mkOutOfStoreSymlink
-        "${config.home.homeDirectory}/dotfiles/wezterm/";
-      recursive = true;
-    };
+    # ".config/wezterm" = {
+    #   source = config.lib.file.mkOutOfStoreSymlink
+    #     "${config.home.homeDirectory}/dotfiles/wezterm/";
+    #   recursive = true;
+    # };
     ".config/tmux" = {
       source = config.lib.file.mkOutOfStoreSymlink
         "${config.home.homeDirectory}/dotfiles/tmux/";

@@ -46,5 +46,20 @@ config.window_decorations = 'RESIZE'
 config.window_background_opacity = 0.95
 config.macos_window_background_blur = 10
 
+-- debug_key_events=true,
+config.keys = {
+  -- Turn off the default CMD-m Hide action on macOS by making it
+  -- send the empty string instead of hiding the window
+
+  { key = 'h', mods = 'CTRL|SHIFT', action = wezterm.action({ ActivatePaneDirection = 'Left' }) },
+  { key = 'l', mods = 'CTRL|SHIFT', action = wezterm.action({ ActivatePaneDirection = 'Right' }) },
+  { key = 'j', mods = 'CTRL|SHIFT', action = wezterm.action({ ActivatePaneDirection = 'Down' }) },
+  { key = 'k', mods = 'CTRL|SHIFT', action = wezterm.action({ ActivatePaneDirection = 'Up' }) },
+
+  { key = '{', mods = 'CTRL|SHIFT', action = wezterm.action({ SplitVertical = {} }) },
+  { key = '}', mods = 'CTRL|SHIFT', action = wezterm.action({ SplitHorizontal = { domain = 'CurrentPaneDomain' } }) },
+  { key = 'Enter', mods = 'CTRL', action = wezterm.action({ SplitHorizontal = { domain = 'CurrentPaneDomain' } }) },
+}
+
 -- and finally, return the configuration to wezterm
 return config
