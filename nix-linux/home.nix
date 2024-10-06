@@ -13,6 +13,8 @@ let
     # FIXME: select your core binaries that you always want on the bleeding-edge
     bat
     bottom # btop  # replacement of htop/nmon
+    btop
+    delta
     du-dust
     eza
     fd
@@ -20,8 +22,6 @@ let
     fx
     fzf
     gh # for bootstrapping
-    delta
-    meld
     git-crypt
     git-extras
     htop
@@ -30,6 +30,7 @@ let
     jq # A lightweight and flexible command-line JSON processor
     killall
     lazygit
+    meld
     neofetch
     neovim
     procs
@@ -38,9 +39,9 @@ let
     sd
     starship
     tmux
-    zellij
     tree
     yazi
+    zellij
   ];
 
   stable-packages = with pkgs; [

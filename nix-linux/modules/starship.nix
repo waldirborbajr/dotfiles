@@ -32,8 +32,8 @@
         ssh_symbol = "@";
         format = "$ssh_symbol[$hostname](bright-blue) ";
       };
-      golang.symbol = "";
-      rust.symbol = "rs ";
+      golang.symbol = " ";
+      rust.symbol = "🦀 ";
       lua.symbol = "󰢱 ";
       nix_shell.symbol = " ";
 
