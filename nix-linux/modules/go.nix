@@ -1,40 +1,36 @@
-{
-  config,
-  pkgs,
-  pkgs-unstable,
-  ...
-}: {
-
-  programs.go = {
-    enable = true;
-    package = pkgs.go_1_23;
-  };
-
+{ config, pkgs, ... }:
+let
+  pkgsUnstable = import <nixpkgs-unstable> { };
+  # nix-gaming = import (builtins.fetchTarball "https://github.com/fufexan/nix-gaming/archive/master.tar.gz");
+in {
   home = {
     packages = with pkgs; [
+      (hiPrio go_1_23)
       air
       delve
+      go-outline
+      go-symbols
       go-tools # staticcheck
+      gocode-gomod
+      godef
       gofumpt
-      # pkgs-unstable.golangci-lint
-      # pkgs-unstable.golangci-lint-langserver
-      # golangci-lint
-      # golangci-lint-langserver
+      golang-perf
+      golangci-lint
       gomodifytags
       gopls
+      goreleaser
       gotests
-      gotestsum
-      gotools # goimports
+      gotools
       impl
+      pkgsUnstable.go_1_23
       revive
-      sqlc
     ];
 
     sessionVariables = rec {
       GOPATH = "${config.xdg.dataHome}/go";
       GOBIN = "${GOPATH}/bin";
       GOROOT = "${pkgs.go}/share/go";
-      # GOMODCACHE = "${config.xdg.cacheHome}/go/pkg/mod";
     };
   };
 }
+
