@@ -48,43 +48,9 @@ let
     # FIXME: customize these stable packages to your liking for the languages that you use key tools
 
     obsidian
-    # it provides the command `nom` works just like `nix`
-    # with more details log output
     nix-output-monitor
-    # nerdfonts
-    # terminus-nerdfont
-    # wezterm
-    # zsh
-
-    # core languages
-    # nodejs_22
-    # go
-    # typescript
-    # lua
-
-    # local dev stuff
     mkcert
     httpie
-
-    # treesitter
-    # tree-sitter
-
-    # language servers
-    # nodePackages.vscode-langservers-extracted # html, css, json, eslint
-    # nodePackages.yaml-language-server
-    # nil # nix
-    # golangci-lint-langserver # golang
-    # gopls # golang
-    # nodePackages.typescript-language-server # ts/js
-
-    # formatters and linters
-    # alejandra # nix
-    # deadnix # nix
-    # nodePackages.prettier
-    # shellcheck
-    # shfmt
-    # statix # nix
-    # golangci-lint # golang
   ];
 
   # nvChad = import ./modules/nvchad.nix { inherit pkgs; };
