@@ -11,5 +11,7 @@
       map-syntax = [ "h:cpp" ".ignore:.gitignore" ];
     };
   };
+  home.shellAliases.cat = "bat";
+  # "bat --theme=base16 --number --color=always --paging=never --tabs=2 --wrap=never";
 }
 

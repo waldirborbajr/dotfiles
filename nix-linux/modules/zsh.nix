@@ -39,10 +39,7 @@
       dstop = "docker stop $(docker ps -a -q)";
       dclean = "docker rm $(docker ps -a -q)";
       dclear = "docker rmi --force $(docker images -q)";
-      cat =
-        "bat --theme=base16 --number --color=always --paging=never --tabs=2 --wrap=never";
       vim = "nvim";
-      ls = "ls --color";
       ctrl-l = "clear";
       C-l = "ctrl-l";
       control-l = "clear";

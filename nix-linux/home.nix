@@ -101,6 +101,7 @@ in {
     # ./modules/typescript.nix
     ./modules/wezterm.nix
     ./modules/bat.nix
+    ./modules/btop.nix
     ./modules/eza.nix
     ./modules/fzf.nix
     ./modules/gh.nix
