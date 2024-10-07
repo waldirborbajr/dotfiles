@@ -61,6 +61,7 @@
         "sudo nala update && sudo rm /var/lib/apt/lists/lock && sudo nala upgrade -y && sudo nala autoremove -y && sudo nala autopurge -y && sudo nala clean && flatpak update -y && flatpak uninstall --unused -y && sudo snap refresh";
       tmk = "tmux kill-session -a"; # clear clipboard
       tmks = "tmux kill-server";
+      r = "reset";
     };
 
     # -----------------------
