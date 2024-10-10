@@ -211,7 +211,7 @@
         "kubectx"
         "pass"
         "rust"
-        "starship"
+        # "starship"
         "sudo"
         "tmux"
         "z"
