@@ -1,12 +1,17 @@
 { config, pkgs, ... }:
-let
-  pkgsUnstable = import <nixpkgs-unstable> { };
-  # nix-gaming = import (builtins.fetchTarball "https://github.com/fufexan/nix-gaming/archive/master.tar.gz");
-in {
+# let
+#   # pkgsUnstable = import <nixpkgs-unstable> { };
+#   # nix-gaming = import (builtins.fetchTarball "https://github.com/fufexan/nix-gaming/archive/master.tar.gz");
+# in 
+{
+  programs.go = { enable = true; };
+
   home = {
     packages = with pkgs; [
-      (hiPrio go_1_23)
+      # pkgsUnstable.go_1_23
+      # (hiPrio go_1_23)
       air
+      iferr
       delve
       go-outline
       go-symbols
@@ -14,7 +19,6 @@ in {
       gocode-gomod
       godef
       gofumpt
-      golang-perf
       golangci-lint
       gomodifytags
       gopls
@@ -22,14 +26,13 @@ in {
       gotests
       gotools
       impl
-      pkgsUnstable.go_1_23
       revive
     ];
 
-    sessionVariables = rec {
-      GOPATH = "${config.xdg.dataHome}/go";
-      GOBIN = "${GOPATH}/bin";
-      GOROOT = "${pkgs.go}/share/go";
+    sessionVariables = {
+      GOROOT = "${config.programs.go.package}/share/go";
+      GOPATH = "${config.home.homeDirectory}/go";
+      GOBIN = "${config.home.homeDirectory}/bin";
     };
   };
 }

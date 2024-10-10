@@ -6,7 +6,8 @@ let
   # nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs-unstable
   # nix-channel --update
 
-  homedir = builtins.getEnv "HOME";
+  # homedir = builtins.getEnv "HOME";
+  homedir = "/home/${config.home.username}";
   username = builtins.getEnv "USER";
 
   unstable-packages = with pkgsUnstable; [
@@ -32,7 +33,6 @@ let
     lazygit
     meld
     neofetch
-    neovim
     procs
     ripgrep # recursively searches directories for a regex pattern
     ripgrep-all
@@ -65,7 +65,6 @@ in {
     # ./modules/timezone.nix
     # ./modules/tmux.nix
     # ./modules/typescript.nix
-    ./modules/wezterm.nix
     ./modules/bat.nix
     ./modules/btop.nix
     ./modules/eza.nix
@@ -76,6 +75,7 @@ in {
     ./modules/htop.nix
     ./modules/lazygit.nix
     ./modules/lua.nix
+    ./modules/neovim.nix
     ./modules/nix.nix
     ./modules/node.nix
     ./modules/obsidian.nix
@@ -83,6 +83,7 @@ in {
     ./modules/ripgrep.nix
     ./modules/rust.nix
     ./modules/starship.nix
+    ./modules/wezterm.nix
     ./modules/yazi.nix
     ./modules/zoxide.nix
     ./modules/zsh.nix
@@ -236,10 +237,11 @@ in {
     XDG_STATE_HOME = "$HOME/.local/state";
   };
 
-  nixpkgs.config = {
-    allowUnfree = true;
-    allowUnfreePredicate = _: true;
-  };
+  nixpkgs.config = { allowUnfree = true; };
+
+  # Install UnFree programs
+  # nixpkgs.config.allowUnfreePredicate = pkg:
+  #   builtins.elem (pkgs.lib.getName pkgs) [ "discord" ];
 
   # enable experimental features
   nix = {
