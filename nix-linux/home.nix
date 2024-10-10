@@ -82,7 +82,7 @@ in {
     ./modules/python.nix
     ./modules/ripgrep.nix
     ./modules/rust.nix
-    ./modules/starship.nix
+    # ./modules/starship.nix
     ./modules/wezterm.nix
     ./modules/yazi.nix
     ./modules/zoxide.nix
