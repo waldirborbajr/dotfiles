@@ -1,3 +1,6 @@
+stow:
+	stow 
+
 restow:
 	stow --verbose --target=$$HOME --restow */
 
