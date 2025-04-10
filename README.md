@@ -1,48 +1,37 @@
-## Borba Junior, W dotfiles
+# dotfiles
+This is my dotfile playground for learning nix as my reproducable setup for handling dotfiles on a macOS system
 
-This is the home of all my dotfiles. These are files that add custom configurations to my computer and applications, primarily the terminal.
+this repository will be updated & improved upon as I learn the nix language and ways of working
 
-## Requirements
+## Installation
+### nixOS:
 
-Ensure you have the following installed on your system
+Taken directly from nxiOS.org:
+```shell
+  sh <(curl -L https://nixos.org/nix/install) --no-daemon
+````
+### Home manager
+read more: https://nix-community.github.io/home-manager/index.xhtml#sec-install-standalone
 
-### Git
+```shell
+nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
+nix-channel --update
 
-```sh
-sudo nala install git
+nix-shell '<home-manager>' -A install
 ```
 
-### Stow
-
-```sh
-sudo nala install stow
+### flake support
+add the following to ~/.config/nix/nix.config
+```shell
+experimental-features = nix-command flakes
 ```
-
-## How to install
-
-1. Install [GNU Stow](https://www.gnu.org/software/stow/) (`sudo nala install stow`) or use my [GLink](https://github.com/waldirborbajr/glink) (`go install github.com/waldirborbajr/glink@latest`)
-
-3. Clone this repository
-
-```sh
-$ git clone git@github.com/waldirborbajr/dotfiles.git
-$ cd dotfiles
-```
-
-3. Run stow command
-
-```sh
-$ stow . -t ~
-```
-
 ## Software
 
 - Terminal:
   - [Wezterm](https://wezfurlong.org/wezterm)
-  - [Alacritty](https://alacritty.org/)
-- Font: [Monaspace](https://monaspace.githubnext.com/)
+- Font: [Meslo](https://www.nerdfonts.com/)
 - Colors: [catppuccin](https://github.com/catppuccin/catppuccin)
-- Shell: [zsh](https://www.zsh.org/)  and [Oh My Zsh](https://ohmyz.sh/)
+- Shell: [zsh](https://www.zsh.org/)  and [ZimFM](https://zimfw.sh/)
 - Multiplexer:
   - [tmux](https://github.com/tmux/tmux/wiki)
   - [zellij](https://zellij.dev/)
@@ -54,3 +43,7 @@ $ stow . -t ~
 ## Hardware
 
 Need a new one, ASAP. I'm currently on an old, but very old i5 1st Gen. Praying for an upgrade. 
+
+[!WARNING]
+
+

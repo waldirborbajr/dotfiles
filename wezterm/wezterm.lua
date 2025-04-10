@@ -1,85 +1,65 @@
+-- Pull in the wezterm API
 local wezterm = require('wezterm')
 
-local config = {}
+local mux = wezterm.mux
 
-if wezterm.config_builder then
-  config = wezterm.config_builder()
-end
+-- This will hold the configuration.
+local config = wezterm.config_builder()
 
-config.enable_tab_bar = false -- remove tab bar
+-- This is where you actually apply your config choices
 
+-- Open Maximized
+wezterm.on('gui-startup', function()
+  local tab, pane, window = mux.spawn_window({})
+  window:gui_window():maximize()
+end)
+
+-- Open FullScreen without option to minimize
+-- wezterm.on('gui-startup', function(window)
+--   local tab, pane, window = mux.spawn_window(cmd or {})
+--   local gui_window = window:gui_window()
+--   gui_window:perform_action(wezterm.action.ToggleFullScreen, pane)
+-- end)
+
+config.color_scheme = 'Catppuccin Macchiato'
 config.window_decorations = 'RESIZE' -- remove window decorations
-config.window_background_opacity = 0.95
-config.macos_window_background_blur = 10
+config.check_for_updates = false
+config.use_fancy_tab_bar = false
+config.tab_bar_at_bottom = false
+config.enable_tab_bar = false
 
-config.color_scheme = 'Catppuccin Frappe'
+config.window_padding = {
+  left = 4.5,
+  right = 2.5,
+  top = 4.5,
+  bottom = 2.5,
+}
 
-config.audible_bell = 'Disabled' -- disable sounds when at the end of doc
+config.default_cursor_style = 'SteadyBar'
 
--- this is going to be used to toggle between color schemes
--- local function scheme_for_apperance(appearance)
--- 	if appearance:find("Dark") then
--- 		return "Catppuccin Frappe"
--- 	else
--- 		return "Catppuccin Latte"
--- 	end
--- end
---
--- print(wezterm.gui.get_appearance())
-
--- config.color_scheme = scheme_for_apperance(wezterm.gui.get_apperanace()) -- get the current theme
-
-config.font = wezterm.font('MesloLGS Nerd Font', { weight = 'Medium', stretch = 'Normal', style = 'Normal' })
+config.font = wezterm.font('MesloLGS Nerd Font')
 config.font_size = 12
--- config.font_weight
-config.cursor_blink_rate = 800
 
 config.enable_tab_bar = false
 
-config.inactive_pane_hsb = {
-  saturation = 0.9,
-  brightness = 0.8,
-}
+config.window_decorations = 'RESIZE'
+config.window_background_opacity = 0.95
+config.macos_window_background_blur = 10
 
--- config.window_background_image = "~/Documents/img-backgrounds/sacred-geometry.jpeg"
---
--- config.window_background_gradient = {
---   orientation = 'Vertical',
---   colors = {
---     '#1E1E2F',
---     '#1E1E2F',
---   },
---   blend = 'Rgb',
---   interpolation = 'Linear',
--- }
-
-config.window_padding = {
-  left = 2.5,
-  right = 2.5,
-  top = 2.5,
-  bottom = 4.5,
-}
--- config.window_padding = {
---   left = 55,
---   right = 44,
---   top = 44,
---   bottom = 22,
--- }
-
--- config.default_prog = { 'zel', '-l', 'welcome'}
-
+-- debug_key_events=true,
 config.keys = {
-  {
-    key = 'c',
-    mods = 'CMD',
-    action = wezterm.action.CopyTo('ClipboardAndPrimarySelection'),
-  },
-  {
-    -- Disable Cmd+T (or Super+T on some systems)
-    key = 't',
-    mods = 'CMD',
-    action = wezterm.action.DisableDefaultAssignment,
-  },
+  -- Turn off the default CMD-m Hide action on macOS by making it
+  -- send the empty string instead of hiding the window
+
+  { key = 'h', mods = 'CTRL|SHIFT', action = wezterm.action({ ActivatePaneDirection = 'Left' }) },
+  { key = 'l', mods = 'CTRL|SHIFT', action = wezterm.action({ ActivatePaneDirection = 'Right' }) },
+  { key = 'j', mods = 'CTRL|SHIFT', action = wezterm.action({ ActivatePaneDirection = 'Down' }) },
+  { key = 'k', mods = 'CTRL|SHIFT', action = wezterm.action({ ActivatePaneDirection = 'Up' }) },
+
+  { key = '{', mods = 'CTRL|SHIFT', action = wezterm.action({ SplitVertical = {} }) },
+  { key = '}', mods = 'CTRL|SHIFT', action = wezterm.action({ SplitHorizontal = { domain = 'CurrentPaneDomain' } }) },
+  { key = 'Enter', mods = 'CTRL', action = wezterm.action({ SplitHorizontal = { domain = 'CurrentPaneDomain' } }) },
 }
 
+-- and finally, return the configuration to wezterm
 return config

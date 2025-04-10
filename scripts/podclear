@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-podman ps -a -q | xargs podman kill -f
-podman ps -a -q | xargs podman rm -f
-podman images | grep "api\|none" | awk '{print $3}' | xargs podman rmi -f
-podman volume prune -f

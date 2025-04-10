@@ -1,0 +1,266 @@
+# ████████╗███╗   ███╗██╗   ██╗██╗  ██╗
+# ╚══██╔══╝████╗ ████║██║   ██║╚██╗██╔╝
+#    ██║   ██╔████╔██║██║   ██║ ╚███╔╝
+#    ██║   ██║╚██╔╝██║██║   ██║ ██╔██╗
+#    ██║   ██║ ╚═╝ ██║╚██████╔╝██╔╝ ██╗
+#    ╚═╝   ╚═╝     ╚═╝ ╚═════╝ ╚═╝  ╚═╝
+# Terminal multiplexer
+# https://github.com/tmux/tmux
+
+set-environment -g TMUX_PLUGIN_MANAGER_PATH '~/.tmux/plugins/'
+
+# 24-bit colors
+  # set -g default-terminal "tmux-256color"
+  # set -sa terminal-features ",xterm-256color:RGB"
+  # set -ga terminal-overrides ",alacritty:RGB"
+
+  set -g default-terminal "xterm-256color"
+
+# true-color, termguicolors
+  set -ga terminal-overrides ",*256col*:Tc"
+
+# set -g allow-passthrough on
+  set -ga update-environment TERM
+  set -ga update-environment TERM_PROGRAM
+  set -ga update-environment FZF_DEFAULT_OPTS
+
+# act like vim
+  set -g xterm-keys on
+  set -g mode-keys vi
+  set -g status-keys vi
+
+  set -g set-clipboard on      # use system clipboard
+
+  # set -g @continuum-restore 'on'
+
+  # set -g status-interval 5
+  set -s escape-time 0
+  setw -g monitor-activity on
+  set -g visual-activity on
+  set-option -g focus-events on
+  set -g detach-on-destroy off  # don't exit from tmux when closing a session
+  set -g history-limit 1000000 # increase history size (from 2,000)
+
+# we lost the default binding of C-l for clearing screen
+# this line of code fixes it by allowing us to use prefix + C-l
+  bind C-l send-keys 'C-l'
+
+# setup leader key
+  unbind C-b
+  set -g prefix C-a
+
+# shortcuts for iterating on tmux config
+  # unbind r
+  bind-key C-r source-file ~/.config/tmux/tmux.conf \; display-message '~/.tmux.conf is reloaded 🚀'
+  bind-key M split -h 'nvim ~/.config/tmux/tmux.conf'
+
+# ==============================================================
+# Appearance
+# ==============================================================
+
+# status line updates
+  set -g status on
+  set -g status-interval 5
+  set -g status-justify left
+  set -g status-left "#[fg=#1f1f21,bg=#81a2be][#{session_name}]#[default] | "
+  set -g status-left-length 100
+  set -g window-status-format " #{window_index}:#{window_name} "
+  set -g window-status-current-format " #{window_index}:#{window_name}#[fg=#cc6666]*#[default]"
+  set -g status-position top
+  set -g status-right-length 100
+  set -g status-right '#{prefix_highlight}'
+  # set -g status-right '#{prefix_highlight} #[fg=#1f1f21,bg=#81a2be] ⏰%H:%M - %b %d #[default]'
+  set -g status-style fg=#b5bd68,bg=#373b41
+  set -g pane-active-border-style fg=#b5bd68
+  set -g @prefix_highlight_fg '#1f1f21'
+  set -g @prefix_highlight_bg '#cc6666'
+  set -g @prefix_highlight_show_copy_mode 'on'
+  set -g @prefix_highlight_copy_mode_attr 'fg=#1f1f21,bg=#f0c674,bold'
+  set -g @prefix_highlight_prefix_prompt 'Prefix'
+  set -g @prefix_highlight_copy_prompt 'Copy'
+
+# Start windows and panes at 1, not 0
+  set -g base-index 1
+  set -g pane-base-index 1
+  set-window-option -g pane-base-index 1
+  set -g renumber-windows on   # renumber all windows when any window is closed
+
+# prevent auto window renaming once I renamed it
+  set -g allow-rename off
+
+# ==============================================================
+# Pane Stuff
+# ==============================================================
+
+# Rename session and window
+  bind r command-prompt -I "#{window_name}" "rename-window '%%'"
+  bind R command-prompt -I "#{session_name}" "rename-session '%%'"
+
+# new window and retain cwd
+  bind c new-window -c "#{pane_current_path}"
+
+# Split panes
+  bind-key '-' split-window -v -c "#{pane_current_path}"
+  bind-key '\' split-window -h -c "#{pane_current_path}"
+  bind-key '_' split-window -fv -c "#{pane_current_path}"
+  bind-key '|' split-window -fh -c "#{pane_current_path}"
+
+# Zoom pane
+  bind-key + resize-pane -Z
+
+# Resize panes using PREFIX H, J, K, L
+  bind -r H resize-pane -L 5
+  bind -r J resize-pane -D 5
+  bind -r K resize-pane -U 5
+  bind -r L resize-pane -R 5
+
+  bind -n C-k send-keys "clear && tmux clear-history" \; send-keys "Enter"  
+
+# ==============================================================
+# Smart pane switching with awareness of Vim splits.
+# See: https://github.com/christoomey/vim-tmux-navigator
+  is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
+    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?)(diff)?$'"
+  bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
+  bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j'  'select-pane -D'
+  bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k'  'select-pane -U'
+  bind-key -n 'C-l' if-shell "$is_vim" 'send-keys C-l'  'select-pane -R'
+  tmux_version='$(tmux -V | sed -En "s/^tmux ([0-9]+(.[0-9]+)?).*/\1/p")'
+  if-shell -b '[ "$(echo "$tmux_version < 3.0" | bc)" = 1 ]' \
+    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l'"
+  if-shell -b '[ "$(echo "$tmux_version >= 3.0" | bc)" = 1 ]' \
+    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l'"
+
+  bind-key -T copy-mode-vi 'C-h' select-pane -L
+  bind-key -T copy-mode-vi 'C-j' select-pane -D
+  bind-key -T copy-mode-vi 'C-k' select-pane -U
+  bind-key -T copy-mode-vi 'C-l' select-pane -R
+  bind-key -T copy-mode-vi 'C-\' select-pane -l
+# ==============================================================
+
+  bind x run-shell "                                          \
+    if [ #{session_windows} -eq 1 ] &&                      \
+        [ #{window_panes}    -eq 1 ] ; then                  \
+        if [ \$(tmux list-sessions | wc -l) -ge 2 ]; then   \
+            tmux switch-client -l;                          \
+        fi; tmux kill-session -t \"#S\";                    \
+    else                                                    \
+        tmux kill-pane;                                     \
+    fi;                                                     \
+    "
+
+# ==============================================================
+  bind-key "T" run-shell "sesh connect \"$(
+    sesh list | fzf-tmux -p 55%,60% \
+      --no-sort --ansi --border-label ' sesh ' --prompt '⚡  ' \
+      --header '  ^a all ^t tmux ^g configs ^x zoxide ^d tmux kill ^f find' \
+      --bind 'tab:down,btab:up' \
+      --bind 'ctrl-a:change-prompt(⚡  )+reload(sesh list)' \
+      --bind 'ctrl-t:change-prompt(🪟  )+reload(sesh list -t)' \
+      --bind 'ctrl-g:change-prompt(⚙️  )+reload(sesh list -c)' \
+      --bind 'ctrl-x:change-prompt(📁  )+reload(sesh list -z)' \
+      --bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
+      --bind 'ctrl-d:execute(tmux kill-session -t {})+change-prompt(⚡  )+reload(sesh list)'
+  )\""
+# ==============================================================
+
+# =======================================
+# Copy paste stuff
+# =================================================
+
+# Allows scrolling and selecting in copy-mode
+  setw -g mouse on
+  bind -n WheelUpPane   select-pane -t= \; copy-mode -e \; send-keys -M
+  bind -n WheelDownPane select-pane -t= \;                 send-keys -M
+
+  bind-key -T edit-mode-vi Up send-keys -X history-up
+  bind-key -T edit-mode-vi Down send-keys -X history-down
+
+  bind-key -T copy-mode-vi v send-keys -X begin-selection
+# MacOS
+# bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
+# bind-key -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
+# Linux
+  bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace xsel"
+  bind-key -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace xsel"
+
+# =================================================
+# Plugin Setup
+# =================================================
+
+# use duckduckgo for searching selected term (<prefix>shift-s)
+  set -g @open-S 'https://www.duckduckgo.com/?q='
+
+#==================================================
+# Plugins
+# =================================================
+
+  set -g @plugin 'tmux-plugins/tpm'
+  set -g @plugin 'tmux-plugins/tmux-sensible'
+  set -g @plugin 'tmux-plugins/tmux-yank'
+  set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
+  set -g @plugin 'christoomey/vim-tmux-navigator'
+
+# ---------------------------------------------------------------------
+# CaveLab Area
+# ---------------------------------------------------------------------
+
+  # set -g @plugin 'waldirborbajr/tmux-wax'
+  set -g @plugin 'waldirborbajr/tmux-monitor'
+  # set -g status-interval 10
+  # set -g status-right "#(/home/borba/.tmux/plugins/tmux-monitor/tmux-monitor)"
+
+# ---------------------------------------------------------------------
+# End of CaveLab Area
+# ---------------------------------------------------------------------
+
+# Theme ---------------------------------------------------------------
+
+  # set -g @plugin 'catppuccin/tmux#latest'
+  #
+  # set -g @catppuccin_window_left_separator ""
+  # set -g @catppuccin_window_right_separator " "
+  # set -g @catppuccin_window_middle_separator " █"
+  # set -g @catppuccin_window_number_position "right"
+  #
+  # set -g @catppuccin_window_default_fill "number"
+  # set -g @catppuccin_window_default_text "#W"
+  #
+  # set -g @catppuccin_window_current_fill "number"
+  # set -g @catppuccin_window_current_text "#W"
+  #
+  # set -g @catppuccin_status_modules_right "directory session"
+  # set -g @catppuccin_status_left_separator  " "
+  # set -g @catppuccin_status_right_separator ""
+  # set -g @catppuccin_status_fill "icon"
+  # set -g @catppuccin_status_connect_separator "no"
+  #
+  # set -g @catppuccin_directory_text "#{pane_current_path}"
+  #
+# Theme ---------------------------------------------------------------
+
+# Session Control -----------------------------------------------------
+
+# persist tmux sessions after computer restart
+# https://github.com/tmux-plugins/tmux-resurrect
+  set -g @plugin 'tmux-plugins/tmux-resurrect'
+# allow tmux-ressurect to capture pane contents
+  set -g @resurrect-capture-pane-contents 'on'
+# automatically saves sessions for you every 15 minutes (this must be the last plugin)
+# https://github.com/tmux-plugins/tmux-continuum
+  set -g @plugin 'tmux-plugins/tmux-continuum'
+# enable tmux-continuum functionality
+  set -g @continuum-restore 'on'
+# Set the save interval in minutes, default is 15
+  set -g @continuum-save-interval '5'
+
+# Session Control -----------------------------------------------------
+
+# TPM -----------------------------------------------------------------
+
+# install tpm if not already installed
+  if "test ! -d ~/.tmux/plugins/tpm" \
+    "run 'git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm && ~/.tmux/plugins/tpm/bin/install_plugins'"
+
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+  run -b '~/.tmux/plugins/tpm/tpm || true'
