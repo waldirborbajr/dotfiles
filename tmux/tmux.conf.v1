@@ -7,22 +7,16 @@
 # Terminal multiplexer
 # https://github.com/tmux/tmux
 
-set-environment -g TMUX_PLUGIN_MANAGER_PATH '~/.tmux/plugins/'
+  set-environment -g TMUX_PLUGIN_MANAGER_PATH '~/.tmux/plugins/'
 
-# 24-bit colors
-  # set -g default-terminal "tmux-256color"
-  # set -sa terminal-features ",xterm-256color:RGB"
-  # set -ga terminal-overrides ",alacritty:RGB"
-
-  set -g default-terminal "xterm-256color"
-
-# true-color, termguicolors
+  # set -g default-terminal "xterm-256color"
+  set -g default-terminal "screen-256color"
   set -ga terminal-overrides ",*256col*:Tc"
 
-# set -g allow-passthrough on
-  set -ga update-environment TERM
-  set -ga update-environment TERM_PROGRAM
-  set -ga update-environment FZF_DEFAULT_OPTS
+  set -g allow-passthrough on
+  # set -ga update-environment TERM
+  # set -ga update-environment TERM_PROGRAM
+  # set -ga update-environment FZF_DEFAULT_OPTS
 
 # act like vim
   set -g xterm-keys on
@@ -31,23 +25,21 @@ set-environment -g TMUX_PLUGIN_MANAGER_PATH '~/.tmux/plugins/'
 
   set -g set-clipboard on      # use system clipboard
 
-  # set -g @continuum-restore 'on'
-
-  # set -g status-interval 5
   set -s escape-time 0
   setw -g monitor-activity on
   set -g visual-activity on
   set-option -g focus-events on
   set -g detach-on-destroy off  # don't exit from tmux when closing a session
-  set -g history-limit 1000000 # increase history size (from 2,000)
+  set -g history-limit 20000 # increase history size
 
 # we lost the default binding of C-l for clearing screen
 # this line of code fixes it by allowing us to use prefix + C-l
   bind C-l send-keys 'C-l'
 
 # setup leader key
-  unbind C-b
+  unbind-key C-b
   set -g prefix C-a
+  bind-key C-a send-prefix
 
 # shortcuts for iterating on tmux config
   # unbind r
@@ -69,9 +61,8 @@ set-environment -g TMUX_PLUGIN_MANAGER_PATH '~/.tmux/plugins/'
   set -g status-position top
   set -g status-right-length 100
   set -g status-right '#{prefix_highlight}'
-  # set -g status-right '#{prefix_highlight} #[fg=#1f1f21,bg=#81a2be] ⏰%H:%M - %b %d #[default]'
-  set -g status-style fg=#b5bd68,bg=#373b41
-  set -g pane-active-border-style fg=#b5bd68
+  set -g status-style 'fg=#b5bd68,bg=#373b41'
+  set -g pane-active-border-style 'fg=#b5bd68'
   set -g @prefix_highlight_fg '#1f1f21'
   set -g @prefix_highlight_bg '#cc6666'
   set -g @prefix_highlight_show_copy_mode 'on'
@@ -138,36 +129,6 @@ set-environment -g TMUX_PLUGIN_MANAGER_PATH '~/.tmux/plugins/'
   bind-key -T copy-mode-vi 'C-\' select-pane -l
 # ==============================================================
 
-  bind x run-shell "                                          \
-    if [ #{session_windows} -eq 1 ] &&                      \
-        [ #{window_panes}    -eq 1 ] ; then                  \
-        if [ \$(tmux list-sessions | wc -l) -ge 2 ]; then   \
-            tmux switch-client -l;                          \
-        fi; tmux kill-session -t \"#S\";                    \
-    else                                                    \
-        tmux kill-pane;                                     \
-    fi;                                                     \
-    "
-
-# ==============================================================
-  bind-key "T" run-shell "sesh connect \"$(
-    sesh list | fzf-tmux -p 55%,60% \
-      --no-sort --ansi --border-label ' sesh ' --prompt '⚡  ' \
-      --header '  ^a all ^t tmux ^g configs ^x zoxide ^d tmux kill ^f find' \
-      --bind 'tab:down,btab:up' \
-      --bind 'ctrl-a:change-prompt(⚡  )+reload(sesh list)' \
-      --bind 'ctrl-t:change-prompt(🪟  )+reload(sesh list -t)' \
-      --bind 'ctrl-g:change-prompt(⚙️  )+reload(sesh list -c)' \
-      --bind 'ctrl-x:change-prompt(📁  )+reload(sesh list -z)' \
-      --bind 'ctrl-f:change-prompt(🔎  )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
-      --bind 'ctrl-d:execute(tmux kill-session -t {})+change-prompt(⚡  )+reload(sesh list)'
-  )\""
-# ==============================================================
-
-# =======================================
-# Copy paste stuff
-# =================================================
-
 # Allows scrolling and selecting in copy-mode
   setw -g mouse on
   bind -n WheelUpPane   select-pane -t= \; copy-mode -e \; send-keys -M
@@ -184,13 +145,6 @@ set-environment -g TMUX_PLUGIN_MANAGER_PATH '~/.tmux/plugins/'
   bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace xsel"
   bind-key -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace xsel"
 
-# =================================================
-# Plugin Setup
-# =================================================
-
-# use duckduckgo for searching selected term (<prefix>shift-s)
-  set -g @open-S 'https://www.duckduckgo.com/?q='
-
 #==================================================
 # Plugins
 # =================================================
@@ -200,44 +154,6 @@ set-environment -g TMUX_PLUGIN_MANAGER_PATH '~/.tmux/plugins/'
   set -g @plugin 'tmux-plugins/tmux-yank'
   set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
   set -g @plugin 'christoomey/vim-tmux-navigator'
-
-# ---------------------------------------------------------------------
-# CaveLab Area
-# ---------------------------------------------------------------------
-
-  # set -g @plugin 'waldirborbajr/tmux-wax'
-  set -g @plugin 'waldirborbajr/tmux-monitor'
-  # set -g status-interval 10
-  # set -g status-right "#(/home/borba/.tmux/plugins/tmux-monitor/tmux-monitor)"
-
-# ---------------------------------------------------------------------
-# End of CaveLab Area
-# ---------------------------------------------------------------------
-
-# Theme ---------------------------------------------------------------
-
-  # set -g @plugin 'catppuccin/tmux#latest'
-  #
-  # set -g @catppuccin_window_left_separator ""
-  # set -g @catppuccin_window_right_separator " "
-  # set -g @catppuccin_window_middle_separator " █"
-  # set -g @catppuccin_window_number_position "right"
-  #
-  # set -g @catppuccin_window_default_fill "number"
-  # set -g @catppuccin_window_default_text "#W"
-  #
-  # set -g @catppuccin_window_current_fill "number"
-  # set -g @catppuccin_window_current_text "#W"
-  #
-  # set -g @catppuccin_status_modules_right "directory session"
-  # set -g @catppuccin_status_left_separator  " "
-  # set -g @catppuccin_status_right_separator ""
-  # set -g @catppuccin_status_fill "icon"
-  # set -g @catppuccin_status_connect_separator "no"
-  #
-  # set -g @catppuccin_directory_text "#{pane_current_path}"
-  #
-# Theme ---------------------------------------------------------------
 
 # Session Control -----------------------------------------------------
 

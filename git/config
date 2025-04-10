@@ -1,134 +1,120 @@
-[user]
-	name = Waldir BORBA JUNIOR
-	email = wborbajr@gmail.com
+[alias]
+	a = "add"
+	af = "!git add $(git ls-files -m -o --exclude-standard | sk -m)"
+	b = "branch"
+	br = "branch"
+	c = "commit"
+	ca = "commit --amend"
+	cm = "commit -m"
+	co = "checkout"
+	d = "diff"
+	ds = "diff --staged"
+	edit-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; hx `f`"
+	essa = "push --force"
+	fuck = "commit --amend -m"
+	graph = "log --all --decorate --graph --oneline"
+	hist = "log --pretty=format:\"%Cgreen%h %Creset%cd %Cblue[%cn] %Creset%s%C(yellow)%d%C(reset)\" --graph --date=relative --decorate --all"
+	l = "log"
+	llog = "log --graph --name-status --pretty=format:\"%C(red)%h %C(reset)(%cd) %C(green)%an %Creset%s %C(yellow)%d%Creset\" --date=relative"
+	oops = "checkout --"
+	p = "push"
+	pf = "push --force-with-lease"
+	pl = "!git pull origin $(git rev-parse --abbrev-ref HEAD)"
+	prettylog = "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
+	ps = "!git push origin $(git rev-parse --abbrev-ref HEAD)"
+	r = "rebase"
+	s = "status --short"
+	sha = "rev-parse origin/main"
+	sm = "switch main"
+	ss = "status"
+	st = "status"
 
-[credential]
-	helper = store
+[blame]
+	date = "relative"
+
+[branch]
+	autosetupmerge = true
+
+[color]
+	ui = true
+
+[core]
+	editor = "nvim"
+	pager = "/nix/store/yy3qkcm0mj96i9s4yp9hy7s5irriy0mq-delta-0.18.2/bin/delta"
+	whitespace = "fix,-indent-with-non-tab,trailing-space,cr-at-eol"
+
+[credential "https://gist.github.com"]
+	helper = "/nix/store/a42dil5xrgf74ir5nnryhyg4v0ymkpi0-gh-2.69.0/bin/gh auth git-credential"
+
+[credential "https://github.com"]
+	helper = "/nix/store/a42dil5xrgf74ir5nnryhyg4v0ymkpi0-gh-2.69.0/bin/gh auth git-credential"
+
+[delta]
+	enable = true
+	features = "decorations line-numbers"
+	hyprlinks = true
+	navigate = true
+	syntax-theme = "none"
+	whitespace-error-style = "22 reverse"
+
+[delta "decorations"]
+	commit-decoration-style = "bold yellow box ul"
+	file-decoration-style = "none"
+	file-style = "bold yellow ul"
+	hunk-decoration-style = "bold blue ul"
+	hunk-header-style = "omit"
+
+[delta "line-numbers"]
+	line-numbers = true
+	line-numbers-left-format = ""
+	line-numbers-left-style = ""
+	line-numbers-minus-style = "brightblack"
+	line-numbers-plus-style = "brightblack"
+	line-numbers-right-format = "{np:>4}│"
+	line-numbers-right-style = "brightblack"
+	line-numbers-zero-style = "brightblack"
+
+[delta "options"]
+	navigate = true
+
+[diff]
+	tool = "meld"
+
+[gpg]
+	format = "openpgp"
+
+[gpg "openpgp"]
+	program = "/nix/store/pggww1d2pg24fcg5v36xn63n53vanyyi-gnupg-2.4.7/bin/gpg"
+
+[init]
+	defaultBranch = "main"
+
+[interactive]
+	diffFilter = "/nix/store/yy3qkcm0mj96i9s4yp9hy7s5irriy0mq-delta-0.18.2/bin/delta --color-only"
+
+[merge]
+	stat = "true"
 
 [pull]
+	ff = "only"
 	rebase = true
 
 [push]
-  default = simple
+	autoSetupRemote = true
+	default = "tracking"
 
-[core]
-	excludesfile = ~/.gitignore
-	editor = nvim
-	# pager = diff-so-fancy | less --tabs=4 -RFX
-  pager = delta
-  whitespace = fix
+[rebase]
+	autoSqaush = true
+	autoStash = true
+	updateRefs = true
 
-[color]
-  ui = auto
-
-[github]
-	user = waldirborbajr
-
-[gitlab]
-	user = waldirborbajr
-
-[init]
-	defaultBranch = main
-
-[interactive]
-    diffFilter = delta --color-only
-
-[delta]
-    navigate = true    # use n and N to move between diff sections
-    features = catppuccin-mocha
-
-[merge]
-    conflictstyle = diff3
-
-[diff]
-    colorMoved = default
-
-[filter "lfs"]
-	clean = git-lfs clean %f
-	smudge = git-lfs smudge %f
-  required = true
-
-[alias]
-  st = status -s
-  sta = status
-  conf = config --global --edit
-  cge = config --global --edit
-  ci = commit
-  co = checkout
-  cod = checkout .
-  rh = reset HEAD
-  aa = add -A
-  cdf = clean -df
-  br = branch
-  bra = branch -a
-  pr = pull --rebase
-  amend = commit -a --amend --no-edit
-  ciam = commit -a --amend --no-edit
-	a = "!git status --short | peco | awk '{print $2}' | xargs git add"
-	d = diff
-	co = checkout
-	ci = commit
-	ca = commit -a
-	ps = "!git push origin $(git rev-parse --abbrev-ref HEAD)"
-	pl = "!git pull origin $(git rev-parse --abbrev-ref HEAD)"
-	swc = switch -c $1
-	swm = switch main
-	br = branch
-	ba = branch -a
-	bm = branch --merged
-	bn = branch --no-merged
-	df = "!git hist | peco | awk '{print $2}' | xargs -I {} git diff {}^ {}"
-	hist = log --pretty=format:\"%Cgreen%h %Creset%cd %Cblue[%cn] %Creset%s%C(yellow)%d%C(reset)\" --graph --date=relative --decorate --all
-	log = log --graph --name-status --pretty=format:\"%C(red)%h %C(reset)(%cd) %C(green)%an %Creset%s %C(yellow)%d%Creset\" --date=relative
-	open = "!hub browse"
-	type = cat-file -t
-	dump = cat-file -p
-	find = "!f() { git log --pretty=format:\"%h %cd [%cn] %s%d\" --date=relative -S'pretty' -S\"$@\" | peco | awk '{print $1}' | xargs -I {} git diff {}^ {}; }; f"
-	# edit conflicted file on merge
-	edit-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; vim `f`"
-	# add conflicted file on merge
-	add-unmerged = "!f() { git ls-files --unmerged | cut -f2 | sort -u ; }; git add `f`"
-
-[fetch]
-	prune = true
-
-[branch]
-	autosetuprebase = always
-
-[push]
-	default = current
-	followTags = true
 [rerere]
+	autoupdate = true
 	enabled = true
 
-[delta "catppuccin-mocha"]
-	blame-palette = "#1e1e2e #181825 #11111b #313244 #45475a"
-	commit-decoration-style = "box ul"
-	dark = true
-	file-decoration-style = "#cdd6f4"
-	file-style = "#cdd6f4"
-	hunk-header-decoration-style = "box ul"
-	hunk-header-file-style = "bold"
-	hunk-header-line-number-style = "bold #a6adc8"
-	hunk-header-style = "file line-number syntax"
-	line-numbers = true
-	line-numbers-left-style = "#6c7086"
-	line-numbers-minus-style = "bold #f38ba8"
-	line-numbers-plus-style = "bold #a6e3a1"
-	line-numbers-right-style = "#6c7086"
-	line-numbers-zero-style = "#6c7086"
-	# 25% red 75% base
-	minus-emph-style = "bold syntax #53394c"
-	# 10% red 90% base
-	minus-style = "syntax #35293b"
-	# 25% green 75% base
-	plus-emph-style = "bold syntax #40504b"
-	# 10% green 90% base
-	plus-style = "syntax #2c333a"
-	map-styles = \
-		bold purple => syntax "#494060", \
-		bold blue => syntax "#394361", \
-		bold cyan => syntax "#384d5e", \
-		bold yellow => syntax "#544f4e"
-	# Should match the name of the bat theme
-	syntax-theme = "Catppuccin Mocha"
+[user]
+	email = "wborbajr@gmail.com"
+	name = "Waldir Borba Junior"
+
+[web]
+	browser = "google-chrome-stable"

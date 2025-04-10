@@ -1,181 +1,310 @@
-# Start configuration added by Zim install {{{
-#
-# User configuration sourced by interactive shells
-#
+typeset -U path cdpath fpath manpath
+for profile in ${(z)NIX_PROFILES}; do
+  fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
+done
 
-# -----------------
-# Zsh configuration
-# -----------------
+HELPDIR="/nix/store/4s5j74mqdljf0m753lsfkd1jp236zrf7-zsh-5.9/share/zsh/$ZSH_VERSION/help"
 
-#
-# History
-#
-
-# Remove older command from the history if a duplicate is to be added.
-setopt HIST_IGNORE_ALL_DUPS
-HISTSIZE=5000
-HISTFILE=~/.zsh_history
-SAVEHIST=5000
-HISTDUP=erase
-setopt appendhistory
-setopt sharehistory
-setopt incappendhistory
-setopt hist_save_no_dups
-setopt hist_ignore_dups
-setopt hist_find_no_dups
-
-#
-# Input/output
-#
-
-# Set editor default keymap to emacs (`-e`) or vi (`-v`)
+# Use viins keymap as the default.
 bindkey -v
 
-# Prompt for spelling correction of commands.
-#setopt CORRECT
+TZ="America/Sao_Paulo"
+ZSH_AUTOSUGGEST_STRATEGY=("history" "completion")
+ZVM_VI_INSERT_ESCAPE_BINDKEY="jk"
+# Load Zsh modules
+zmodload zsh/zle
+zmodload zsh/zpty
+zmodload zsh/complist
 
-# Customize spelling correction prompt.
-#SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
+# Initialize colors
+autoload -Uz colors
+colors
 
-# Remove path separator from WORDCHARS.
-WORDCHARS=${WORDCHARS//[\/]}
+# Initialize completion system
+autoload -U compinit
+compinit
+_comp_options+=(globdots)
 
-# -----------------
-# Zim configuration
-# -----------------
+# Load edit-command-line for ZLE
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey "^e" edit-command-line
 
-# Use degit instead of git as the default tool to install and update modules.
-#zstyle ':zim:zmodule' use 'degit'
+# General completion behavior
+zstyle ':completion:*' completer _extensions _complete _approximate
 
-# --------------------
-# Module configuration
-# --------------------
+# Use cache
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
 
-#
-# git
-#
+# Complete the alias
+zstyle ':completion:*' complete true
 
-# Set a custom prefix for the generated aliases. The default prefix is 'G'.
-#zstyle ':zim:git' aliases-prefix 'g'
+# Autocomplete options
+zstyle ':completion:*' complete-options true
 
-#
-# input
-#
+# Completion matching control
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' keep-prefix true
 
-# Append `../` to your input for each `.` you type after an initial `..`
-#zstyle ':zim:input' double-dot-expand yes
+# Group matches and describe
+zstyle ':completion:*' menu select
+zstyle ':completion:*' list-grouped false
+zstyle ':completion:*' list-separator ''
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*:matches' group 'yes'
+zstyle ':completion:*:warnings' format '%F{red}%B-- No match for: %d --%b%f'
+zstyle ':completion:*:messages' format '%d'
+zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
+zstyle ':completion:*:descriptions' format '[%d]'
 
-#
-# termtitle
-#
+# Colors
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
-# Set a custom terminal title format using prompt expansion escape sequences.
-# See http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html#Simple-Prompt-Escapes
-# If none is provided, the default '%n@%m: %~' is used.
-#zstyle ':zim:termtitle' format '%1~'
+# Directories
+zstyle ':completion:*:*:cd:*' tag-order local-directories directory-stack path-directories
+zstyle ':completion:*:*:cd:*:directory-stack' menu yes select
+zstyle ':completion:*:-tilde-:*' group-order 'named-directories' 'path-directories' 'users' 'expand'
+zstyle ':completion:*:*:-command-:*:*' group-order aliases builtins functions commands
+zstyle ':completion:*' special-dirs true
+zstyle ':completion:*' squeeze-slashes true
 
-#
-# zsh-autosuggestions
-#
+# Sort
+zstyle ':completion:*' sort false
+zstyle ":completion:*:git-checkout:*" sort false
+zstyle ':completion:*' file-sort modification
+zstyle ':completion:*:eza' sort false
+zstyle ':completion:complete:*:options' sort false
+zstyle ':completion:files' sort false
 
-# Disable automatic widget re-binding on each precmd. This can be set when
-# zsh-users/zsh-autosuggestions is the last module in your ~/.zimrc.
-ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+# fzf-tab
+zstyle ':fzf-tab:complete:*:*' fzf-preview 'preview $realpath'
+zstyle ':fzf-tab:complete:kill:argument-rest' fzf-preview 'ps --pid=$word -o cmd --no-headers -w -w'
+zstyle ':fzf-tab:complete:kill:argument-rest' fzf-flags '--preview-window=down:3:wrap'
+zstyle ':fzf-tab:*' fzf-command fzf
+zstyle ':fzf-tab:*' fzf-pad 4
+zstyle ':fzf-tab:*' fzf-min-height 100
+zstyle ':fzf-tab:*' switch-group ',' '.'
 
-# Customize the style that the suggestions are shown with.
-# See https://github.com/zsh-users/zsh-autosuggestions/blob/master/README.md#suggestion-highlight-style
-#ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
+source /nix/store/fkn9nc4kc5qsjf0vj30ak6zifdra9kz3-zsh-autosuggestions-0.7.1/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+ZSH_AUTOSUGGEST_STRATEGY=(history)
 
-#
-# zsh-syntax-highlighting
-#
 
-# Set what highlighters will be used.
-# See https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+# History options should be set in .zshrc and after oh-my-zsh sourcing.
+# See https://github.com/nix-community/home-manager/issues/177.
+HISTSIZE="536870912"
+SAVEHIST="536870912"
+HISTORY_IGNORE='(*.private*)'
+HISTFILE="/home/borba/.cache/zsh/zsh_history"
+mkdir -p "$(dirname "$HISTFILE")"
 
-# Customize the main highlighter styles.
-# See https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/main.md#how-to-tweak-it
-#typeset -A ZSH_HIGHLIGHT_STYLES
-#ZSH_HIGHLIGHT_STYLES[comment]='fg=242'
+setopt HIST_FCNTL_LOCK
+unsetopt APPEND_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+unsetopt HIST_SAVE_NO_DUPS
+unsetopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt SHARE_HISTORY
+setopt EXTENDED_HISTORY
+setopt autocd
 
-# ------------------
-# Initialize modules
-# ------------------
-
-ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
-# Download zimfw plugin manager if missing.
-if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
-  if (( ${+commands[curl]} )); then
-    curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
-        https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
-  else
-    mkdir -p ${ZIM_HOME} && wget -nv -O ${ZIM_HOME}/zimfw.zsh \
-        https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
-  fi
+if [[ $options[zle] = on ]]; then
+  eval "$(/nix/store/50sdwcp5aw8scrrrdkr2lrwcnid6h9k7-fzf-0.61.0/bin/fzf --zsh)"
 fi
-# Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
-if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
-  source ${ZIM_HOME}/zimfw.zsh init -q
-fi
-# Initialize modules.
-source ${ZIM_HOME}/init.zsh
 
-# ------------------------------
-# Post-init module configuration
-# ------------------------------
-
-#
-# zsh-history-substring-search
-#
-
-zmodload -F zsh/terminfo +p:terminfo
-# Bind ^[[A/^[[B manually so up/down works both before and after zle-line-init
-for key ('^[[A' '^P' ${terminfo[kcuu1]}) bindkey ${key} history-substring-search-up
-for key ('^[[B' '^N' ${terminfo[kcud1]}) bindkey ${key} history-substring-search-down
-for key ('k') bindkey -M vicmd ${key} history-substring-search-up
-for key ('j') bindkey -M vicmd ${key} history-substring-search-down
-unset key
-# }}} End configuration added by Zim install
+export GPG_TTY=$TTY
+/nix/store/pggww1d2pg24fcg5v36xn63n53vanyyi-gnupg-2.4.7/bin/gpg-connect-agent updatestartuptty /bye > /dev/null
 
 
-# ZSH
-export ZDOTDIR="${HOME}/dotfiles/zshrc"
 
-# Nix!
-export NIX_CONF_DIR=$HOME/.config/nix
-. /home/borba/.nix-profile/etc/profile.d/nix.sh
-# Nix
+export ANDROID_SDK_ROOT=$HOME/development/Android/Sdk/
+export ANDROID_HOME=$HOME/development/Android/Sdk/
+# export ANDROID_AVD_HOME=/Volumes/home/VMS/Android-Emulator
+export PATH=$ANDROID_SDK_ROOT/tools:$PATH
+export PATH=$ANDROID_SDK_ROOT/tools/bin:$PATH
+export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH
+# \"Android SDK Command-line Tools (latest)\" needs to be installed (See SETUP_MACOS.md)
+export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
+export CHROME_EXECUTABLE=/home/borba/.nix-profile/bin/chromium
+# export CHROME_EXECUTABLE=/snap/bin/chromium
 
-# source
-# . "$ZSH/oh-my-zsh.sh"
-# . "$ZDOTDIR/functions.zsh"
-# . "$ZDOTDIR/options.zsh"
-# . "$ZDOTDIR/completions.zsh"
-# . "$ZDOTDIR/fzf.zsh"
-# . "$ZDOTDIR/node.zsh"
-. "$ZDOTDIR/aliases.zsh"
-# . "$ZDOTDIR/plugins.zsh"
-# . "$ZDOTDIR/starship.zsh"
-# . "$ZDOTDIR/zoxide.zsh"
-
+export GOPATH=$(mise exec go --command 'go env GOPATH')
+export GOROOT=$(mise exec go --command 'go env GOROOT')
+export GOBIN=$(mise exec go --command 'go env GOBIN')
+export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$GOROOT/bin
+export PATH=$PATH:$GOBIN
 export PATH=$PATH:$HOME/.local/bin
-export PATH="$PATH:/home/borba/snap/multipass/common/bin"
 
-# moved to Nix
-# export GOROOT=/usr/local/go
-# export GOPATH=$HOME/go   # your-go-workspace
-# export GOBIN=$GOPATH/bin # where go-generate-executable-binaries
+function cd() {
+  builtin cd $*
+  lsd
+}
 
-export EDITOR=nvim
+function mkd() {
+  mkdir $1
+  builtin cd $1
+}
 
-export FZF_DEFAULT_COMMAND="fd --type f --hidden --exclude .git"
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND --no-ignore"
-export FZF_DEFAULT_OPTS='--bind ctrl-y:preview-up,ctrl-e:preview-down,left:toggle+up,right:toggle+down'
-export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
---color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
---color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
---color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
-eval "$(fzf --zsh)"
+function _list_zellij_sessions () {
+  zellij list-sessions 2>/dev/null | sed -e 's/\x1b\[[0-9;]*m//g'
+}
 
-source "$HOME/.cargo/env"
+function zja() {
+  zj_session=$(_list_zellij_sessions | rg -v '(EXITED -|\(current\))' | awk '{print $1}' | fzf)
+  if [[ -n $zj_session ]]; then
+    wezterm start -- zsh --login -c "zellij attach $session"
+  fi
+}
+
+function zjl() {
+  layout=$(fd '.*' "$HOME/.config/zellij/layouts" | xargs -I{} basename {} .kdl | fzf)
+  if [[ -n $layout ]]; then
+    wezterm start -- zsh --login -c "zellij --layout $layout attach -c $layout"
+  fi
+}
+
+function zjgc() {
+  sessions=$(_list_zellij_sessions | awk '/EXITED -/ {print $1}' )
+  if [[ -n $sessions ]]; then
+    echo $sessions | xargs -n1 zellij d
+  fi
+}
+
+function zjd() {
+  sessions=$(_list_zellij_sessions | awk '{print $1}' | fzf -m)
+  if [[ -n $sessions ]]; then
+    echo $sessions | xargs -n1 zellij d --force
+  fi
+}
+
+function chirpinstall() {
+
+  URL="$1"
+
+  FILENAME=$(basename "$URL")
+
+  cd $HOME/Downloads/
+  
+  curl -O $URL
+  pipx install --system-site-packages --force $FILENAME
+}
+
+function ghpr() {
+  GH_FORCE_TTY=100% gh pr list | fzf --ansi --preview 'GH_FORCE_TTY=100% gh pr view {1}' --preview-window down --header-lines 3 | awk '{print $1}' | xargs gh pr checkout
+}
+
+function fletnew() {
+
+  if [[ -z  "$1" ]]; then
+    exit 1;
+  fi
+
+  mkdir $1
+  cd $1
+  uv init --bare
+  uv add 'flet[all]' --dev
+  uv run flet create
+  source .venv/bin/activate
+}
+
+function fleton() {
+  source .venv/bin/activate
+}
+
+function fletoff() {
+  deactivate
+}
+
+# # Starship initialization
+# eval "($starship init zsh)"
+# eval "$(/nix/store/8z0s76z97izq0idblkyx42n8466qh05q-starship-1.22.1/bin/starship init zsh)"
+
+# Zoxide initialization
+# eval "($zoxide init zsh)"
+
+function yy() {
+  local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
+  yazi "$@" --cwd-file="$tmp"
+  if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
+}
+
+if [[ $TERM != "dumb" ]]; then
+  eval "$(/nix/store/8z0s76z97izq0idblkyx42n8466qh05q-starship-1.22.1/bin/starship init zsh)"
+fi
+
+eval "$(/nix/store/pj26znmd6gw4gpiqfgn9z5y7zz6vhj24-direnv-2.35.0/bin/direnv hook zsh)"
+
+alias -- ..='cd ..'
+alias -- ...='cd ../..'
+alias -- ....='cd ../../..'
+alias -- .....='cd ../../../..'
+alias -- aq='asciiquarium -s'
+alias -- d=docker
+alias -- da='docker ps -a'
+alias -- de='docker exec -it'
+alias -- di='docker images'
+alias -- docker_clean='docker builder prune -a --force'
+alias -- dr='docker run --rm -it'
+alias -- drma='docker stop $(docker ps -aq) && docker rm -f $(docker ps -aq)'
+alias -- drmc='docker rm $(docker ps --filter=status=exited --filter=status=created -q)'
+alias -- drmd='docker rmi $(docker images -a --filter=dangling=true -q)'
+alias -- drmi='di | grep none | awk '\''{print $3}'\'' | sponge | xargs docker rmi'
+alias -- drmii='docker rmi $(docker images -a -q)'
+alias -- eza='eza --icons auto --git'
+alias -- ff=fastfetch
+alias -- gg=lazygit
+alias -- k=kubectl
+alias -- kdd='kubectl describe deployment'
+alias -- kdeld='kubectl delete deployment'
+alias -- kdeli='kubectl delete ingress'
+alias -- kdelns='kubectl delete namespace'
+alias -- kdelp='kubectl delete pods'
+alias -- kdels='kubectl delete svc'
+alias -- kdelsec='kubectl delete secret'
+alias -- kdi='kubectl describe ingress'
+alias -- kdno='kubectl describe node'
+alias -- kdns='kubectl describe namespace'
+alias -- kdp='kubectl describe pods'
+alias -- kds='kubectl describe svc'
+alias -- kdsec='kubectl describe secret'
+alias -- ked='kubectl edit deployment'
+alias -- kei='kubectl edit ingress'
+alias -- kens='kubectl edit namespace'
+alias -- kep='kubectl edit pods'
+alias -- kes='kubectl edit svc'
+alias -- kgd='kubectl get deployment'
+alias -- kgi='kubectl get ingress'
+alias -- kgno='kubectl get node'
+alias -- kgns='kubectl get namespaces'
+alias -- kgp='kubectl get pods'
+alias -- kgs='kubectl get svc'
+alias -- kgsec='kubectl get secret'
+alias -- l='ls -l'
+alias -- la='ls -a'
+alias -- ld=lazydocker
+alias -- lg=lazygit
+alias -- ll='eza -l'
+alias -- lla='ls -la'
+alias -- ls=lsd
+alias -- lt='ls --tree'
+alias -- repo='cd $HOME/Documents/repositories'
+alias -- rmvim='rm -rf ~/.local/share/nvim && rm -rf ~/.cache/nvim && rm -rf ~/.local/state/nvim'
+alias -- syshealth='sudo nala update && sudo rm /var/lib/apt/lists/lock && sudo nala upgrade -y && sudo nala autoremove -y && sudo nala autopurge -y && sudo nala clean && flatpak update -y && flatpak uninstall --unused -y && sudo snap refresh'
+alias -- temp='cd $HOME/Downloads/temp'
+alias -- tmc='clear; tmux clear-history; clear'
+alias -- tmk='tmux kill-session'
+alias -- v=nvim
+alias -- vi=nvim
+alias -- vim=nvim
+alias -- xterm='sudo update-alternatives --config x-terminal-emulator'
+alias -- y=yazi
+alias -- zj='zellij a -c '\''B+ DevOps'\'''
+alias -- zlcahe='rm -rf ~/.cache/zellij'
+eval "$(/nix/store/1d2ccpv0rrjapka11q2k2y9vxzykdzm4-zoxide-0.9.7/bin/zoxide init zsh )"
