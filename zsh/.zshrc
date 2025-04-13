@@ -1,10 +1,3 @@
-typeset -U path cdpath fpath manpath
-for profile in ${(z)NIX_PROFILES}; do
-  fpath+=($profile/share/zsh/site-functions $profile/share/zsh/$ZSH_VERSION/functions $profile/share/zsh/vendor-completions)
-done
-
-HELPDIR="/nix/store/4s5j74mqdljf0m753lsfkd1jp236zrf7-zsh-5.9/share/zsh/$ZSH_VERSION/help"
-
 # Use viins keymap as the default.
 bindkey -v
 
@@ -87,10 +80,6 @@ zstyle ':fzf-tab:*' fzf-pad 4
 zstyle ':fzf-tab:*' fzf-min-height 100
 zstyle ':fzf-tab:*' switch-group ',' '.'
 
-source /nix/store/fkn9nc4kc5qsjf0vj30ak6zifdra9kz3-zsh-autosuggestions-0.7.1/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-ZSH_AUTOSUGGEST_STRATEGY=(history)
-
-
 # History options should be set in .zshrc and after oh-my-zsh sourcing.
 # See https://github.com/nix-community/home-manager/issues/177.
 HISTSIZE="536870912"
@@ -111,24 +100,13 @@ setopt SHARE_HISTORY
 setopt EXTENDED_HISTORY
 setopt autocd
 
-if [[ $options[zle] = on ]]; then
-  eval "$(/nix/store/50sdwcp5aw8scrrrdkr2lrwcnid6h9k7-fzf-0.61.0/bin/fzf --zsh)"
-fi
-
-export GPG_TTY=$TTY
-/nix/store/pggww1d2pg24fcg5v36xn63n53vanyyi-gnupg-2.4.7/bin/gpg-connect-agent updatestartuptty /bye > /dev/null
-
-
-
-export ANDROID_SDK_ROOT=$HOME/development/Android/Sdk/
-export ANDROID_HOME=$HOME/development/Android/Sdk/
-# export ANDROID_AVD_HOME=/Volumes/home/VMS/Android-Emulator
-export PATH=$ANDROID_SDK_ROOT/tools:$PATH
-export PATH=$ANDROID_SDK_ROOT/tools/bin:$PATH
-export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH
-# \"Android SDK Command-line Tools (latest)\" needs to be installed (See SETUP_MACOS.md)
-export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
-export CHROME_EXECUTABLE=/home/borba/.nix-profile/bin/chromium
+# export ANDROID_SDK_ROOT=$HOME/development/Android/Sdk/
+# export ANDROID_HOME=$HOME/development/Android/Sdk/
+# export PATH=$ANDROID_SDK_ROOT/tools:$PATH
+# export PATH=$ANDROID_SDK_ROOT/tools/bin:$PATH
+# export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH
+# export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
+# export CHROME_EXECUTABLE=/home/borba/.nix-profile/bin/chromium
 # export CHROME_EXECUTABLE=/snap/bin/chromium
 
 export GOPATH=$(mise exec go --command 'go env GOPATH')
@@ -307,4 +285,3 @@ alias -- xterm='sudo update-alternatives --config x-terminal-emulator'
 alias -- y=yazi
 alias -- zj='zellij a -c '\''B+ DevOps'\'''
 alias -- zlcahe='rm -rf ~/.cache/zellij'
-eval "$(/nix/store/1d2ccpv0rrjapka11q2k2y9vxzykdzm4-zoxide-0.9.7/bin/zoxide init zsh )"
