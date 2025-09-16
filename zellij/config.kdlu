@@ -1,8 +1,8 @@
-// ui {
-//     pane_frames {
-//         hide_session_name false
-//     }
-// }
+ui {
+    pane_frames {
+        hide_session_name false
+    }
+}
 
 keybinds clear-defaults=true {
     locked {
@@ -160,7 +160,7 @@ keybinds clear-defaults=true {
         bind "Alt o" { MoveTab "right"; }
         bind "Alt p" { TogglePaneInGroup; }
         bind "Alt Shift p" { ToggleGroupMarking; }
-        // bind "Ctrl q" { Quit; }
+        bind "Ctrl q" { Quit; }
     }
     shared_except "locked" "move" {
         bind "Ctrl h" { SwitchToMode "move"; }
@@ -283,7 +283,7 @@ web_client {
 //   - true
 //   - false (Default)
 // 
-simplified_ui true
+// simplified_ui true
  
 // Choose the theme that is specified in the themes section.
 // Default: default
@@ -333,7 +333,7 @@ theme "catppuccin-frappe"
 //   - true (default, enabled)
 //   - false
 // 
-pane_frames false
+// pane_frames false
  
 // When attaching to an existing session with other users,
 // should the session be mirrored (true)
@@ -396,13 +396,13 @@ pane_frames false
 // otherwise this will error if such a session exists.
 // Default: <RANDOM>
 // 
-session_name "B+ DevOps"
+// session_name "My singleton session"
  
 // When `session_name` is provided, attaches to that session
 // if it is already running or creates it otherwise.
 // Default: false
 // 
-attach_to_session true
+// attach_to_session true
  
 // Toggle between having Zellij lay out panes according to a predefined set of layouts whenever possible
 // Options:
