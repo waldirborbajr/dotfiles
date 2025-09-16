@@ -1,9 +1,3 @@
-// ui {
-//     pane_frames {
-//         hide_session_name false
-//     }
-// }
-
 keybinds clear-defaults=true {
     locked {
         bind "Ctrl g" { SwitchToMode "normal"; }
