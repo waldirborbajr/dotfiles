@@ -1,0 +1,165 @@
+theme = "catppuccin_mocha"
+# theme = "catppuccin_macchiato_transparent"
+
+# [editor.lsp]
+# display-messages = true 
+
+# [editor]
+# true-color = true
+# line-number = "relative"
+# mouse = true
+# bufferline = "multiple"
+
+# idle-timeout = 200
+# completion-trigger-len = 1
+
+# [keys.normal]
+# esc = ["collapse_selection", "keep_primary_selection"]
+# C-x = ":buffer-close"
+# X = ["extend_line_up", "extend_to_line_bounds"]
+# C-n = ":new"
+# C-r = ":reload-all"
+# # C-n = ["goto_next_diag"]
+# # C-p = ["goto_prev_diag"]
+# C-k = ["delete_selection", "move_visual_line_up", "paste_before"]
+# C-j = ["delete_selection", "move_visual_line_down", "paste_before"]
+
+# [editor.cursor-shape]
+# insert = "bar"
+
+# [editor.statusline]
+# left = ["mode", "spinner", "file-name"]
+# center = ["workspace-diagnostics"]
+# right = ["diagnostics", "version-control" , "selections", "position", "file-encoding", "file-line-ending", "file-type"]
+# separator = "│"
+
+# [editor.file-picker]
+# hidden = false
+
+# [editor.indent-guides]
+# render = true
+
+[editor]
+line-number = "relative"
+color-modes = true
+cursorline = true
+true-color = true
+bufferline = "multiple"
+completion-timeout = 15
+auto-completion = true
+undercurl = false
+cursorcolumn = true
+auto-info = true
+text-width = 99
+#gutters = ["line-numbers", "diagnostics", "spacer", "diff"]
+gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
+
+[editor.cursor-shape]
+insert = "bar"
+select = "underline"
+
+[editor.statusline]
+mode.normal = "Normal"
+mode.insert = "Insert"
+mode.select = "Select"
+left = ["mode", "spinner", "version-control", "spacer"]
+center = [
+  "file-base-name",
+  "read-only-indicator",
+  "file-modification-indicator",
+]
+right = [
+  "diagnostics",
+  "primary-selection-length",
+  "selections",
+  "register",
+  "position",
+  "total-line-numbers",
+  "file-encoding",
+  "file-type",
+]
+
+[editor.lsp]
+display-messages = true
+display-inlay-hints = true
+
+[editor.soft-wrap]
+enable = true
+
+[editor.file-picker]
+hidden = false
+ignore = false
+git-ignore = false
+git-global = false
+git-exclude = false
+
+[editor.indent-guides]
+render = false
+#character = "╎" # Some characters that work well: "▏", "┆", "┊", "⸽"
+#skip-levels = 1
+
+[keys.normal]
+C-s = ":w!"
+C-r = ":config-open"
+C-S-r = ":config-reload"
+C-l = ":o ~/.config/helix/languages.toml"
+C-A-l = ":o ~/.config/helix/lsp-ai.json"
+A-l = ":o ~/Library/Caches/lsp-ai/lsp-ai.log"
+"S-ret" = ["open_above", "normal_mode"]
+"ret" = ["open_below", "normal_mode"]
+S-x = "extend_line_above"
+S-up = [ # scroll selections up one line
+  "ensure_selections_forward",
+  "extend_to_line_bounds",
+  "extend_char_right",
+  "extend_char_left",
+  "delete_selection",
+  "move_line_up",
+  "add_newline_above",
+  "move_line_up",
+  "replace_with_yanked",
+]
+S-down = [ # scroll selections down one line
+  "ensure_selections_forward",
+  "extend_to_line_bounds",
+  "extend_char_right",
+  "extend_char_left",
+  "delete_selection",
+  "add_newline_below",
+  "move_line_down",
+  "replace_with_yanked",
+]
+# C-g = [
+#   ":write-all",
+#   ":sh zellij run -c -f --width 80%% --height 80%% -x 10%% -y 10%% --name lazygit -- lazygit",
+# ]
+C-n = ":buffer-next"
+C-p = ":buffer-previous"
+C-q = ":bc"
+# C-y = ":sh zellij run -n Yazi -c -f -x 10%% -y 10%% --width 80%% --height 80%% -- bash ~/.config/helix/yazi-picker.sh open %{buffer_name}"
+
+C-y = [
+  ':sh rm -f /tmp/unique-file',
+  ':insert-output yazi %{buffer_name} --chooser-file=/tmp/unique-file',
+  ':insert-output echo "\x1b[?1049h\x1b[?2004h" > /dev/tty',
+  ':open %sh{cat /tmp/unique-file}',
+  ':redraw',
+]
+
+# lazygit
+C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
+
+
+[keys.insert]
+C-s = ["normal_mode", ":w!"]
+"A-ret" = ["normal_mode", "open_below"]
+C-space = "completion"
+
+[keys.normal.space.space]
+b = ":sh git blame -L %{cursor_line},%{cursor_line} %{buffer_name}"
+s = ":sh zellij run -c -f --width 80%% --height 80%% -x 10%% -y 10%% --name scooter -- scooter"
+
+[keys.normal.space]
+e = ":sh zellij run -n Yazi -c -f -x 10%% -y 10%% --width 80%% --height 80%% -- bash ~/.config/helix/yazi-picker.sh open %{buffer_name}"
+# f = "file_explorer_in_current_directory"
+# F = "file_explorer_in_current_buffer_directory"

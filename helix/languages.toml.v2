@@ -1,0 +1,89 @@
+[[language]]
+name = "rust"
+language-servers = ["rust-analyzer", "bacon-ls"]
+
+[language-server.rust-analyzer.config]
+inlayHints.bindingModeHints.enable = true
+inlayHints.chainingHints.enable = true
+inlayHints.closingBraceHints.enable = true
+inlayHints.closingBraceHints.minLines = 10
+inlayHints.closureCaptureHints.enable = true
+inlayHints.closureReturnTypeHints.enable = "with_block"
+inlayHints.closureStyle.enable = "impl_fn"
+inlayHints.discriminantHints.enable = "fieldless"
+inlayHints.lifetimeElisionHints.enable = "skip_trivial"
+inlayHints.lifetimeElisionHints.useParameterNames = true
+inlayHints.typeHints.hideClosureInitialization = false
+inlayHints.typeHints.enable = true
+inlayHints.expressionAdjustmentHints.enable = "reborrow"
+inlayHints.parameterHints.enable = true
+inlayHints.reborrowHints.enable = "mutable"
+inlayHints.renderColons = true
+
+checkOnSave = { enable = false }
+diagnostics = { enable = false }
+
+[language-server.bacon-ls]
+command = "bacon-ls"
+
+[[language]]
+name = "go"
+scope = "source.go"
+injection-regex = "go"
+file-types = ["go"]
+roots = ["go.work", "go.mod"]
+auto-format = true
+comment-token = "//"
+language-servers = ["gopls", "golangci-lint-lsp"]
+# TODO: gopls needs utf-8 offsets?
+indent = { tab-width = 4, unit = "\t" }
+
+[language-server.gopls]
+command = "gopls"
+
+[language-server.gopls.config.hints]
+assignVariableTypes = true
+compositeLiteralFields = true
+constantValues = true
+compositeLiteralTypes = true
+functionTypeParameters = true
+parameterNames = false
+rangeVariableTypes = true
+
+[language-server.golangci-lint-lsp]
+command = "golangci-lint-langserver"
+
+[language-server.golangci-lint-lsp.config]
+command = [
+  "golangci-lint",
+  "run",
+  "--out-format",
+  "json",
+  "--issues-exit-code=1",
+]
+
+[language-server.zls]
+command = "zls"
+
+[language-server.zls.config]
+zig.zls.enableInlayHints = true
+zig.zls.inlayHintsExcludeSingleArgument = true
+zig.zls.inlayHintsShowBuiltin = true
+zig.zls.inlayHintsShowParameterName = true
+zig.zls.inlayHintsShowVariableDeclaration = true
+
+[[language]]
+name = "python"
+scope = "source.python"
+injection-regex = "python"
+file-types = ["py"]
+shebangs = ["python"]
+roots = ["pyproject.toml", "setup.py", "poetry.lock", "pyrightconfig.json"]
+language-servers = ["ruff"]
+indent = { tab-width = 4, unit = "    " }
+comment-token = "#"
+auto-format = true
+
+[language-server.ruff]
+command = "ruff-lsp"
+config = { settings = { run = "onSave" } }
