@@ -129,12 +129,16 @@ function zs() {
   zellij -s $1
 }
 
-function lg() {
+function lzg() {
   lazygit
 }
 
-function db() {
+function lzq() {
   lazysql
+}
+
+function lzd() {
+  lazydocker
 }
 
 zellij_tab_name_update() {
