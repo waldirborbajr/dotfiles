@@ -11,6 +11,9 @@ cargo install zoxide --locked
 # Install yazi
 cargo install --force yazi-build
 
+# Install cargo update
+cargo install cargo-update
+
 # Install fzf
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
 ~/.fzf/install

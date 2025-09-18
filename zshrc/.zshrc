@@ -120,7 +120,7 @@ bindkey -v
 export KEYTIMEOUT=1
 
 alias rmvim="rm -rf ~/.config/nvim && rm -rf ~/.local/state/nvim && rm -rf ~/.local/share/nvim"
-alias syshealth="sudo rm -rv /var/lib/apt/lists/* && sudo nala update && sudo rm /var/lib/apt/lists/lock && sudo nala upgrade -y && sudo nala autoremove -y && sudo nala autopurge -y && sudo nala clean && flatpak update -y && flatpak uninstall --unused -y && sudo snap refresh";
+alias syshealth="sudo rm -rv /var/lib/apt/lists/* && sudo nala update && sudo rm /var/lib/apt/lists/lock && sudo nala upgrade -y && sudo nala autoremove -y && sudo nala autopurge -y && sudo nala clean && flatpak update -y && flatpak uninstall --unused -y && sudo snap refresh && cargo install-update -a";
 alias zj="zellij a -c 'B+ DevOps'"
 alias zlcahe="rm -rf ~/.cache/zellij"
 alias ai-dev='zellij --layout ai-coding'
