@@ -19,12 +19,47 @@ check_system_requirements() {
     exit 1
   fi
   if ! command -v go &> /dev/null; then
-    echo "Go não encontrado. Instale o Go antes de continuar: https://go.dev/doc/install"
+    sh ./installgo.sh
+    echo "Reinitcie o terminal para continuar a instalação"
     exit 1
   fi
   if ! command -v git &> /dev/null; then
     echo "Git não encontrado. Instalando git..."
     sudo nala install -y git || { echo "Falha ao instalar git"; exit 1; }
+  fi
+}
+
+# Função para configurar fzf no shell padrão
+configure_fzf() {
+  echo "Configurando fzf no shell padrão..."
+  # Detectar o shell padrão
+  SHELL_NAME=$(basename "$SHELL")
+  case "$SHELL_NAME" in
+    bash)
+      SHELL_CONFIG="$HOME/.bashrc"
+      ;;
+    zsh)
+      SHELL_CONFIG="$HOME/.zshrc"
+      ;;
+    *)
+      echo "Shell $SHELL_NAME não suportado para configuração automática. Configure o fzf manualmente."
+      return 1
+      ;;
+  esac
+
+  # Verificar se o fzf já está configurado no arquivo
+  if grep -q "fzf/bash" "$SHELL_CONFIG" 2>/dev/null; then
+    echo "fzf já está configurado em $SHELL_CONFIG."
+  else
+    echo "Adicionando configuração do fzf em $SHELL_CONFIG..."
+    # Adicionar as linhas de configuração do fzf
+    {
+      echo ""
+      echo "# Configuração do fzf"
+      echo '[ -f ~/.fzf/shell/completion.'"$SHELL_NAME"'] && source ~/.fzf/shell/completion.'"$SHELL_NAME"''
+      echo '[ -f ~/.fzf/shell/key-bindings.'"$SHELL_NAME"'] && source ~/.fzf/shell/key-bindings.'"$SHELL_NAME"''
+    } >> "$SHELL_CONFIG" || { echo "Falha ao adicionar configuração do fzf em $SHELL_CONFIG"; return 1; }
+    echo "Configuração do fzf adicionada com sucesso!"
   fi
 }
 
@@ -61,6 +96,7 @@ if ! check_installed fzf; then
   echo "Clonando e instalando fzf..."
   git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf || { echo "Falha ao clonar fzf"; exit 1; }
   ~/.fzf/install --all --no-update-rc || { echo "Falha ao instalar fzf"; exit 1; }
+  configure_fzf || { echo "Falha ao configurar fzf"; exit 1; }
 fi
 
 # Instalar LazySQL
@@ -86,4 +122,4 @@ if ! check_installed hx; then
   sudo nala install -y helix || { echo "Falha ao instalar helix"; exit 1; }
 fi
 
-echo "Todas as ferramentas foram verificadas e instaladas com sucesso!"
+echo "Todas as ferramentas foram verificadas, instaladas e configuradas com sucesso!"
