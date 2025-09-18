@@ -23,4 +23,3 @@ syshealth() {
   cargo install-update -a
   go install
 }
-
