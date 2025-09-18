@@ -47,20 +47,32 @@ configure_fzf() {
       ;;
   esac
 
-  # Verificar se o fzf já está configurado no arquivo
-  if grep -q "fzf/bash" "$SHELL_CONFIG" 2>/dev/null; then
-    echo "fzf já está configurado em $SHELL_CONFIG."
+  # Adicionar ~/.fzf/bin ao PATH, se não estiver presente
+  FZF_PATH="$HOME/.fzf/bin"
+  if grep -q "$FZF_PATH" "$SHELL_CONFIG" 2>/dev/null; then
+    echo "O diretório $FZF_PATH já está no PATH em $SHELL_CONFIG."
   else
-    echo "Adicionando configuração do fzf em $SHELL_CONFIG..."
-    # Adicionar as linhas de configuração do fzf
+    echo "Adicionando $FZF_PATH ao PATH em $SHELL_CONFIG..."
+    {
+      echo ""
+      echo "# Adicionando fzf ao PATH"
+      echo 'export PATH="$PATH:'"$FZF_PATH"'"'
+    } >> "$SHELL_CONFIG" || { echo "Falha ao adicionar $FZF_PATH ao PATH em $SHELL_CONFIG"; return 1; }
+  fi
+
+  # Verificar se o fzf já está configurado no arquivo
+  if grep -q "fzf/shell" "$SHELL_CONFIG" 2>/dev/null; then
+    echo "Configurações de completion e key-bindings do fzf já estão em $SHELL_CONFIG."
+  else
+    echo "Adicionando configurações de completion e key-bindings do fzf em $SHELL_CONFIG..."
     {
       echo ""
       echo "# Configuração do fzf"
-      echo '[ -f ~/.fzf/shell/completion.'"$SHELL_NAME"'] && source ~/.fzf/shell/completion.'"$SHELL_NAME"''
-      echo '[ -f ~/.fzf/shell/key-bindings.'"$SHELL_NAME"'] && source ~/.fzf/shell/key-bindings.'"$SHELL_NAME"''
-    } >> "$SHELL_CONFIG" || { echo "Falha ao adicionar configuração do fzf em $SHELL_CONFIG"; return 1; }
-    echo "Configuração do fzf adicionada com sucesso!"
+      echo '[ -f ~/.fzf/shell/completion.'"$SHELL_NAME"' ] && source ~/.fzf/shell/completion.'"$SHELL_NAME"''
+      echo '[ -f ~/.fzf/shell/key-bindings.'"$SHELL_NAME"' ] && source ~/.fzf/shell/key-bindings.'"$SHELL_NAME"''
+    } >> "$SHELL_CONFIG" || { echo "Falha ao adicionar configurações do fzf em $SHELL_CONFIG"; return 1; }
   fi
+  echo "Configuração do fzf concluída com sucesso!"
 }
 
 # Iniciar verificação de dependências
