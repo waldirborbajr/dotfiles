@@ -4,3 +4,4 @@
 --ignore=atuin/*
 --ignore=init.sh
 --ignore=install.sh
+--ignore=installgo.sh
