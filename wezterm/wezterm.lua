@@ -17,9 +17,7 @@ config.tab_bar_at_bottom = false
 config.enable_tab_bar = false
 
 config.font = wezterm.font_with_fallback({
-	"JetBrains Mono",
-	"Symbols Nerd Font Mono",
-	"Noto Color Emoji",
+	"JetBrains Mono Nerd Font",
 })
 config.font_size = 11.0
 config.default_cwd = wezterm.home_dir
