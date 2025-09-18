@@ -37,7 +37,13 @@ check_system_requirements() {
   fi
   if ! command -v git &> /dev/null; then
     echo "Git não encontrado. Instalando git..."
-    sudo nala install -y git || { echo "Falha ao instalar git"; exit 1; }
+    sudo apt update || { echo "Falha ao atualizar pacotes com apt"; exit 1; }
+    sudo apt install -y git || { echo "Falha ao instalar git"; exit 1; }
+  fi
+  if ! command -v nala &> /dev/null; then
+    echo "Nala não encontrado. Instalando nala..."
+    sudo apt update || { echo "Falha ao atualizar pacotes com apt"; exit 1; }
+    sudo apt install -y nala || { echo "Falha ao instalar nala"; exit 1; }
   fi
   if ! command -v fc-cache &> /dev/null; then
     echo "fontconfig não encontrado. Instalando fontconfig..."
@@ -89,6 +95,85 @@ configure_fzf() {
     } >> "$SHELL_CONFIG" || { echo "Falha ao adicionar configurações do fzf em $SHELL_CONFIG"; return 1; }
   fi
   echo "Configuração do fzf concluída com sucesso!"
+}
+
+# Função para configurar starship no shell padrão
+configure_starship() {
+  echo "Configurando starship no shell padrão..."
+  # Detectar o shell padrão
+  SHELL_NAME=$(basename "$SHELL")
+  case "$SHELL_NAME" in
+    bash)
+      SHELL_CONFIG="$HOME/.bashrc"
+      ;;
+    zsh)
+      SHELL_CONFIG="$HOME/.zshrc"
+      ;;
+    *)
+      echo "Shell $SHELL_NAME não suportado para configuração automática. Configure o starship manualmente."
+      return 1
+      ;;
+  esac
+
+  # Verificar se o starship já está configurado no arquivo
+  if grep -q "starship init" "$SHELL_CONFIG" 2>/dev/null; then
+    echo "Configuração do starship já está em $SHELL_CONFIG."
+  else
+    echo "Adicionando configuração do starship em $SHELL_CONFIG..."
+    {
+      echo ""
+      echo "# Configuração do starship"
+      echo 'eval "$(starship init '"$SHELL_NAME"')"'
+    } >> "$SHELL_CONFIG" || { echo "Falha ao adicionar configuração do starship em $SHELL_CONFIG"; return 1; }
+  fi
+  echo "Configuração do starship concluída com sucesso!"
+}
+
+# Função para configurar carapace no shell padrão
+configure_carapace() {
+  echo "Configurando carapace no shell padrão..."
+  # Detectar o shell padrão
+  SHELL_NAME=$(basename "$SHELL")
+  case "$SHELL_NAME" in
+    bash)
+      SHELL_CONFIG="$HOME/.bashrc"
+      ;;
+    zsh)
+      SHELL_CONFIG="$HOME/.zshrc"
+      ;;
+    *)
+      echo "Shell $SHELL_NAME não suportado para configuração automática. Configure o carapace manualmente."
+      return 1
+      ;;
+  esac
+
+  # Verificar se o carapace já está configurado no arquivo
+  if grep -q "carapace _carapace" "$SHELL_CONFIG" 2>/dev/null; then
+    echo "Configuração do carapace já está em $SHELL_CONFIG."
+  else
+    echo "Adicionando configuração do carapace em $SHELL_CONFIG..."
+    {
+      echo ""
+      echo "# Configuração do carapace"
+      echo 'source <(carapace _carapace '"$SHELL_NAME"')'
+    } >> "$SHELL_CONFIG" || { echo "Falha ao adicionar configuração do carapace em $SHELL_CONFIG"; return 1; }
+  fi
+  echo "Configuração do carapace concluída com sucesso!"
+}
+
+# Função para adicionar repositório do carapace
+add_carapace_repository() {
+  echo "Adicionando repositório do carapace..."
+  REPO_LINE="deb [trusted=yes] https://apt.fury.io/rsteube/ /"
+  SOURCES_DIR="/etc/apt/sources.list.d"
+  CARAPACE_SOURCE="$SOURCES_DIR/fury.list"
+  if [ -f "$CARAPACE_SOURCE" ] && grep -Fx "$REPO_LINE" "$CARAPACE_SOURCE" > /dev/null; then
+    echo "Repositório do carapace já está configurado em $CARAPACE_SOURCE."
+  else
+    echo "Adicionando repositório do carapace em $CARAPACE_SOURCE..."
+    sudo mkdir -p "$SOURCES_DIR" || { echo "Falha ao criar diretório $SOURCES_DIR"; exit 1; }
+    echo "$REPO_LINE" | sudo tee "$CARAPACE_SOURCE" > /dev/null || { echo "Falha ao adicionar repositório do carapace"; exit 1; }
+  fi
 }
 
 # Função para instalar JetBrains Mono Nerd Font
@@ -168,5 +253,19 @@ fi
 
 # Instalar JetBrains Mono Nerd Font
 install_jetbrains_mono_nerd_font
+
+# Instalar starship
+if ! check_installed starship; then
+  cargo install starship --locked || { echo "Falha ao instalar starship"; exit 1; }
+  configure_starship || { echo "Falha ao configurar starship"; exit 1; }
+fi
+
+# Instalar carapace
+if ! check_installed carapace; then
+  add_carapace_repository
+  sudo nala update || { echo "Falha ao atualizar pacotes"; exit 1; }
+  sudo nala install -y carapace-bin || { echo "Falha ao instalar carapace-bin"; exit 1; }
+  configure_carapace || { echo "Falha ao configurar carapace"; exit 1; }
+fi
 
 echo "Todas as ferramentas e fontes foram verificadas, instaladas e configuradas com sucesso!"

@@ -1,0 +1,12 @@
+# Carregar variáveis de ambiente
+source "$ZDOTDIR/exports.zsh"
+
+# Carregar aliases
+source "$ZDOTDIR/aliases.zsh"
+
+# Carregar plugins e temas
+source "$ZDOTDIR/plugins.zsh"
+
+# Prompt
+autoload -Uz promptinit && promptinit
+prompt pure

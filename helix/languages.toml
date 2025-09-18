@@ -4,7 +4,7 @@
 
 [language-server.gopls]
 command = "gopls"
-indent = { tab-width = 2, unit = "\t" }
+indent = { tab-width = 4, unit = "\t" }
 
 [language-server.gopls.config.hints]
 assignVariableTypes = true
@@ -30,7 +30,7 @@ auto-format = true
 comment-token = "//"
 block-comment-tokens = { start = "/*", end = "*/" }
 language-servers = ["gopls", "golangci-lint-lsp"]
-indent = { tab-width = 2, unit = "\t" }
+indent = { tab-width = 4, unit = "\t" }
 
 [language.debugger]
 name = "go"
@@ -84,7 +84,7 @@ file-types = [{ glob = "go.mod" }]
 auto-format = true
 comment-token = "//"
 language-servers = ["gopls"]
-indent = { tab-width = 2, unit = "\t" }
+indent = { tab-width = 4, unit = "\t" }
 
 [[grammar]]
 name = "gomod"
@@ -98,7 +98,7 @@ file-types = ["gotmpl"]
 comment-token = "//"
 block-comment-tokens = { start = "/*", end = "*/" }
 language-servers = ["gopls"]
-indent = { tab-width = 2, unit = " " }
+indent = { tab-width = 4, unit = " " }
 
 [[grammar]]
 name = "gotmpl"
@@ -112,7 +112,7 @@ file-types = [{ glob = "go.work" }]
 auto-format = true
 comment-token = "//"
 language-servers = ["gopls"]
-indent = { tab-width = 2, unit = "\t" }
+indent = { tab-width = 4, unit = "\t" }
 
 [[grammar]]
 name = "gowork"
