@@ -1,5 +1,56 @@
 # Functions
 
+# Transformei em função (mais seguro e legível)
+syshealth() {
+  echo "🧹 Limpando cache do apt/nala..."
+  sudo rm -rf /var/lib/apt/lists/*
+  sudo nala update
+  sudo nala upgrade -y
+  sudo nala autoremove -y
+  sudo nala autopurge -y
+  sudo nala clean
+
+  echo "📦 Atualizando Flatpak e Snap..."
+  flatpak update -y
+  flatpak uninstall --unused -y
+  sudo snap refresh
+
+  echo "⚙️ Atualizando Cargo e Go..."
+  cargo install-update -a
+  go install
+}
+
+dokerzap(){
+    # 1. Parar todos os containers
+  docker stop $(docker ps -aq)
+
+  # 2. Remover todos os containers
+  docker rm $(docker ps -aq)
+
+  # 3. Remover todas as imagens
+  docker rmi $(docker images -q)
+
+  # 4. Remover todos os volumes
+  docker volume prune -f
+
+  # 5. Remover todas as redes não utilizadas
+  docker network prune -f
+
+  # 6. Limpeza completa do sistema
+  docker system prune -a -f --volumes
+}
+
+dockernew(){
+  # Parar o serviço Docker completamente
+  sudo systemctl stop docker
+
+  # Remover todos os arquivos do Docker (EXTREMO - vai apagar TUDO)
+  sudo rm -rf /var/lib/docker/*
+
+  # Reiniciar o Docker
+  sudo systemctl start docker
+}
+
 zl() { zellij list-sessions }
 za() { zellij attach "$1" }
 zs() { zellij -s "$1" }
