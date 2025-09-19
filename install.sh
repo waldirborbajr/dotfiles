@@ -210,6 +210,11 @@ if ! check_installed zoxide; then
   cargo install zoxide --locked || { echo "Falha ao instalar zoxide"; exit 1; }
 fi
 
+# Instalar bat
+if ! check_installed bat; then
+  cargo install bat || { echo "Falha ao instalar bat"; exit 1; }
+fi
+
 # Instalar yazi
 if ! check_installed yazi; then
   cargo install --force yazi-build || { echo "Falha ao instalar yazi"; exit 1; }
