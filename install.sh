@@ -31,8 +31,7 @@ check_system_requirements() {
   fi
   if ! command -v go &> /dev/null; then
     sh ./installgo.sh
-    echo "Reinitcie o terminal para continuar a instalação"
-    # echo "Go não encontrado. Instale o Go antes de continuar: https://go.dev/doc/install"
+    echo "Reinicie o terminal para continuar a instalação"
     exit 1
   fi
   if ! command -v git &> /dev/null; then
@@ -51,25 +50,35 @@ check_system_requirements() {
   fi
 }
 
-# Função para configurar fzf no shell padrão
-configure_fzf() {
-  echo "Configurando fzf no shell padrão..."
-  # Detectar o shell padrão
+# Função para obter o arquivo de configuração do shell
+get_shell_config() {
   SHELL_NAME=$(basename "$SHELL")
   case "$SHELL_NAME" in
     bash)
-      SHELL_CONFIG="$HOME/.bashrc"
+      echo "$HOME/.bashrc"
       ;;
     zsh)
-      SHELL_CONFIG="$HOME/.zshrc"
+      if [ -n "$ZDOTDIR" ]; then
+        echo "$ZDOTDIR/.zshrc"
+      else
+        echo "$HOME/.zshrc"
+      fi
       ;;
     *)
-      echo "Shell $SHELL_NAME não suportado para configuração automática. Configure o fzf manualmente."
-      return 1
+      echo ""
       ;;
   esac
+}
 
-  # Adicionar ~/.fzf/bin ao PATH, se não estiver presente
+# Função para configurar fzf no shell padrão
+configure_fzf() {
+  echo "Configurando fzf no shell padrão..."
+  SHELL_CONFIG=$(get_shell_config)
+  if [ -z "$SHELL_CONFIG" ]; then
+    echo "Shell $SHELL não suportado para configuração automática. Configure o fzf manualmente."
+    return 1
+  fi
+
   FZF_PATH="$HOME/.fzf/bin"
   if grep -q "$FZF_PATH" "$SHELL_CONFIG" 2>/dev/null; then
     echo "O diretório $FZF_PATH já está no PATH em $SHELL_CONFIG."
@@ -79,10 +88,9 @@ configure_fzf() {
       echo ""
       echo "# Adicionando fzf ao PATH"
       echo 'export PATH="$PATH:'"$FZF_PATH"'"'
-    } >> "$SHELL_CONFIG" || { echo "Falha ao adicionar $FZF_PATH ao PATH em $SHELL_CONFIG"; return 1; }
+    } >> "$SHELL_CONFIG"
   fi
 
-  # Verificar se o fzf já está configurado no arquivo
   if grep -q "fzf/shell" "$SHELL_CONFIG" 2>/dev/null; then
     echo "Configurações de completion e key-bindings do fzf já estão em $SHELL_CONFIG."
   else
@@ -92,7 +100,7 @@ configure_fzf() {
       echo "# Configuração do fzf"
       echo '[ -f ~/.fzf/shell/completion.'"$SHELL_NAME"' ] && source ~/.fzf/shell/completion.'"$SHELL_NAME"''
       echo '[ -f ~/.fzf/shell/key-bindings.'"$SHELL_NAME"' ] && source ~/.fzf/shell/key-bindings.'"$SHELL_NAME"''
-    } >> "$SHELL_CONFIG" || { echo "Falha ao adicionar configurações do fzf em $SHELL_CONFIG"; return 1; }
+    } >> "$SHELL_CONFIG"
   fi
   echo "Configuração do fzf concluída com sucesso!"
 }
@@ -100,22 +108,12 @@ configure_fzf() {
 # Função para configurar starship no shell padrão
 configure_starship() {
   echo "Configurando starship no shell padrão..."
-  # Detectar o shell padrão
-  SHELL_NAME=$(basename "$SHELL")
-  case "$SHELL_NAME" in
-    bash)
-      SHELL_CONFIG="$HOME/.bashrc"
-      ;;
-    zsh)
-      SHELL_CONFIG="$HOME/.zshrc"
-      ;;
-    *)
-      echo "Shell $SHELL_NAME não suportado para configuração automática. Configure o starship manualmente."
-      return 1
-      ;;
-  esac
+  SHELL_CONFIG=$(get_shell_config)
+  if [ -z "$SHELL_CONFIG" ]; then
+    echo "Shell $SHELL não suportado para configuração automática. Configure o starship manualmente."
+    return 1
+  fi
 
-  # Verificar se o starship já está configurado no arquivo
   if grep -q "starship init" "$SHELL_CONFIG" 2>/dev/null; then
     echo "Configuração do starship já está em $SHELL_CONFIG."
   else
@@ -124,7 +122,7 @@ configure_starship() {
       echo ""
       echo "# Configuração do starship"
       echo 'eval "$(starship init '"$SHELL_NAME"')"'
-    } >> "$SHELL_CONFIG" || { echo "Falha ao adicionar configuração do starship em $SHELL_CONFIG"; return 1; }
+    } >> "$SHELL_CONFIG"
   fi
   echo "Configuração do starship concluída com sucesso!"
 }
@@ -132,22 +130,12 @@ configure_starship() {
 # Função para configurar carapace no shell padrão
 configure_carapace() {
   echo "Configurando carapace no shell padrão..."
-  # Detectar o shell padrão
-  SHELL_NAME=$(basename "$SHELL")
-  case "$SHELL_NAME" in
-    bash)
-      SHELL_CONFIG="$HOME/.bashrc"
-      ;;
-    zsh)
-      SHELL_CONFIG="$HOME/.zshrc"
-      ;;
-    *)
-      echo "Shell $SHELL_NAME não suportado para configuração automática. Configure o carapace manualmente."
-      return 1
-      ;;
-  esac
+  SHELL_CONFIG=$(get_shell_config)
+  if [ -z "$SHELL_CONFIG" ]; then
+    echo "Shell $SHELL não suportado para configuração automática. Configure o carapace manualmente."
+    return 1
+  fi
 
-  # Verificar se o carapace já está configurado no arquivo
   if grep -q "carapace _carapace" "$SHELL_CONFIG" 2>/dev/null; then
     echo "Configuração do carapace já está em $SHELL_CONFIG."
   else
@@ -156,7 +144,7 @@ configure_carapace() {
       echo ""
       echo "# Configuração do carapace"
       echo 'source <(carapace _carapace '"$SHELL_NAME"')'
-    } >> "$SHELL_CONFIG" || { echo "Falha ao adicionar configuração do carapace em $SHELL_CONFIG"; return 1; }
+    } >> "$SHELL_CONFIG"
   fi
   echo "Configuração do carapace concluída com sucesso!"
 }
@@ -171,8 +159,8 @@ add_carapace_repository() {
     echo "Repositório do carapace já está configurado em $CARAPACE_SOURCE."
   else
     echo "Adicionando repositório do carapace em $CARAPACE_SOURCE..."
-    sudo mkdir -p "$SOURCES_DIR" || { echo "Falha ao criar diretório $SOURCES_DIR"; exit 1; }
-    echo "$REPO_LINE" | sudo tee "$CARAPACE_SOURCE" > /dev/null || { echo "Falha ao adicionar repositório do carapace"; exit 1; }
+    sudo mkdir -p "$SOURCES_DIR"
+    echo "$REPO_LINE" | sudo tee "$CARAPACE_SOURCE" > /dev/null
   fi
 }
 
@@ -181,13 +169,13 @@ install_jetbrains_mono_nerd_font() {
   if ! check_font_installed "JetBrainsMono Nerd Font"; then
     echo "Baixando JetBrains Mono Nerd Font..."
     FONT_DIR="$HOME/.local/share/fonts"
-    mkdir -p "$FONT_DIR" || { echo "Falha ao criar diretório $FONT_DIR"; exit 1; }
+    mkdir -p "$FONT_DIR"
     FONT_ZIP="$FONT_DIR/JetBrainsMono.zip"
-    curl -sL https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip -o "$FONT_ZIP" || { echo "Falha ao baixar JetBrains Mono Nerd Font"; exit 1; }
-    unzip -o "$FONT_ZIP" -d "$FONT_DIR" || { echo "Falha ao descompactar JetBrains Mono Nerd Font"; exit 1; }
-    rm "$FONT_ZIP" || { echo "Falha ao remover arquivo zip"; exit 1; }
+    curl -sL https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip -o "$FONT_ZIP"
+    unzip -o "$FONT_ZIP" -d "$FONT_DIR"
+    rm "$FONT_ZIP"
     echo "Atualizando cache de fontes..."
-    fc-cache -fv || { echo "Falha ao atualizar cache de fontes"; exit 1; }
+    fc-cache -fv
     echo "JetBrains Mono Nerd Font instalado com sucesso!"
   fi
 }
@@ -233,9 +221,9 @@ fi
 # Instalar fzf
 if ! check_installed fzf; then
   echo "Clonando e instalando fzf..."
-  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf || { echo "Falha ao clonar fzf"; exit 1; }
-  ~/.fzf/install --all --no-update-rc || { echo "Falha ao instalar fzf"; exit 1; }
-  configure_fzf || { echo "Falha ao configurar fzf"; exit 1; }
+  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  ~/.fzf/install --all --no-update-rc
+  configure_fzf
 fi
 
 # Instalar LazySQL
@@ -256,9 +244,24 @@ fi
 # Instalar helix
 if ! check_installed hx; then
   echo "Adicionando repositório do Helix e instalando..."
-  sudo add-apt-repository ppa:maveonair/helix-editor -y || { echo "Falha ao adicionar repositório do Helix"; exit 1; }
-  sudo nala update || { echo "Falha ao atualizar pacotes"; exit 1; }
-  sudo nala install -y helix || { echo "Falha ao instalar helix"; exit 1; }
+  sudo add-apt-repository ppa:maveonair/helix-editor -y
+  sudo nala update
+  sudo nala install -y helix
+fi
+
+# Instalar libs Go (se Go estiver instalado)
+if command -v go &> /dev/null; then
+  echo "Go encontrado. Instalando libs necessárias..."
+
+  go install golang.org/x/tools/gopls@latest                               || { echo "Falha ao instalar gopls"; exit 1; }
+  go install github.com/go-delve/delve/cmd/dlv@latest                      || { echo "Falha ao instalar delve"; exit 1; }
+  go install golang.org/x/tools/cmd/goimports@latest                       || { echo "Falha ao instalar goimports"; exit 1; }
+  go install github.com/nametake/golangci-lint-langserver@latest           || { echo "Falha ao instalar golangci-lint-langserver"; exit 1; }
+  go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest || { echo "Falha ao instalar golangci-lint"; exit 1; }
+
+  echo "Todas as libs Go foram instaladas com sucesso!"
+else
+  echo "Go não encontrado. Pulando instalação das libs Go."
 fi
 
 # Instalar JetBrains Mono Nerd Font
@@ -266,16 +269,16 @@ install_jetbrains_mono_nerd_font
 
 # Instalar starship
 if ! check_installed starship; then
-  cargo install starship --locked || { echo "Falha ao instalar starship"; exit 1; }
-  configure_starship || { echo "Falha ao configurar starship"; exit 1; }
+  cargo install starship --locked
+  configure_starship
 fi
 
 # Instalar carapace
 if ! check_installed carapace; then
   add_carapace_repository
-  sudo nala update || { echo "Falha ao atualizar pacotes"; exit 1; }
-  sudo nala install -y carapace-bin || { echo "Falha ao instalar carapace-bin"; exit 1; }
-  configure_carapace || { echo "Falha ao configurar carapace"; exit 1; }
+  sudo nala update
+  sudo nala install -y carapace-bin
+  configure_carapace
 fi
 
 echo "Todas as ferramentas e fontes foram verificadas, instaladas e configuradas com sucesso!"
