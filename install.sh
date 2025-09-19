@@ -215,6 +215,11 @@ if ! check_installed bat; then
   cargo install bat || { echo "Falha ao instalar bat"; exit 1; }
 fi
 
+# Instalar eza
+if ! check_installed eza; then
+  cargo install eza || { echo "Falha ao instalar eza"; exit 1; }
+fi
+
 # Instalar yazi
 if ! check_installed yazi; then
   cargo install --force yazi-build || { echo "Falha ao instalar yazi"; exit 1; }
