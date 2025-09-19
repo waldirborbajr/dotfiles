@@ -4,7 +4,7 @@ local act = wezterm.action
 
 -- Config builder
 local config = wezterm.config_builder()
-local modkey = "ALT"
+-- local modkey = "ALT"
 
 -- ======= APPEARANCE =======
 config.color_scheme = "Catppuccin Mocha"
@@ -47,65 +47,65 @@ config.macos_window_background_blur = 10
 config.default_cursor_style = "SteadyBar"
 
 -- ======= KEYBINDINGS =======
-config.keys = {
-	-- Spawn new window
-	{
-		key = "n",
-		mods = "CMD", -- 'CMD' on macOS, 'CTRL|SHIFT' on Linux
-		action = act.SpawnCommandInNewWindow({
-			cwd = wezterm.home_dir,
-		}),
-	},
+-- config.keys = {
+-- 	-- Spawn new window
+-- 	{
+-- 		key = "n",
+-- 		mods = "CMD", -- 'CMD' on macOS, 'CTRL|SHIFT' on Linux
+-- 		action = act.SpawnCommandInNewWindow({
+-- 			cwd = wezterm.home_dir,
+-- 		}),
+-- 	},
 
-	-- Spawn a new tab
-	{ key = "t", mods = modkey, action = act.SpawnTab("CurrentPaneDomain") },
+-- 	-- Spawn a new tab
+-- 	{ key = "t", mods = modkey, action = act.SpawnTab("CurrentPaneDomain") },
 
-	-- Close current tab without prompt
-	{ key = "w", mods = modkey, action = act.CloseCurrentTab({ confirm = false }) },
+-- 	-- Close current tab without prompt
+-- 	{ key = "w", mods = modkey, action = act.CloseCurrentTab({ confirm = false }) },
 
-	-- Splitting panes (Neovim-style)
-	{ key = "\\", mods = modkey, action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-	{ key = "-", mods = modkey, action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+-- 	-- Splitting panes (Neovim-style)
+-- 	{ key = "\\", mods = modkey, action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+-- 	{ key = "-", mods = modkey, action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
 
-	-- Navigate between panes with [Alt]+[H/J/K/L]
-	{ key = "h", mods = modkey, action = act.ActivatePaneDirection("Left") },
-	{ key = "j", mods = modkey, action = act.ActivatePaneDirection("Down") },
-	{ key = "k", mods = modkey, action = act.ActivatePaneDirection("Up") },
-	{ key = "l", mods = modkey, action = act.ActivatePaneDirection("Right") },
+-- 	-- Navigate between panes with [Alt]+[H/J/K/L]
+-- 	{ key = "h", mods = modkey, action = act.ActivatePaneDirection("Left") },
+-- 	{ key = "j", mods = modkey, action = act.ActivatePaneDirection("Down") },
+-- 	{ key = "k", mods = modkey, action = act.ActivatePaneDirection("Up") },
+-- 	{ key = "l", mods = modkey, action = act.ActivatePaneDirection("Right") },
 
-	-- Resize panes with [Alt+Shift]+[H/J/K/L]
-	{ key = "H", mods = "ALT|SHIFT", action = act.AdjustPaneSize({ "Left", 1 }) },
-	{ key = "J", mods = "ALT|SHIFT", action = act.AdjustPaneSize({ "Down", 1 }) },
-	{ key = "K", mods = "ALT|SHIFT", action = act.AdjustPaneSize({ "Up", 1 }) },
-	{ key = "L", mods = "ALT|SHIFT", action = act.AdjustPaneSize({ "Right", 1 }) },
+-- 	-- Resize panes with [Alt+Shift]+[H/J/K/L]
+-- 	{ key = "H", mods = "ALT|SHIFT", action = act.AdjustPaneSize({ "Left", 1 }) },
+-- 	{ key = "J", mods = "ALT|SHIFT", action = act.AdjustPaneSize({ "Down", 1 }) },
+-- 	{ key = "K", mods = "ALT|SHIFT", action = act.AdjustPaneSize({ "Up", 1 }) },
+-- 	{ key = "L", mods = "ALT|SHIFT", action = act.AdjustPaneSize({ "Right", 1 }) },
 
-	-- Clipboard
-	{ key = "c", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") },
-	{ key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") },
+-- 	-- Clipboard
+-- 	{ key = "c", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") },
+-- 	{ key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") },
 
-	-- ===== Tabs (tmux-style) =====
-	-- Move between tabs
-	{ key = "[", mods = "ALT|SHIFT", action = act.ActivateTabRelative(-1) },
-	{ key = "]", mods = "ALT|SHIFT", action = act.ActivateTabRelative(1) },
+-- 	-- ===== Tabs (tmux-style) =====
+-- 	-- Move between tabs
+-- 	{ key = "[", mods = "ALT|SHIFT", action = act.ActivateTabRelative(-1) },
+-- 	{ key = "]", mods = "ALT|SHIFT", action = act.ActivateTabRelative(1) },
 
-	-- Reorder tabs
-	{ key = "LeftArrow", mods = "ALT|SHIFT", action = act.MoveTabRelative(-1) },
-	{ key = "RightArrow", mods = "ALT|SHIFT", action = act.MoveTabRelative(1) },
-}
+-- 	-- Reorder tabs
+-- 	{ key = "LeftArrow", mods = "ALT|SHIFT", action = act.MoveTabRelative(-1) },
+-- 	{ key = "RightArrow", mods = "ALT|SHIFT", action = act.MoveTabRelative(1) },
+-- }
 
--- Dynamically generate [Alt]+[1..9] tab switching
-for i = 1, 9 do
-	table.insert(config.keys, {
-		key = tostring(i),
-		mods = modkey,
-		action = act.ActivateTab(i - 1),
-	})
-end
-table.insert(config.keys, {
-	key = "0",
-	mods = modkey,
-	action = act.ActivateTab(9),
-})
+-- -- Dynamically generate [Alt]+[1..9] tab switching
+-- for i = 1, 9 do
+-- 	table.insert(config.keys, {
+-- 		key = tostring(i),
+-- 		mods = modkey,
+-- 		action = act.ActivateTab(i - 1),
+-- 	})
+-- end
+-- table.insert(config.keys, {
+-- 	key = "0",
+-- 	mods = modkey,
+-- 	action = act.ActivateTab(9),
+-- })
 
 -- ======= MOUSE BINDINGS =======
 config.mouse_bindings = {
