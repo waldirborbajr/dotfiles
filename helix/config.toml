@@ -55,63 +55,83 @@ git-global = false
 git-exclude = false
 
 [editor.indent-guides]
-render = false
-#character = "╎" # Some characters that work well: "▏", "┆", "┊", "⸽"
-#skip-levels = 1
+render = true
 
 [keys.normal]
-C-s = ":w!"
-C-r = ":config-open"
-C-S-r = ":config-reload"
-C-l = ":o ~/.config/helix/languages.toml"
-C-A-l = ":o ~/.config/helix/lsp-ai.json"
-A-l = ":o ~/Library/Caches/lsp-ai/lsp-ai.log"
-"S-ret" = ["open_above", "normal_mode"]
-"ret" = ["open_below", "normal_mode"]
-S-x = "extend_line_above"
-S-up = [ # scroll selections up one line
-  "ensure_selections_forward",
-  "extend_to_line_bounds",
-  "extend_char_right",
-  "extend_char_left",
-  "delete_selection",
-  "move_line_up",
-  "add_newline_above",
-  "move_line_up",
-  "replace_with_yanked",
+"%" = "match_brackets"
+"*" = ["move_char_right", "move_prev_word_start", "move_next_word_end", "search_selection", "search_next"]
+"#" = ["move_char_right", "move_prev_word_start", "move_next_word_end", "search_selection", "search_prev"]
+"$" = "goto_line_end"
+0 = "goto_line_start"
+G = "goto_file_end"
+C-e = [
+  ':sh rm -f /tmp/unique-file',
+  ':insert-output yazi %{buffer_name} --chooser-file=/tmp/unique-file',
+  ':insert-output echo "\x1b[?1049h\x1b[?2004h" > /dev/tty',
+  ':open %sh{cat /tmp/unique-file}',
+  ':redraw',
 ]
-S-down = [ # scroll selections down one line
-  "ensure_selections_forward",
-  "extend_to_line_bounds",
-  "extend_char_right",
-  "extend_char_left",
-  "delete_selection",
-  "add_newline_below",
-  "move_line_down",
-  "replace_with_yanked",
-]
-# C-g = [
-#   ":write-all",
-#   ":sh zellij run -c -f --width 80%% --height 80%% -x 10%% -y 10%% --name lazygit -- lazygit",
-# ]
-C-n = ":buffer-next"
-C-p = ":buffer-previous"
-C-q = ":bc"
-A-y = ":sh zellij run -n Yazi -c -f -x 10%% -y 10%% --width 80%% --height 80%% -- bash ~/.config/helix/yazi-picker.sh open %{buffer_name}"
 
-# lazygit
-A-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
-
-[keys.insert]
-C-s = ["normal_mode", ":w!"]
-"A-ret" = ["normal_mode", "open_below"]
-C-space = "completion"
-
-[keys.normal.space.space]
-b = ":sh git blame -L %{cursor_line},%{cursor_line} %{buffer_name}"
-s = ":sh zellij run -c -f --width 80%% --height 80%% -x 10%% -y 10%% --name scooter -- scooter"
+[keys.select]
+i = "select_textobject_inner"
+a = "select_textobject_around"
 
 [keys.normal.space]
-e = ":sh zellij run -n Yazi -c -f -x 10%% -y 10%% --width 80%% --height 80%% -- bash ~/.config/helix/yazi-picker.sh open %{buffer_name}"
-# f = "file_explorer_in_current_directory"
-# F = "file_explorer_in_current_buffer_directory"
+l = ":toggle lsp.display-inlay-hints"
+
+# [keys.normal]
+# C-s = ":w!"
+# C-r = ":config-open"
+# C-S-r = ":config-reload"
+# C-l = ":o ~/.config/helix/languages.toml"
+# C-A-l = ":o ~/.config/helix/lsp-ai.json"
+# A-l = ":o ~/Library/Caches/lsp-ai/lsp-ai.log"
+# "S-ret" = ["open_above", "normal_mode"]
+# "ret" = ["open_below", "normal_mode"]
+# S-x = "extend_line_above"
+# S-up = [ # scroll selections up one line
+#   "ensure_selections_forward",
+#   "extend_to_line_bounds",
+#   "extend_char_right",
+#   "extend_char_left",
+#   "delete_selection",
+#   "move_line_up",
+#   "add_newline_above",
+#   "move_line_up",
+#   "replace_with_yanked",
+# ]
+# S-down = [ # scroll selections down one line
+#   "ensure_selections_forward",
+#   "extend_to_line_bounds",
+#   "extend_char_right",
+#   "extend_char_left",
+#   "delete_selection",
+#   "add_newline_below",
+#   "move_line_down",
+#   "replace_with_yanked",
+# ]
+# # C-g = [
+# #   ":write-all",
+# #   ":sh zellij run -c -f --width 80%% --height 80%% -x 10%% -y 10%% --name lazygit -- lazygit",
+# # ]
+# C-n = ":buffer-next"
+# C-p = ":buffer-previous"
+# C-q = ":bc"
+# A-y = ":sh zellij run -n Yazi -c -f -x 10%% -y 10%% --width 80%% --height 80%% -- bash ~/.config/helix/yazi-picker.sh open %{buffer_name}"
+
+# # lazygit
+# A-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw"]
+
+# [keys.insert]
+# C-s = ["normal_mode", ":w!"]
+# "A-ret" = ["normal_mode", "open_below"]
+# C-space = "completion"
+
+# [keys.normal.space.space]
+# b = ":sh git blame -L %{cursor_line},%{cursor_line} %{buffer_name}"
+# s = ":sh zellij run -c -f --width 80%% --height 80%% -x 10%% -y 10%% --name scooter -- scooter"
+
+# [keys.normal.space]
+# e = ":sh zellij run -n Yazi -c -f -x 10%% -y 10%% --width 80%% --height 80%% -- bash ~/.config/helix/yazi-picker.sh open %{buffer_name}"
+# # f = "file_explorer_in_current_directory"
+# # F = "file_explorer_in_current_buffer_directory"
