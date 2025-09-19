@@ -22,6 +22,22 @@ check_font_installed() {
   fi
 }
 
+# Função para obter o caminho do arquivo de configuração do shell
+get_shell_config() {
+  local SHELL_NAME=$(basename "$SHELL")
+  case "$SHELL_NAME" in
+    bash)
+      echo "$HOME/.bashrc"
+      ;;
+    zsh)
+      echo "${ZDOTDIR:-$HOME}/.zshrc"
+      ;;
+    *)
+      echo ""
+      ;;
+  esac
+}
+
 # Função para verificar e instalar dependências do sistema
 check_system_requirements() {
   echo "Verificando dependências do sistema..."
@@ -31,8 +47,7 @@ check_system_requirements() {
   fi
   if ! command -v go &> /dev/null; then
     sh ./installgo.sh
-    echo "Reinitcie o terminal para continuar a instalação"
-    # echo "Go não encontrado. Instale o Go antes de continuar: https://go.dev/doc/install"
+    echo "Reinicie o terminal para continuar a instalação"
     exit 1
   fi
   if ! command -v git &> /dev/null; then
@@ -54,22 +69,13 @@ check_system_requirements() {
 # Função para configurar fzf no shell padrão
 configure_fzf() {
   echo "Configurando fzf no shell padrão..."
-  # Detectar o shell padrão
   SHELL_NAME=$(basename "$SHELL")
-  case "$SHELL_NAME" in
-    bash)
-      SHELL_CONFIG="$HOME/.bashrc"
-      ;;
-    zsh)
-      SHELL_CONFIG="$HOME/.zshrc"
-      ;;
-    *)
-      echo "Shell $SHELL_NAME não suportado para configuração automática. Configure o fzf manualmente."
-      return 1
-      ;;
-  esac
+  SHELL_CONFIG=$(get_shell_config)
+  if [[ -z "$SHELL_CONFIG" ]]; then
+    echo "Shell $SHELL_NAME não suportado para configuração automática. Configure o fzf manualmente."
+    return 1
+  fi
 
-  # Adicionar ~/.fzf/bin ao PATH, se não estiver presente
   FZF_PATH="$HOME/.fzf/bin"
   if grep -q "$FZF_PATH" "$SHELL_CONFIG" 2>/dev/null; then
     echo "O diretório $FZF_PATH já está no PATH em $SHELL_CONFIG."
@@ -82,7 +88,6 @@ configure_fzf() {
     } >> "$SHELL_CONFIG" || { echo "Falha ao adicionar $FZF_PATH ao PATH em $SHELL_CONFIG"; return 1; }
   fi
 
-  # Verificar se o fzf já está configurado no arquivo
   if grep -q "fzf/shell" "$SHELL_CONFIG" 2>/dev/null; then
     echo "Configurações de completion e key-bindings do fzf já estão em $SHELL_CONFIG."
   else
@@ -100,22 +105,13 @@ configure_fzf() {
 # Função para configurar starship no shell padrão
 configure_starship() {
   echo "Configurando starship no shell padrão..."
-  # Detectar o shell padrão
   SHELL_NAME=$(basename "$SHELL")
-  case "$SHELL_NAME" in
-    bash)
-      SHELL_CONFIG="$HOME/.bashrc"
-      ;;
-    zsh)
-      SHELL_CONFIG="$HOME/.zshrc"
-      ;;
-    *)
-      echo "Shell $SHELL_NAME não suportado para configuração automática. Configure o starship manualmente."
-      return 1
-      ;;
-  esac
+  SHELL_CONFIG=$(get_shell_config)
+  if [[ -z "$SHELL_CONFIG" ]]; then
+    echo "Shell $SHELL_NAME não suportado para configuração automática. Configure o starship manualmente."
+    return 1
+  fi
 
-  # Verificar se o starship já está configurado no arquivo
   if grep -q "starship init" "$SHELL_CONFIG" 2>/dev/null; then
     echo "Configuração do starship já está em $SHELL_CONFIG."
   else
@@ -132,22 +128,13 @@ configure_starship() {
 # Função para configurar carapace no shell padrão
 configure_carapace() {
   echo "Configurando carapace no shell padrão..."
-  # Detectar o shell padrão
   SHELL_NAME=$(basename "$SHELL")
-  case "$SHELL_NAME" in
-    bash)
-      SHELL_CONFIG="$HOME/.bashrc"
-      ;;
-    zsh)
-      SHELL_CONFIG="$HOME/.zshrc"
-      ;;
-    *)
-      echo "Shell $SHELL_NAME não suportado para configuração automática. Configure o carapace manualmente."
-      return 1
-      ;;
-  esac
+  SHELL_CONFIG=$(get_shell_config)
+  if [[ -z "$SHELL_CONFIG" ]]; then
+    echo "Shell $SHELL_NAME não suportado para configuração automática. Configure o carapace manualmente."
+    return 1
+  fi
 
-  # Verificar se o carapace já está configurado no arquivo
   if grep -q "carapace _carapace" "$SHELL_CONFIG" 2>/dev/null; then
     echo "Configuração do carapace já está em $SHELL_CONFIG."
   else
@@ -159,6 +146,44 @@ configure_carapace() {
     } >> "$SHELL_CONFIG" || { echo "Falha ao adicionar configuração do carapace em $SHELL_CONFIG"; return 1; }
   fi
   echo "Configuração do carapace concluída com sucesso!"
+}
+
+# Função para configurar zinit e fzf-tab no Zsh
+configure_zinit_fzftab() {
+  echo "Configurando zinit e fzf-tab no Zsh..."
+  SHELL_NAME=$(basename "$SHELL")
+  if [[ "$SHELL_NAME" != "zsh" ]]; then
+    echo "zinit e fzf-tab são suportados apenas no Zsh. Pulando configuração."
+    return 1
+  fi
+  SHELL_CONFIG=$(get_shell_config)
+
+  # Verificar se o zinit já está configurado
+  if grep -q "zinit self-update" "$SHELL_CONFIG" 2>/dev/null; then
+    echo "Configuração do zinit já está em $SHELL_CONFIG."
+  else
+    echo "Adicionando configuração do zinit em $SHELL_CONFIG..."
+    {
+      echo ""
+      echo "# Configuração do zinit"
+      echo '[[ -f "$HOME/.zinit/bin/zinit.zsh" ]] && source "$HOME/.zinit/bin/zinit.zsh" || { echo "zinit não encontrado"; exit 1; }'
+      echo 'autoload -Uz _zinit'
+      echo '(( ${+_comps} )) && _comps[zinit]=_zinit'
+    } >> "$SHELL_CONFIG" || { echo "Falha ao adicionar configuração do zinit em $SHELL_CONFIG"; return 1; }
+  fi
+
+  # Adicionar fzf-tab via zinit
+  if grep -q "zinit light Aloxaf/fzf-tab" "$SHELL_CONFIG" 2>/dev/null; then
+    echo "fzf-tab já está configurado em $SHELL_CONFIG."
+  else
+    echo "Adicionando fzf-tab via zinit em $SHELL_CONFIG..."
+    {
+      echo ""
+      echo "# Configuração do fzf-tab via zinit"
+      echo 'zinit light Aloxaf/fzf-tab'
+    } >> "$SHELL_CONFIG" || { echo "Falha ao adicionar fzf-tab em $SHELL_CONFIG"; return 1; }
+  fi
+  echo "Configuração do zinit e fzf-tab concluída com sucesso!"
 }
 
 # Função para adicionar repositório do carapace
@@ -194,6 +219,13 @@ install_jetbrains_mono_nerd_font() {
 
 # Iniciar verificação de dependências
 check_system_requirements
+
+# Instalar zinit
+if ! [[ -d "$HOME/.zinit/bin" ]]; then
+  echo "Instalando zinit..."
+  git clone https://github.com/zdharma-continuum/zinit.git "$HOME/.zinit/bin" || { echo "Falha ao clonar zinit"; exit 1; }
+fi
+configure_zinit_fzftab || { echo "Falha ao configurar zinit e fzf-tab"; exit 1; }
 
 # Instalar fd-find
 if ! check_installed fd; then
