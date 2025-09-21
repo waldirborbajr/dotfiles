@@ -76,12 +76,18 @@ render = true
 "$" = "goto_line_end"
 0 = "goto_line_start"
 G = "goto_file_end"
-C-e = [
+
+# lazygit
+C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw", ":rla"]
+# yazi
+C-y = [
   ':sh rm -f /tmp/unique-file',
   ':insert-output yazi %{buffer_name} --chooser-file=/tmp/unique-file',
   ':insert-output echo "\x1b[?1049h\x1b[?2004h" > /dev/tty',
   ':open %sh{cat /tmp/unique-file}',
   ':redraw',
+  ':set mouse false',
+  ':set mouse true',
 ]
 
 [keys.select]
