@@ -6,9 +6,9 @@ check_installed() { command -v "$1" &>/dev/null; }
 # Obtém arquivo de configuração do shell (respeita $ZDOTDIR)
 get_shell_config() {
   case "$(basename "$SHELL")" in
-    bash) echo "$HOME/.bashrc" ;;
-    zsh)  echo "${ZDOTDIR:-$HOME}/.zshrc" ;;
-    *)    echo "" ;;
+  bash) echo "$HOME/.bashrc" ;;
+  zsh) echo "${ZDOTDIR:-$HOME}/.zshrc" ;;
+  *) echo "" ;;
   esac
 }
 
@@ -17,7 +17,10 @@ add_to_shell_config() {
   local line="$1" desc="$2"
   local cfg="$(get_shell_config)"
   [ -z "$cfg" ] && echo "Shell não suportado. Configure $desc manualmente." && return
-  grep -qF "$line" "$cfg" 2>/dev/null || { echo "Configurando $desc..."; echo -e "\n$line" >> "$cfg"; }
+  grep -qF "$line" "$cfg" 2>/dev/null || {
+    echo "Configurando $desc..."
+    echo -e "\n$line" >>"$cfg"
+  }
 }
 
 # Dependências básicas
@@ -25,10 +28,13 @@ check_system_requirements() {
   for cmd in cargo git nala fc-cache; do
     if ! check_installed $cmd; then
       case $cmd in
-        cargo) echo "Instale Rust antes de continuar: https://www.rust-lang.org/tools/install"; exit 1 ;;
-        git)   sudo apt update && sudo apt install -y git ;;
-        nala)  sudo apt update && sudo apt install -y nala ;;
-        fc-cache) sudo nala install -y fontconfig ;;
+      cargo)
+        echo "Instale Rust antes de continuar: https://www.rust-lang.org/tools/install"
+        exit 1
+        ;;
+      git) sudo apt update && sudo apt install -y git ;;
+      nala) sudo apt update && sudo apt install -y nala ;;
+      fc-cache) sudo nala install -y fontconfig ;;
       esac
     fi
   done
@@ -40,17 +46,20 @@ install_tools() {
   declare -A cargo_tools=(
     [fd]="fd-find" [rg]="ripgrep" [zoxide]="zoxide --locked"
     [bat]="bat" [eza]="eza" [yazi]="--force yazi-build"
-    [cargo-install-update]="cargo-update" [starship]="starship --locked"
+    [cargo - install - update]="cargo-update" [starship]="starship --locked"
   )
   for bin in "${!cargo_tools[@]}"; do
     check_installed "$bin" || cargo install ${cargo_tools[$bin]}
   done
 
-  check_installed fzf || { git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --all --no-update-rc; add_to_shell_config '# fzf' "fzf"; }
-  check_installed lazysql   || go install github.com/jorgerojas26/lazysql@latest
-  check_installed lazygit   || go install github.com/jesseduffield/lazygit@latest
-  check_installed lazydocker|| go install github.com/jesseduffield/lazydocker@latest
-  check_installed hx        || { sudo add-apt-repository ppa:maveonair/helix-editor -y && sudo nala update && sudo nala install -y helix; }
+  check_installed fzf || {
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --all --no-update-rc
+    add_to_shell_config '# fzf' "fzf"
+  }
+  check_installed lazysql || go install github.com/jorgerojas26/lazysql@latest
+  check_installed lazygit || go install github.com/jesseduffield/lazygit@latest
+  check_installed lazydocker || go install github.com/jesseduffield/lazydocker@latest
+  check_installed hx || { sudo add-apt-repository ppa:maveonair/helix-editor -y && sudo nala update && sudo nala install -y helix; }
 }
 
 # Instala libs Go extras

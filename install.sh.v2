@@ -1,0 +1,141 @@
+#!/bin/bash
+
+# ===========================================
+# Funções auxiliares
+# ===========================================
+
+check_installed() {
+  if command -v "$1" &> /dev/null; then
+    echo "$1 já está instalado."
+    return 0
+  else
+    echo "$1 não está instalado. Instalando..."
+    return 1
+  fi
+}
+
+check_font_installed() {
+  if fc-list | grep -qi "$1"; then
+    echo "A fonte $1 já está instalada."
+    return 0
+  else
+    echo "A fonte $1 não está instalada. Instalando..."
+    return 1
+  fi
+}
+
+check_system_requirements() {
+  echo "Verificando dependências do sistema..."
+  if ! command -v cargo &> /dev/null; then
+    echo "Cargo não encontrado. Instale o Rust antes de continuar: https://www.rust-lang.org/tools/install"
+    exit 1
+  fi
+  if ! command -v go &> /dev/null; then
+    sh ./installgo.sh
+    echo "Reinicie o terminal para continuar a instalação"
+    exit 1
+  fi
+  if ! command -v git &> /dev/null; then
+    sudo apt update && sudo apt install -y git || exit 1
+  fi
+  if ! command -v nala &> /dev/null; then
+    sudo apt update && sudo apt install -y nala || exit 1
+  fi
+  if ! command -v fc-cache &> /dev/null; then
+    sudo nala install -y fontconfig || exit 1
+  fi
+}
+
+# ===========================================
+# Configuração do ambiente Zsh
+# ===========================================
+
+configure_zsh_environment() {
+  echo "Configurando ambiente Zsh..."
+
+  ZDOTDIR_TARGET="$HOME/.config/zshrc"
+  mkdir -p "$ZDOTDIR_TARGET"
+
+  # Criar ~/.zshenv se não existir
+  if [ ! -f "$HOME/.zshenv" ]; then
+    echo "Criando ~/.zshenv..."
+    cat << 'EOF' > "$HOME/.zshenv"
+. "$HOME/.cargo/env"
+export ZDOTDIR="$HOME/.config/zshrc"
+EOF
+  fi
+
+  echo "✅ Ambiente Zsh configurado para usar $ZDOTDIR_TARGET"
+}
+
+# ===========================================
+# Instalações adicionais
+# ===========================================
+
+install_jetbrains_mono_nerd_font() {
+  if ! check_font_installed "JetBrainsMono Nerd Font"; then
+    FONT_DIR="$HOME/.local/share/fonts"
+    mkdir -p "$FONT_DIR"
+    FONT_ZIP="$FONT_DIR/JetBrainsMono.zip"
+    curl -sL https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip -o "$FONT_ZIP" || exit 1
+    unzip -o "$FONT_ZIP" -d "$FONT_DIR" || exit 1
+    rm "$FONT_ZIP"
+    fc-cache -fv
+  fi
+}
+
+add_carapace_repository() {
+  REPO_LINE="deb [trusted=yes] https://apt.fury.io/rsteube/ /"
+  SOURCES_DIR="/etc/apt/sources.list.d"
+  CARAPACE_SOURCE="$SOURCES_DIR/fury.list"
+  if [ ! -f "$CARAPACE_SOURCE" ] || ! grep -Fx "$REPO_LINE" "$CARAPACE_SOURCE" > /dev/null; then
+    echo "$REPO_LINE" | sudo tee "$CARAPACE_SOURCE" > /dev/null || exit 1
+  fi
+}
+
+# ===========================================
+# Execução principal
+# ===========================================
+
+check_system_requirements
+configure_zsh_environment
+
+# Instalar utilitários via cargo
+check_installed fd       || cargo install fd-find
+check_installed rg       || cargo install ripgrep
+check_installed zoxide   || cargo install zoxide --locked
+check_installed yazi     || cargo install --force yazi-build
+check_installed cargo-install-update || cargo install cargo-update
+check_installed bat      || cargo install bat
+check_installed eza      || cargo install eza
+check_installed starship || cargo install starship --locked
+
+# Instalar fzf
+if ! check_installed fzf; then
+  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  ~/.fzf/install --all --no-update-rc
+fi
+
+# Instalar apps em Go
+check_installed lazysql   || go install github.com/jorgerojas26/lazysql@latest
+check_installed lazygit   || go install github.com/jesseduffield/lazygit@latest
+check_installed lazydocker|| go install github.com/jesseduffield/lazydocker@latest
+
+# Instalar helix
+if ! check_installed hx; then
+  sudo add-apt-repository ppa:maveonair/helix-editor -y
+  sudo nala update
+  sudo nala install -y helix
+fi
+
+# Instalar carapace
+if ! check_installed carapace; then
+  add_carapace_repository
+  sudo nala update
+  sudo nala install -y carapace-bin
+fi
+
+# Instalar fontes
+install_jetbrains_mono_nerd_font
+
+echo "✅ Todas as ferramentas e fontes foram verificadas, instaladas e configuradas com sucesso!"

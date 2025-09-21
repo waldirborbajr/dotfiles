@@ -46,3 +46,15 @@ fi
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Configuração do zinit
+[[ -f "$HOME/.zinit/bin/zinit.zsh" ]] && source "$HOME/.zinit/bin/zinit.zsh" || { echo "zinit não encontrado"; exit 1; }
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+# Configuração do fzf-tab via zinit
+zinit light Aloxaf/fzf-tab
+
+eval "$(starship init $(basename $SHELL))"
+
+source <(carapace _carapace $(basename $SHELL))
