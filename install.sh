@@ -1,69 +1,77 @@
 #!/bin/bash
 
+# ----------------------
+# Funções utilitárias
+# ----------------------
+
 # Verifica se comando existe
 check_installed() { command -v "$1" &>/dev/null; }
 
 # Obtém arquivo de configuração do shell (respeita $ZDOTDIR)
 get_shell_config() {
   case "$(basename "$SHELL")" in
-  bash) echo "$HOME/.bashrc" ;;
-  zsh) echo "${ZDOTDIR:-$HOME}/.zshrc" ;;
-  *) echo "" ;;
+    bash) echo "$HOME/.bashrc" ;;
+    zsh)  echo "${ZDOTDIR:-$HOME}/.zshrc" ;;
+    *)    echo "" ;;
   esac
 }
 
-# Configurações de shell (fzf, starship, carapace)
+# Adiciona linha no shell config se não existir
 add_to_shell_config() {
-  local line="$1" desc="$2"
-  local cfg="$(get_shell_config)"
+  local line="$1" desc="$2" cfg
+  cfg="$(get_shell_config)"
   [ -z "$cfg" ] && echo "Shell não suportado. Configure $desc manualmente." && return
   grep -qF "$line" "$cfg" 2>/dev/null || {
-    echo "Configurando $desc..."
-    echo -e "\n$line" >>"$cfg"
+    echo "Configurando $desc em $cfg..."
+    echo -e "\n$line" >> "$cfg"
   }
 }
 
-# Dependências básicas
+# Verifica dependências básicas
 check_system_requirements() {
   for cmd in cargo git nala fc-cache; do
     if ! check_installed $cmd; then
       case $cmd in
-      cargo)
-        echo "Instale Rust antes de continuar: https://www.rust-lang.org/tools/install"
-        exit 1
-        ;;
-      git) sudo apt update && sudo apt install -y git ;;
-      nala) sudo apt update && sudo apt install -y nala ;;
-      fc-cache) sudo nala install -y fontconfig ;;
+        cargo) echo "Instale Rust antes de continuar: https://www.rust-lang.org/tools/install"; exit 1 ;;
+        git)   sudo apt update && sudo apt install -y git ;;
+        nala)  sudo apt update && sudo apt install -y nala ;;
+        fc-cache) sudo nala install -y fontconfig ;;
       esac
     fi
   done
   if ! check_installed go; then sh ./installgo.sh && echo "Reinicie o terminal para continuar." && exit 1; fi
 }
 
-# Instalações via cargo/go
-install_tools() {
+# ----------------------
+# Instalações principais
+# ----------------------
+
+# Instalar ferramentas via cargo
+install_cargo_tools() {
   declare -A cargo_tools=(
     [fd]="fd-find" [rg]="ripgrep" [zoxide]="zoxide --locked"
     [bat]="bat" [eza]="eza" [yazi]="--force yazi-build"
-    [cargo - install - update]="cargo-update" [starship]="starship --locked"
+    [cargo-install-update]="cargo-update" [starship]="starship --locked"
   )
   for bin in "${!cargo_tools[@]}"; do
     check_installed "$bin" || cargo install ${cargo_tools[$bin]}
   done
 
-  check_installed fzf || {
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --all --no-update-rc
+  # fzf
+  if ! check_installed fzf; then
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    ~/.fzf/install --all --no-update-rc
     add_to_shell_config '# fzf' "fzf"
-  }
-  check_installed lazysql || go install github.com/jorgerojas26/lazysql@latest
-  check_installed lazygit || go install github.com/jesseduffield/lazygit@latest
-  check_installed lazydocker || go install github.com/jesseduffield/lazydocker@latest
-  check_installed hx || { sudo add-apt-repository ppa:maveonair/helix-editor -y && sudo nala update && sudo nala install -y helix; }
+  fi
 }
 
-# Instala libs Go extras
-install_go_libs() {
+# Instalar ferramentas Go
+install_go_tools() {
+  check_installed lazysql   || go install github.com/jorgerojas26/lazysql@latest
+  check_installed lazygit   || go install github.com/jesseduffield/lazygit@latest
+  check_installed lazydocker|| go install github.com/jesseduffield/lazydocker@latest
+
+  # libs Go extras
   for lib in \
     golang.org/x/tools/gopls \
     github.com/go-delve/delve/cmd/dlv \
@@ -74,7 +82,33 @@ install_go_libs() {
   done
 }
 
-# Instala fontes
+# Instalar Helix via AppImage
+install_helix_appimage() {
+  if check_installed hx; then
+    echo "Helix (hx) já instalado."
+    return
+  fi
+
+  echo "Buscando última release do Helix..."
+  LATEST=$(curl -s https://api.github.com/repos/helix-editor/helix/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+  [ -z "$LATEST" ] && { echo "Não foi possível obter a versão do Helix."; return 1; }
+
+  ASSET="helix-${LATEST}-x86_64.AppImage"
+  URL="https://github.com/helix-editor/helix/releases/download/${LATEST}/${ASSET}"
+  DEST_DIR="$HOME/.local/bin"
+  DEST_PATH="${DEST_DIR}/hx"
+
+  echo "Baixando $ASSET..."
+  mkdir -p "$DEST_DIR"
+  curl -L "$URL" -o "$DEST_PATH" || { echo "Falha ao baixar Helix."; return 1; }
+  chmod +x "$DEST_PATH"
+
+  add_to_shell_config 'export PATH="$HOME/.local/bin:$PATH"' "PATH local"
+
+  echo "Helix instalado em $DEST_PATH"
+}
+
+# Instalar fontes JetBrainsMono Nerd Font
 install_fonts() {
   if ! fc-list | grep -qi "JetBrainsMono Nerd Font"; then
     mkdir -p "$HOME/.local/share/fonts"
@@ -84,7 +118,7 @@ install_fonts() {
   fi
 }
 
-# Configura carapace
+# Instalar e configurar carapace
 setup_carapace() {
   check_installed carapace || {
     echo "deb [trusted=yes] https://apt.fury.io/rsteube/ /" | sudo tee /etc/apt/sources.list.d/fury.list
@@ -93,10 +127,13 @@ setup_carapace() {
   add_to_shell_config 'source <(carapace _carapace $(basename $SHELL))' "carapace"
 }
 
+# ----------------------
 # Execução
+# ----------------------
 check_system_requirements
-install_tools
-install_go_libs
+install_cargo_tools
+install_go_tools
+install_helix_appimage
 install_fonts
 add_to_shell_config 'eval "$(starship init $(basename $SHELL))"' "starship"
 setup_carapace

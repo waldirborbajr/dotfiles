@@ -19,6 +19,7 @@ path_add "/opt/nvim-linux-x86_64/bin"
 path_add "$HOME/.fzf/bin"
 path_add "$HOME/ripgrep"
 path_add "$HOME/fd"
+path_add "$HOME/.local/bin"
 
 export GOPATH="$HOME/go"
 
