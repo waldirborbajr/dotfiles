@@ -10,7 +10,6 @@ bufferline = "multiple"
 completion-timeout = 15
 auto-completion = true
 undercurl = false
-cursorcolumn = true
 auto-info = true
 text-width = 99
 gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
@@ -18,20 +17,17 @@ gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
 end-of-line-diagnostics = "hint"
 
 [editor.inline-diagnostics]
-# Minimum severity to show a diagnostic on the primary cursor's line.
-# Note that `cursor-line` diagnostics are hidden in insert mode.
-cursor-line = "error"
-# Minimum severity to show a diagnostic on other lines:
-# other-lines = "error"
+cursor-line = "error" # Show inline diagnostics when the cursor is on the line
+other-lines = "disable" # Don't expand diagnostics unless the cursor is on the line
 
 [editor.cursor-shape]
 insert = "bar"
 select = "underline"
 
 [editor.statusline]
-mode.normal = "NORMAL"
-mode.insert = "INSERT"
-mode.select = "SELECT"
+mode.normal = "NOR"
+mode.insert = "INS"
+mode.select = "SEL"
 left = ["mode", "spinner", "version-control", "spacer"]
 separator = "│"
 center = [
@@ -51,8 +47,11 @@ right = [
 ]
 
 [editor.lsp]
-display-messages = false
-display-inlay-hints = true
+enable = true
+# Disable automatically popups of signature parameter help
+auto-signature-help = false
+# Show LSP messages in the status line
+display-messages = true
 
 [editor.soft-wrap]
 enable = true
