@@ -2,6 +2,7 @@ theme = "catppuccin_frappe"
 
 [editor]
 line-number = "relative"
+mouse = false
 color-modes = true
 cursorline = true
 true-color = true
@@ -12,7 +13,6 @@ undercurl = false
 cursorcolumn = true
 auto-info = true
 text-width = 99
-#gutters = ["line-numbers", "diagnostics", "spacer", "diff"]
 gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
 
 [editor.cursor-shape]
@@ -20,10 +20,11 @@ insert = "bar"
 select = "underline"
 
 [editor.statusline]
-mode.normal = "Normal"
-mode.insert = "Insert"
-mode.select = "Select"
+mode.normal = "NORMAL"
+mode.insert = "INSERT"
+mode.select = "SELECT"
 left = ["mode", "spinner", "version-control", "spacer"]
+separator = "│"
 center = [
   "file-base-name",
   "read-only-indicator",
@@ -41,11 +42,14 @@ right = [
 ]
 
 [editor.lsp]
-display-messages = true
+display-messages = false
 display-inlay-hints = true
 
 [editor.soft-wrap]
 enable = true
+max-wrap = 25 # increase value to reduce forced mid-word wrapping
+max-indent-retain = 0
+wrap-indicator = ""  # set wrap-indicator to "" to hide it
 
 [editor.file-picker]
 hidden = false
