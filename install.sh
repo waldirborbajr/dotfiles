@@ -77,6 +77,7 @@ install_go_tools() {
     github.com/go-delve/delve/cmd/dlv \
     golang.org/x/tools/cmd/goimports \
     github.com/nametake/golangci-lint-langserver \
+    github.com/Gelio/go-global-update@latest \
     github.com/golangci/golangci-lint/v2/cmd/golangci-lint; do
     go install "$lib@latest"
   done

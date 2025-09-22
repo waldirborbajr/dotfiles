@@ -17,7 +17,7 @@ syshealth() {
 
   echo "⚙️ Atualizando Cargo e Go..."
   cargo install-update -a
-  go install
+  go-global-update
 }
 
 dokerzap() {
