@@ -20,8 +20,8 @@ syshealth() {
   go install
 }
 
-dokerzap(){
-    # 1. Parar todos os containers
+dokerzap() {
+  # 1. Parar todos os containers
   docker stop $(docker ps -aq)
 
   # 2. Remover todos os containers
@@ -40,7 +40,7 @@ dokerzap(){
   docker system prune -a -f --volumes
 }
 
-dockernew(){
+dockernew() {
   # Parar o serviço Docker completamente
   sudo systemctl stop docker
 

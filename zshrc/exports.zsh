@@ -1,6 +1,7 @@
 # Variáveis de ambiente
 export EDITOR="nvim"
-export LANG="pt_BR.UTF-8"
+export LANG="en_US.UTF-8"
+# export LANG="pt_BR.UTF-8"
 
 # XDG Base Directories
 export XDG_CONFIG_HOME="$HOME/.config"
