@@ -58,3 +58,5 @@ zinit light Aloxaf/fzf-tab
 eval "$(starship init $(basename $SHELL))"
 
 source <(carapace _carapace $(basename $SHELL))
+
+export PATH="$HOME/.local/bin:$PATH"
