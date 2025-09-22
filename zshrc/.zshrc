@@ -1,6 +1,28 @@
-# ===========================================
-# Zsh Configuration
-# ===========================================
+#===========================================
+#Zsh Configuration
+#===========================================
+
+# ---------------------------
+# History settings
+# ---------------------------
+
+# Tamanho do histórico
+HISTSIZE=20000        # comandos mantidos em memória
+SAVEHIST=20000        # comandos salvos no arquivo
+
+# Arquivo onde o histórico será salvo
+HISTFILE="${ZDOTDIR:-$HOME}/.zsh_history"
+
+# Opções de histórico
+setopt APPEND_HISTORY         # adiciona em vez de sobrescrever
+setopt SHARE_HISTORY          # compartilha histórico entre sessões
+setopt HIST_IGNORE_ALL_DUPS   # remove duplicados
+setopt HIST_REDUCE_BLANKS     # remove espaços extras
+setopt HIST_IGNORE_SPACE      # não salva comandos que começam com espaço
+setopt EXTENDED_HISTORY       # salva timestamp junto com os comandos
+setopt HIST_SAVE_NO_DUPS      # não salva duplicados no arquivo
+setopt HIST_VERIFY            # confirma antes de executar comando do histórico
+setopt HIST_FIND_NO_DUPS      # evita mostrar duplicados ao pesquisar
 
 # ---------------------------
 # Basic zsh setup

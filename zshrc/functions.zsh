@@ -20,7 +20,7 @@ syshealth() {
   go-global-update
 }
 
-dokerzap() {
+dockerzap() {
   # 1. Parar todos os containers
   docker stop $(docker ps -aq)
 
