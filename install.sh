@@ -52,7 +52,7 @@ install_cargo_tools() {
     [fd]="fd-find" [rg]="ripgrep" [zoxide]="zoxide --locked"
     [bat]="bat" [eza]="eza" [yazi]="--force yazi-build"
     [cargo-install-update]="cargo-update" [starship]="starship --locked"
-    [zellij] "zellij --locked"
+    [zellij]="zellij --locked"
   )
   for bin in "${!cargo_tools[@]}"; do
     check_installed "$bin" || cargo install ${cargo_tools[$bin]}
