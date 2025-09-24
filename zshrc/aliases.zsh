@@ -15,3 +15,12 @@ alias gaa='git add --all'
 alias gp='git push'
 alias gl='git pull'
 alias glo='git log --oneline --decorate --graph'
+
+alias reboot="systemctl reboot"
+alias xterm="sudo update-alternatives --config x-terminal-emulator"
+
+alias ".."="cd .."
+alias "..."="cd ../.."
+alias "...."="cd ../../.."
+alias "....."="cd ../../../.."
+
