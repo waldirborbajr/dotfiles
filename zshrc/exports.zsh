@@ -14,7 +14,7 @@ path_add() { [[ -d "$1" ]] && PATH="$1:$PATH" }
 # PATHs importantes
 path_add "$HOME/bin"
 path_add "/usr/local/go/bin"
-path_add "$HOME/localbin"
+path_add "$HOME/dotfiles/localbin"
 path_add "$HOME/go/bin"
 path_add "/opt/nvim-linux-x86_64/bin"
 path_add "$HOME/.fzf/bin"
