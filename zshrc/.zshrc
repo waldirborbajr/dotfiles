@@ -53,6 +53,20 @@ source "$ZDOTDIR/completion.zsh"
 source "$ZDOTDIR/functions.zsh"
 source "$ZDOTDIR/aliases.zsh"
 
+export ZSH_CUSTOM_PLUGINS="${ZDOTDIR}/plugins"
+
+# Source zsh-autosuggestions
+if [ -f "${ZSH_CUSTOM_PLUGINS}/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+    source "${ZSH_CUSTOM_PLUGINS}/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    
+    # Configurações do zsh-autosuggestions
+    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#8a8a8a"
+    ZSH_AUTOSUGGEST_STRATEGY=(match_prev_cmd)
+    # ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+    ZSH_AUTOSUGGEST_USE_ASYNC=true
+    bindkey '^ ' autosuggest-accept
+fi
+
 # ---------------------------
 # Carapace
 # ---------------------------
