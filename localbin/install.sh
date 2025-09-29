@@ -129,6 +129,40 @@ setup_carapace() {
   add_to_shell_config 'source <(carapace _carapace $(basename $SHELL))' "carapace"
 }
 
+# Instalar e configurar zsh-autosuggestions (NOVO)
+setup_zsh_autosuggestions() {
+  if [ "$(basename "$SHELL")" != "zsh" ]; then
+    echo "zsh-autosuggestions é apenas para Zsh. Pulando instalação."
+    return
+  fi
+
+  local ZSH_AUTOSUGGESTIONS_DIR="${ZDOTDIR:-$HOME}/.zsh/zsh-autosuggestions"
+  if [ ! -d "$ZSH_AUTOSUGGESTIONS_DIR" ]; then
+    echo "Clonando zsh-autosuggestions..."
+    git clone --depth 1 https://github.com/zsh-users/zsh-autosuggestions "$ZSH_AUTOSUGGESTIONS_DIR" || {
+      echo "Falha ao clonar zsh-autosuggestions."
+      return 1
+    }
+  else
+    echo "zsh-autosuggestions já está instalado em $ZSH_AUTOSUGGESTIONS_DIR."
+  fi
+
+  # Adicionar configuração ao .zshrc
+  local config_lines=$(
+    cat <<'EOF'
+# zsh-autosuggestions
+[[ -f ${ZDOTDIR:-$HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && source ${ZDOTDIR:-$HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
+ZSH_AUTOSUGGEST_USE_ASYNC=true
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=8"
+ZSH_AUTOSUGGEST_CLEAR_WIDGETS=(accept-line)
+bindkey '^ ' autosuggest-accept
+EOF
+  )
+  add_to_shell_config "$config_lines" "zsh-autosuggestions"
+}
+
 # ----------------------
 # Execução
 # ----------------------
@@ -139,5 +173,6 @@ install_helix_appimage
 install_fonts
 add_to_shell_config 'eval "$(starship init $(basename $SHELL))"' "starship"
 setup_carapace
+setup_zsh_autosuggestions # NOVO: Chamar a função de instalação do zsh-autosuggestions
 
 echo "✅ Todas as ferramentas foram instaladas e configuradas com sucesso!"
