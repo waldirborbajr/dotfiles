@@ -20,6 +20,11 @@ syshealth() {
   go-global-update
 }
 
+pkgfix() {
+  sudo nala install -f
+  sudo dpkg --configure -a
+}
+
 dockerzap() {
   # 1. Parar todos os containers
   docker stop $(docker ps -aq)
