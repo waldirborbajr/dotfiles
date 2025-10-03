@@ -10,9 +10,9 @@ check_installed() { command -v "$1" &>/dev/null; }
 # Obtém arquivo de configuração do shell (respeita $ZDOTDIR)
 get_shell_config() {
   case "$(basename "$SHELL")" in
-    bash) echo "$HOME/.bashrc" ;;
-    zsh)  echo "${ZDOTDIR:-$HOME}/.zshrc" ;;
-    *)    echo "" ;;
+  bash) echo "$HOME/.bashrc" ;;
+  zsh) echo "${ZDOTDIR:-$HOME}/.zshrc" ;;
+  *) echo "" ;;
   esac
 }
 
@@ -23,7 +23,7 @@ add_to_shell_config() {
   [ -z "$cfg" ] && echo "Shell não suportado. Configure $desc manualmente." && return
   grep -qF "$line" "$cfg" 2>/dev/null || {
     echo "Configurando $desc em $cfg..."
-    echo -e "\n$line" >> "$cfg"
+    echo -e "\n$line" >>"$cfg"
   }
 }
 
@@ -32,10 +32,13 @@ check_system_requirements() {
   for cmd in cargo git nala fc-cache; do
     if ! check_installed $cmd; then
       case $cmd in
-        cargo) echo "Instale Rust antes de continuar: https://www.rust-lang.org/tools/install"; exit 1 ;;
-        git)   sudo apt update && sudo apt install -y git ;;
-        nala)  sudo apt update && sudo apt install -y nala ;;
-        fc-cache) sudo nala install -y fontconfig ;;
+      cargo)
+        echo "Instale Rust antes de continuar: https://www.rust-lang.org/tools/install"
+        exit 1
+        ;;
+      git) sudo apt update && sudo apt install -y git ;;
+      nala) sudo apt update && sudo apt install -y nala ;;
+      fc-cache) sudo nala install -y fontconfig ;;
       esac
     fi
   done
@@ -51,7 +54,7 @@ install_cargo_tools() {
   declare -A cargo_tools=(
     [fd]="fd-find" [rg]="ripgrep" [zoxide]="zoxide --locked"
     [bat]="bat" [eza]="eza" [yazi]="--force yazi-build"
-    [cargo-install-update]="cargo-update" [starship]="starship --locked"
+    [cargo - install - update]="cargo-update" [starship]="starship --locked"
     [zellij]="zellij --locked"
   )
   for bin in "${!cargo_tools[@]}"; do
@@ -68,9 +71,9 @@ install_cargo_tools() {
 
 # Instalar ferramentas Go
 install_go_tools() {
-  check_installed lazysql   || go install github.com/jorgerojas26/lazysql@latest
-  check_installed lazygit   || go install github.com/jesseduffield/lazygit@latest
-  check_installed lazydocker|| go install github.com/jesseduffield/lazydocker@latest
+  check_installed lazysql || go install github.com/jorgerojas26/lazysql@latest
+  check_installed lazygit || go install github.com/jesseduffield/lazygit@latest
+  check_installed lazydocker || go install github.com/jesseduffield/lazydocker@latest
 
   # libs Go extras
   for lib in \
@@ -93,7 +96,10 @@ install_helix_appimage() {
 
   echo "Buscando última release do Helix..."
   LATEST=$(curl -s https://api.github.com/repos/helix-editor/helix/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
-  [ -z "$LATEST" ] && { echo "Não foi possível obter a versão do Helix."; return 1; }
+  [ -z "$LATEST" ] && {
+    echo "Não foi possível obter a versão do Helix."
+    return 1
+  }
 
   ASSET="helix-${LATEST}-x86_64.AppImage"
   URL="https://github.com/helix-editor/helix/releases/download/${LATEST}/${ASSET}"
@@ -102,7 +108,10 @@ install_helix_appimage() {
 
   echo "Baixando $ASSET..."
   mkdir -p "$DEST_DIR"
-  curl -L "$URL" -o "$DEST_PATH" || { echo "Falha ao baixar Helix."; return 1; }
+  curl -L "$URL" -o "$DEST_PATH" || {
+    echo "Falha ao baixar Helix."
+    return 1
+  }
   chmod +x "$DEST_PATH"
 
   add_to_shell_config 'export PATH="$HOME/.local/bin:$PATH"' "PATH local"
@@ -172,7 +181,7 @@ install_go_tools
 install_helix_appimage
 install_fonts
 add_to_shell_config 'eval "$(starship init $(basename $SHELL))"' "starship"
-setup_carapace
+# setup_carapace
 setup_zsh_autosuggestions # NOVO: Chamar a função de instalação do zsh-autosuggestions
 
 echo "✅ Todas as ferramentas foram instaladas e configuradas com sucesso!"
