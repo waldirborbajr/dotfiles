@@ -77,6 +77,16 @@ if command -v carapace >/dev/null; then
 fi
 
 # ---------------------------
+# Atuin Configs
+# ---------------------------
+export ATUIN_NOBIND="true"
+eval "$(atuin init zsh)"
+# bindkey '^r' _atuin_search_widget
+bindkey '^e' atuin-up-search-viins
+#User configuration
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# ---------------------------
 # Prompt & Tools
 # ---------------------------
 eval "$(starship init zsh)"

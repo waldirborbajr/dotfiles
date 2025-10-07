@@ -6,15 +6,17 @@ alias gs='git status'
 alias dc='docker compose'
 alias rmvim="rm -rf ~/.config/nvim ~/.local/state/nvim ~/.local/share/nvim"
 
-alias g='git'
-alias gst='git status'
-alias gco='git checkout'
 alias gcmsg='git commit -m'
-alias ga='git add .'
 alias gaa='git add --all'
 alias gp='git push'
 alias gl='git pull'
-alias glo='git log --oneline --decorate --graph'
+# git aliases
+alias gt="git"
+alias ga="git add ."
+alias gs="git status -s"
+alias gc='git commit -m'
+alias glog='git log --oneline --graph --all'
+alias gh-create='gh repo create --private --source=. --remote=origin && git push -u --all && gh browse'
 
 alias reboot="systemctl reboot"
 alias xterm="sudo update-alternatives --config x-terminal-emulator"

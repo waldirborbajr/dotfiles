@@ -27,3 +27,10 @@ export GOPATH="$HOME/go"
 # Manpath (caso pacotes instalem manpages extras)
 export MANPATH="/usr/local/share/man:$MANPATH"
 
+#----- Vim Editing modes & keymaps ------ 
+set -o vi
+
+export EDITOR=nvim
+export VISUAL=nvim
+
+
