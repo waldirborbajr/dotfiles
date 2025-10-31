@@ -26,3 +26,5 @@ alias "..."="cd ../.."
 alias "...."="cd ../../.."
 alias "....."="cd ../../../.."
 
+alias rustupdate="rustup self update"
+
