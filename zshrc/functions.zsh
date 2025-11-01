@@ -66,9 +66,11 @@ lzq() { command -v lazysql >/dev/null && lazysql }
 lzd() { command -v lazydocker >/dev/null && lazydocker }
 
 # Atualiza nome da aba do Zellij dinamicamente
+# Atualiza nome da aba do Zellij dinamicamente
 zellij_tab_name_update() {
-  if [[ -n $ZELLIJ ]]; then
-    tab_name=''
+  # CORREÇÃO: Verificar se ZELLIJ está definida antes de usar
+  if [[ -n "${ZELLIJ:-}" ]]; then
+    local tab_name=''
     if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
       tab_name+=$(basename "$(git rev-parse --show-toplevel)")/
       tab_name+=$(git rev-parse --show-prefix)
@@ -85,8 +87,11 @@ zellij_tab_name_update() {
   fi
 }
 
-zellij_tab_name_update
-chpwd_functions+=(zellij_tab_name_update)
+# CORREÇÃO: Só adicionar à chpwd_functions se estiver dentro do Zellij
+if [[ -n "${ZELLIJ:-}" ]]; then
+  zellij_tab_name_update
+  chpwd_functions+=(zellij_tab_name_update)
+fi
 
 chirp_update() {
   # Base URL for CHIRP daily builds
@@ -167,103 +172,121 @@ chirp_update() {
 }
 
 update_go() {
-set -euf -o pipefail
+    echo "🔍 Verificando instalação do Go..."
+    
+    # Verifica se o Go está instalado e pega a versão atual
+    if command -v go >/dev/null 2>&1; then
+        CURRENT_GO_VERSION=$(go version | grep -oE '[0-9]+\.[0-9]+(\.[0-9]+)?')
+        echo "✅ Go instalado - Versão: $CURRENT_GO_VERSION"
+    else
+        echo "❌ Go não está instalado"
+        CURRENT_GO_VERSION=""
+    fi
 
-# Fetch the latest stable Go version from https://go.dev/dl/
-echo "Fetching the latest stable Go version..."
-LATEST_VERSION=$(curl -s https://go.dev/dl/ | grep -oP 'go\K[0-9]+\.[0-9]+(\.[0-9]+)?' | sort -V | tail -1)
-if [[ -z "$LATEST_VERSION" ]]; then
-  echo "Error: Could not fetch the latest Go version. Exiting."
-  exit 1
-fi
-echo "Latest Go version available: ${LATEST_VERSION}"
+    # Busca a última versão disponível
+    echo "📡 Buscando última versão do Go..."
+    
+    # Método alternativo sem pattern matching
+    LATEST_GO_VERSION=$(curl -s --fail "https://go.dev/VERSION?m=text" | head -1 | sed 's/go//')
+    
+    # Se falhar, tenta método alternativo
+    if [ -z "$LATEST_GO_VERSION" ] || [ "$LATEST_GO_VERSION" = "null" ]; then
+        LATEST_GO_VERSION=$(curl -s https://go.dev/dl/ | grep -oE 'go[0-9]+\.[0-9]+\.[0-9]+' | head -1 | sed 's/go//')
+    fi
+    
+    if [ -z "$LATEST_GO_VERSION" ]; then
+        echo "❌ Erro: Não foi possível obter a versão mais recente"
+        echo "💡 Dica: Verifique sua conexão com a internet"
+        return 1
+    fi
+    
+    echo "📦 Última versão disponível: $LATEST_GO_VERSION"
 
-# Check if Go is already installed and get its version
-INSTALLED_VERSION=""
-if command -v go &> /dev/null; then
-  INSTALLED_VERSION=$(go version | grep -oP 'go\K[0-9]+\.[0-9]+(\.[0-9]+)?')
-  echo "Installed Go version: ${INSTALLED_VERSION}"
-else
-  echo "No Go installation found."
-fi
+    # Se já tem a versão mais recente, só configura environment
+    if [ "$CURRENT_GO_VERSION" = "$LATEST_GO_VERSION" ]; then
+        echo "✅ Já está na versão mais recente"
+        setup_go_environment
+        return 0
+    fi
 
-PLATFORM="linux-amd64" # Adjust if your system architecture is different (e.g., linux-arm64)
+    # Se não tem Go instalado ou versão é diferente, prossegue com instalação/atualização
+    if [ -z "$CURRENT_GO_VERSION" ]; then
+        echo "🚀 Instalando Go $LATEST_GO_VERSION..."
+    else
+        echo "🔄 Atualizando Go $CURRENT_GO_VERSION → $LATEST_GO_VERSION..."
+    fi
 
-# Compare versions and skip if the installed version is the latest
-if [[ "$INSTALLED_VERSION" == "$LATEST_VERSION" ]]; then
-  echo "Go version ${LATEST_VERSION} is already installed and up to date."
-  # Ensure environment variables are set even if we skip installation
-  echo "Verifying Go environment variables..."
-  PROFILE_FILE="$HOME/.zshrc"
-  if ! grep -q "export PATH=\"\$PATH\":/usr/local/go/bin" "$PROFILE_FILE"; then
-    echo "export PATH=\"\$PATH\":/usr/local/go/bin" >> "$PROFILE_FILE"
-  fi
-  if ! grep -q "export GOPATH=\$HOME/go" "$PROFILE_FILE"; then
-    echo "export GOPATH=\$HOME/go" >> "$PROFILE_FILE"
-  fi
-  if ! grep -q "export PATH=\"\$PATH\":\$GOPATH/bin" "$PROFILE_FILE"; then
-    echo "export PATH=\"\$PATH\":\$GOPATH/bin" >> "$PROFILE_FILE"
-  fi
-  source "$PROFILE_FILE"
-  echo "Go environment variables verified."
-  go version
-  exit 0
-fi
+    # Define arquivo e URL de download
+    GO_ARCHIVE="go${LATEST_GO_VERSION}.linux-amd64.tar.gz"
+    DOWNLOAD_URL="https://golang.org/dl/${GO_ARCHIVE}"
 
-# Download the latest Go release if needed
-echo "Downloading Go version ${LATEST_VERSION} for ${PLATFORM}..."
-TEMP_DIR=$(mktemp -d)
-cd "$TEMP_DIR"
-if ! curl -sL -o "go${LATEST_VERSION}.${PLATFORM}.tar.gz" "https://golang.org/dl/go${LATEST_VERSION}.${PLATFORM}.tar.gz"; then
-  echo "Error: Failed to download Go. Check your internet connection or the version availability."
-  rm -rf "$TEMP_DIR"
-  exit 1
-fi
+    # Download do Go
+    echo "💾 Baixando $GO_ARCHIVE..."
+    if ! curl -fL -o "/tmp/${GO_ARCHIVE}" "$DOWNLOAD_URL"; then
+        echo "❌ Erro no download do Go"
+        echo "💡 Tentando URL alternativa..."
+        # Tenta URL alternativa
+        DOWNLOAD_URL="https://dl.google.com/go/${GO_ARCHIVE}"
+        if ! curl -fL -o "/tmp/${GO_ARCHIVE}" "$DOWNLOAD_URL"; then
+            echo "❌ Falha no download"
+            return 1
+        fi
+    fi
 
-# Remove the old Go installation
-echo "Removing old Go version..."
-sudo rm -rf /usr/local/go
+    # Remove instalação anterior se existir
+    if [ -d "/usr/local/go" ]; then
+        echo "🧹 Removendo instalação anterior..."
+        sudo rm -rf /usr/local/go
+    fi
 
-# Install the new Go version
-echo "Installing new Go version..."
-sudo tar -C /usr/local -xzf "go${LATEST_VERSION}.${PLATFORM}.tar.gz"
+    # Instala nova versão
+    echo "⚙️ Instalando Go..."
+    sudo tar -C /usr/local -xzf "/tmp/${GO_ARCHIVE}"
 
-# Set up Go environment variables (if not already configured in your shell profile)
-echo "Setting up Go environment variables..."
-PROFILE_FILE="$HOME/.zshrc"
-if ! grep -q "export PATH=\"\$PATH\":/usr/local/go/bin" "$PROFILE_FILE"; then
-  echo "export PATH=\"\$PATH\":/usr/local/go/bin" >> "$PROFILE_FILE"
-fi
-if ! grep -q "export GOPATH=\$HOME/go" "$PROFILE_FILE"; then
-  echo "export GOPATH=\$HOME/go" >> "$PROFILE_FILE"
-fi
-if ! grep -q "export PATH=\"\$PATH\":\$GOPATH/bin" "$PROFILE_FILE"; then
-  echo "export PATH=\"\$PATH\":\$GOPATH/bin" >> "$PROFILE_FILE"
-fi
+    # Configura environment
+    setup_go_environment
 
-# Source the profile to apply changes immediately
-source "$PROFILE_FILE"
+    # Limpeza
+    rm -f "/tmp/${GO_ARCHIVE}"
+    
+    # Verifica instalação
+    if command -v go >/dev/null 2>&1; then
+        NEW_VERSION=$(go version)
+        echo "✅ $NEW_VERSION"
+        echo "🎉 Go instalado/atualizado com sucesso!"
+    else
+        echo "⚠️  Go instalado mas pode precisar recarregar o terminal"
+        echo "💡 Execute: source ~/.zshrc"
+    fi
+}
 
-# Verify PATH includes Go bin
-if [[ ":$PATH:" != *":/usr/local/go/bin:"* ]]; then
-  echo "Warning: /usr/local/go/bin not in PATH. Restart your terminal or run 'source ~/.zshrc' manually."
-else
-  echo "PATH updated successfully."
-fi
+# Função auxiliar para configurar environment
+setup_go_environment() {
+    echo "⚙️ Configurando environment..."
+    
+    local profile_file="$HOME/.zshrc"
+    
+    # Remove configurações antigas do Go se existirem
+    if [ -f "$profile_file" ]; then
+        grep -v "export PATH.*/usr/local/go/bin" "$profile_file" > "${profile_file}.tmp" && mv "${profile_file}.tmp" "$profile_file"
+        grep -v "export GOPATH=" "$profile_file" > "${profile_file}.tmp" && mv "${profile_file}.tmp" "$profile_file"
+        grep -v "export PATH.*GOPATH/bin" "$profile_file" > "${profile_file}.tmp" && mv "${profile_file}.tmp" "$profile_file"
+        grep -v "# Go environment" "$profile_file" > "${profile_file}.tmp" && mv "${profile_file}.tmp" "$profile_file"
+    fi
+    
+    # Adiciona novas configurações
+    echo '# Go environment' >> "$profile_file"
+    echo 'export PATH="$PATH:/usr/local/go/bin"' >> "$profile_file"
+    echo 'export GOPATH="$HOME/go"' >> "$profile_file"
+    echo 'export PATH="$PATH:$GOPATH/bin"' >> "$profile_file"
 
-# Create the Go workspace directories if they don't exist
-mkdir -p ~/go/{bin,pkg,src}
-
-# Clean up downloaded archive
-echo "Cleaning up downloaded files..."
-cd "$HOME"  # Change back to home directory before cleanup
-rm "go${LATEST_VERSION}.${PLATFORM}.tar.gz"
-rmdir "$TEMP_DIR"
-
-echo "Go update completed. Current Go version:"
-if command -v go &> /dev/null; then
-  go version
-else
-  echo "Go is installed but not yet in PATH. Run 'source ~/.zshrc' and try 'go version' again."
-fi
+    # Cria diretórios do workspace
+    mkdir -p "$HOME/go/"{bin,src,pkg}
+    
+    # Atualiza PATH na sessão atual
+    export PATH="$PATH:/usr/local/go/bin"
+    export GOPATH="$HOME/go"
+    export PATH="$PATH:$GOPATH/bin"
+    
+    echo "✅ Environment configurado"
 }
