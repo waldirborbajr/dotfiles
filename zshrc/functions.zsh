@@ -1,24 +1,44 @@
-# Functions
+# ===========================================
+# System Functions
+# ===========================================
 
 # Transformei em função (mais seguro e legível)
 syshealth() {
-  echo "🧹 Limpando cache do apt/nala..."
-  sudo rm -rf /var/lib/apt/lists/*
-  sudo nala update
-  sudo nala upgrade -y
+  echo "🧹 Cleaning system..."
+  sudo nala update && sudo nala upgrade -y
   sudo nala autoremove -y
   sudo nala autopurge -y
-  sudo nala clean
-
-  echo "📦 Atualizando Flatpak e Snap..."
-  flatpak update -y
-  flatpak uninstall --unused -y
-  sudo snap refresh
-
-  echo "⚙️ Atualizando Cargo e Go..."
-  cargo install-update -a
-  go-global-update
+  
+  echo "📦 Updating Flatpaks..."
+  flatpak update -y 2>/dev/null && flatpak uninstall --unused -y 2>/dev/null
+  
+  echo "📦 Updating Snaps..."
+  sudo snap refresh 2>/dev/null
+  
+  echo "⚙️ Updating Rust and Go..."
+  rustup update 2>/dev/null
+  command -v go >/dev/null && echo "✅ Go $(go version | grep -oE '[0-9]+\.[0-9]+')"
+  
+  echo "🎉 System updated!"
 }
+# syshealth() {
+#   echo "🧹 Limpando cache do apt/nala..."
+#   sudo rm -rf /var/lib/apt/lists/*
+#   sudo nala update
+#   sudo nala upgrade -y
+#   sudo nala autoremove -y
+#   sudo nala autopurge -y
+#   sudo nala clean
+#
+#   echo "📦 Atualizando Flatpak e Snap..."
+#   flatpak update -y
+#   flatpak uninstall --unused -y
+#   sudo snap refresh
+#
+#   echo "⚙️ Atualizando Cargo e Go..."
+#   cargo install-update -a
+#   go-global-update
+# }
 
 pkgfix() {
   sudo nala install -f
@@ -56,6 +76,10 @@ dockernew() {
   sudo systemctl start docker
 }
 
+# ===========================================
+# Zellij & Tooling (KEEPING YOUR WORKFLOW)
+# ===========================================
+
 zl() { zellij list-sessions }
 za() { zellij attach "$1" }
 zs() { zellij -s "$1" }
@@ -65,7 +89,6 @@ lzg() { command -v lazygit >/dev/null && lazygit }
 lzq() { command -v lazysql >/dev/null && lazysql }
 lzd() { command -v lazydocker >/dev/null && lazydocker }
 
-# Atualiza nome da aba do Zellij dinamicamente
 # Atualiza nome da aba do Zellij dinamicamente
 zellij_tab_name_update() {
   # CORREÇÃO: Verificar se ZELLIJ está definida antes de usar

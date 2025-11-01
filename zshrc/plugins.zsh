@@ -14,18 +14,24 @@ source "$HOME/.zinit/bin/zinit.zsh"
 # Plugins
 # ---------------------------
 
-# Sugestões automáticas (digitação assistida)
-zinit ice wait lucid
+# Essential plugins only
 zinit light zsh-users/zsh-autosuggestions
-
-# Melhorias de completions
-zinit ice wait lucid
 zinit light zsh-users/zsh-completions
-
-# Busca no histórico estilo fish
-zinit ice wait lucid
-zinit light zsh-users/zsh-history-substring-search
-
-# Syntax highlighting → sempre carregar por último
-zinit ice wait lucid
 zinit light zsh-users/zsh-syntax-highlighting
+
+
+# # Sugestões automáticas (digitação assistida)
+# zinit ice wait lucid
+# zinit light zsh-users/zsh-autosuggestions
+#
+# # Melhorias de completions
+# zinit ice wait lucid
+# zinit light zsh-users/zsh-completions
+#
+# # Busca no histórico estilo fish
+# zinit ice wait lucid
+# zinit light zsh-users/zsh-history-substring-search
+#
+# # Syntax highlighting → sempre carregar por último
+# zinit ice wait lucid
+# zinit light zsh-users/zsh-syntax-highlighting
