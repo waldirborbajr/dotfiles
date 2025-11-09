@@ -5,9 +5,11 @@
 # Transformei em função (mais seguro e legível)
 syshealth() {
   echo "🧹 Cleaning system..."
+  sudo rm -rf /var/lib/apt/lists/*
   sudo nala update && sudo nala upgrade -y
   sudo nala autoremove -y
   sudo nala autopurge -y
+  sudo nala clean
   
   echo "📦 Updating Flatpaks..."
   flatpak update -y 2>/dev/null && flatpak uninstall --unused -y 2>/dev/null
@@ -21,24 +23,6 @@ syshealth() {
   
   echo "🎉 System updated!"
 }
-# syshealth() {
-#   echo "🧹 Limpando cache do apt/nala..."
-#   sudo rm -rf /var/lib/apt/lists/*
-#   sudo nala update
-#   sudo nala upgrade -y
-#   sudo nala autoremove -y
-#   sudo nala autopurge -y
-#   sudo nala clean
-#
-#   echo "📦 Atualizando Flatpak e Snap..."
-#   flatpak update -y
-#   flatpak uninstall --unused -y
-#   sudo snap refresh
-#
-#   echo "⚙️ Atualizando Cargo e Go..."
-#   cargo install-update -a
-#   go-global-update
-# }
 
 pkgfix() {
   sudo nala install -f
