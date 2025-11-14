@@ -4,6 +4,9 @@
 
 # Transformei em função (mais seguro e legível)
 syshealth() {
+
+  pkgfix
+
   echo "🧹 Cleaning system..."
   sudo rm -rf /var/lib/apt/lists/*
   sudo nala update && sudo nala upgrade -y
