@@ -5,6 +5,7 @@ return {
     "Lazyvim/Lazyvim",
     opts = {
       colorscheme = "catppuccin",
+      -- colorscheme = function() end, -- This will prevent any colorscheme from loading
     },
   },
 }
