@@ -23,6 +23,9 @@ alias reboot="systemctl reboot"
 alias rmvim="rm -rf ~/.config/nvim ~/.local/state/nvim ~/.local/share/nvim"
 alias xterm="sudo update-alternatives --config x-terminal-emulator"
 
+alias v="nvim"
+alias y="yazi"
+
 # # Aliases úteis
 # # alias ll='ls -la --color=auto'
 # alias ll="eza -lg --icons --group-directories-first"
