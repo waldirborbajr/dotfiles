@@ -86,12 +86,6 @@ bindkey '^e' atuin-up-search-viins
 #User configuration
 # export MANPATH="/usr/local/man:$MANPATH"
 
-# ---------------------------
-# Prompt & Tools
-# ---------------------------
-eval "$(starship init zsh)"
-eval "$(zoxide init zsh)"
-
 # ---- FZF -----
 
 # Set up fzf key bindings and fuzzy completion
@@ -166,3 +160,11 @@ source <(carapace _carapace $(basename $SHELL))
 export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# ---------------------------
+# Prompt & Tools
+# ---------------------------
+eval "$(starship init zsh)"
+eval "$(zoxide init zsh)"
+
+
