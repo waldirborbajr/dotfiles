@@ -47,7 +47,7 @@ alias xterm="sudo update-alternatives --config x-terminal-emulator"
 
 alias v="nvim"
 alias y="yazi"
-alias y="lazygit"
+alias l="lazygit"
 
 gcm() { git commit --message "$*" }
 
