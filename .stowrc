@@ -1,8 +1,0 @@
---target=~/.config
---ignore=.stowrc
---ignore=DS_Store
---ignore=atuin/*
---ignore=init.sh
---ignore=install.sh
---ignore=installgo.sh
---ignore=localbin/

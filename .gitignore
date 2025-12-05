@@ -1,4 +1,2 @@
-zshrc/.zcompdump*
-zshrc/.zsh_history
-nvim/lazy-lock.json
-zshrc/.zsh/zsh-autosuggestions
+.DS_Store
+git_mpluspcc/
