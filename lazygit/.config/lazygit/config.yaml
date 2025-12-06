@@ -1,24 +1,28 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/jesseduffield/lazygit/master/schema/config.json
-# cyberdream theme for lazygit
+# Copied from https://github.com/folke/tokyonight.nvim/blob/main/extras/lazygit/tokyonight_night.conf
 gui:
-  border: rounded
+  nerdFontsVersion: "3"
   theme:
     activeBorderColor:
-      - "#5ef1ff"
-      - bold
+      - "#ff9e64"
+      - "bold"
     inactiveBorderColor:
-      - "#7b8496"
+      - "#27a1b9"
     searchingActiveBorderColor:
-      - "#ff5ef1"
+      - "#ff9e64"
+      - "bold"
     optionsTextColor:
-      - "#ffffff"
+      - "#7aa2f7"
     selectedLineBgColor:
-      - "#3c4048"
-    cherryPickedCommitBgColor:
-      - "#3c4048"
+      - "#283457"
     cherryPickedCommitFgColor:
-      - "#ff5ea0"
+      - "#7aa2f7"
+    cherryPickedCommitBgColor:
+      - "#bb9af7"
+    markedBaseCommitFgColor:
+      - "#7aa2f7"
+    markedBaseCommitBgColor:
+      - "#e0af68"
     unstagedChangesColor:
-      - "#ffbd5e"
+      - "#db4b4b"
     defaultFgColor:
-      - "#ffffff"
+      - "#c0caf5"
