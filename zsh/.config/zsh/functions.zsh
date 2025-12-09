@@ -20,9 +20,14 @@ syshealth() {
   echo "📦 Updating Snaps..."
   sudo snap refresh 2>/dev/null
   
-  echo "⚙️ Updating Rust and Go..."
+  echo "⚙️ Updating Rust..."
   rustup update 2>/dev/null
-  command -v go >/dev/null && echo "✅ Go $(go version | grep -oE '[0-9]+\.[0-9]+')"
+
+  echo "⚙️ Updating all GO binaries..."
+  gup update
+
+  echo "⚙️ Updating installed Rust executables..."
+  cargo install-update -a
   
   echo "🎉 System updated!"
 }
