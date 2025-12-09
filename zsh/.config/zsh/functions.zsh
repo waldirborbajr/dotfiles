@@ -72,6 +72,12 @@ za() { zellij attach "$1" }
 zs() { zellij -s "$1" }
 zc() { rm -rf ~/.cache/zellij }
 
+tmx() {
+  if [[ -z "$TMUX" && -z "$SSH_CONNECTION" ]]; then
+    tmux attach || tmux new
+  fi
+}
+
 lzg() { command -v lazygit >/dev/null && lazygit }
 lzq() { command -v lazysql >/dev/null && lazysql }
 lzd() { command -v lazydocker >/dev/null && lazydocker }

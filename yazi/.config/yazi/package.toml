@@ -1,0 +1,24 @@
+[[plugin.deps]]
+use = "yazi-rs/plugins:full-border"
+rev = "19dc890"
+hash = "3996fc74044bc44144b323686f887e1"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:git"
+rev = "19dc890"
+hash = "27ca02f49fd236b5cc7bf03c243859fe"
+
+[[plugin.deps]]
+use = "DreamMaoMao/searchjump"
+rev = "7fafec3"
+hash = "5337bf545993d8c4dec2c229031f49d"
+
+[[plugin.deps]]
+use = "Rolv-Apneseth/starship"
+rev = "eca1861"
+hash = "e519d894e94ded741e06aae4d4775981"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:catppuccin-macchiato"
+rev = "3edeb49"
+hash = "4127d9d6c96862ed96a7a64b3973a5af"
