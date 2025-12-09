@@ -29,6 +29,9 @@ syshealth() {
   echo "⚙️ Updating installed Rust executables..."
   cargo install-update -a
   
+  echo "⚙️ Updating Yazi packages"
+  ya pkg upgrade
+  
   echo "🎉 System updated!"
 }
 
