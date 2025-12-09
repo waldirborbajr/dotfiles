@@ -311,3 +311,29 @@ setup_go_environment() {
     
     echo "✅ Environment configurado"
 }
+
+# Session manager that prefers Zellij but falls back to TMUX
+session() {
+    # Skip in SSH or if already in a terminal multiplexer
+    if [[ -n "$SSH_CONNECTION" ]] || [[ -n "$TMUX" ]] || [[ -n "$ZELLIJ" ]]; then
+        return 0
+    fi
+    
+    # Try to attach to existing Zellij session
+    if command -v zellij >/dev/null 2>&1; then
+        if zellij list-sessions 2>/dev/null | grep -q .; then
+            echo "Attaching to Zellij..."
+            zellij attach "$(zellij list-sessions | head -1)"
+        else
+            echo "Starting new Zellij session..."
+            zellij
+        fi
+    # Fallback to tmux if Zellij isn't available
+    elif command -v tmux >/dev/null 2>&1; then
+        if [[ -z "$TMUX" ]]; then
+            tmux attach || tmux new
+        fi
+    else
+        echo "No terminal multiplexer found (Zellij or TMUX)"
+    fi
+}
