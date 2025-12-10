@@ -45,9 +45,9 @@ alias reboot="systemctl reboot"
 alias rmvim="rm -rf ~/.config/nvim ~/.local/state/nvim ~/.local/share/nvim"
 alias xterm="sudo update-alternatives --config x-terminal-emulator"
 
-alias v="nvim"
-alias y="yazi"
-alias l="lazygit"
+alias nv="nvim"
+alias yz="yazi"
+alias lg="lazygit"
 
 gcm() { git commit --message "$*" }
 
