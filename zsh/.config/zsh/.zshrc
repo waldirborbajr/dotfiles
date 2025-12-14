@@ -177,9 +177,7 @@ export NVM_DIR="$HOME/.config/nvm"
 
 # --- Integration with tmux & wezterm ---
 # Automatic tmux attach on terminal start (unless nested or ssh)
-# if [[ -z "$TMUX" && -z "$SSH_CONNECTION" ]]; then
-#   tmux attach || tmux new
-# fi
+tmx
 
 # --- Shell Keybindings (ZLE) ---
 bindkey -e
