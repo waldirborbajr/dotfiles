@@ -1,3 +1,4 @@
 .DS_Store
 git_mpluspcc/
 zsh/.config/zsh/.zsh_history
+nvim/.config/nvim/lazy-lock.json
