@@ -82,7 +82,8 @@ zc() { rm -rf ~/.cache/zellij }
 
 tmx() {
   if [[ -z "$TMUX" && -z "$SSH_CONNECTION" ]]; then
-    tmux attach || tmux new
+    # tmux attach || tmux new
+    tmux attach -t default >/dev/null 2>&1 || tmux new -s default
   fi
 }
 

@@ -1,28 +1,9 @@
 #!/usr/bin/env zsh
-# ~/.zshenv: Zsh environment file. Gets loaded for every kind of shell session.
-# ------------------------------------------------------------------------------
 
-# Zsh startup file execution order:
-# ------------------------------------------------------------------------------
-# For ALL zsh invocations:
-# 1. /etc/zshenv (system-wide, always)
-# 2. ~/.zshenv (user, always)
-#
-# For LOGIN shells only:
-# 3. /etc/zprofile (system-wide, login shells only)
-# 4. ~/.zprofile (user, login shells only)
-#
-# For INTERACTIVE shells only:
-# 5. /etc/zshrc (system-wide, interactive shells)
-# 6. ~/.zshrc (user, interactive shells)
-#
-# For LOGIN shells only (again):
-# 7. /etc/zlogin (system-wide, login shells)
-# 8. ~/.zlogin (user, login shells)
-#
-# Notes:
-# - Replace ~/.* with $ZDOTDIR/.* if ZDOTDIR is set
-# - Files 2-8 can be disabled by unsetting RCS or GLOBAL_RCS options
+[ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
+
+# Secrets
+[ -f "$HOME/.env" ] && source "$HOME/.env"
 
 # Set up relevant XDG base directories.
 # Spec: https://specifications.freedesktop.org/basedir-spec/latest/index.html
@@ -53,3 +34,27 @@ fi
 # ------------------------------------------------------------------------------
 export EDITOR=nvim
 export VISUAL=nvim
+
+# Locale settings
+export LANG="en_US.UTF-8" # Sets default locale for all categories
+export LC_ALL="en_US.UTF-8" # Overrides all other locale settings
+export LC_CTYPE="en_US.UTF-8" # Controls character classification and case conversion
+
+# Use Neovim as default editor
+export EDITOR="nvim"
+export VISUAL="nvim"
+
+# Add /usr/local/bin to the beginning of the PATH environment variable.
+# This ensures that executables in /usr/local/bin are found before other directories in the PATH.
+export PATH="/usr/local/bin:$PATH"
+
+# Set LDFLAGS environment variable for the linker to use the specified directories for library files.
+# This is useful when building software that depends on non-standard library locations, like zlib and bzip2 in this case.
+export LDFLAGS="-L/usr/local/opt/zlib/lib -L/usr/local/opt/bzip2/lib"
+
+# Set CPPFLAGS environment variable for the C/C++ preprocessor to use the specified directories for header files.
+# This is useful when building software that depends on non-standard header locations, like zlib and bzip2 in this case.
+export CPPFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include"
+
+# Hide computer name in terminal
+export DEFAULT_USER="$(whoami)"
