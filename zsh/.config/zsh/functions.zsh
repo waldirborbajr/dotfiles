@@ -85,7 +85,8 @@ tmx() {
     # tmux attach || tmux new
     tmux attach -t default >/dev/null 2>&1 || tmux new -s default
   fi
-}
+} 
+# } && export -f tmx
 
 lzg() { command -v lazygit >/dev/null && lazygit }
 lzq() { command -v lazysql >/dev/null && lazysql }

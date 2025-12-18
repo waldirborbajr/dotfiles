@@ -91,3 +91,18 @@ quick_commit() {
 
 alias gqc='quick_commit'
 alias gqcp='quick_commit push'
+
+# rwxrob
+alias todo='nvim ~/.todo'
+alias ip='ip -c'
+alias '?'=gpt
+alias '??'=duck
+alias '???'=google
+alias dot='cd ~/dotfiles/'
+alias prj='cd ~/prj/'
+alias ls='ls -h --color=auto'
+alias free='free -h'
+alias tree='tree -a'
+alias df='df -h'
+alias chmox='chmod +x'
+alias diff='diff --color'
