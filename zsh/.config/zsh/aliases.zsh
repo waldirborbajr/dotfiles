@@ -106,3 +106,5 @@ alias tree='tree -a'
 alias df='df -h'
 alias chmox='chmod +x'
 alias diff='diff --color'
+
+alias syslist='systemctl list-units —type=service --state=running'
