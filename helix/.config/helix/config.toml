@@ -9,18 +9,20 @@ true-color = true
 bufferline = "multiple"
 completion-timeout = 15
 auto-completion = true
-undercurl = false
+auto-format = true          # Novo: formata automaticamente ao salvar (se LSP suportar)
 auto-info = true
+idle-timeout = 50           # Mais responsivo para LSP/inlay hints
 text-width = 99
+rulers = [100]              # Novo: linha vertical em 100 colunas (ajuste se preferir 80/120)
 gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
-# Minimum severity to show a diagnostic after the end of a line:
 end-of-line-diagnostics = "hint"
 
 [editor.inline-diagnostics]
-cursor-line = "error" # Show inline diagnostics when the cursor is on the line
-other-lines = "disable" # Don't expand diagnostics unless the cursor is on the line
+cursor-line = "error"
+other-lines = "warning"     # Melhor: mostra warnings/hints em outras linhas também
 
 [editor.cursor-shape]
+normal = "block"            # Adicionado: mais comum e visível
 insert = "bar"
 select = "underline"
 
@@ -30,41 +32,27 @@ mode.insert = "INS"
 mode.select = "SEL"
 left = ["mode", "spinner", "version-control", "spacer"]
 separator = "│"
-center = [
-  "file-base-name",
-  "read-only-indicator",
-  "file-modification-indicator",
-]
-right = [
-  "diagnostics",
-  "primary-selection-length",
-  "selections",
-  "register",
-  "position",
-  "total-line-numbers",
-  "file-encoding",
-  "file-type",
-]
+center = ["file-base-name", "read-only-indicator", "file-modification-indicator"]
+right = ["diagnostics", "primary-selection-length", "selections", "register", "position", "total-line-numbers", "file-encoding", "file-type"]
 
 [editor.lsp]
 enable = true
-# Disable automatically popups of signature parameter help
 auto-signature-help = false
-# Show LSP messages in the status line
 display-messages = true
+display-inlay-hints = true  # Novo: ativa inlay hints por default (pode toggle com space l)
 
 [editor.soft-wrap]
 enable = true
-max-wrap = 25 # increase value to reduce forced mid-word wrapping
+max-wrap = 100              # Melhor que 25: evita quebras excessivas no meio de palavras
 max-indent-retain = 0
-wrap-indicator = ""  # set wrap-indicator to "" to hide it
+wrap-indicator = ""         # Esconde o indicador de wrap
 
 [editor.file-picker]
 hidden = false
-ignore = false
-git-ignore = false
-git-global = false
-git-exclude = false
+ignore = true               # Recomendado: respeita .ignore
+git-ignore = true           # Recomendado: respeita .gitignore (picker mais limpo)
+git-global = true
+git-exclude = true
 
 [editor.indent-guides]
 render = true
@@ -79,7 +67,8 @@ G = "goto_file_end"
 
 # lazygit
 C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw", ":rla"]
-# yazi
+
+# yazi (mantido como estava)
 C-y = [
   ':sh rm -f /tmp/unique-file',
   ':insert-output yazi %{buffer_name} --chooser-file=/tmp/unique-file',
@@ -96,4 +85,3 @@ a = "select_textobject_around"
 
 [keys.normal.space]
 l = ":toggle lsp.display-inlay-hints"
-
