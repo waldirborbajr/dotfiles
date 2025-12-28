@@ -1,24 +1,10 @@
 ####################################################################################################
-# go
+# GO — indentação com 2 espaços (não idiomático, mas consistente globalmente)
 ####################################################################################################
 
 [language-server.gopls]
 command = "gopls"
-indent = { tab-width = 4, unit = "\t" }
-
-[language-server.gopls.config.hints]
-assignVariableTypes = true
-compositeLiteralFields = true
-constantValues = true
-functionTypeParameters = true
-parameterNames = true
-rangeVariableTypes = true
-
-[language-server.golangci-lint-lsp]
-command = "golangci-lint-langserver"
-
-[language-server.golangci-lint-lsp.config]
-command = ["golangci-lint", "run", "--output.json.path=stdout", "--show-stats=false", "--issues-exit-code=1"]
+indent = { tab-width = 2, unit = "  " }     # ALTERADO: 2 espaços, sem tab
 
 [[language]]
 name = "go"
@@ -26,120 +12,22 @@ scope = "source.go"
 injection-regex = "go"
 file-types = ["go"]
 roots = ["go.work", "go.mod"]
+
 auto-format = true
-comment-token = "//"
-block-comment-tokens = { start = "/*", end = "*/" }
-language-servers = ["gopls", "golangci-lint-lsp"]
-indent = { tab-width = 4, unit = "\t" }
 formatter = { command = "goimports" }
 
-[language.debugger]
-name = "go"
-transport = "tcp"
-command = "dlv"
-args = ["dap"]
-port-arg = "-l 127.0.0.1:{}"
+comment-token = "//"
+block-comment-tokens = { start = "/*", end = "*/" }
 
-[[language.debugger.templates]]
-name = "source"
-request = "launch"
-completion = [{ name = "entrypoint", completion = "filename", default = "." }]
-args = { mode = "debug", program = "{0}" }
+language-servers = ["gopls", "golangci-lint-lsp"]
 
-[[language.debugger.templates]]
-name = "binary"
-request = "launch"
-completion = [{ name = "binary", completion = "filename" }]
-args = { mode = "exec", program = "{0}" }
+indent = { tab-width = 2, unit = "  " }     # ALTERADO: força 2 espaços no editor
 
-[[language.debugger.templates]]
-name = "test"
-request = "launch"
-completion = [{ name = "tests", completion = "directory", default = "." }]
-args = { mode = "test", program = "{0}" }
-
-[[language.debugger.templates]]
-name = "attach"
-request = "attach"
-completion = ["pid"]
-args = { mode = "local", processId = "{0}" }
-
-[[language.debugger.templates]]
-name = "core"
-request = "launch"
-completion = [
-  { name = "binary", completion = "filename" },
-  { name = "core", completion = "filename" },
-]
-args = { mode = "core", program = "{0}", coreFilePath = "{1}" }
-
-[[grammar]]
-name = "go"
-source = { git = "https://github.com/tree-sitter/tree-sitter-go", rev = "64457ea6b73ef5422ed1687178d4545c3e91334a" }
-
-# [[language]]
-# name = "gomod"
-# scope = "source.gomod"
-# injection-regex = "gomod"
-# file-types = [{ glob = "go.mod" }]
-# auto-format = true
-# comment-token = "//"
-# language-servers = ["gopls"]
-# indent = { tab-width = 4, unit = "\t" }
-
-# [[grammar]]
-# name = "gomod"
-# source = { git = "https://github.com/camdencheek/tree-sitter-go-mod", rev = "6efb59652d30e0e9cd5f3b3a669afd6f1a926d3c" }
-
-# [[language]]
-# name = "gotmpl"
-# scope = "source.gotmpl"
-# injection-regex = "gotmpl"
-# file-types = ["gotmpl"]
-# comment-token = "//"
-# block-comment-tokens = { start = "/*", end = "*/" }
-# language-servers = ["gopls"]
-# indent = { tab-width = 4, unit = " " }
-
-# [[grammar]]
-# name = "gotmpl"
-# source = { git = "https://github.com/dannylongeuay/tree-sitter-go-template", rev = "395a33e08e69f4155156f0b90138a6c86764c979" }
-
-# [[language]]
-# name = "gowork"
-# scope = "source.gowork"
-# injection-regex = "gowork"
-# file-types = [{ glob = "go.work" }]
-# auto-format = true
-# comment-token = "//"
-# language-servers = ["gopls"]
-# indent = { tab-width = 4, unit = "\t" }
-
-# [[grammar]]
-# name = "gowork"
-# source = { git = "https://github.com/omertuc/tree-sitter-go-work", rev = "6dd9dd79fb51e9f2abc829d5e97b15015b6a8ae2" }
+persistent-diagnostic-sources = ["gopls"]
 
 ####################################################################################################
-# rust
+# RUST — já idiomático com 2 espaços (mantido)
 ####################################################################################################
-
-# introduce new language server
-[language-server.scls]
-command = "simple-completion-language-server"
-
-[language-server.scls.config]
-max_completion_items = 100           # set max completion results len for each group: words, snippets, unicode-input
-feature_words = false                # enable completion by word
-feature_snippets = true              # enable snippets
-snippets_first = true                # completions will return before snippets by default
-snippets_inline_by_word_tail = false # suggest snippets by WORD tail, for example text `xsq|` become `x^2|` when snippet `sq` has body `^2`
-feature_unicode_input = false        # enable "unicode input"
-feature_paths = false                # enable path completion
-feature_citations = false            # enable citation completion (only on `citation` feature enabled)
-
-
-[language-server.rust_lsp]
-command = "rust-analyzer"
 
 [[language]]
 name = "rust"
@@ -147,84 +35,24 @@ scope = "source.rust"
 injection-regex = "rs|rust"
 file-types = ["rs"]
 roots = ["Cargo.toml", "Cargo.lock"]
-shebangs = ["rust-script", "cargo"]
+
 auto-format = true
 comment-tokens = ["//", "///", "//!"]
+
 block-comment-tokens = [
   { start = "/*", end = "*/" },
   { start = "/**", end = "*/" },
-  { start = "/*!", end = "*/" },
+  { start = "/*!", end = "*/" }
 ]
-language-servers = [ "scls", "rust-analyzer" ]
-indent = { tab-width = 2, unit = "\t" }
+
+language-servers = ["rust-analyzer"]
+
+indent = { tab-width = 2, unit = "  " }     # CONFIRMADO: 2 espaços, sem tab
+
 persistent-diagnostic-sources = ["rustc", "clippy"]
 
-[language.auto-pairs]
-'(' = ')'
-'{' = '}'
-'[' = ']'
-'"' = '"'
-'<' = '>'
-'`' = '`'
-
-[language.debugger]
-name = "lldb-dap"
-transport = "stdio"
-command = "lldb-dap"
-
-[[language.debugger.templates]]
-name = "binary"
-request = "launch"
-completion = [{ name = "binary", completion = "filename" }]
-args = { program = "{0}" }
-
-[[language.debugger.templates]]
-name = "binary (terminal)"
-request = "launch"
-completion = [{ name = "binary", completion = "filename" }]
-args = { program = "{0}", runInTerminal = true }
-
-[[language.debugger.templates]]
-name = "attach"
-request = "attach"
-completion = ["pid"]
-args = { pid = "{0}" }
-
-[[language.debugger.templates]]
-name = "gdbserver attach"
-request = "attach"
-completion = [
-  { name = "lldb connect url", default = "connect://localhost:3333" },
-  { name = "file", completion = "filename" },
-  "pid",
-]
-args = { attachCommands = [
-  "platform select remote-gdb-server",
-  "platform connect {0}",
-  "file {1}",
-  "attach {2}",
-] }
-
-[[grammar]]
-name = "rust"
-source = { git = "https://github.com/tree-sitter/tree-sitter-rust", rev = "1f63b33efee17e833e0ea29266dd3d713e27e321" }
-
-[language-server.rust-analyzer]
-command = "rust-analyzer"
-
-[language-server.rust-analyzer.config]
-inlayHints.bindingModeHints.enable = false
-inlayHints.closingBraceHints.minLines = 10
-inlayHints.closureReturnTypeHints.enable = "with_block"
-inlayHints.discriminantHints.enable = "fieldless"
-inlayHints.lifetimeElisionHints.enable = "skip_trivial"
-inlayHints.typeHints.hideClosureInitialization = false
-
-[language-server.rust-analyzer.config.files]
-watcher = "server"
-
 ####################################################################################################
-# markdown
+# MARKDOWN — 2 espaços (mantido)
 ####################################################################################################
 
 [[language]]
@@ -233,22 +61,36 @@ scope = "source.md"
 injection-regex = "md|markdown"
 file-types = ["md"]
 roots = []
-indent = { tab-width = 2, unit = "  " }
 
-[[grammar]]
-name = "markdown"
-source = { git = "https://github.com/MDeiml/tree-sitter-markdown", rev = "142a5b4a1b092b64c9f5db8f11558f9dd4009a1b", subpath = "tree-sitter-markdown" }
+indent = { tab-width = 2, unit = "  " }     # CONFIRMADO: padrão Markdown
+
+auto-format = false
+language-servers = []
+
+####################################################################################################
+# NIX — 2 espaços, alinhado ao alejandra
+####################################################################################################
+
+[language-server.nixd]
+command = "nixd"
+
+[language-server.nixd.config]
+formatting.command = ["alejandra"]
+diagnostics.suppress = ["sema-escaping"]
+options.enable = true
 
 [[language]]
-name = "markdown.inline"
-scope = "source.markdown.inline"
-injection-regex = "markdown\\.inline"
-file-types = []
-roots = []
-grammar = "markdown_inline"
+name = "nix"
+scope = "source.nix"
+injection-regex = "nix"
+file-types = ["nix"]
+roots = ["flake.nix", "shell.nix", "default.nix"]
 
-[[grammar]]
-name = "markdown_inline"
-source = { git = "https://github.com/MDeiml/tree-sitter-markdown", rev = "142a5b4a1b092b64c9f5db8f11558f9dd4009a1b", subpath = "tree-sitter-markdown-inline" }
+auto-format = true
+formatter = { command = "alejandra" }
 
+comment-token = "#"
 
+language-servers = ["nixd"]
+
+indent = { tab-width = 2, unit = "  " }     # CONFIRMADO: 2 espaços, sem tab
