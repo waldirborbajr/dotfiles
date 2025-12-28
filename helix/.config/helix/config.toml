@@ -1,126 +1,96 @@
-theme = "catppuccin_frappe"
+####################################################################################################
+# GO — indentação com 2 espaços (não idiomático, mas consistente globalmente)
+####################################################################################################
 
-[editor]
-line-number = "relative"
-mouse = false
-color-modes = true
-cursorline = true
-true-color = true
-bufferline = "multiple"
+[language-server.gopls]
+command = "gopls"
+indent = { tab-width = 2, unit = "  " }     # ALTERADO: 2 espaços, sem tab
 
-completion-timeout = 15
-auto-completion = true
-auto-format = true            # NOVO: formata automaticamente ao salvar (via LSP)
-auto-info = true
+[[language]]
+name = "go"
+scope = "source.go"
+injection-regex = "go"
+file-types = ["go"]
+roots = ["go.work", "go.mod"]
 
-idle-timeout = 100             # AJUSTADO: equilíbrio entre responsividade e CPU
-scroll-lines = 3               # NOVO: scroll mais suave
+auto-format = true
+formatter = { command = "goimports" }
 
-text-width = 99
-rulers = [100]                 # NOVO: guia visual de coluna (bom para Go/Rust)
+comment-token = "//"
+block-comment-tokens = { start = "/*", end = "*/" }
 
-gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
-end-of-line-diagnostics = "hint"
+language-servers = ["gopls", "golangci-lint-lsp"]
 
-[editor.inline-diagnostics]
-cursor-line = "error"
-other-lines = "warning"       # AJUSTADO: mostra warnings/hints fora da linha atual
+indent = { tab-width = 2, unit = "  " }     # ALTERADO: força 2 espaços no editor
 
-[editor.cursor-shape]
-normal = "block"              # NOVO: modo normal explícito e mais visível
-insert = "bar"
-select = "underline"
+persistent-diagnostic-sources = ["gopls"]
 
-[editor.statusline]
-separator = "│"
+####################################################################################################
+# RUST — já idiomático com 2 espaços (mantido)
+####################################################################################################
 
-mode.normal = "NOR"
-mode.insert = "INS"
-mode.select = "SEL"
+[[language]]
+name = "rust"
+scope = "source.rust"
+injection-regex = "rs|rust"
+file-types = ["rs"]
+roots = ["Cargo.toml", "Cargo.lock"]
 
-left = [
-  "mode",
-  "spinner",
-  "version-control",
-  "spacer"
+auto-format = true
+comment-tokens = ["//", "///", "//!"]
+
+block-comment-tokens = [
+  { start = "/*", end = "*/" },
+  { start = "/**", end = "*/" },
+  { start = "/*!", end = "*/" }
 ]
 
-center = [
-  "file-base-name",
-  "read-only-indicator",
-  "file-modification-indicator"
-]
+language-servers = ["rust-analyzer"]
 
-right = [
-  "diagnostics",
-  "selections",               # AJUSTADO: mais útil que selection-length primeiro
-  "primary-selection-length",
-  "position",
-  "total-line-numbers",
-  "file-encoding",
-  "file-type"
-]
+indent = { tab-width = 2, unit = "  " }     # CONFIRMADO: 2 espaços, sem tab
 
-[editor.lsp]
-enable = true
-auto-signature-help = false
-display-messages = true
-display-inlay-hints = true    # NOVO: inlay hints ligados por padrão
-snippets = true               # NOVO: habilita snippets do LSP
-goto-reference-include-declaration = false  # NOVO: evita refs duplicadas
+persistent-diagnostic-sources = ["rustc", "clippy"]
 
-[editor.soft-wrap]
-enable = true
-max-wrap = 100                # AJUSTADO: evita quebras agressivas (melhor leitura)
-max-indent-retain = 0
-wrap-indicator = ""           # NOVO: remove símbolo visual de wrap
+####################################################################################################
+# MARKDOWN — 2 espaços (mantido)
+####################################################################################################
 
-[editor.file-picker]
-hidden = false
-ignore = true                 # AJUSTADO: respeita .ignore
-git-ignore = true             # AJUSTADO: respeita .gitignore
-git-global = true             # AJUSTADO
-git-exclude = true            # AJUSTADO
+[[language]]
+name = "markdown"
+scope = "source.md"
+injection-regex = "md|markdown"
+file-types = ["md"]
+roots = []
 
-[editor.indent-guides]
-render = true
-character = "▏"               # NOVO: guia mais limpa visualmente
-skip-levels = 1               # NOVO: reduz poluição em níveis rasos
+indent = { tab-width = 2, unit = "  " }     # CONFIRMADO: padrão Markdown
 
-[keys.normal]
-"%" = "match_brackets"
-"$" = "goto_line_end"
-"0" = "goto_line_start"
-"G" = "goto_file_end"
+auto-format = false
+language-servers = []
 
-"*" = ["move_char_right", "move_prev_word_start", "move_next_word_end", "search_selection", "search_next"]
-"#" = ["move_char_right", "move_prev_word_start", "move_next_word_end", "search_selection", "search_prev"]
+####################################################################################################
+# NIX — 2 espaços, alinhado ao alejandra
+####################################################################################################
 
-# lazygit
-"C-g" = [
-  ":new",
-  ":insert-output lazygit",
-  ":buffer-close!",
-  ":redraw",
-  ":reload-all"               # AJUSTADO: substitui :rla por comando oficial
-]
+[language-server.nixd]
+command = "nixd"
 
-# yazi
-"C-y" = [
-  ":sh rm -f /tmp/unique-file",
-  ":insert-output yazi %{buffer_name} --chooser-file=/tmp/unique-file",
-  ":insert-output echo \"\\x1b[?1049h\\x1b[?2004h\" > /dev/tty",
-  ":open %sh{cat /tmp/unique-file}",
-  ":redraw",
-  ":set mouse false",
-  ":set mouse true"
-]
+[language-server.nixd.config]
+formatting.command = ["alejandra"]
+diagnostics.suppress = ["sema-escaping"]
+options.enable = true
 
-[keys.select]
-i = "select_textobject_inner"
-a = "select_textobject_around"
+[[language]]
+name = "nix"
+scope = "source.nix"
+injection-regex = "nix"
+file-types = ["nix"]
+roots = ["flake.nix", "shell.nix", "default.nix"]
 
-[keys.normal.space]
-l = ":toggle lsp.display-inlay-hints"
-w = ":write"                  # NOVO: leader+w salva
-q = ":quit"                   # NOVO: leader+q sai
+auto-format = true
+formatter = { command = "alejandra" }
+
+comment-token = "#"
+
+language-servers = ["nixd"]
+
+indent = { tab-width = 2, unit = "  " }     # CONFIRMADO: 2 espaços, sem tab
