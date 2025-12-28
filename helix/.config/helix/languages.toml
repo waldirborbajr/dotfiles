@@ -4,7 +4,10 @@
 
 [language-server.gopls]
 command = "gopls"
-indent = { tab-width = 4, unit = "\t" }     # ALTERADO: volta para TAB com largura 4
+indent = { tab-width = 4, unit = "\t" }     # PADRÃO FINAL: TAB / 4
+
+[language-server.golangci-lint-lsp]
+command = "golangci-lint-langserver"
 
 [[language]]
 name = "go"
@@ -21,13 +24,16 @@ block-comment-tokens = { start = "/*", end = "*/" }
 
 language-servers = ["gopls", "golangci-lint-lsp"]
 
-indent = { tab-width = 4, unit = "\t" }     # ALTERADO: editor alinhado ao gofmt
+indent = { tab-width = 4, unit = "\t" }     # PADRÃO FINAL
 
 persistent-diagnostic-sources = ["gopls"]
 
 ####################################################################################################
-# RUST — padrão idiomático: TAB com largura 4
+# RUST — padrão consistente: TAB com largura 4
 ####################################################################################################
+
+[language-server.rust-analyzer]
+command = "rust-analyzer"
 
 [[language]]
 name = "rust"
@@ -37,6 +43,7 @@ file-types = ["rs"]
 roots = ["Cargo.toml", "Cargo.lock"]
 
 auto-format = true
+
 comment-tokens = ["//", "///", "//!"]
 
 block-comment-tokens = [
@@ -47,12 +54,12 @@ block-comment-tokens = [
 
 language-servers = ["rust-analyzer"]
 
-indent = { tab-width = 4, unit = "\t" }     # ALTERADO: volta para TAB/4 (rustfmt aceita)
+indent = { tab-width = 4, unit = "\t" }     # PADRÃO FINAL
 
 persistent-diagnostic-sources = ["rustc", "clippy"]
 
 ####################################################################################################
-# MARKDOWN — mantido simples (espaços não fazem diferença sem auto-format)
+# MARKDOWN — simples, sem LSP
 ####################################################################################################
 
 [[language]]
@@ -62,13 +69,13 @@ injection-regex = "md|markdown"
 file-types = ["md"]
 roots = []
 
-indent = { tab-width = 4, unit = "\t" }     # ALTERADO: consistência global
-
 auto-format = false
 language-servers = []
 
+indent = { tab-width = 4, unit = "\t" }     # CONSISTÊNCIA GLOBAL
+
 ####################################################################################################
-# NIX — alinhado ao padrão geral (formatter decide)
+# NIX — nixd + alejandra
 ####################################################################################################
 
 [language-server.nixd]
@@ -93,4 +100,4 @@ comment-token = "#"
 
 language-servers = ["nixd"]
 
-indent = { tab-width = 4, unit = "\t" }     # ALTERADO: TAB com largura 4
+indent = { tab-width = 4, unit = "\t" }     # PADRÃO FINAL
