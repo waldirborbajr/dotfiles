@@ -1,96 +1,127 @@
-####################################################################################################
-# GO — indentação com 2 espaços (não idiomático, mas consistente globalmente)
-####################################################################################################
+theme = "catppuccin_frappe"
 
-[language-server.gopls]
-command = "gopls"
-indent = { tab-width = 2, unit = "  " }     # ALTERADO: 2 espaços, sem tab
+[editor]
+line-number = "relative"
+mouse = false
+color-modes = true
+cursorline = true
+true-color = true
+bufferline = "multiple"
 
-[[language]]
-name = "go"
-scope = "source.go"
-injection-regex = "go"
-file-types = ["go"]
-roots = ["go.work", "go.mod"]
+# Completion
+auto-completion = true
+completion-timeout = 15
+auto-info = true
 
-auto-format = true
-formatter = { command = "goimports" }
+# Layout
+text-width = 99
+gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
+end-of-line-diagnostics = "hint"
 
-comment-token = "//"
-block-comment-tokens = { start = "/*", end = "*/" }
+# UX
+undercurl = false
+idle-timeout = 200
+scroll-lines = 3
 
-language-servers = ["gopls", "golangci-lint-lsp"]
+[editor.inline-diagnostics]
+cursor-line = "error"
+other-lines = "disable"
 
-indent = { tab-width = 2, unit = "  " }     # ALTERADO: força 2 espaços no editor
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
 
-persistent-diagnostic-sources = ["gopls"]
+[editor.statusline]
+separator = "│"
 
-####################################################################################################
-# RUST — já idiomático com 2 espaços (mantido)
-####################################################################################################
+mode.normal = "NOR"
+mode.insert = "INS"
+mode.select = "SEL"
 
-[[language]]
-name = "rust"
-scope = "source.rust"
-injection-regex = "rs|rust"
-file-types = ["rs"]
-roots = ["Cargo.toml", "Cargo.lock"]
-
-auto-format = true
-comment-tokens = ["//", "///", "//!"]
-
-block-comment-tokens = [
-  { start = "/*", end = "*/" },
-  { start = "/**", end = "*/" },
-  { start = "/*!", end = "*/" }
+left = [
+  "mode",
+  "spinner",
+  "version-control",
+  "spacer"
 ]
 
-language-servers = ["rust-analyzer"]
+center = [
+  "file-base-name",
+  "read-only-indicator",
+  "file-modification-indicator"
+]
 
-indent = { tab-width = 2, unit = "  " }     # CONFIRMADO: 2 espaços, sem tab
+right = [
+  "diagnostics",
+  "selections",
+  "primary-selection-length",
+  "position",
+  "total-line-numbers",
+  "file-encoding",
+  "file-type"
+]
 
-persistent-diagnostic-sources = ["rustc", "clippy"]
+[editor.lsp]
+enable = true
+auto-signature-help = false
+display-messages = true
+snippets = true
+goto-reference-include-declaration = false
 
-####################################################################################################
-# MARKDOWN — 2 espaços (mantido)
-####################################################################################################
+[editor.soft-wrap]
+enable = true
+max-wrap = 25
+max-indent-retain = 0
+wrap-indicator = ""
 
-[[language]]
-name = "markdown"
-scope = "source.md"
-injection-regex = "md|markdown"
-file-types = ["md"]
-roots = []
+[editor.file-picker]
+hidden = false
+ignore = false
+git-ignore = false
+git-global = false
+git-exclude = false
 
-indent = { tab-width = 2, unit = "  " }     # CONFIRMADO: padrão Markdown
+[editor.indent-guides]
+render = true
+character = "▏"
+skip-levels = 1
 
-auto-format = false
-language-servers = []
+[keys.normal]
+"%" = "match_brackets"
+"$" = "goto_line_end"
+"0" = "goto_line_start"
+"G" = "goto_file_end"
 
-####################################################################################################
-# NIX — 2 espaços, alinhado ao alejandra
-####################################################################################################
+# Better word search like Vim
+"*" = ["move_char_right", "move_prev_word_start", "move_next_word_end", "search_selection", "search_next"]
+"#" = ["move_char_right", "move_prev_word_start", "move_next_word_end", "search_selection", "search_prev"]
 
-[language-server.nixd]
-command = "nixd"
+# Lazygit
+"C-g" = [
+  ":new",
+  ":insert-output lazygit",
+  ":buffer-close!",
+  ":redraw",
+  ":reload-all"
+]
 
-[language-server.nixd.config]
-formatting.command = ["alejandra"]
-diagnostics.suppress = ["sema-escaping"]
-options.enable = true
+# Yazi file manager
+"C-y" = [
+  ":sh rm -f /tmp/unique-file",
+  ":insert-output yazi %{buffer_name} --chooser-file=/tmp/unique-file",
+  ":insert-output echo \"\\x1b[?1049h\\x1b[?2004h\" > /dev/tty",
+  ":open %sh{cat /tmp/unique-file}",
+  ":redraw",
+  ":set mouse false",
+  ":set mouse true"
+]
 
-[[language]]
-name = "nix"
-scope = "source.nix"
-injection-regex = "nix"
-file-types = ["nix"]
-roots = ["flake.nix", "shell.nix", "default.nix"]
+[keys.select]
+i = "select_textobject_inner"
+a = "select_textobject_around"
 
-auto-format = true
-formatter = { command = "alejandra" }
-
-comment-token = "#"
-
-language-servers = ["nixd"]
-
-indent = { tab-width = 2, unit = "  " }     # CONFIRMADO: 2 espaços, sem tab
+[keys.normal.space]
+l = ":toggle lsp.display-inlay-hints"
+w = ":write"
+q = ":quit"
