@@ -1,10 +1,22 @@
 ####################################################################################################
-# GO — indentação com 2 espaços (não idiomático, mas consistente globalmente)
+# go - Performance + Assertividade: gopls (principal) + golangci-lint (linters fortes)
 ####################################################################################################
-
 [language-server.gopls]
 command = "gopls"
-indent = { tab-width = 2, unit = "  " }     # ALTERADO: 2 espaços, sem tab
+
+[language-server.gopls.config.hints]
+assignVariableTypes = true
+compositeLiteralFields = true
+constantValues = true
+functionTypeParameters = true
+parameterNames = true
+rangeVariableTypes = true
+
+[language-server.golangci-lint-lsp]
+command = "golangci-lint-langserver"
+
+[language-server.golangci-lint-lsp.config]
+command = ["golangci-lint", "run", "--out-format=json", "--issues-exit-code=1"]
 
 [[language]]
 name = "go"
@@ -12,22 +24,31 @@ scope = "source.go"
 injection-regex = "go"
 file-types = ["go"]
 roots = ["go.work", "go.mod"]
-
 auto-format = true
-formatter = { command = "goimports" }
-
 comment-token = "//"
 block-comment-tokens = { start = "/*", end = "*/" }
-
 language-servers = ["gopls", "golangci-lint-lsp"]
+indent = { tab-width = 2, unit = "  " }  # Alterado: 2 espaços (padrão moderno Go)
+formatter = { command = "goimports" }
 
-indent = { tab-width = 2, unit = "  " }     # ALTERADO: força 2 espaços no editor
-
-persistent-diagnostic-sources = ["gopls"]
+[[grammar]]
+name = "go"
+source = { git = "https://github.com/tree-sitter/tree-sitter-go", rev = "64457ea6b73ef5422ed1687178d4545c3e91334a" }
 
 ####################################################################################################
-# RUST — já idiomático com 2 espaços (mantido)
+# rust - Performance máxima: apenas rust-analyzer (Clippy on check, inlay hints mínimos)
 ####################################################################################################
+[language-server.rust-analyzer]
+command = "rust-analyzer"
+
+[language-server.rust-analyzer.config]
+check.command = "clippy"
+inlayHints.bindingModeHints.enable = false
+inlayHints.closingBraceHints.minLines = 10
+inlayHints.closureReturnTypeHints.enable = "with_block"
+inlayHints.discriminantHints.enable = "fieldless"
+inlayHints.lifetimeElisionHints.enable = "skip_trivial"
+inlayHints.typeHints.hideClosureInitialization = false
 
 [[language]]
 name = "rust"
@@ -35,62 +56,77 @@ scope = "source.rust"
 injection-regex = "rs|rust"
 file-types = ["rs"]
 roots = ["Cargo.toml", "Cargo.lock"]
-
 auto-format = true
 comment-tokens = ["//", "///", "//!"]
-
 block-comment-tokens = [
   { start = "/*", end = "*/" },
   { start = "/**", end = "*/" },
-  { start = "/*!", end = "*/" }
+  { start = "/*!", end = "*/" },
 ]
-
 language-servers = ["rust-analyzer"]
-
-indent = { tab-width = 2, unit = "  " }     # CONFIRMADO: 2 espaços, sem tab
-
+indent = { tab-width = 2, unit = "  " }  # Alterado: 2 espaços (alinhado com sua preferência)
 persistent-diagnostic-sources = ["rustc", "clippy"]
 
+[language.auto-pairs]
+'(' = ')'
+'{' = '}'
+'[' = ']'
+'"' = '"'
+'<' = '>'
+'`' = '`'
+
+[[grammar]]
+name = "rust"
+source = { git = "https://github.com/tree-sitter/tree-sitter-rust", rev = "261b20226c04ef601adbdf185a800512a5f66291" }
+
 ####################################################################################################
-# MARKDOWN — 2 espaços (mantido)
+# markdown - Leve e produtivo
 ####################################################################################################
+[language-server.marksman]
+command = "marksman"
 
 [[language]]
 name = "markdown"
 scope = "source.md"
 injection-regex = "md|markdown"
-file-types = ["md"]
+file-types = ["md", "markdown"]
 roots = []
+indent = { tab-width = 2, unit = "  " }  # Já estava com 2 espaços, mantido
+language-servers = ["marksman"]
 
-indent = { tab-width = 2, unit = "  " }     # CONFIRMADO: padrão Markdown
+[[grammar]]
+name = "markdown"
+source = { git = "https://github.com/MDeiml/tree-sitter-markdown", rev = "142a5b4a1b092b64c9f5db8f11558f9dd4009a1b", subpath = "tree-sitter-markdown" }
 
-auto-format = false
-language-servers = []
+[[language]]
+name = "markdown.inline"
+scope = "source.markdown.inline"
+injection-regex = "markdown\\.inline"
+file-types = []
+grammar = "markdown_inline"
+
+[[grammar]]
+name = "markdown_inline"
+source = { git = "https://github.com/MDeiml/tree-sitter-markdown", rev = "142a5b4a1b092b64c9f5db8f11558f9dd4009a1b", subpath = "tree-sitter-markdown-inline" }
 
 ####################################################################################################
-# NIX — 2 espaços, alinhado ao alejandra
+# nix - Performance + Assertividade: nixd + nixfmt-rfc-style
 ####################################################################################################
-
 [language-server.nixd]
 command = "nixd"
-
-[language-server.nixd.config]
-formatting.command = ["alejandra"]
-diagnostics.suppress = ["sema-escaping"]
-options.enable = true
 
 [[language]]
 name = "nix"
 scope = "source.nix"
 injection-regex = "nix"
 file-types = ["nix"]
-roots = ["flake.nix", "shell.nix", "default.nix"]
-
+roots = ["flake.nix", "shell.nix", ".nixpkgs"]
 auto-format = true
-formatter = { command = "alejandra" }
-
 comment-token = "#"
-
+indent = { tab-width = 2, unit = "  " }  # Já estava com 2 espaços, mantido
 language-servers = ["nixd"]
+formatter = { command = "nixfmt-rfc-style" }
 
-indent = { tab-width = 2, unit = "  " }     # CONFIRMADO: 2 espaços, sem tab
+[[grammar]]
+name = "nix"
+source = { git = "https://github.com/nix-community/tree-sitter-nix", rev = "1b69cf1fa92366eefbe6863c184e5d2ece5f187d" }
