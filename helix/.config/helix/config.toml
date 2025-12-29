@@ -33,18 +33,12 @@ normal = "block"
 select = "underline"
 
 [editor.statusline]
-separator = "│"
+left = ["mode", "spinner", "version-control", "file-name"]
+#separator = "│"
 
-mode.normal = "NOR"
-mode.insert = "INS"
-mode.select = "SEL"
-
-left = [
-  "mode",
-  "spinner",
-  "version-control",
-  "spacer"
-]
+#mode.normal = "NOR"
+#mode.insert = "INS"
+#mode.select = "SEL"
 
 center = [
   "file-base-name",
@@ -83,15 +77,22 @@ git-global = false
 git-exclude = false
 
 [editor.indent-guides]
+character = "╎"
 render = true
-character = "▏"
-skip-levels = 1
+#character = "▏"
+#skip-levels = 1
 
 [keys.normal]
 "%" = "match_brackets"
 "$" = "goto_line_end"
 "0" = "goto_line_start"
 "G" = "goto_file_end"
+"A-<" = "goto_previous_buffer"   # Alt <
+"A->" = "goto_next_buffer"       # Alt >
+"A-w" = ":buffer-close"          # Alt w
+"A-/" = "repeat_last_motion"     # Alt /
+A-x = "extend_to_line_bounds"
+X = "select_line_above"
 
 # Better word search like Vim
 "*" = ["move_char_right", "move_prev_word_start", "move_next_word_end", "search_selection", "search_next"]
@@ -120,6 +121,8 @@ skip-levels = 1
 [keys.select]
 i = "select_textobject_inner"
 a = "select_textobject_around"
+A-x = "extend_to_line_bounds"
+X = "select_line_above"
 
 [keys.normal.space]
 l = ":toggle lsp.display-inlay-hints"
