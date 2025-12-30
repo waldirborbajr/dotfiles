@@ -1,165 +1,120 @@
--- Improved wezterm.lua with cleaner structure, performance tweaks,
--- safer defaults, and better maintainability
-
+-- Pull in WezTerm API
 local wezterm = require("wezterm")
-local act = wezterm.action
 
--- Use config_builder when available
-local config = wezterm.config_builder and wezterm.config_builder() or {}
+-- Utility functions
+local window_background_opacity = 0.8
+local function toggle_window_background_opacity(window)
+  local overrides = window:get_config_overrides() or {}
+  if not overrides.window_background_opacity then
+    overrides.window_background_opacity = 1.0
+  else
+    overrides.window_background_opacity = nil
+  end
+  window:set_config_overrides(overrides)
+end
+wezterm.on("toggle-window-background-opacity", toggle_window_background_opacity)
 
--- ============================================================================
--- APPEARANCE
--- ============================================================================
-config.color_scheme = "Catppuccin Mocha"
+local function toggle_ligatures(window)
+  local overrides = window:get_config_overrides() or {}
+  if not overrides.harfbuzz_features then
+    overrides.harfbuzz_features = { "calt=0", "clig=0", "liga=0" }
+  else
+    overrides.harfbuzz_features = nil
+  end
+  window:set_config_overrides(overrides)
+end
+wezterm.on("toggle-ligatures", toggle_ligatures)
+
+-- Returns color scheme dependant on operating system theme setting (dark/light)
+local function color_scheme_for_appearance(appearance)
+  if appearance:find("Dark") then
+    return "Tokyo Night Moon"
+  else
+    return "Tokyo Night Day"
+  end
+end
+
+-- Initialize actual config
+local config = {}
+if wezterm.config_builder then
+  config = wezterm.config_builder()
+end
+
+-- Start tmux when opening WezTerm
+config.default_prog = { "/bin/zsh", "-l", "-c", "--", 'tmux new -As base' }
+
+-- Skip closing confirmation when tmux is running
+config.skip_close_confirmation_for_processes_named = { "tmux" }
+
+-- Appearance
+config.font = wezterm.font_with_fallback {
+  "JetBrains Mono Nerd Font",
+  "DepartureMono Nerd Font",
+  "IosevkaTerm Nerd Font Mono",
+  "JetBrainsMono Nerd Font",
+}
+config.font_size = 12.0
+config.color_scheme = color_scheme_for_appearance(wezterm.gui.get_appearance())
+config.window_background_opacity = window_background_opacity
+config.macos_window_background_blur = 10
 config.window_decorations = "RESIZE"
 config.hide_tab_bar_if_only_one_tab = true
-config.enable_tab_bar = false
+config.native_macos_fullscreen_mode = false
 config.use_fancy_tab_bar = false
-config.tab_bar_at_bottom = false
-config.check_for_updates = false
+config.max_fps = 144
+config.animation_fps = 144
 
-config.font = wezterm.font_with_fallback({ "JetBrains Mono Nerd Font" })
-config.font_size = 11.0
-config.harfbuzz_features = { "calt=0" }
-
-config.window_background_opacity = 0.95
-config.macos_window_background_blur = 10
-config.default_cursor_style = "SteadyBar"
-
-config.window_padding = {
-	left = 5,
-	right = 0,
-	top = 5,
-	bottom = 0,
-}
-
--- ============================================================================
--- PERFORMANCE / BEHAVIOR
--- ============================================================================
-config.default_cwd = wezterm.home_dir
-config.scrollback_lines = 20000
-config.enable_scroll_bar = false
-config.animation_fps = 60
-config.max_fps = 120
-config.adjust_window_size_when_changing_font_size = false
-config.window_close_confirmation = "NeverPrompt"
-config.inactive_pane_hsb = {
-	saturation = 0.8,
-	brightness = 0.7,
-}
-
--- ============================================================================
--- WEZTERM INTEROPERABILITY (recommended for tmux + nvim + wezterm)
--- ============================================================================
--- Tell wezterm to emulate kitty keyboard protocol (helps with complex key maps)
-config.enable_kitty_keyboard = true
--- Ensure a stable TERM value outside tmux; tmux will set tmux-256color inside sessions
--- config.term = "wezterm"
-
--- ============================================================================
--- KEYS: send Alt/Meta sequences to the shell so tmux/vim receive them as expected
--- ============================================================================
--- Goal: Alt-h/j/k/l -> navigate panes in tmux/nvim; Alt+Shift -> resize; digits Alt+1..9 -> select windows
+-- Keybindings
 config.keys = {
-	-- Alt + h/j/k/l -> send ESC + letter (Meta key)
-	{ key = "h", mods = "ALT", action = act.SendString("\x1bh") },
-	{ key = "j", mods = "ALT", action = act.SendString("\x1bj") },
-	{ key = "k", mods = "ALT", action = act.SendString("\x1bk") },
-	{ key = "l", mods = "ALT", action = act.SendString("\x1bl") },
-
-	-- Alt+Shift H/J/K/L -> send ESC + uppercase letter (Meta+Shift)
-	{ key = "H", mods = "ALT|SHIFT", action = act.SendString("\x1bH") },
-	{ key = "J", mods = "ALT|SHIFT", action = act.SendString("\x1bJ") },
-	{ key = "K", mods = "ALT|SHIFT", action = act.SendString("\x1bK") },
-	{ key = "L", mods = "ALT|SHIFT", action = act.SendString("\x1bL") },
-
-	-- Copy / Paste (Ctrl+Shift C / V)
-	{ key = "c", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") },
-	{ key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") },
-
-	-- Open links with mouse is kept; these keys help tmux window selection via Alt+1..9
+  {
+    key = "O",
+    mods = "CTRL|SHIFT",
+    action = wezterm.action.EmitEvent("toggle-window-background-opacity"),
+  },
+  {
+    key = "E",
+    mods = "CTRL|SHIFT",
+    action = wezterm.action.EmitEvent("toggle-ligatures"),
+  },
+  -- Quickly open config file with common macOS keybind
+  {
+    key = ",",
+    mods = "SUPER",
+    action = wezterm.action.SpawnCommandInNewWindow({
+      cwd = os.getenv("WEZTERM_CONFIG_DIR"),
+      args = { os.getenv("SHELL"), "-l", "-c", 'eval "$(mise env zsh)" && source "$XDG_DATA_HOME/bob/env/env.sh" && $VISUAL $WEZTERM_CONFIG_FILE' },
+    }),
+  },
+  -- Quickly open config file with alternative keybind
+  {
+    key = "<",
+    mods = "CTRL|SHIFT",
+    action = wezterm.action.SpawnCommandInNewWindow({
+      cwd = os.getenv("WEZTERM_CONFIG_DIR"),
+      args = { os.getenv("SHELL"), "-l", "-c", 'eval "$(mise env zsh)" && source "$XDG_DATA_HOME/bob/env/env.sh" && $VISUAL $WEZTERM_CONFIG_FILE' },
+    }),
+  },
+  -- Spawn Window without tmux
+  {
+    key = ">",
+    mods = "CTRL|SHIFT",
+    action = wezterm.action.SpawnCommandInNewWindow({
+      args = { os.getenv("SHELL"), "-l", "-c", "zsh" },
+    }),
+  },
+  -- Disable CTRL+N (default new window binding)
+  {
+    key = "n",
+    mods = "CTRL",
+    action = wezterm.action.DisableDefaultAssignment,
+  },
+  -- Bind new window to CTRL+SHIFT+N instead
+  {
+    key = "n",
+    mods = "CTRL|SHIFT",
+    action = wezterm.action.SpawnWindow,
+  },
 }
 
--- Dynamically add Alt+1..9 and Alt+0 (0 -> 10th)
-for i = 1, 9 do
-	table.insert(config.keys, { key = tostring(i), mods = "ALT", action = act.SendString("\x1b" .. tostring(i)) })
-end
--- Alt+0 -> send ESC+0
-table.insert(config.keys, { key = "0", mods = "ALT", action = act.SendString("\x1b0") })
-
--- ============================================================================
--- MOUSE BINDINGS
--- ============================================================================
-config.mouse_bindings = {
-	{
-		event = { Up = { streak = 1, button = "Left" } },
-		mods = "NONE",
-		action = act.OpenLinkAtMouseCursor,
-	},
-}
-
--- from: https://akos.ma/blog/adopting-wezterm/
-config.hyperlink_rules = {
-	-- Matches: a URL in parens: (URL)
-	{
-		regex = "\\((\\w+://\\S+)\\)",
-		format = "$1",
-		highlight = 1,
-	},
-	-- Matches: a URL in brackets: [URL]
-	{
-		regex = "\\[(\\w+://\\S+)\\]",
-		format = "$1",
-		highlight = 1,
-	},
-	-- Matches: a URL in curly braces: {URL}
-	{
-		regex = "\\{(\\w+://\\S+)\\}",
-		format = "$1",
-		highlight = 1,
-	},
-	-- Matches: a URL in angle brackets: <URL>
-	{
-		regex = "<(\\w+://\\S+)>",
-		format = "$1",
-		highlight = 1,
-	},
-	-- Then handle URLs not wrapped in brackets
-	{
-		regex = "[^(]\\b(\\w+://\\S+[)/a-zA-Z0-9-]+)",
-		format = "$1",
-		highlight = 1,
-	},
-}
-
--- ============================================================================
--- STATUS BAR (right side)
--- ============================================================================
-wezterm.on("update-right-status", function(window, _)
-	local date = wezterm.strftime("%Y-%m-%d %H:%M:%S")
-	window:set_right_status(wezterm.format({
-		{ Foreground = { Color = "#89b4fa" } },
-		{ Text = " " .. date .. " " },
-	}))
-end)
-
--- ============================================================================
--- TAB TITLE CUSTOMIZATION
--- ============================================================================
-wezterm.on("format-tab-title", function(tab)
-	local pane = tab.active_pane
-
-	local cwd_uri = pane.current_working_dir
-	local cwd = cwd_uri and (cwd_uri.file_path or cwd_uri.path) or ""
-	if cwd ~= "" then
-		cwd = cwd:gsub("^.*[/\\]([^/\\]+)[/\\]?$", "%1")
-	end
-
-	local process = pane.foreground_process_name or ""
-	return cwd .. " - " .. process
-end)
-
--- ============================================================================
--- RETURN
--- ============================================================================
+-- Return config to WezTerm
 return config
