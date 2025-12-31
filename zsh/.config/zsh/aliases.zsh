@@ -49,7 +49,7 @@ alias nv="nvim"
 alias yz="yazi"
 alias lg="lazygit"
 
-gcm() { git commit --message "$*" }
+# gcm() { git commit --message "$*" }
 
 # Aliases: docker
 alias dps='docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"'
