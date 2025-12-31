@@ -38,14 +38,14 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 zinit light b4b4r07/enhancd
 zinit light Peltoche/lsd
 zinit wait"1" lucid from"gh-r" as"null" for \
-    sbin"**/fd"        sharkdp/fd \
-    sbin"**/bat"       sharkdp/bat \
-    sbin"**/rg"        BurntSushi/ripgrep \
-    sbin"**/delta"     dandavison/delta \
-    sbin"**/lsd"       lsd-rs/lsd \
-    sbin"**/jq"        jqlang/jq \
-    sbin"**/yq"        mikefarah/yq \
-    sbin"**/zoxide"    ajeetdsouza/zoxide \
+#    sbin"**/fd"        sharkdp/fd \
+#    sbin"**/bat"       sharkdp/bat \
+#    sbin"**/rg"        BurntSushi/ripgrep \
+#    sbin"**/delta"     dandavison/delta \
+#    sbin"**/lsd"       lsd-rs/lsd \
+#    sbin"**/jq"        jqlang/jq \
+#    sbin"**/yq"        mikefarah/yq \
+#    sbin"**/zoxide"    ajeetdsouza/zoxide \
     sbin"**/eza" eza-community/eza
 
 # Install fzf
