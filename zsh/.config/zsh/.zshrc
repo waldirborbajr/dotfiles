@@ -38,10 +38,10 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 # zinit light b4b4r07/enhancd
 # zinit light Peltoche/lsd
 zinit wait"1" lucid from"gh-r" as"program" for \
-    sbin"**/eza*" if'[[ $OSTYPE != darwin* ]]' eza-community/eza \
-    sbin"fzf" atload'eval "$(fzf --zsh)"' junegunn/fzf \
-    sbin"**/delta*" atload"alias diff='delta -ns'" dandavison/delta \
-    sbin"**/fd*" cp"**/fd.1 -> $ZPFX/man/man1" completions @sharkdp/fd
+    sbin"**/eza*" ver"v0.23.4" if'[[ $OSTYPE != darwin* ]]' eza-community/eza \
+    sbin"fzf" ver"0.55.0" atload'eval "$(fzf --zsh)"' junegunn/fzf \
+    sbin"**/delta*" ver"0.18.2" atload"alias diff='delta -ns'" dandavison/delta \
+    sbin"**/fd*" ver"v10.2.0" cp"**/fd.1 -> $ZPFX/man/man1" completions @sharkdp/fd
 
 # Install fzf
 zinit ice wait lucid from"gh-r" as"null" sbin"fzf" \
