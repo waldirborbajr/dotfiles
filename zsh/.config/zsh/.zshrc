@@ -39,7 +39,7 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 # zinit light Peltoche/lsd
 zinit wait"1" lucid from"gh-r" as"program" for \
     sbin"**/eza*" ver"v0.23.4" if'[[ $OSTYPE != darwin* ]]' eza-community/eza \
-    sbin"fzf" ver"0.55.0" atload'eval "$(fzf --zsh)"' junegunn/fzf \
+    sbin"fzf" ver"0.67.0" atload'eval "$(fzf --zsh)"' junegunn/fzf \
     sbin"**/delta*" ver"0.18.2" atload"alias diff='delta -ns'" dandavison/delta \
     sbin"**/fd*" ver"v10.2.0" cp"**/fd.1 -> $ZPFX/man/man1" completions @sharkdp/fd
 
@@ -96,7 +96,7 @@ setopt hist_reduce_blanks  # Remove superfluous blanks
 
 # Shell integrations
 #eval "$($HOME/.fzf/bin/fzf --zsh)"
-eval "$(fzf --zsh)"
+# eval "$(fzf --zsh)"
 
 # Zoxide integration
 eval "$(zoxide init --cmd cd zsh)"
@@ -133,6 +133,25 @@ source "$ZDOTDIR/hack.zsh"
 # else
 #   echo ERROR: eza could not be found. Skip setting up eza aliases.
 # fi
+
+
+# Simplified PATH management
+path_add() { 
+  [[ -d "$1" && ":$PATH:" != *":$1:"* ]] && PATH="$1:$PATH"
+}
+
+# Essential paths only
+essential_paths=(
+  "$HOME/.local/bin"
+  "$HOME/bin"
+  "$HOME/go/bin"
+  "/usr/local/go/bin"
+  "$HOME/dotfiles/localbin"
+  "/opt/nvim-linux-x86_64/bin"
+  "$HOME/.fzf/bin"
+)
+
+for p in $essential_paths; do path_add $p; done
 
 microfetch
 
