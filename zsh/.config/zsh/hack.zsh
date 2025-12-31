@@ -128,7 +128,7 @@ add-zsh-hook chpwd auto_nvm
 # 5. Suffix Aliases - Open Files by Extension
 # -------------------------------------------
 # Just type the filename to open it with the associated program
-alias -s json=jless
+#alias -s json=jless
 alias -s md=bat
 alias -s go='$EDITOR'
 alias -s rs='$EDITOR'
@@ -138,6 +138,14 @@ alias -s py='$EDITOR'
 alias -s js='$EDITOR'
 alias -s ts='$EDITOR'
 alias -s html=open  # macOS: open in default browser
+#alias -s md="$EDITOR"
+alias -s mov="open"
+alias -s png="open"
+alias -s mp4="open"
+#alias -s go="$EDITOR"
+#alias -s js="$EDITOR"
+alias -s yaml="$EDITOR"
+alias -s json="jq <"
 
 # -------------------------------------------
 # 6. Global Aliases - Use Anywhere in Commands
