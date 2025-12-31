@@ -50,3 +50,7 @@ lspci -nn | grep Network
 sudo apt install broadcom-sta-dkms
 sudo sed -i 's/wifi.powersave = 3/wifi.powersave = 2/' /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
 ```
+
+```
+sudo dd bs=4M if=/path/to/file.iso of=/dev/sdX status=progress oflag=sync
+```
