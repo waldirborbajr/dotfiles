@@ -54,3 +54,21 @@ export CPPFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/bzip2/include"
 
 # Hide computer name in terminal
 export DEFAULT_USER="$(whoami)"
+
+# Simplified PATH management
+path_add() { 
+  [[ -d "$1" && ":$PATH:" != *":$1:"* ]] && PATH="$1:$PATH"
+}
+
+# Essential paths only
+essential_paths=(
+  "$HOME/.local/bin"
+  "$HOME/bin"
+  "$HOME/go/bin"
+  "/usr/local/go/bin"
+  "$HOME/dotfiles/localbin"
+  "/opt/nvim-linux-x86_64/bin"
+  "$HOME/.fzf/bin"
+)
+
+for p in $essential_paths; do path_add $p; done

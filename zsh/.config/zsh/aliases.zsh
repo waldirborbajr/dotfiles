@@ -108,3 +108,6 @@ alias chmox='chmod +x'
 alias diff='diff --color'
 
 alias syslist='systemctl list-units —type=service --state=running'
+
+alias vim='nvim'
+alias c='clear'

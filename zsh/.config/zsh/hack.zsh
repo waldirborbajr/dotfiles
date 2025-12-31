@@ -231,3 +231,10 @@ bindkey -s '^Xgc' 'git commit -m ""\C-b'
 bindkey -s '^Xgp' 'git push origin '
 bindkey -s '^Xgs' 'git status\n'
 bindkey -s '^Xgl' 'git log --oneline -n 10\n'
+
+bindkey -e
+bindkey '^[[A' history-search-backward
+bindkey '^p' history-search-backward
+bindkey '^[[B' history-search-forward
+bindkey '^n' history-search-forward
+bindkey '^[w' kill-region
