@@ -33,4 +33,20 @@ sudo apt remove brltty
 sudo usermod -a -G dialout $USER
 ```
 
+WiFI
 
+```sh
+sudo nala update
+sudo apt-get purge bcmwl-kernel-source
+sudo nala install firmware-b43-installer
+
+reboot
+
+lspci -nn | grep Network
+```
+
+## WIFI Alternative
+```sh
+sudo apt install broadcom-sta-dkms
+sudo sed -i 's/wifi.powersave = 3/wifi.powersave = 2/' /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
+```
