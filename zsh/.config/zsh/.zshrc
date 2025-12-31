@@ -1,87 +1,138 @@
-# ===========================================
-# ZSH CONFIGURATION (OTIMIZADA E ORGANIZADA)
-# ===========================================
-# Mantém sua lógica original, apenas reorganizada, otimizada e limpa.
-# Nada removido — apenas melhorado.
+# Set the directory we want to store zinit and plugins
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+
+# Download Zinit, if it's not there yet
+if [ ! -d "$ZINIT_HOME" ]; then
+   mkdir -p "$(dirname $ZINIT_HOME)"
+   git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+
+# Source/Load zinit
+source "${ZINIT_HOME}/zinit.zsh"
+
+# Add in Powerlevel10k
+zinit ice depth=1; zinit light romkatv/powerlevel10k
+
+# Add in zsh plugins
+zinit light zsh-users/zsh-syntax-highlighting
+#zinit light zsh-users/zsh-completions
+#zinit light zsh-users/zsh-autosuggestions
+zinit light Aloxaf/fzf-tab
+
+# Add in snippets
+zinit snippet OMZP::git
+zinit snippet OMZP::sudo
+zinit snippet OMZP::archlinux
+zinit snippet OMZP::aws
+zinit snippet OMZP::kubectl
+zinit snippet OMZP::kubectx
+zinit snippet OMZP::command-not-found
+
+# Load completions
+autoload -Uz compinit && compinit
+
+zinit cdreplay -q
+
+# Prompt
+# eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Keybindings
+bindkey -e
+bindkey '^[[A' history-search-backward
+bindkey '^p' history-search-backward
+bindkey '^[[B' history-search-forward
+bindkey '^n' history-search-forward
+bindkey '^[w' kill-region
+
+zle_highlight+=(paste:none)
+
+# History
+HISTSIZE=5000
+HISTFILE=~/.local/share/zsh/history
+SAVEHIST=$HISTSIZE
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
+
+# Completion styling
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+
+# Aliases
+alias ls='ls --color'
+alias vim='nvim'
+alias c='clear'
+
+# Shell integrations
+eval "$(fzf --zsh)"
+
+# Zoxide integration
+eval "$(zoxide init --cmd cd zsh)"
+
+# Open buffer line in editor
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey '^x^e' edit-command-line
+
+# Suffix Aliases
+alias -s md="$EDITOR"
+alias -s mov="open"
+alias -s png="open"
+alias -s mp4="open"
+alias -s go="$EDITOR"
+alias -s js="$EDITOR"
+alias -s yaml="$EDITOR"
+alias -s json="jq <"
+export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # -------------------------------------------
-# 👉 1) HISTORY CONFIG
-# -------------------------------------------
-HISTSIZE=20000
-SAVEHIST=20000
-HISTFILE="${ZDOTDIR:-$HOME}/.zsh_history"
-
-setopt APPEND_HISTORY
-setopt SHARE_HISTORY
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_REDUCE_BLANKS
-setopt HIST_IGNORE_SPACE
-setopt EXTENDED_HISTORY
-setopt HIST_SAVE_NO_DUPS
-setopt HIST_VERIFY
-setopt HIST_FIND_NO_DUPS
-
-# -------------------------------------------
-# 👉 2) BASIC ZSH INIT
-# -------------------------------------------
-autoload -Uz compinit
-compinit -C
-
-# -------------------------------------------
-# 👉 3) PLUGINS LOADING (ZINIT)
-# -------------------------------------------
-{
-  source "$ZDOTDIR/plugins.zsh"
-} always {
-  if alias zi >/dev/null 2>&1; then
-    zi_func=$(alias zi | sed "s/^zi='\(.*\)'$/\1/")
-    unalias zi
-    zi() { eval "$zi_func" "$@" }
-  fi
-}
-
-[[ -f "$HOME/.zinit/bin/zinit.zsh" ]] && source "$HOME/.zinit/bin/zinit.zsh" || {
-  echo "zinit não encontrado"; exit 1;
-}
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
-
-# -------------------------------------------
-# 👉 4) CUSTOM SOURCES
+# 👉 CUSTOM SOURCES
 # -------------------------------------------
 source "$ZDOTDIR/exports.zsh"
-source "$ZDOTDIR/completion.zsh"
+#source "$ZDOTDIR/completion.zsh"
 source "$ZDOTDIR/functions.zsh"
-source "$ZDOTDIR/aliases.zsh"
+#source "$ZDOTDIR/aliases.zsh"
 
-export ZSH_CUSTOM_PLUGINS="${ZDOTDIR}/plugins"
+#export ZSH_CUSTOM_PLUGINS="${ZDOTDIR}/plugins"
 
 # -------------------------------------------
 # 👉 5) AUTOSUGGESTIONS
 # -------------------------------------------
-if [ -f "${ZSH_CUSTOM_PLUGINS}/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
-  source "${ZSH_CUSTOM_PLUGINS}/zsh-autosuggestions/zsh-autosuggestions.zsh"
-  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#8a8a8a"
-  ZSH_AUTOSUGGEST_STRATEGY=(match_prev_cmd)
-  ZSH_AUTOSUGGEST_USE_ASYNC=true
-  bindkey '^ ' autosuggest-accept
-fi
+#if [ -f "${ZSH_CUSTOM_PLUGINS}/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+#  source "${ZSH_CUSTOM_PLUGINS}/zsh-autosuggestions/zsh-autosuggestions.zsh"
+#  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#8a8a8a"
+#  ZSH_AUTOSUGGEST_STRATEGY=(match_prev_cmd)
+#  ZSH_AUTOSUGGEST_USE_ASYNC=true
+#  bindkey '^ ' autosuggest-accept
+#fi
 
 # -------------------------------------------
 # 👉 6) CARAPACE
 # -------------------------------------------
-if command -v carapace >/dev/null; then
-  export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
-  zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
-  source <(carapace _carapace)
-fi
+#if command -v carapace >/dev/null; then
+#  export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense'
+#  zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+#  source <(carapace _carapace)
+#fi
 
 # -------------------------------------------
 # 👉 7) ATUIN
 # -------------------------------------------
-export ATUIN_NOBIND="true"
-eval "$(atuin init zsh)"
-bindkey '^e' atuin-up-search-viins
+#export ATUIN_NOBIND="true"
+#eval "$(atuin init zsh)"
+#bindkey '^e' atuin-up-search-viins
 
 # -------------------------------------------
 # 👉 8) FZF + FD + PREVIEWS
