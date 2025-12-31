@@ -35,13 +35,13 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
 # Provides enhancd, lsd, bat, and eza.
-zinit light b4b4r07/enhancd
-zinit light Peltoche/lsd
-zinit wait"1" lucid from"gh-r" as"null" for \
-    sbin"**/eza" if'[[ $OSTYPE != darwin* ]]' eza-community/eza \
+# zinit light b4b4r07/enhancd
+# zinit light Peltoche/lsd
+zinit wait"1" lucid from"gh-r" as"program" for \
+    sbin"**/eza*" if'[[ $OSTYPE != darwin* ]]' eza-community/eza \
     sbin"fzf" atload'eval "$(fzf --zsh)"' junegunn/fzf \
-    sbin"**/delta" atload"alias diff='delta -ns'" dandavison/delta \
-    sbin"**/fd" cp"**/fd.1 -> $ZPFX/man/man1" completions @sharkdp/fd 
+    sbin"**/delta*" atload"alias diff='delta -ns'" dandavison/delta \
+    sbin"**/fd*" cp"**/fd.1 -> $ZPFX/man/man1" completions @sharkdp/fd
 
 # Install fzf
 zinit ice wait lucid from"gh-r" as"null" sbin"fzf" \
