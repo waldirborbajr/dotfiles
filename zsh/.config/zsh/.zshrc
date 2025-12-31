@@ -38,13 +38,22 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 zinit light b4b4r07/enhancd
 zinit light Peltoche/lsd
 zinit wait"1" lucid from"gh-r" as"null" for \
-  sbin"**/bat"        sharkdp/bat \
-  sbin"**/eza"        eza-community/eza \
-  sbin"**/fd"         sharkdp/fd \
-  sbin"**/rg"         BurntSushi/ripgrep \
-  sbin"**/zoxide"     ajeetdsouza/zoxide \
-  sbin"**/fzf"        junegunn/fzf \
-  sbin"**/microfetch" NotNite/microfetch
+    sbin"**/fd"        sharkdp/fd \
+    sbin"**/bat"       sharkdp/bat \
+    sbin"**/rg"        BurntSushi/ripgrep \
+    sbin"**/delta"     dandavison/delta \
+    sbin"**/lsd"       lsd-rs/lsd \
+    sbin"**/jq"        jqlang/jq \
+    sbin"**/yq"        mikefarah/yq \
+    sbin"**/zoxide"    ajeetdsouza/zoxide
+
+# Install fzf
+zinit ice wait lucid from"gh-r" as"null" sbin"fzf" \
+    atclone"./fzf --zsh > init.zsh" \
+    atpull"%atclone" \
+    src"init.zsh" \
+    atload"source ${CONFIG_DIR}/fzf/config.zsh"
+zinit light junegunn/fzf
 
 zinit wait lucid for \
   atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
