@@ -38,8 +38,13 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 zinit light b4b4r07/enhancd
 zinit light Peltoche/lsd
 zinit wait"1" lucid from"gh-r" as"null" for \
-  sbin"**/bat"  @sharkdp/bat \
-  sbin"**/eza"  eza-community/eza
+  sbin"**/bat"        sharkdp/bat \
+  sbin"**/eza"        eza-community/eza \
+  sbin"**/fd"         sharkdp/fd \
+  sbin"**/rg"         BurntSushi/ripgrep \
+  sbin"**/zoxide"     ajeetdsouza/zoxide \
+  sbin"**/fzf"        junegunn/fzf \
+  sbin"**/microfetch" NotNite/microfetch
 
 zinit wait lucid for \
   atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
