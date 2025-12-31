@@ -87,7 +87,8 @@ setopt hist_ignore_dups
 setopt hist_find_no_dups
 
 # Shell integrations
-eval "$($HOME/.fzf/bin/fzf --zsh)"
+#eval "$($HOME/.fzf/bin/fzf --zsh)"
+eval "$(fzf --zsh)"
 
 # Zoxide integration
 eval "$(zoxide init --cmd cd zsh)"
