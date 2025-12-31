@@ -45,7 +45,8 @@ zinit wait"1" lucid from"gh-r" as"null" for \
     sbin"**/lsd"       lsd-rs/lsd \
     sbin"**/jq"        jqlang/jq \
     sbin"**/yq"        mikefarah/yq \
-    sbin"**/zoxide"    ajeetdsouza/zoxide
+    sbin"**/zoxide"    ajeetdsouza/zoxide \
+    sbin"**/eza" eza-community/eza
 
 # Install fzf
 zinit ice wait lucid from"gh-r" as"null" sbin"fzf" \
