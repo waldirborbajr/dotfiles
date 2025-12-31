@@ -34,12 +34,12 @@ zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
 
-# Provides enhancd, lsd, bat, and exa.
+# Provides enhancd, lsd, bat, and eza.
 zinit light b4b4r07/enhancd
 zinit light Peltoche/lsd
 zinit wait"1" lucid from"gh-r" as"null" for \
   sbin"**/bat"  @sharkdp/bat \
-  sbin"**/exa"  ogham/exa
+  sbin"**/eza"  eza-community/eza
 
 zinit wait lucid for \
   atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
