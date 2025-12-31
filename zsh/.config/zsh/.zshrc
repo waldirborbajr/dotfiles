@@ -84,11 +84,6 @@ eval "$($HOME/.fzf/bin/fzf --zsh)"
 # Zoxide integration
 eval "$(zoxide init --cmd cd zsh)"
 
-# Open buffer line in editor
-autoload -Uz edit-command-line
-zle -N edit-command-line
-bindkey '^x^e' edit-command-line
-
 # Suffix Aliases
 alias -s md="$EDITOR"
 alias -s mov="open"
@@ -111,6 +106,7 @@ export NVM_DIR="$HOME/.nvm"
 #source "$ZDOTDIR/completion.zsh"
 # source "$ZDOTDIR/functions.zsh"
 #source "$ZDOTDIR/aliases.zsh"
+source "$ZDOTDIR/hack.zsh"
 
 #export ZSH_CUSTOM_PLUGINS="${ZDOTDIR}/plugins"
 
