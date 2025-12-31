@@ -74,17 +74,20 @@ zinit cdreplay -q
 
 zle_highlight+=(paste:none)
 
-# History
+# Setup history params
 HISTSIZE=5000
+#HISTFILE=~/.zsh_history
 HISTFILE=~/.local/share/zsh/history
 SAVEHIST=$HISTSIZE
-setopt appendhistory
-setopt sharehistory
-setopt hist_ignore_space
-setopt hist_ignore_all_dups
-setopt hist_save_no_dups
-setopt hist_ignore_dups
-setopt hist_find_no_dups
+HISTDUP=erase
+setopt appendhistory  # Append to the history file
+setopt sharehistory  # Share history across terminals
+setopt hist_ignore_space  # Ignore commands that start with a space
+setopt hist_ignore_all_dups  # Ignore duplicate commands
+setopt hist_save_no_dups  # Don't save duplicate commands
+setopt hist_ignore_dups  # Ignore duplicate entries
+setopt hist_find_no_dups  # Ignore duplicate entries
+setopt hist_reduce_blanks  # Remove superfluous blanks
 
 # Shell integrations
 #eval "$($HOME/.fzf/bin/fzf --zsh)"
