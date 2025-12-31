@@ -79,7 +79,7 @@ alias vim='nvim'
 alias c='clear'
 
 # Shell integrations
-eval "$(fzf --zsh)"
+eval "$($HOME/.fzf/bin/fzf --zsh)"
 
 # Zoxide integration
 eval "$(zoxide init --cmd cd zsh)"
