@@ -50,8 +50,6 @@ config.skip_close_confirmation_for_processes_named = { "tmux" }
 config.font = wezterm.font_with_fallback {
   "JetBrains Mono Nerd Font",
   "DepartureMono Nerd Font",
-  "IosevkaTerm Nerd Font Mono",
-  "JetBrainsMono Nerd Font",
 }
 config.font_size = 12.0
 config.color_scheme = color_scheme_for_appearance(wezterm.gui.get_appearance())
