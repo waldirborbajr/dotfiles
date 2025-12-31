@@ -1,9 +1,18 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
+#
+#    ______          __     ____                 __  ______ 
+#   / ____/___  ____/ /__  / __ \____  _____    / / / / __ \
+#  / /   / __ \/ __  / _ \/ / / / __ \/ ___/   / /_/ / / / /
+# / /___/ /_/ / /_/ /  __/ /_/ / /_/ (__  )   / __  / /_/ / 
+# \____/\____/\__,_/\___/\____/ .___/____/   /_/ /_/\___\_\ 
+#                            /_/
+#
+#
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-#if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-#fi
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 
 # Set the directory we want to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -22,140 +31,345 @@ zinit ice depth=1; zinit light romkatv/powerlevel10k
 
 # Add in zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting
-#zinit light zsh-users/zsh-completions
-#zinit light zsh-users/zsh-autosuggestions
-
-# Completion styling
-zinit pack="bgn-binary+keys" for fzf
+zinit light zsh-users/zsh-completions
+zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
-
-# Provides enhancd, lsd, bat, and eza.
-# zinit light b4b4r07/enhancd
-# zinit light Peltoche/lsd
-zinit wait"1" lucid from"gh-r" as"program" for \
-    sbin"**/eza*" ver"v0.23.4" if'[[ $OSTYPE != darwin* ]]' eza-community/eza \
-    sbin"fzf" ver"0.67.0" atload'eval "$(fzf --zsh)"' junegunn/fzf \
-    sbin"**/delta*" ver"0.18.2" atload"alias diff='delta -ns'" dandavison/delta \
-    sbin"**/fd*" ver"v10.2.0" cp"**/fd.1 -> $ZPFX/man/man1" completions @sharkdp/fd
-
-# Install fzf
-zinit ice wait lucid from"gh-r" as"null" sbin"fzf" \
-    atclone"./fzf --zsh > init.zsh" \
-    atpull"%atclone" \
-    src"init.zsh" \
-    atload"source ${CONFIG_DIR}/fzf/config.zsh"
-zinit light junegunn/fzf
-
-zinit wait lucid for \
-  atinit"ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay" \
-     zdharma/fast-syntax-highlighting \
-  blockf \
-     zsh-users/zsh-completions \
-  atload"!_zsh_autosuggest_start" \
-     zsh-users/zsh-autosuggestions
+zinit light jeffreytse/zsh-vi-mode
 
 # Add in snippets
 zinit snippet OMZP::git
 zinit snippet OMZP::sudo
-#zinit snippet OMZP::archlinux
-#zinit snippet OMZP::aws
-#zinit snippet OMZP::kubectl
-#zinit snippet OMZP::kubectx
+# zinit snippet OMZP::tmuxinator
+# zinit snippet OMZP::docker
 zinit snippet OMZP::command-not-found
+
+# Disable the cursor style feature
+# ZVM_CURSOR_STYLE_ENABLED=false
+ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BLINKING_BEAM
+ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLINKING_BLOCK
+ZVM_OPPEND_MODE_CURSOR=$ZVM_CURSOR_BLINKING_UNDERLINE
 
 # Load completions
 autoload -Uz compinit && compinit
 
 zinit cdreplay -q
 
-# Prompt
-# eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/zen.toml)"
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-zle_highlight+=(paste:none)
+#######################################################
+# ZSH Basic Options
+#######################################################
 
-# Setup history params
-HISTSIZE=5000
-#HISTFILE=~/.zsh_history
-HISTFILE=~/.local/share/zsh/history
+setopt autocd              # change directory just by typing its name
+setopt correct             # auto correct mistakes
+setopt interactivecomments # allow comments in interactive mode
+setopt magicequalsubst     # enable filename expansion for arguments of the form ‘anything=expression’
+setopt nonomatch           # hide error message if there is no match for the pattern
+setopt notify              # report the status of background jobs immediately
+setopt numericglobsort     # sort filenames numerically when it makes sense
+setopt promptsubst         # enable command substitution in prompt
+
+#######################################################
+# Environment Variables
+#######################################################
+# export EDITOR=nvim
+# export VISUAL=nvim
+export EDITOR=nvim visudo
+export VISUAL=nvim visudo
+export SUDO_EDITOR=nvim
+export FCEDIT=nvim
+export TERMINAL=wezterm
+export BROWSER=com.brave.Browser
+if [[ -x "$(command -v bat)" ]]; then
+	export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+	export PAGER=bat
+fi
+
+if [[ -x "$(command -v fzf)" ]]; then
+	export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+	  --info=inline-right \
+	  --ansi \
+	  --layout=reverse \
+	  --border=rounded \
+	  --color=border:#27a1b9 \
+	  --color=fg:#c0caf5 \
+	  --color=gutter:#16161e \
+	  --color=header:#ff9e64 \
+	  --color=hl+:#2ac3de \
+	  --color=hl:#2ac3de \
+	  --color=info:#545c7e \
+	  --color=marker:#ff007c \
+	  --color=pointer:#ff007c \
+	  --color=prompt:#2ac3de \
+	  --color=query:#c0caf5:regular \
+	  --color=scrollbar:#27a1b9 \
+	  --color=separator:#ff9e64 \
+	  --color=spinner:#ff007c \
+	"
+fi
+
+#######################################################
+# ZSH Keybindings
+#######################################################
+
+bindkey -v
+# bindkey '^p' history-search-backward
+# bindkey '^n' history-search-forward
+# bindkey '^[w' kill-region
+# bindkey ' ' magic-space                           # do history expansion on space
+bindkey "^[[A" history-beginning-search-backward  # search history with up key
+bindkey "^[[B" history-beginning-search-forward   # search history with down key
+
+#######################################################
+# History Configuration
+#######################################################
+
+HISTSIZE=10000
+HISTFILE=~/.zsh_history
 SAVEHIST=$HISTSIZE
 HISTDUP=erase
-setopt appendhistory  # Append to the history file
-setopt sharehistory  # Share history across terminals
-setopt hist_ignore_space  # Ignore commands that start with a space
-setopt hist_ignore_all_dups  # Ignore duplicate commands
-setopt hist_save_no_dups  # Don't save duplicate commands
-setopt hist_ignore_dups  # Ignore duplicate entries
-setopt hist_find_no_dups  # Ignore duplicate entries
-setopt hist_reduce_blanks  # Remove superfluous blanks
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
 
-# Shell integrations
-#eval "$($HOME/.fzf/bin/fzf --zsh)"
-# eval "$(fzf --zsh)"
+#######################################################
+# Completion styling
+#######################################################
 
-# Zoxide integration
-eval "$(zoxide init --cmd cd zsh)"
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*' menu no
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+# zstyle ':completion:*:*:docker:*' option-stacking yes
+# zstyle ':completion:*:*:docker-*:*' option-stacking yes
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+#######################################################
+# Add Common Binary Directories to Path
+#######################################################
 
-# -------------------------------------------
-# 👉 CUSTOM SOURCES
-# -------------------------------------------
-source "$ZDOTDIR/functions.zsh"
-source "$ZDOTDIR/aliases.zsh"
-source "$ZDOTDIR/hack.zsh"
-
-# eza (better `ls`)
-# ------------------------------------------------------------------------------
-# if type eza &>/dev/null; then
-#   alias l="eza --icons=always"
-#   alias la="eza -a --icons=always"
-#   alias lh="eza -ad --icons=always .*"
-#   alias ll="eza -lg --icons=always"
-#   alias lla="eza -lag --icons=always"
-#   alias llh="eza -lagd --icons=always .*"
-#   alias ls="eza --icons=always"
-#   alias lt2="eza -lTg --level=2 --icons=always"
-#   alias lt3="eza -lTg --level=3 --icons=always"
-#   alias lt4="eza -lTg --level=4 --icons=always"
-#   alias lt="eza -lTg --icons=always"
-#   alias lta2="eza -lTag --level=2 --icons=always"
-#   alias lta3="eza -lTag --level=3 --icons=always"
-#   alias lta4="eza -lTag --level=4 --icons=always"
-#   alias lta="eza -lTag --icons=always"
-# else
-#   echo ERROR: eza could not be found. Skip setting up eza aliases.
-# fi
-
-
-# Simplified PATH management
-path_add() { 
-  [[ -d "$1" && ":$PATH:" != *":$1:"* ]] && PATH="$1:$PATH"
+# Add directories to the end of the path if they exist and are not already in the path
+# Link: https://superuser.com/questions/39751/add-directory-to-path-if-its-not-already-there
+function pathappend() {
+    for ARG in "$@"
+    do
+        if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
+            PATH="${PATH:+"$PATH:"}$ARG"
+        fi
+    done
 }
 
-# Essential paths only
-essential_paths=(
-  "$HOME/.local/bin"
-  "$HOME/bin"
-  "$HOME/go/bin"
-  "/usr/local/go/bin"
-  "$HOME/dotfiles/localbin"
-  "/opt/nvim-linux-x86_64/bin"
-  "$HOME/.fzf/bin"
-)
+# Add directories to the beginning of the path if they exist and are not already in the path
+function pathprepend() {
+    for ARG in "$@"
+    do
+        if [ -d "$ARG" ] && [[ ":$PATH:" != *":$ARG:"* ]]; then
+            PATH="$ARG${PATH:+":$PATH"}"
+        fi
+    done
+}
 
-for p in $essential_paths; do path_add $p; done
+# y shell wrapper that provides the ability to change the current working directory when exiting Yazi.
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
 
-microfetch
+# Add the most common personal binary paths located inside the home folder
+# (these directories are only added if they exist)
+pathprepend "$HOME/bin" "$HOME/sbin" "$HOME/.local/bin" "$HOME/local/bin" "$HOME/.bin" 
 
-# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
-[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
+pathappend "/usr/local/go/bin" 
+pathappend "/opt/nvim-linux-x86_64/bin" 
+pathappend "/opt/wezterm"
+pathappend "$HOME/.tmuxifier/bin"
 
+# Check for the Rust package manager binary install location
+# Link: https://doc.rust-lang.org/cargo/index.html
+pathappend "$HOME/.cargo/bin"
+
+#######################################################
+# Aliases
+#######################################################
+
+alias ls='ls --color'
+alias ll='ls -larth'
+alias c='clear'
+alias q='exit'
+alias ..='cd ..'
+alias mkdir='mkdir -pv'
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias rm='rm -iv'
+alias rmdir='rmdir -v'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+alias wezterm='flatpak run org.wezfurlong.wezterm'
+
+# Alias for neovim
+if [[ -x "$(command -v nvim)" ]]; then
+	alias vi='nvim'
+	alias vim='nvim'
+	alias svi='sudo nvim'
+	alias vis='nvim "+set si"'
+elif [[ -x "$(command -v vim)" ]]; then
+	alias vi='vim'
+	alias svi='sudo vim'
+	alias vis='vim "+set si"'
+fi
+
+# Alias for lsd
+if [[ -x "$(command -v lsd)" ]]; then
+	alias ls='lsd -F --group-dirs first'
+	alias ll='lsd --all --header --long --group-dirs first'
+	alias tree='lsd --tree'
+fi
+
+# Alias to launch a document, file, or URL in it's default X application
+if [[ -x "$(command -v xdg-open)" ]]; then
+	alias open='runfree xdg-open'
+fi
+
+# Alias to launch a document, file, or URL in it's default PDF reader
+if [[ -x "$(command -v evince)" ]]; then
+    alias pdf='runfree evince'
+fi
+
+# Alias For bat
+# Link: https://github.com/sharkdp/bat
+if [[ -x "$(command -v bat)" ]]; then
+    alias cat='bat'
+fi
+
+# Alias for lazygit
+# Link: https://github.com/jesseduffield/lazygit
+if [[ -x "$(command -v lazygit)" ]]; then
+    alias lg='lazygit'
+fi
+
+# Alias for FZF
+# Link: https://github.com/junegunn/fzf
+if [[ -x "$(command -v fzf)" ]]; then
+    alias fzf='fzf --preview "bat --style=numbers --color=always --line-range :500 {}"'
+    # Alias to fuzzy find files in the current folder(s), preview them, and launch in an editor
+	if [[ -x "$(command -v xdg-open)" ]]; then
+		alias preview='open $(fzf --info=inline --query="${@}")'
+	else
+		alias preview='edit $(fzf --info=inline --query="${@}")'
+	fi
+fi
+
+# Get local IP addresses
+if [[ -x "$(command -v ip)" ]]; then
+    alias iplocal="ip -br -c a"
+else
+    alias iplocal="ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'"
+fi
+
+# Get public IP addresses
+if [[ -x "$(command -v curl)" ]]; then
+    alias ipexternal="curl -s ifconfig.me && echo"
+elif [[ -x "$(command -v wget)" ]]; then
+    alias ipexternal="wget -qO- ifconfig.me && echo"
+fi
+
+
+#######################################################
+# Functions
+#######################################################
+
+# Start a program but immediately disown it and detach it from the terminal
+function runfree() {
+	"$@" > /dev/null 2>&1 & disown
+}
+
+# Copy file with a progress bar
+function cpp() {
+	if [[ -x "$(command -v rsync)" ]]; then
+		# rsync -avh --progress "${1}" "${2}"
+		rsync -ah --info=progress2 "${1}" "${2}"
+	else
+		set -e
+		strace -q -ewrite cp -- "${1}" "${2}" 2>&1 \
+		| awk '{
+		count += $NF
+		if (count % 10 == 0) {
+			percent = count / total_size * 100
+			printf "%3d%% [", percent
+			for (i=0;i<=percent;i++)
+				printf "="
+				printf ">"
+				for (i=percent;i<100;i++)
+					printf " "
+					printf "]\r"
+				}
+			}
+		END { print "" }' total_size=$(stat -c '%s' "${1}") count=0
+	fi
+}
+
+# Copy and go to the directory
+function cpg() {
+	if [[ -d "$2" ]];then
+		cp "$1" "$2" && cd "$2"
+	else
+		cp "$1" "$2"
+	fi
+}
+
+# Move and go to the directory
+function mvg() {
+	if [[ -d "$2" ]];then
+		mv "$1" "$2" && cd "$2"
+	else
+		mv "$1" "$2"
+	fi
+}
+
+# Create and go to the directory
+function mkdirg() {
+	mkdir -p "$@" && cd "$@"
+}
+
+# Prints random height bars across the width of the screen
+# (great with lolcat application on new terminal windows)
+function random_bars() {
+	columns=$(tput cols)
+	chars=(▁ ▂ ▃ ▄ ▅ ▆ ▇ █)
+	for ((i = 1; i <= $columns; i++))
+	do
+		echo -n "${chars[RANDOM%${#chars} + 1]}"
+	done
+	echo
+}
+
+#######################################################
+# ZSH Syntax highlighting
+#######################################################
+# source ~/.config/zsh/zsh-syntax-highlightin-tokyonight.zsh
+
+#######################################################
+# Shell integrations
+#######################################################
+
+# Set up fzf key bindings and fuzzy completion
+# source <(fzf --zsh)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# zoxide config for zsh plugins 
+eval "$(zoxide init --cmd cd zsh)"
+
+# tmuxifier config for zsh plugins  
+eval "$(tmuxifier init -)"
+
