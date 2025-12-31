@@ -84,17 +84,6 @@ eval "$($HOME/.fzf/bin/fzf --zsh)"
 # Zoxide integration
 eval "$(zoxide init --cmd cd zsh)"
 
-# Suffix Aliases
-alias -s md="$EDITOR"
-alias -s mov="open"
-alias -s png="open"
-alias -s mp4="open"
-alias -s go="$EDITOR"
-alias -s js="$EDITOR"
-alias -s yaml="$EDITOR"
-alias -s json="jq <"
-export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
-
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
