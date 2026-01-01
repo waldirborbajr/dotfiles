@@ -1,4 +1,3 @@
-<img width="2000" height="2000" alt="image" src="https://github.com/user-attachments/assets/2eef4c49-b822-4636-8162-465037ca4631" /># dotfiles
 
 These are my dotfiles. Feel free to use or copy what you need from this repo.
 
