@@ -32,25 +32,14 @@ sudo apt remove brltty
 sudo usermod -a -G dialout $USER
 ```
 
-WiFI
-
-```sh
-sudo nala update
-sudo apt-get purge bcmwl-kernel-source
-sudo nala install firmware-b43-installer
-
-reboot
-
-lspci -nn | grep Network
-```
-
-## WIFI Alternative (#1)
-
+## MacBook WiFi - Linux (#1)
 
 ```sh
 sudo apt install broadcom-sta-dkms
 sudo sed -i 's/wifi.powersave = 3/wifi.powersave = 2/' /etc/NetworkManager/conf.d/default-wifi-powersave-on.conf
 ```
+
+## Write ISO to device
 
 ```
 sudo dd bs=4M if=/path/to/file.iso of=/dev/sdX status=progress oflag=sync
