@@ -81,6 +81,7 @@ export SUDO_EDITOR=nvim
 export FCEDIT=nvim
 export TERMINAL=wezterm
 export BROWSER=com.brave.Browser
+
 if [[ -x "$(command -v bat)" ]]; then
 	export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 	export PAGER=bat
@@ -354,10 +355,12 @@ function random_bars() {
 	echo
 }
 
-#######################################################
-# ZSH Syntax highlighting
-#######################################################
-# source ~/.config/zsh/zsh-syntax-highlightin-tokyonight.zsh
+# -------------------------------------------
+# 👉 CUSTOM SOURCES
+# -------------------------------------------
+source "$ZDOTDIR/functions.zsh"
+source "$ZDOTDIR/aliases.zsh"
+source "$ZDOTDIR/hack.zsh"
 
 #######################################################
 # Shell integrations
