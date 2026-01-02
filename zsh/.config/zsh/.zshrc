@@ -1,9 +1,9 @@
 #
-#    ______          __     ____                 __  ______ 
+#    ______          __     ____                 __  ______
 #   / ____/___  ____/ /__  / __ \____  _____    / / / / __ \
 #  / /   / __ \/ __  / _ \/ / / / __ \/ ___/   / /_/ / / / /
-# / /___/ /_/ / /_/ /  __/ /_/ / /_/ (__  )   / __  / /_/ / 
-# \____/\____/\__,_/\___/\____/ .___/____/   /_/ /_/\___\_\ 
+# / /___/ /_/ / /_/ /  __/ /_/ / /_/ (__  )   / __  / /_/ /
+# \____/\____/\__,_/\___/\____/ .___/____/   /_/ /_/\___\_\
 #                            /_/
 #
 #
@@ -187,12 +187,14 @@ function y() {
 
 # Add the most common personal binary paths located inside the home folder
 # (these directories are only added if they exist)
-pathprepend "$HOME/bin" "$HOME/sbin" "$HOME/.local/bin" "$HOME/local/bin" "$HOME/.bin" 
+pathprepend "$HOME/bin" "$HOME/sbin" "$HOME/.local/bin" "$HOME/local/bin" "$HOME/.bin"
 
-pathappend "/usr/local/go/bin" 
-pathappend "/opt/nvim-linux-x86_64/bin" 
+pathappend "/usr/local/go/bin"
+pathappend "/opt/nvim-linux-x86_64/bin"
 pathappend "/opt/wezterm"
 pathappend "$HOME/.tmuxifier/bin"
+pathappend "$HOME/go/bin"
+pathappend "$HOME/bin"
 
 # Check for the Rust package manager binary install location
 # Link: https://doc.rust-lang.org/cargo/index.html
@@ -370,9 +372,9 @@ source "$ZDOTDIR/hack.zsh"
 # source <(fzf --zsh)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# zoxide config for zsh plugins 
+# zoxide config for zsh plugins
 eval "$(zoxide init --cmd cd zsh)"
 
-# tmuxifier config for zsh plugins  
+# tmuxifier config for zsh plugins
 eval "$(tmuxifier init -)"
 
