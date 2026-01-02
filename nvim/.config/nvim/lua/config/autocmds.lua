@@ -5,7 +5,7 @@ autocmd("TextYankPost", {
   group = vim.api.nvim_create_augroup("yank_highlight", { clear = true }),
   desc = "Highlight yanked text",
   callback = function()
-    vim.highlight.on_yank { higroup = "Visual", timeout = 150 }
+    vim.highlight.on_yank({ higroup = "Visual", timeout = 150 })
   end,
 })
 
@@ -37,7 +37,7 @@ autocmd("VimResized", {
 autocmd("FileType", {
   group = vim.api.nvim_create_augroup("no_auto_comment", { clear = true }),
   callback = function()
-    vim.opt_local.formatoptions:remove { "c", "r", "o" }
+    vim.opt_local.formatoptions:remove({ "c", "r", "o" })
   end,
 })
 
@@ -70,8 +70,10 @@ local lsp_ref_group = vim.api.nvim_create_augroup("LspReferenceHighlight", { cle
 autocmd("CursorMoved", {
   group = lsp_ref_group,
   callback = function()
-    if vim.fn.mode() == "i" then return end
-    for _, client in ipairs(vim.lsp.get_clients { bufnr = 0 }) do
+    if vim.fn.mode() == "i" then
+      return
+    end
+    for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
       if client.server_capabilities.documentHighlightProvider then
         vim.lsp.buf.clear_references()
         vim.lsp.buf.document_highlight()
@@ -94,14 +96,14 @@ autocmd("BufWritePre", {
 })
 
 -- Undotree layout
-vim.cmd.packadd("nvim.undotree")
-autocmd("FileType", {
-  pattern = "nvim-undotree",
-  callback = function()
-    vim.cmd.wincmd("H")
-    vim.api.nvim_win_set_width(0, 40)
-  end,
-})
+-- vim.cmd.packadd("nvim.undotree")
+-- autocmd("FileType", {
+--   pattern = "nvim-undotree",
+--   callback = function()
+--     vim.cmd.wincmd("H")
+--     vim.api.nvim_win_set_width(0, 40)
+--   end,
+-- })
 
 -- Close Lazy with Esc
 autocmd("FileType", {
