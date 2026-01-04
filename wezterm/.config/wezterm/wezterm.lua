@@ -1,8 +1,10 @@
 -- Pull in WezTerm API
 local wezterm = require("wezterm")
 
--- Utility functions
+-- Constants
 local window_background_opacity = 0.9
+
+-- Utility functions
 local function toggle_window_background_opacity(window)
   local overrides = window:get_config_overrides() or {}
   if not overrides.window_background_opacity then
@@ -27,7 +29,11 @@ wezterm.on("toggle-ligatures", toggle_ligatures)
 
 -- Returns color scheme dependant on operating system theme setting (dark/light)
 local function color_scheme_for_appearance(appearance)
-   return "Catppuccin Mocha"
+  if appearance:find("Dark") then
+    return "Catppuccin Mocha"
+  else
+    return "Catppuccin Latte"  -- Ajuste para um tema claro preferido
+  end
 end
 
 -- Initialize actual config
@@ -38,8 +44,6 @@ end
 
 -- Start tmux when opening WezTerm
 config.default_prog = { "/bin/zsh", "-l", "-c", "--", 'tmux new -As base' }
-
--- Skip closing confirmation when tmux is running
 config.skip_close_confirmation_for_processes_named = { "tmux" }
 
 -- Appearance
@@ -55,78 +59,37 @@ config.window_decorations = "RESIZE"
 config.hide_tab_bar_if_only_one_tab = true
 config.native_macos_fullscreen_mode = false
 config.use_fancy_tab_bar = false
-config.max_fps = 144
-config.animation_fps = 144
 
-config.window_padding = {
-	left = 5,
-	right = 0,
-	top = 5,
-	bottom = 0,
-}
-
-config.default_cwd = wezterm.home_dir
-config.scrollback_lines = 20000
-config.enable_scroll_bar = false
-config.animation_fps = 60
+-- Performance
 config.max_fps = 120
+config.animation_fps = 60
+config.scrollback_lines = 10000  -- Reduzido para economia de memória
+
+-- Layout
+config.window_padding = {
+  left = 5,
+  right = 0,
+  top = 5,
+  bottom = 0,
+}
+config.default_cwd = wezterm.home_dir
+config.enable_scroll_bar = false
 config.adjust_window_size_when_changing_font_size = false
 config.window_close_confirmation = "NeverPrompt"
 config.inactive_pane_hsb = {
-	saturation = 0.8,
-	brightness = 0.7,
+  saturation = 0.8,
+  brightness = 0.7,
 }
 
 -- Keybindings
 config.keys = {
-  {
-    key = "O",
-    mods = "CTRL|SHIFT",
-    action = wezterm.action.EmitEvent("toggle-window-background-opacity"),
-  },
-  {
-    key = "E",
-    mods = "CTRL|SHIFT",
-    action = wezterm.action.EmitEvent("toggle-ligatures"),
-  },
-  -- Quickly open config file with common macOS keybind
-  {
-    key = ",",
-    mods = "SUPER",
-    action = wezterm.action.SpawnCommandInNewWindow({
-      cwd = os.getenv("WEZTERM_CONFIG_DIR"),
-      args = { os.getenv("SHELL"), "-l", "-c", 'eval "$(mise env zsh)" && source "$XDG_DATA_HOME/bob/env/env.sh" && $VISUAL $WEZTERM_CONFIG_FILE' },
-    }),
-  },
-  -- Quickly open config file with alternative keybind
-  {
-    key = "<",
-    mods = "CTRL|SHIFT",
-    action = wezterm.action.SpawnCommandInNewWindow({
-      cwd = os.getenv("WEZTERM_CONFIG_DIR"),
-      args = { os.getenv("SHELL"), "-l", "-c", 'eval "$(mise env zsh)" && source "$XDG_DATA_HOME/bob/env/env.sh" && $VISUAL $WEZTERM_CONFIG_FILE' },
-    }),
-  },
-  -- Spawn Window without tmux
-  {
-    key = ">",
-    mods = "CTRL|SHIFT",
-    action = wezterm.action.SpawnCommandInNewWindow({
-      args = { os.getenv("SHELL"), "-l", "-c", "zsh" },
-    }),
-  },
-  -- Disable CTRL+N (default new window binding)
-  {
-    key = "n",
-    mods = "CTRL",
-    action = wezterm.action.DisableDefaultAssignment,
-  },
-  -- Bind new window to CTRL+SHIFT+N instead
-  {
-    key = "n",
-    mods = "CTRL|SHIFT",
-    action = wezterm.action.SpawnWindow,
-  },
+  { key = "O", mods = "CTRL|SHIFT", action = wezterm.action.EmitEvent("toggle-window-background-opacity") },  -- Toggle opacity
+  { key = "E", mods = "CTRL|SHIFT", action = wezterm.action.EmitEvent("toggle-ligatures") },  -- Toggle ligatures
+  { key = ",", mods = "SUPER", action = wezterm.action.SpawnCommandInNewWindow({ cwd = os.getenv("WEZTERM_CONFIG_DIR"), args = { os.getenv("SHELL"), "-l", "-c", 'eval "$(mise env zsh)" && source "$XDG_DATA_HOME/bob/env/env.sh" && $VISUAL $WEZTERM_CONFIG_FILE' } }) },  -- Edit config (macOS style)
+  { key = "<", mods = "CTRL|SHIFT", action = wezterm.action.SpawnCommandInNewWindow({ cwd = os.getenv("WEZTERM_CONFIG_DIR"), args = { os.getenv("SHELL"), "-l", "-c", 'eval "$(mise env zsh)" && source "$XDG_DATA_HOME/bob/env/env.sh" && $VISUAL $WEZTERM_CONFIG_FILE' } }) },  -- Edit config (alt)
+  { key = ">", mods = "CTRL|SHIFT", action = wezterm.action.SpawnCommandInNewWindow({ args = { os.getenv("SHELL"), "-l", "-c", "zsh" } }) },  -- Spawn without tmux
+  { key = "n", mods = "CTRL", action = wezterm.action.DisableDefaultAssignment },  -- Disable default new window
+  { key = "n", mods = "CTRL|SHIFT", action = wezterm.action.SpawnWindow },  -- New window
 }
 
 -- Return config to WezTerm
