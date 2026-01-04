@@ -32,7 +32,7 @@ local function color_scheme_for_appearance(appearance)
 	if appearance:find("Dark") then
 		return "Catppuccin Mocha"
 	else
-		return "Catppuccin Latte" -- Ajuste para um tema claro preferido
+		return "Catppuccin Latte"
 	end
 end
 
@@ -63,7 +63,7 @@ config.use_fancy_tab_bar = false
 -- Performance
 config.max_fps = 120
 config.animation_fps = 60
-config.scrollback_lines = 10000 -- Reduzido para economia de memória
+config.scrollback_lines = 10000 -- Reduced for lower memory usage
 
 -- Layout
 config.window_padding = {
@@ -75,7 +75,7 @@ config.window_padding = {
 config.default_cwd = wezterm.home_dir
 config.enable_scroll_bar = false
 config.adjust_window_size_when_changing_font_size = false
-config.window_close_confirmation = "NeverPrompt"
+-- config.window_close_confirmation = "NeverPrompt"
 config.inactive_pane_hsb = {
 	saturation = 0.8,
 	brightness = 0.7,
@@ -83,8 +83,11 @@ config.inactive_pane_hsb = {
 
 -- Keybindings
 config.keys = {
-	{ key = "O", mods = "CTRL|SHIFT", action = wezterm.action.EmitEvent("toggle-window-background-opacity") }, -- Toggle opacity
-	{ key = "E", mods = "CTRL|SHIFT", action = wezterm.action.EmitEvent("toggle-ligatures") }, -- Toggle ligatures
+	-- Toggles
+	{ key = "O", mods = "CTRL|SHIFT", action = wezterm.action.EmitEvent("toggle-window-background-opacity") },
+	{ key = "E", mods = "CTRL|SHIFT", action = wezterm.action.EmitEvent("toggle-ligatures") },
+
+	-- Edit config (macOS style)
 	{
 		key = ",",
 		mods = "SUPER",
@@ -97,27 +100,20 @@ config.keys = {
 				'eval "$(mise env zsh)" && source "$XDG_DATA_HOME/bob/env/env.sh" && $VISUAL $WEZTERM_CONFIG_FILE',
 			},
 		}),
-	}, -- Edit config (macOS style)
-	{
-		key = "<",
-		mods = "CTRL|SHIFT",
-		action = wezterm.action.SpawnCommandInNewWindow({
-			cwd = os.getenv("WEZTERM_CONFIG_DIR"),
-			args = {
-				os.getenv("SHELL"),
-				"-l",
-				"-c",
-				'eval "$(mise env zsh)" && source "$XDG_DATA_HOME/bob/env/env.sh" && $VISUAL $WEZTERM_CONFIG_FILE',
-			},
-		}),
-	}, -- Edit config (alt)
+	},
+
+	-- Spawn window without tmux
 	{
 		key = ">",
 		mods = "CTRL|SHIFT",
-		action = wezterm.action.SpawnCommandInNewWindow({ args = { os.getenv("SHELL"), "-l", "-c", "zsh" } }),
-	}, -- Spawn without tmux
-	{ key = "n", mods = "CTRL", action = wezterm.action.DisableDefaultAssignment }, -- Disable default new window
-	{ key = "n", mods = "CTRL|SHIFT", action = wezterm.action.SpawnWindow }, -- New window
+		action = wezterm.action.SpawnCommandInNewWindow({
+			args = { os.getenv("SHELL"), "-l", "-c", "zsh" },
+		}),
+	},
+
+	-- Window management
+	{ key = "n", mods = "CTRL", action = wezterm.action.DisableDefaultAssignment },
+	{ key = "n", mods = "CTRL|SHIFT", action = wezterm.action.SpawnWindow },
 }
 
 -- Return config to WezTerm
