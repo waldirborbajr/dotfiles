@@ -51,7 +51,7 @@ config.font = wezterm.font_with_fallback {
   "JetBrains Mono Nerd Font",
   "DepartureMono Nerd Font",
 }
-config.font_size = 12.0
+config.font_size = 11.0
 config.color_scheme = color_scheme_for_appearance(wezterm.gui.get_appearance())
 config.window_background_opacity = window_background_opacity
 config.macos_window_background_blur = 10
@@ -61,6 +61,13 @@ config.native_macos_fullscreen_mode = false
 config.use_fancy_tab_bar = false
 config.max_fps = 144
 config.animation_fps = 144
+
+config.window_padding = {
+	left = 5,
+	right = 0,
+	top = 5,
+	bottom = 0,
+}
 
 -- Keybindings
 config.keys = {
