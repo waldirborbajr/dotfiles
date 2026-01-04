@@ -27,11 +27,7 @@ wezterm.on("toggle-ligatures", toggle_ligatures)
 
 -- Returns color scheme dependant on operating system theme setting (dark/light)
 local function color_scheme_for_appearance(appearance)
-  if appearance:find("Dark") then
-    return "Tokyo Night Moon"
-  else
-    return "Tokyo Night Day"
-  end
+   return "Catppuccin Mocha"
 end
 
 -- Initialize actual config
@@ -67,6 +63,18 @@ config.window_padding = {
 	right = 0,
 	top = 5,
 	bottom = 0,
+}
+
+config.default_cwd = wezterm.home_dir
+config.scrollback_lines = 20000
+config.enable_scroll_bar = false
+config.animation_fps = 60
+config.max_fps = 120
+config.adjust_window_size_when_changing_font_size = false
+config.window_close_confirmation = "NeverPrompt"
+config.inactive_pane_hsb = {
+	saturation = 0.8,
+	brightness = 0.7,
 }
 
 -- Keybindings
