@@ -1,3 +1,7 @@
+if true then
+  return {}
+end
+
 -- lua/plugins/disabled.lua
 return {
   { "folke/trouble.nvim", enabled = false },

@@ -2,107 +2,73 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
-local keymap = vim.keymap
-local opts = { noremap = true, silent = true }
-local Util = require("lazyvim.util")
+-- Track the notification window ID
+local gh_notification_win_id = nil
 
-keymap.set("n", "<C-h>", "<Cmd>NvimTmuxNavigateLeft<CR>", { silent = true })
-keymap.set("n", "<C-j>", "<Cmd>NvimTmuxNavigateDown<CR>", { silent = true })
-keymap.set("n", "<C-k>", "<Cmd>NvimTmuxNavigateUp<CR>", { silent = true })
-keymap.set("n", "<C-l>", "<Cmd>NvimTmuxNavigateRight<CR>", { silent = true })
-keymap.set("n", "<C-\\>", "<Cmd>NvimTmuxNavigateLastActive<CR>", { silent = true })
-keymap.set("n", "<C-Space>", "<Cmd>NvimTmuxNavigateNavigateNext<CR>", { silent = true })
+vim.keymap.set("n", "<C-7>", function()
+  -- Check if notifications window is already open, close it if it is
+  if gh_notification_win_id and vim.api.nvim_win_is_valid(gh_notification_win_id) then
+    vim.api.nvim_win_close(gh_notification_win_id, true)
+    gh_notification_win_id = nil
+    return
+  end
 
--- Borderless terminal
-vim.keymap.set("n", "<C-/>", function()
-  Util.terminal(nil, { border = "none" })
-end, { desc = "Term with border" })
+  local success, git_notifications = pcall(function()
+    return vim.fn.system("gh notify -s -a -n5"):gsub("\n$", "")
+  end)
 
--- Borderless lazygit
-vim.keymap.set("n", "<leader>gg", function()
-  Util.terminal({ "lazygit" }, { cwd = Util.root(), esc_esc = false, ctrl_hjkl = false, border = "none" })
-end, { desc = "Lazygit (root dir)" })
+  if not success or git_notifications == "" then
+    require("noice").notify("No GitHub notifications or error running command", "warn")
+    return
+  end
 
-keymap.del({ "n", "i", "v" }, "<A-j>")
-keymap.del({ "n", "i", "v" }, "<A-k>")
-keymap.del("n", "<C-Left>")
-keymap.del("n", "<C-Down>")
-keymap.del("n", "<C-Up>")
-keymap.del("n", "<C-Right>")
+  -- Strip ANSI escape sequences and format output
+  local cleaned = git_notifications:gsub("\27%[[%d;]+m", "") -- Remove ANSI color codes
+  local formatted = {}
+  for line in cleaned:gmatch("[^\r\n]+") do
+    -- Extract date/time and description
+    local date_time, description = line:match("%s*(%d+/%w+ %d+:%d+)%s*(.*)")
+    if date_time and description then
+      table.insert(formatted, string.format("%s  %s", date_time, description))
+    end
+  end
 
-keymap.set("n", "<M-h>", '<Cmd>lua require("tmux").resize_left()<CR>', { silent = true })
-keymap.set("n", "<M-j>", '<Cmd>lua require("tmux").resize_bottom()<CR>', { silent = true })
-keymap.set("n", "<M-k>", '<Cmd>lua require("tmux").resize_top()<CR>', { silent = true })
-keymap.set("n", "<M-l>", '<Cmd>lua require("tmux").resize_right()<CR>', { silent = true })
+  -- Create a buffer for the notifications
+  local buf = vim.api.nvim_create_buf(false, true)
 
-local set_keymap = vim.api.nvim_set_keymap
+  -- Set buffer content
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, formatted)
 
--- Split windows
-keymap.set("n", "ss", ":vsplit<Return>", opts)
-keymap.set("n", "sv", ":split<Return>", opts)
+  -- Calculate window dimensions
+  local width = math.min(160, vim.o.columns - 4)
+  local height = math.min(#formatted + 1, 15)
 
--- Tabs
-keymap.set("n", "te", ":tabedit", opts)
-keymap.set("n", "<tab>", ":tabnext<Return>", opts)
-keymap.set("n", "<s-tab>", ":tabprev<Return>", opts)
+  -- Center the window
+  local row = math.floor((vim.o.lines - height) / 2)
+  local col = math.floor((vim.o.columns - width) / 2)
 
--- package-info keymaps
-set_keymap(
-  "n",
-  "<leader>cpt",
-  "<cmd>lua require('package-info').toggle()<cr>",
-  { silent = true, noremap = true, desc = "Toggle" }
-)
-set_keymap(
-  "n",
-  "<leader>cpd",
-  "<cmd>lua require('package-info').delete()<cr>",
-  { silent = true, noremap = true, desc = "Delete package" }
-)
-set_keymap(
-  "n",
-  "<leader>cpu",
-  "<cmd>lua require('package-info').update()<cr>",
-  { silent = true, noremap = true, desc = "Update package" }
-)
-set_keymap(
-  "n",
-  "<leader>cpi",
-  "<cmd>lua require('package-info').install()<cr>",
-  { silent = true, noremap = true, desc = "Install package" }
-)
-set_keymap(
-  "n",
-  "<leader>cpc",
-  "<cmd>lua require('package-info').change_version()<cr>",
-  { silent = true, noremap = true, desc = "Change package version" }
-)
+  -- Create floating window
+  local padding = 1 -- top, left, bottom, right
+  local win = vim.api.nvim_open_win(buf, true, {
+    relative = "editor",
+    width = width - 2 * padding,
+    height = height - 1 * padding,
+    row = row + padding,
+    col = col + padding,
+    style = "minimal",
+    border = "rounded",
+    title = "GitHub Notifications",
+    title_pos = "center",
+  })
 
----
--- Extra keymaps
----------------
+  -- Store window ID for toggle functionality
+  gh_notification_win_id = win
 
-vim.keymap.set("n", "<leader>a", function()
-  vim.cmd("argadd %")
-  vim.cmd("argdedup")
-end)
+  vim.bo[buf].modifiable = false
+  vim.bo[buf].buftype = "nofile"
+  vim.bo[buf].filetype = "gh-notifications"
 
-vim.keymap.set("n", "<leader>r", function()
-  vim.cmd.args()
-end)
-
-vim.keymap.set("n", "<C-h>", function()
-  vim.cmd("silent! 1argument")
-end)
-
-vim.keymap.set("n", "<C-j>", function()
-  vim.cmd("silent! 2argument")
-end)
-
-vim.keymap.set("n", "<C-k>", function()
-  vim.cmd("silent! 3argument")
-end)
-
-vim.keymap.set("n", "<C-l>", function()
-  vim.cmd("silent! 4argument")
-end)
+  -- Add keymaps to close the window
+  vim.api.nvim_buf_set_keymap(buf, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  vim.api.nvim_buf_set_keymap(buf, "n", "<Esc>", "<cmd>close<CR>", { noremap = true, silent = true })
+end, { desc = "Show GitHub notifications", silent = true })

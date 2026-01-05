@@ -79,8 +79,8 @@ return {
         ["gx"] = "actions.open_external",
         ["g."] = "actions.toggle_hidden",
         ["g\\"] = "actions.toggle_trash",
-              -- Quick quit
-      ["q"] = "actions.close",
+        -- Quick quit
+        ["q"] = "actions.close",
       },
       -- Configuration for the floating keymaps help window
       keymaps_help = {
