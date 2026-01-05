@@ -79,7 +79,7 @@ alias suspend='sudo pm-suspend'
 
 alias syslist='systemctl list-units --type=service --state=running'
 
-alias rmvim='rm -rf ~/.config/nvim ~/.local/state/nvim ~/.local/share/nvim'
+alias rmvim='~/.local/state/nvim ~/.local/share/nvim'
 alias xterm='sudo update-alternatives --config x-terminal-emulator'
 
 #######################################
