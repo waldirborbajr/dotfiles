@@ -50,3 +50,6 @@ sudo dd bs=4M if=/path/to/file.iso of=/dev/sdX status=progress oflag=sync
 ```
 https://linuxvox.com/blog/install-nerd-fonts-ubuntu/
 ```
+
+
+LAzyGit
