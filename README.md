@@ -52,4 +52,3 @@ https://linuxvox.com/blog/install-nerd-fonts-ubuntu/
 ```
 
 
-LAzyGit
