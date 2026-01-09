@@ -1,24 +1,29 @@
 [[plugin.deps]]
 use = "yazi-rs/plugins:full-border"
-rev = "7ca66b4"
+rev = "68f7d48"
 hash = "3996fc74044bc44144b323686f887e1"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:git"
-rev = "7ca66b4"
-hash = "d2aa1b2f32c8b4fd1775e8f5c45f8fab"
+rev = "68f7d48"
+hash = "36a484acf6a0a0219c543ccb4cee218f"
 
 [[plugin.deps]]
 use = "DreamMaoMao/searchjump"
-rev = "7fafec3"
-hash = "5337bf545993d8c4dec2c229031f49d"
+rev = "cab627c"
+hash = "4df5f3783cbbfed60466f1aa9bc45b5e"
 
 [[plugin.deps]]
 use = "Rolv-Apneseth/starship"
 rev = "eca1861"
 hash = "e519d894e94ded741e06aae4d4775981"
 
+[[plugin.deps]]
+use = "dedukun/bookmarks"
+rev = "9ef1254"
+hash = "92fbb5483657fa7976cdf4e0104e18e0"
+
 [[flavor.deps]]
 use = "yazi-rs/flavors:catppuccin-macchiato"
-rev = "9276ffa"
-hash = "9b9a8e91898a73c1211788a4ed30336"
+rev = "4a1802a"
+hash = "b069dba45e199684b16fa12d385642ed"
