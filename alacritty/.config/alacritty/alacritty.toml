@@ -1,0 +1,98 @@
+[window]
+padding = { x = 10, y = 8 }
+decorations = "Full"          # ou "Buttonless" no macOS / "None" se quiser minimalista
+opacity = 0.97
+blur = true                   # só funciona em alguns compositores (wayland/kwin/hyprland/mutter com blur)
+dynamic_title = true
+resize_increments = true
+startup_mode = "Windowed"
+
+[font]
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+bold   = { family = "JetBrainsMono Nerd Font", style = "Bold" }
+italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
+
+# Recomendado para boa legibilidade + ligatures
+size = 13.0
+
+# 2. Estilo "grande e confortável" (muito popular em 4K/1440p)
+# size = 14.5
+# offset = { x = 0, y = 2 }
+# glyph_offset = { x = 0, y = 2 }
+
+# 3. Estilo compacto / rice minimalista
+# size = 12.0
+# padding = { x = 8, y = 6 }
+# opacity = 0.92
+
+# Ligatures funcionam bem com esta fonte
+builtin_box_drawing = true
+offset = { x = 0, y = 1 }
+glyph_offset = { x = 0, y = 1 }
+
+# Cursor bonitinho
+[cursor]
+style = { shape = "Beam", blinking = "On" }
+vi_mode_style = { shape = "Block" }
+unfocused_hollow = true
+thickness = 0.15
+blink_interval = 750
+
+# Rolagem suave
+[scrolling]
+history = 15000
+multiplier = 3
+
+# Tema Catppuccin Mocha (o mais popular em 2025/26)
+[colors.primary]
+background = '#1e1e2e'
+foreground = '#cdd6f4'
+
+[colors.normal]
+black   = '#45475a'
+red     = '#f38ba8'
+green   = '#a6e3a1'
+yellow  = '#f9e2af'
+blue    = '#89b4fa'
+magenta = '#f5c2e7'
+cyan    = '#94e2d5'
+white   = '#bac2de'
+
+[colors.bright]
+black   = '#585b70'
+red     = '#f38ba8'
+green   = '#a6e3a1'
+yellow  = '#f9e2af'
+blue    = '#89b4fa'
+magenta = '#f5c2e7'
+cyan    = '#94e2d5'
+white   = '#a6adc8'
+
+[colors.dim]
+black   = '#45475a'
+red     = '#f38ba8'
+green   = '#a6e3a1'
+yellow  = '#f9e2af'
+blue    = '#89b4fa'
+magenta = '#f5c2e7'
+cyan    = '#94e2d5'
+white   = '#a6adc8'
+
+# ──────────────────────────────────────────────────────────────
+# Alternativas rápidas de outros sabores Catppuccin (copie e cole)
+# ──────────────────────────────────────────────────────────────
+
+# Catppuccin Latte (claro)
+# background = '#eff1f5'
+# foreground = '#4c4f69'
+# black   = '#5c5f77'   white   = '#acb0be'
+# red     = '#d20f39'   bright_red    = '#d20f39'
+# green   = '#40a02b'   bright_green  = '#40a02b'
+# yellow  = '#df8e1d'   bright_yellow = '#df8e1d'
+# blue    = '#1e66f5'   bright_blue   = '#1e66f5'
+# magenta = '#ea76cb'   bright_magenta= '#ea76cb'
+# cyan    = '#179299'   bright_cyan   = '#179299'
+
+# Catppuccin Frappe
+# background = '#303446'
+# foreground = '#c6d0f5'
