@@ -1,11 +1,18 @@
 [window]
+# padding = { x = 10, y = 8 }
+# decorations = "Full"          # ou "Buttonless" no macOS / "None" se quiser minimalista
+# opacity = 0.97
+# blur = true                   # só funciona em alguns compositores (wayland/kwin/hyprland/mutter com blur)
+# dynamic_title = true
+# resize_increments = true
+# startup_mode = "Windowed"
 padding = { x = 10, y = 8 }
-decorations = "Full"          # ou "Buttonless" no macOS / "None" se quiser minimalista
+decorations = "None"          # sem bordas
 opacity = 0.97
-blur = true                   # só funciona em alguns compositores (wayland/kwin/hyprland/mutter com blur)
+blur = true                   # depende do compositor
 dynamic_title = true
 resize_increments = true
-startup_mode = "Windowed"
+startup_mode = "Fullscreen"   # abre em tela cheia
 
 [font]
 normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
