@@ -13,17 +13,7 @@ bold   = { family = "JetBrainsMono Nerd Font", style = "Bold" }
 italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
 
 # Recomendado para boa legibilidade + ligatures
-size = 13.0
-
-# 2. Estilo "grande e confortável" (muito popular em 4K/1440p)
-# size = 14.5
-# offset = { x = 0, y = 2 }
-# glyph_offset = { x = 0, y = 2 }
-
-# 3. Estilo compacto / rice minimalista
-# size = 12.0
-# padding = { x = 8, y = 6 }
-# opacity = 0.92
+ size = 11.0
 
 # Ligatures funcionam bem com esta fonte
 builtin_box_drawing = true
