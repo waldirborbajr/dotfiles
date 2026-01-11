@@ -134,7 +134,7 @@ chirp_update() {
     if [ $? -eq 0 ]; then
       echo "Downloaded chirp-$CURRENT_VERSION-py3-none-any.whl"
       # Install using pip
-      pip install --system-site-packages "chirp-$CURRENT_VERSION-py3-none-any.whl"
+      pipx install --system-site-packages "chirp-$CURRENT_VERSION-py3-none-any.whl"
       if [ $? -eq 0 ]; then
         echo "Successfully installed chirp-$CURRENT_VERSION-py3-none-any.whl"
         # Clean up downloaded file
@@ -177,7 +177,7 @@ chirp_update() {
       if [ $? -eq 0 ]; then
         echo "Downloaded $LATEST_WHL"
         # Upgrade using pip
-        pip install --upgrade --force-reinstall "$LATEST_WHL"
+        pipx install --upgrade --force-reinstall "$LATEST_WHL"
         if [ $? -eq 0 ]; then
           echo "Successfully updated to $LATEST_WHL"
           # Clean up downloaded file
