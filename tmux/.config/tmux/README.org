@@ -1,172 +1,240 @@
-#+TITLE: Tmux Configuration
-#+AUTHOR: Tony, btw
+# Tmux Configuration
 
-* Installation
+> Opinionated tmux setup focused on **productivity, persistence and low friction**.
+> Designed to work seamlessly with **Alacritty**, **Neovim**, and modern DevOps workflows.
 
-This is my tmux config. It's a zero-plugin setup with vim-like keybindings and a Tokyo Night Moon theme.
+---
 
-To use this config, first make sure tmux is installed:
+## ✨ Highlights
 
-#+begin_src sh
-# Arch
+- Prefix key remapped to **Ctrl-a**
+- Vim-style pane navigation
+- Path-aware splits (new panes open in the same directory)
+- Tokyo Night theme (plugin-based)
+- Clipboard integration
+- **Session persistence with tmux-resurrect + tmux-continuum**
+- Automatic restore on startup
+- Works on **Linux, macOS, NixOS**
+
+---
+
+## 📦 Requirements
+
+- tmux ≥ 3.2 (recommended)
+- git
+
+Optional but recommended:
+- Alacritty
+- Neovim
+- Zsh
+
+---
+
+## 🔧 Installation
+
+### Install tmux
+
+```sh
+# Arch Linux
 sudo pacman -S tmux
 
-# Ubuntu/Debian
+# Ubuntu / Debian
 sudo apt install tmux
 
 # macOS
 brew install tmux
-#+end_src
+```
 
-Then point tmux to this config by symlinking it:
+### Clone this repository
 
-#+begin_src sh
+```sh
+git clone https://github.com/your-user/your-tmux-repo.git
+```
+
+### Symlink configuration
+
+```sh
 mkdir -p ~/.config/tmux
-ln -sf /path/to/this/tmux.conf ~/.config/tmux/tmux.conf
-#+end_src
+ln -sf /path/to/repo/tmux.conf ~/.config/tmux/tmux.conf
+```
 
-Or if you just want to test it out without symlinking:
+Reload tmux:
 
-#+begin_src sh
-tmux source-file /path/to/this/tmux.conf
-#+end_src
+```sh
+tmux source-file ~/.config/tmux/tmux.conf
+```
 
-* Configuration Breakdown
+---
 
-** Terminal and Display Settings
+## 🔌 Plugins (TPM)
 
-#+begin_src conf
-set -g default-terminal "tmux-256color"
-set -ga terminal-overrides ",*:RGB"
-#+end_src
+This setup uses **TPM – Tmux Plugin Manager**.
 
-These lines enable 256-color support and true color (RGB) support. The first line tells tmux to advertise itself as a 256-color terminal, and the second enables 24-bit RGB colors. This is essential for proper color rendering in tools like Neovim.
+Plugins in use:
 
-#+begin_src conf
-set -g mouse on
-set -g set-clipboard on
-#+end_src
+- `tmux-plugins/tpm`
+- `tmux-plugins/tmux-sensible`
+- `joshmedeski/vim-tmux-navigator`
+- `tmux-plugins/tmux-yank`
+- `janoamaral/tokyo-night-tmux`
+- `tmux-plugins/tmux-resurrect`
+- `tmux-plugins/tmux-continuum`
 
-Mouse support lets you click between panes and drag borders to resize. Clipboard integration means when you copy text in tmux, it goes to your system clipboard.
+### Install plugins
 
-** Prefix Key
+Inside tmux:
 
-#+begin_src conf
-unbind C-b
-set -g prefix C-a
-bind-key C-a send-prefix
-#+end_src
+```
+Prefix + I
+```
 
-This changes the prefix from =Ctrl-b= to =Ctrl-a= because it's way easier to reach. The third line lets you send the actual =Ctrl-a= to the terminal if needed.
+---
 
-** Pane Navigation
+## ♻️ Session Persistence
 
-#+begin_src conf
-bind h select-pane -L
-bind j select-pane -D
-bind k select-pane -U
-bind l select-pane -R
-#+end_src
+### tmux-resurrect
 
-Vim-style pane navigation. After hitting the prefix, you can use =h/j/k/l= to move between panes.
+Restores:
 
-#+begin_src conf
-bind -n M-h select-pane -L
-bind -n M-j select-pane -D
-bind -n M-k select-pane -U
-bind -n M-l select-pane -R
-#+end_src
+- Sessions
+- Windows and panes
+- Layouts
+- Working directories
+- Commands (ssh, kubectl, nvim, etc.)
 
-The =-n= flag means "bind without prefix". So =Alt+h/j/k/l= lets you switch panes instantly without hitting prefix first.
+Manual commands:
 
-** Splits
+| Action | Shortcut |
+|------|---------|
+| Save session | `Prefix + Ctrl + s` |
+| Restore session | `Prefix + Ctrl + r` |
 
-#+begin_src conf
-unbind %
-bind | split-window -h -c "#{pane_current_path}"
+### tmux-continuum
 
-unbind '"'
-bind - split-window -v -c "#{pane_current_path}"
-#+end_src
+- Automatically saves sessions every **10 minutes**
+- Automatically restores sessions on tmux startup
 
-Split windows with =prefix + |= for vertical and =prefix + -= for horizontal. The =-c "#{pane_current_path}"= part makes new panes open in the same directory as your current pane.
+No manual interaction required 🚀
 
-** Config Reload
+---
 
-#+begin_src conf
-unbind r
-bind r source-file $HOME/.config/tmux/tmux.conf
-#+end_src
+## 🧭 Keybindings
 
-Reload your config with =prefix + r= without having to restart tmux.
+### Prefix
 
-** Window Management
+| Key | Action |
+|----|------|
+| `Ctrl-a` | tmux prefix |
 
-#+begin_src conf
-set -g base-index 1
-set -g pane-base-index 1
-set-window-option -g pane-base-index 1
-set-option -g renumber-windows on
-#+end_src
+---
 
-Start numbering windows and panes at 1 instead of 0. This is more ergonomic because window 1 is on the left of your keyboard. The =renumber-windows= option automatically renumbers windows when you close one, so you don't get gaps.
+### Pane navigation (Vim-style)
 
-#+begin_src conf
-bind -n M-1 select-window -t 1
-bind -n M-2 select-window -t 2
-# ... (continues through M-9)
-#+end_src
+| Key | Action |
+|----|------|
+| `Prefix + h/j/k/l` | Move between panes |
+| `Ctrl + h/j/k/l` | Move between panes (Neovim ↔ tmux) |
 
-Jump directly to windows with =Alt+1= through =Alt+9=, no prefix needed.
+---
 
-** Copy Mode
+### Splits (path-aware)
 
-#+begin_src conf
-set-window-option -g mode-keys vi
-bind-key -T copy-mode-vi v send-keys -X begin-selection
-bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
-bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
-unbind -T copy-mode-vi MouseDragEnd1Pane
-#+end_src
+| Key | Action |
+|----|------|
+| `Prefix + \\` | Horizontal split |
+| `Prefix + -` | Vertical split |
 
-Vim-style copy mode. Enter copy mode with =prefix + [=, navigate with =h/j/k/l=, press =v= to start selection, =y= to yank (copy). The =C-v= binding lets you do rectangle selection like in vim. The last line prevents mouse selection from exiting copy mode automatically.
+New panes open in the **current working directory**.
 
-** Theme
+---
 
-The rest of the config is the Tokyo Night Moon theme. The color variables are defined at the top:
+### Resize panes
 
-#+begin_src conf
-thm_bg="#222436"
-thm_fg="#c8d3f5"
-thm_cyan="#86e1fc"
-# ... etc
-#+end_src
+| Key | Action |
+|----|------|
+| `Prefix + ← / →` | Resize horizontally |
+| `Prefix + ↑ / ↓` | Resize vertically |
+| `Prefix + m` | Toggle zoom |
 
-The status bar shows:
-- Current window with a checkmark and the last two parts of the current directory path
-- Other windows showing just their index and name
-- Right side shows window name, a visual indicator that changes color when prefix is pressed, and session name
+---
 
-The status bar format strings look complex but they're just using tmux's format variables like =#I= (window index), =#W= (window name), =#S= (session name), and conditional formatting with =#{?client_prefix,...}=.
+### Window navigation
 
-* Keybindings Summary
+| Key | Action |
+|----|------|
+| `Shift + ← / →` | Previous / next window |
+| `Alt + H / L` | Previous / next window |
 
-| Bind               | Action                      |
-|--------------------+-----------------------------|
-| =Ctrl-a=           | Prefix key                  |
-| =prefix + \vert=   | Split vertical              |
-| =prefix + -=       | Split horizontal            |
-| =prefix + h/j/k/l= | Navigate panes              |
-| =Alt + h/j/k/l=    | Navigate panes (no prefix)  |
-| =Alt + 1-9=        | Jump to window (no prefix)  |
-| =prefix + r=       | Reload config               |
-| =prefix + [=       | Enter copy mode             |
-| =v= (copy mode)    | Start selection             |
-| =y= (copy mode)    | Yank (copy) selection       |
+---
 
-* Notes
+### Copy mode (vi)
 
-This config is heavily inspired by Henry Misc's zero-plugin approach. No TPM, no plugins, just native tmux features.
+| Key | Action |
+|----|------|
+| `Prefix + [` | Enter copy mode |
+| `v` | Start selection |
+| `Ctrl + v` | Rectangle selection |
+| `y` | Yank selection |
 
-If you want to change the theme colors, just swap out the =thm_*= variables at the top with your preferred color scheme.
+Clipboard is integrated with the system via `tmux-yank`.
+
+---
+
+### Reload config
+
+| Key | Action |
+|----|------|
+| `Prefix + r` | Reload tmux config |
+
+---
+
+## 🎨 Theme
+
+This configuration uses **Tokyo Night** via plugin:
+
+- Clean status bar
+- Relative path display
+- Minimal Git indicators
+- No visual clutter
+
+Theme options are configured directly in `tmux.conf` using plugin variables.
+
+---
+
+## 🧠 Design Philosophy
+
+- Minimal friction
+- Keyboard-first
+- Vim-centric workflow
+- Persistent state (never lose context)
+- Declarative-friendly (works great with dotfiles / Nix)
+
+---
+
+## 🚀 Recommended Setup
+
+Works best with:
+
+- Alacritty autostarting tmux
+- Neovim with sessions enabled
+- Zsh + starship
+
+---
+
+## 📌 Notes
+
+- This is **not** a zero-plugin setup by design
+- Plugins are used intentionally to remove manual session management
+- If you prefer a minimal tmux without plugins, this repo may not be for you
+
+---
+
+## 🧑‍💻 Author
+
+Maintained by **Tony**  
+Adapted and modernized with a DevOps/SRE workflow in mind.
+
+---
+
+Happy hacking 🧠⚡
 
