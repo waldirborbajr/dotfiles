@@ -1,33 +1,44 @@
+####################
+# Ambiente
+####################
+[env]
+TERM = "xterm-256color"
+
+####################
+# Janela
+####################
 [window]
-# padding = { x = 10, y = 8 }
-# decorations = "Full"          # ou "Buttonless" no macOS / "None" se quiser minimalista
-# opacity = 0.97
-# blur = true                   # só funciona em alguns compositores (wayland/kwin/hyprland/mutter com blur)
-# dynamic_title = true
-# resize_increments = true
-# startup_mode = "Windowed"
-padding = { x = 10, y = 8 }
-decorations = "None"          # sem bordas
-opacity = 0.97
-blur = true                   # depende do compositor
+padding = { x = 10, y = 10 }
+decorations = "None"
+opacity = 0.9
+blur = true
 dynamic_title = true
 resize_increments = true
-startup_mode = "Fullscreen"   # abre em tela cheia
+startup_mode = "Fullscreen"
 
+####################
+# Shell / tmux
+####################
+[terminal.shell]
+program = "/bin/tmux"
+args = ["new-session", "-A", "-D", "-s", "DevOps"]
+
+####################
+# Fonte
+####################
 [font]
 normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
 bold   = { family = "JetBrainsMono Nerd Font", style = "Bold" }
 italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
 
-# Recomendado para boa legibilidade + ligatures
- size = 11.0
-
-# Ligatures funcionam bem com esta fonte
+size = 11.0
 builtin_box_drawing = true
 offset = { x = 0, y = 1 }
 glyph_offset = { x = 0, y = 1 }
 
-# Cursor bonitinho
+####################
+# Cursor
+####################
 [cursor]
 style = { shape = "Beam", blinking = "On" }
 vi_mode_style = { shape = "Block" }
@@ -35,61 +46,87 @@ unfocused_hollow = true
 thickness = 0.15
 blink_interval = 750
 
-# Rolagem suave
+####################
+# Scrolling
+####################
 [scrolling]
 history = 15000
 multiplier = 3
 
-# Tema Catppuccin Mocha (o mais popular em 2025/26)
+####################
+# Cores — Catppuccin Mocha
+####################
 [colors.primary]
-background = '#1e1e2e'
-foreground = '#cdd6f4'
+background = "#1e1e2e"
+foreground = "#cdd6f4"
 
 [colors.normal]
-black   = '#45475a'
-red     = '#f38ba8'
-green   = '#a6e3a1'
-yellow  = '#f9e2af'
-blue    = '#89b4fa'
-magenta = '#f5c2e7'
-cyan    = '#94e2d5'
-white   = '#bac2de'
+black   = "#45475a"
+red     = "#f38ba8"
+green   = "#a6e3a1"
+yellow  = "#f9e2af"
+blue    = "#89b4fa"
+magenta = "#f5c2e7"
+cyan    = "#94e2d5"
+white   = "#bac2de"
 
 [colors.bright]
-black   = '#585b70'
-red     = '#f38ba8'
-green   = '#a6e3a1'
-yellow  = '#f9e2af'
-blue    = '#89b4fa'
-magenta = '#f5c2e7'
-cyan    = '#94e2d5'
-white   = '#a6adc8'
+black   = "#585b70"
+red     = "#f38ba8"
+green   = "#a6e3a1"
+yellow  = "#f9e2af"
+blue    = "#89b4fa"
+magenta = "#f5c2e7"
+cyan    = "#94e2d5"
+white   = "#a6adc8"
 
 [colors.dim]
-black   = '#45475a'
-red     = '#f38ba8'
-green   = '#a6e3a1'
-yellow  = '#f9e2af'
-blue    = '#89b4fa'
-magenta = '#f5c2e7'
-cyan    = '#94e2d5'
-white   = '#a6adc8'
+black   = "#45475a"
+red     = "#f38ba8"
+green   = "#a6e3a1"
+yellow  = "#f9e2af"
+blue    = "#89b4fa"
+magenta = "#f5c2e7"
+cyan    = "#94e2d5"
+white   = "#a6adc8"
 
-# ──────────────────────────────────────────────────────────────
-# Alternativas rápidas de outros sabores Catppuccin (copie e cole)
-# ──────────────────────────────────────────────────────────────
+####################
+# Teclado — PADRÃO ÚNICO
+####################
+[keyboard]
+bindings = [
 
-# Catppuccin Latte (claro)
-# background = '#eff1f5'
-# foreground = '#4c4f69'
-# black   = '#5c5f77'   white   = '#acb0be'
-# red     = '#d20f39'   bright_red    = '#d20f39'
-# green   = '#40a02b'   bright_green  = '#40a02b'
-# yellow  = '#df8e1d'   bright_yellow = '#df8e1d'
-# blue    = '#1e66f5'   bright_blue   = '#1e66f5'
-# magenta = '#ea76cb'   bright_magenta= '#ea76cb'
-# cyan    = '#179299'   bright_cyan   = '#179299'
+  # Clipboard
+  { key = "C", mods = "Control|Shift", action = "Copy" },
+  { key = "V", mods = "Control|Shift", action = "Paste" },
+  { key = "Insert", mods = "Shift", action = "PasteSelection" },
 
-# Catppuccin Frappe
-# background = '#303446'
-# foreground = '#c6d0f5'
+  # Fonte
+  { key = "Key0", mods = "Control", action = "ResetFontSize" },
+  { key = "Equals", mods = "Control", action = "IncreaseFontSize" },
+  { key = "Plus", mods = "Control", action = "IncreaseFontSize" },
+  { key = "Minus", mods = "Control", action = "DecreaseFontSize" },
+
+  # Fullscreen
+  { key = "F11", action = "ToggleFullscreen" },
+
+  # Limpar tela (clear + clear scrollback)
+  { key = "L", mods = "Control", chars = "\u000c" },
+
+  # Scroll manual
+  { key = "K", mods = "Control|Shift", action = "ScrollPageUp" },
+  { key = "J", mods = "Control|Shift", action = "ScrollPageDown" },
+  { key = "Home", mods = "Shift", action = "ScrollToTop" },
+  { key = "End", mods = "Shift", action = "ScrollToBottom" },
+
+  # tmux — splits
+  { key = "D", mods = "Command", chars = "\u0002\"" },      # split horizontal
+  { key = "D", mods = "Command|Shift", chars = "\u0002%" },# split vertical
+  { key = "O", mods = "Command", chars = "\u0002o" },      # focus next pane
+
+  # tmux — swap / rotate
+  { key = "Left",  mods = "Command", chars = "\u0002{" },
+  { key = "Right", mods = "Command", chars = "\u0002}" },
+  { key = "Up",    mods = "Command", chars = "\u0002{" },
+  { key = "Down",  mods = "Command", chars = "\u0002}" }
+]
