@@ -20,7 +20,7 @@ startup_mode = "Fullscreen"
 # Shell / tmux
 ####################
 [terminal.shell]
-program = "/bin/tmux"
+program = "/usr/local/bin/tmux"
 args = ["new-session", "-A", "-D", "-s", "DevOps"]
 
 ####################
