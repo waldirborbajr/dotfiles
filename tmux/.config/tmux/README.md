@@ -238,9 +238,9 @@ Adapted and modernized with a DevOps/SRE workflow in mind.
 
 ## Shortcut
 
-|Instalar plugins |`Prefix + I`
-|Atualizar plugins |`Prefix + U`
-|Remover plugins |`Prefix + alt + u`
+* Instalar plugins `Prefix + I` 
+* Atualizar plugins `Prefix + U` 
+* Remover plugins `Prefix + alt + u` 
 
 Happy hacking 🧠⚡
 
