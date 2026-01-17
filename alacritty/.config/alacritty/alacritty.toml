@@ -8,49 +8,75 @@ TERM = "xterm-256color"
 # Janela
 ####################
 [window]
-padding = { x = 10, y = 10 }
+padding = { x = 8, y = 8 }
 decorations = "None"
-opacity = 0.9
+
+# Transparência equilibrada (boa leitura + performance)
+opacity = 0.92
+
+# Blur só vale a pena em compositores bons (Wayland/macOS)
 blur = true
+
 dynamic_title = true
 resize_increments = true
+
+# Fullscreen real (menos redraw que maximized)
 startup_mode = "Fullscreen"
+
+####################
+# Performance
+####################
+[debug]
+render_timer = false
+persistent_logging = false
+log_level = "Off"
 
 ####################
 # Shell / tmux
 ####################
 [terminal.shell]
-program = "/usr/local/bin/tmux"
+program = "tmux"
 args = ["new-session", "-A", "-D", "-s", "DevOps"]
 
 ####################
 # Fonte
 ####################
 [font]
+size = 11.0
+builtin_box_drawing = true
+
 normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
 bold   = { family = "JetBrainsMono Nerd Font", style = "Bold" }
 italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
 
-size = 11.0
-builtin_box_drawing = true
+# Ajustes finos → melhor alinhamento sem custo extra
 offset = { x = 0, y = 1 }
-glyph_offset = { x = 0, y = 1 }
+glyph_offset = { x = 0, y = 0 }
 
 ####################
 # Cursor
 ####################
 [cursor]
-style = { shape = "Beam", blinking = "On" }
-vi_mode_style = { shape = "Block" }
 unfocused_hollow = true
 thickness = 0.15
-blink_interval = 750
+
+[cursor.style]
+shape = "Beam"
+blinking = "On"
+
+[cursor.vi_mode_style]
+shape = "Block"
+
+# Blink mais suave e econômico
+blink_interval = 700
+blink_timeout = 0
 
 ####################
 # Scrolling
 ####################
 [scrolling]
-history = 15000
+# 10k já é mais que suficiente e consome menos RAM
+history = 10000
 multiplier = 3
 
 ####################
@@ -80,53 +106,32 @@ magenta = "#f5c2e7"
 cyan    = "#94e2d5"
 white   = "#a6adc8"
 
-[colors.dim]
-black   = "#45475a"
-red     = "#f38ba8"
-green   = "#a6e3a1"
-yellow  = "#f9e2af"
-blue    = "#89b4fa"
-magenta = "#f5c2e7"
-cyan    = "#94e2d5"
-white   = "#a6adc8"
-
 ####################
-# Teclado — PADRÃO ÚNICO
+# Teclado — Layout único (Linux + macOS)
 ####################
 [keyboard]
 bindings = [
-
   # Clipboard
   { key = "C", mods = "Control|Shift", action = "Copy" },
   { key = "V", mods = "Control|Shift", action = "Paste" },
-  { key = "Insert", mods = "Shift", action = "PasteSelection" },
 
   # Fonte
   { key = "Key0", mods = "Control", action = "ResetFontSize" },
   { key = "Equals", mods = "Control", action = "IncreaseFontSize" },
-  { key = "Plus", mods = "Control", action = "IncreaseFontSize" },
   { key = "Minus", mods = "Control", action = "DecreaseFontSize" },
 
   # Fullscreen
   { key = "F11", action = "ToggleFullscreen" },
 
-  # Limpar tela (clear + clear scrollback)
+  # Clear + scrollback
   { key = "L", mods = "Control", chars = "\u000c" },
 
   # Scroll manual
   { key = "K", mods = "Control|Shift", action = "ScrollPageUp" },
   { key = "J", mods = "Control|Shift", action = "ScrollPageDown" },
-  { key = "Home", mods = "Shift", action = "ScrollToTop" },
-  { key = "End", mods = "Shift", action = "ScrollToBottom" },
 
   # tmux — splits
-  { key = "D", mods = "Command", chars = "\u0002\"" },      # split horizontal
-  { key = "D", mods = "Command|Shift", chars = "\u0002%" },# split vertical
-  { key = "O", mods = "Command", chars = "\u0002o" },      # focus next pane
-
-  # tmux — swap / rotate
-  { key = "Left",  mods = "Command", chars = "\u0002{" },
-  { key = "Right", mods = "Command", chars = "\u0002}" },
-  { key = "Up",    mods = "Command", chars = "\u0002{" },
-  { key = "Down",  mods = "Command", chars = "\u0002}" }
+  { key = "D", mods = "Command", chars = "\u0002\"" },
+  { key = "D", mods = "Command|Shift", chars = "\u0002%" },
+  { key = "O", mods = "Command", chars = "\u0002o" }
 ]
