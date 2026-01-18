@@ -80,3 +80,12 @@ sudo akmods
 lsmod | grep wl
 ```
 
+## NerdFonts
+
+```
+unzip /tmp/Hack.zip -d ~/.local/share/fonts/
+
+fc-cache -vf ~/.local/share/fonts/
+
+fc-list : family style | grep -i nerd
+```
