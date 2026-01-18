@@ -50,17 +50,12 @@ glyph_offset = { x = 0, y = 0 }
 # =========================
 [cursor]
 unfocused_hollow = true
-thickness = 0.15
 
-[cursor.style]
-shape = "Beam"
-blinking = "On"
+# Estilo normal do cursor (ENUM)
+style = "Beam"
 
-# ⚠️ vi_mode_style é ENUM — não é tabela
+# Estilo do cursor no vi mode (ENUM)
 vi_mode_style = "Block"
-
-blink_interval = 700
-blink_timeout = 0
 
 # =========================
 # Scrolling
