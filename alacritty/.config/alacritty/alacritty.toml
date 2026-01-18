@@ -1,65 +1,41 @@
-####################
 # Ambiente
-####################
 [env]
 TERM = "xterm-256color"
-####################
+
 # Janela
-####################
 [window]
 padding = { x = 8, y = 8 }
 decorations = "None"
-# Opacidade opaca para melhor performance
-opacity = 1.0
-# Desativar blur para economia de recursos
-blur = false
+opacity = 1.0           # 1.0 = sem transparência → melhor performance
+blur = false            # Desativado → grande ganho de performance
 dynamic_title = true
 resize_increments = true
-# Fullscreen real (menos redraw que maximized)
 startup_mode = "Fullscreen"
-####################
-# Performance
-####################
+
+# Performance/Debug
 [debug]
 render_timer = false
 persistent_logging = false
 log_level = "Off"
-####################
-# Shell / tmux
-####################
-[shell]
+
+# Shell (correto agora)
+[terminal.shell]
 program = "tmux"
 args = ["new-session", "-A", "-D", "-s", "DevOps"]
-####################
-# Fonte
-####################
+
+# Fonte - mantendo exatamente o que você usa
 [font]
 size = 11.0
 builtin_box_drawing = true
 
-[font.normal]
-family = "JetBrainsMono Nerd Font"
-style = "Regular"
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+bold   = { family = "JetBrainsMono Nerd Font", style = "Bold" }
+italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
 
-[font.bold]
-family = "JetBrainsMono Nerd Font"
-style = "Bold"
+offset = { x = 0, y = 1 }
+glyph_offset = { x = 0, y = 0 }
 
-[font.italic]
-family = "JetBrainsMono Nerd Font"
-style = "Italic"
-
-# Ajustes finos → melhor alinhamento sem custo extra
-[font.offset]
-x = 0
-y = 1
-
-[font.glyph_offset]
-x = 0
-y = 0
-####################
 # Cursor
-####################
 [cursor]
 unfocused_hollow = true
 thickness = 0.15
@@ -69,66 +45,66 @@ shape = "Beam"
 blinking = "On"
 
 [cursor.vi_mode_style]
-shape = "Block"
-blinking = "On"  # Adicionado para compatibilidade e correção do erro
+shape = "Block"     # ← obrigatório
+blinking = "On"     # opcional, mas recomendado manter consistente
 
-# Blink mais suave e econômico
 blink_interval = 700
 blink_timeout = 0
-####################
-# Scrolling
-####################
+
+# Scrolling - valor mais conservador para economizar RAM
 [scrolling]
-# Reduzido para 5000 para menor consumo de RAM, mantendo usabilidade
 history = 5000
 multiplier = 3
-####################
-# Cores — Catppuccin Mocha
-####################
+
+# Cores — Catppuccin Mocha (mantido igual)
 [colors.primary]
 background = "#1e1e2e"
 foreground = "#cdd6f4"
 
 [colors.normal]
-black = "#45475a"
-red = "#f38ba8"
-green = "#a6e3a1"
-yellow = "#f9e2af"
-blue = "#89b4fa"
+black   = "#45475a"
+red     = "#f38ba8"
+green   = "#a6e3a1"
+yellow  = "#f9e2af"
+blue    = "#89b4fa"
 magenta = "#f5c2e7"
-cyan = "#94e2d5"
-white = "#bac2de"
+cyan    = "#94e2d5"
+white   = "#bac2de"
 
 [colors.bright]
-black = "#585b70"
-red = "#f38ba8"
-green = "#a6e3a1"
-yellow = "#f9e2af"
-blue = "#89b4fa"
+black   = "#585b70"
+red     = "#f38ba8"
+green   = "#a6e3a1"
+yellow  = "#f9e2af"
+blue    = "#89b4fa"
 magenta = "#f5c2e7"
-cyan = "#94e2d5"
-white = "#a6adc8"
-####################
-# Teclado — Layout único (Linux + macOS)
-####################
+cyan    = "#94e2d5"
+white   = "#a6adc8"
+
+# Teclado — seus bindings mantidos
 [keyboard]
 bindings = [
   # Clipboard
   { key = "C", mods = "Control|Shift", action = "Copy" },
   { key = "V", mods = "Control|Shift", action = "Paste" },
+
   # Fonte
-  { key = "Key0", mods = "Control", action = "ResetFontSize" },
-  { key = "Equals", mods = "Control", action = "IncreaseFontSize" },
-  { key = "Minus", mods = "Control", action = "DecreaseFontSize" },
+  { key = "Key0",  mods = "Control",      action = "ResetFontSize" },
+  { key = "Equals", mods = "Control",      action = "IncreaseFontSize" },
+  { key = "Minus",  mods = "Control",      action = "DecreaseFontSize" },
+
   # Fullscreen
   { key = "F11", action = "ToggleFullscreen" },
+
   # Clear + scrollback
   { key = "L", mods = "Control", chars = "\u000c" },
+
   # Scroll manual
   { key = "K", mods = "Control|Shift", action = "ScrollPageUp" },
   { key = "J", mods = "Control|Shift", action = "ScrollPageDown" },
-  # tmux — splits
-  { key = "D", mods = "Command", chars = "\u0002\"" },
+
+  # tmux splits (usando Command = Super no Linux / ⌘ no macOS)
+  { key = "D", mods = "Command",       chars = "\u0002\"" },
   { key = "D", mods = "Command|Shift", chars = "\u0002%" },
-  { key = "O", mods = "Command", chars = "\u0002o" }
+  { key = "O", mods = "Command",       chars = "\u0002o" },
 ]
