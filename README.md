@@ -57,3 +57,26 @@ https://linuxvox.com/blog/install-nerd-fonts-ubuntu/
 https://www.schabell.org/2025/01/installing-fedora-41-on-macbook-pro-13-inch-late-2011.html
 ```
 
+## Enable WiFi Fedora
+
+```
+sudo dnf --refresh update
+
+lspci -vnn -d 14e4:
+
+sudo dnf install -y \
+  https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+
+sudo dnf install -y \
+  https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+  https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+
+sudo dnf list kernel
+
+sudo dnf install -y broadcom-wl
+
+sudo akmods
+
+lsmod | grep wl
+```
+
