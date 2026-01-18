@@ -51,4 +51,9 @@ sudo dd bs=4M if=/path/to/file.iso of=/dev/sdX status=progress oflag=sync
 https://linuxvox.com/blog/install-nerd-fonts-ubuntu/
 ```
 
+## WiFi - Fedora
+
+```
+https://www.schabell.org/2025/01/installing-fedora-41-on-macbook-pro-13-inch-late-2011.html
+```
 
