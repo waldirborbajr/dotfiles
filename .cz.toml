@@ -1,26 +1,27 @@
-# [tool.commitizen]
-# name = "cz_conventional_commits"
-# tag_format = "$version"
-# version_scheme = "semver"
-# version = "0.0.1"
-# update_changelog_on_bump = true
-# major_version_zero = true
-
 [tool.commitizen]
 name = "cz_customize"
-tag_format = "snrd/v$version"
-ignored_tag_formats = ["*/v${version}", "v${version}"]
+tag_format = "$version"
 version_scheme = "semver"
-version_provider = "scm"
+version_provider = "npm"
 update_changelog_on_bump = true
-changelog_file = "CHANGELOG.md"
 major_version_zero = true
-annotated_tag = true
-pre_bump_hooks = ["bash scripts/hook-bump-pre.sh"]
-post_bump_hooks = ["goreleaser release --clean -f cmd/snrd/.goreleaser.yml"]
 
 [tool.commitizen.customize]
-bump_pattern = "^(feat|fix|refactor|perf|BREAKING CHANGE)"
-bump_map = { "BREAKING CHANGE" = "MAJOR", "feat" = "MINOR", "fix" = "PATCH", "refactor" = "PATCH", "perf" = "PATCH" }
-default_bump = "PATCH"
-changelog_pattern = "^(feat|fix|refactor|docs|build)\\(core\\)(!)?:"
+message_template = "{{change_type}}"
+
+[[tool.commitizen.customize.questions]]
+type = "list"
+name = "change_type"
+choices = [
+	{value = ":bug:", name = "\uf188 A bug fix. Correlates with PATCH in SemVer"},
+	{value = ":feat:", name = "\uf005 A new feature. Correlates with MINOR in SemVer"},
+	{value = ":memo:", name = "\uf15c Documentation only changes"},
+	{value = ":style:", name = "\ue695 Style Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)"},
+	{value = ":recycle:", name = "\ueb52 Refactor. A code change that neither fixes a bug nor adds a feature"},
+	{value = ":zap:", name = "\uf135 A code change that improves performance"},
+	{value = ":test_tube:", name = "\uf12e Adding missing or correcting existing tests"},
+	{value = ":arrow_up:", name = "\ue36e Upgrade dependencies"},
+	{value = ":construction_worker:", name = "Updates to CI build pipeline"},
+	{value = ":alien:", name = "\ue680 Changes to CI configuration files and scripts (example scopes: GitLabCI)"}
+]
+message = "Select the type of change you are committing"
