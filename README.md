@@ -89,3 +89,20 @@ fc-cache -vf ~/.local/share/fonts/
 
 fc-list : family style | grep -i nerd
 ```
+
+## Fedora Way
+
+```
+sudo dnf update -y
+
+sudo dnf upgrade -y
+
+```
+
+## Installing Development Tools and Dependencies 
+
+```
+sudo dnf groupinstall "Development Tools" -y
+
+sudo dnf install gcc gettext-devel libtool make perl-ExtUtils-Embed -y
+```
