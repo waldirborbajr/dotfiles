@@ -157,4 +157,13 @@ sudo systemctl is-enabled anydesk.service
 sudo dnf upgrade --refresh
 ```
 
+```
+VERSION=$(curl -s https://api.github.com/repos/balena-io/etcher/releases/latest | grep -oP '"tag_name": "v\K[0-9.]+') && wget https://github.com/balena-io/etcher/releases/download/v${VERSION}/balena-etcher-${VERSION}-1.x86_64.rpm
+```
+
+```
+sudo dnf install ./balena-etcher-*.rpm
+```
+
+---
 
