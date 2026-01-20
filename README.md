@@ -95,9 +95,13 @@ fc-list : family style | grep -i nerd
 ```
 sudo dnf update -y
 
+sudo dnf upgrade --refresh
+
 sudo dnf upgrade -y
 
 ```
+
+---
 
 ## Installing Development Tools and Dependencies 
 
@@ -106,6 +110,8 @@ sudo dnf groupinstall "Development Tools" -y
 
 sudo dnf install gcc gettext-devel libtool make perl-ExtUtils-Embed -y
 ```
+
+---
 
 ## Anydesk on Fedora
 
@@ -142,3 +148,13 @@ sudo systemctl status anydesk.service
 ```
 sudo systemctl is-enabled anydesk.service
 ```
+
+---
+
+## Install Balena Etcher
+
+```
+sudo dnf upgrade --refresh
+```
+
+
