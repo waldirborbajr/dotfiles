@@ -167,3 +167,11 @@ sudo dnf install ./balena-etcher-*.rpm
 
 ---
 
+## Chirp
+
+```
+sudo dnf remove brltty
+sudo usermod -a -G dialout $USER
+sudo dnf install chirp
+
+```
