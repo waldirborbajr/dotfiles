@@ -35,7 +35,29 @@ export GOPATH=$HOME/go
 
 ## Prompt
 export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
-eval "$(starship init zsh)"
+# eval "$(starship init zsh)"
 
+# starship
+(( $+commands[starship] )) && eval "$(starship init zsh)"
 
+# Zellij pane renaming hooks - AFTER starship, BEFORE zellij auto-start
+# so they don't interfere with starship's own prompt hooks
+if [[ -n "$ZELLIJ" ]]; then
+  preexec() {
+      zellij action rename-pane "⚙ ${1%% *}"
+  }
+  precmd() {
+      local name
+      name=$(git rev-parse --show-toplevel 2>/dev/null)
+      if [[ -n "$name" ]]; then
+          name=$(basename "$name")
+      else
+          name=$(basename "$PWD")
+      fi
+      zellij action rename-pane "$name"
+  }
+fi
+
+# zellij
+(( $+commands[zellij] )) && eval "$(zellij setup --generate-auto-start zsh)"
 
