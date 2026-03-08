@@ -35,6 +35,7 @@ function plugin-load {
 repos=(
   'zsh-users/zsh-syntax-highlighting'
   'zsh-users/zsh-autosuggestions'
+  'zsh-users/zsh-completions'
 )
 
 plugin-load $repos
