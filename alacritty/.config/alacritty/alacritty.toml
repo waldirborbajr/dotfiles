@@ -2,19 +2,20 @@
 # Ambiente
 # =========================
 [env]
-TERM = "xterm-256color"
+TERM = "xterm-256color"           # bom padrão, mas tmux/zellij gostam de "tmux-256color" em alguns casos
 
 # =========================
-# Janela
+# Janela / Window
 # =========================
 [window]
-padding = { x = 8, y = 8 }
-decorations = "None"
-opacity = 1.0
-blur = false
+padding = { x = 6, y = 6 }         # um pouco menor = mais área útil sem perder conforto
+decorations = "None"               # mantém (bom para fullscreen/workflow limpo)
+opacity = 1.0                      # 1.0 = máxima performance (evita composição extra)
+blur = false                       # já está bom
 dynamic_title = true
 resize_increments = true
-startup_mode = "Fullscreen"
+startup_mode = "Windowed"          # Fullscreen pode causar micro-lags em alguns drivers Wayland → mude para Maximizado se quiser
+# maximize_to_workspace = true     # descomente se usa Wayland + tiling (hyprland/sway)
 
 # =========================
 # Performance / Debug
@@ -22,50 +23,53 @@ startup_mode = "Fullscreen"
 [debug]
 render_timer = false
 persistent_logging = false
-log_level = "Off"
+log_level = "Off"                  # ótimo para prod
+print_events = false               # desative se não estiver debugando
 
 # =========================
-# Shell
+# Shell / Multiplexer
 # =========================
-[terminal.shell]
-program = "tmux"
-args = ["new-session", "-A", "-D", "-s", "DevOps"]
+# [terminal.shell]
+# program = "/usr/bin/tmux"          # ou "/usr/bin/zellij" se quiser testar
+# args = ["new-session", "-A", "-D", "-s", "main"]   # nome mais curto = mais rápido de digitar
+
+# Alternativa Zellij (mais moderno, UI melhor, mouse first-class)
+# program = "/usr/bin/zellij"
+# args = []   # zellij detecta attach automaticamente na maioria dos casos
 
 # =========================
-# Fonte
+# Fonte (ótima escolha)
 # =========================
 [font]
 size = 13.0
 builtin_box_drawing = true
 
-normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
-bold   = { family = "JetBrainsMono Nerd Font", style = "Bold" }
-italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
+normal   = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+bold     = { family = "JetBrainsMono Nerd Font", style = "Bold" }
+italic   = { family = "JetBrainsMono Nerd Font", style = "Italic" }
 
 offset = { x = 0, y = 1 }
 glyph_offset = { x = 0, y = 0 }
 
 # =========================
-# Cursor (CORRIGIDO)
+# Cursor
 # =========================
 [cursor]
 unfocused_hollow = true
+style = { shape = "Beam", blinking = "On" }          # Beam + blink ajuda na visibilidade
+vi_mode_style = { shape = "Block", blinking = "Off" }
 
-# Estilo normal do cursor (ENUM)
-style = "Beam"
-
-# Estilo do cursor no vi mode (ENUM)
-vi_mode_style = "Block"
+blink_interval = 750   # padrão é bom, mas pode testar 500–800
 
 # =========================
-# Scrolling
+# Scrolling (mais fluido)
 # =========================
 [scrolling]
-history = 5000
-multiplier = 3
+history = 12000            # 5k–20k é faixa boa (mais que 30k começa a pesar em RAM)
+multiplier = 4             # scroll mais rápido (3–6 é confortável)
 
 # =========================
-# Cores — Catppuccin Mocha
+# Cores — Catppuccin Mocha (mantido, excelente)
 # =========================
 [colors.primary]
 background = "#1e1e2e"
@@ -92,31 +96,39 @@ cyan    = "#94e2d5"
 white   = "#a6adc8"
 
 # =========================
-# Teclado
+# Teclado — Bindings úteis para produtividade
 # =========================
 [keyboard]
 bindings = [
-  # Clipboard
-  { key = "C", mods = "Control|Shift", action = "Copy" },
+  # Clipboard (padrão moderno)
+  { key = "C", mods = "Control|Shift", action = "Copy"  },
   { key = "V", mods = "Control|Shift", action = "Paste" },
 
-  # Fonte
-  { key = "Key0",   mods = "Control", action = "ResetFontSize" },
-  { key = "Equals", mods = "Control", action = "IncreaseFontSize" },
-  { key = "Minus",  mods = "Control", action = "DecreaseFontSize" },
+  # Fonte size (muito usado)
+  { key = "Equal",  mods = "Control",       action = "IncreaseFontSize" },
+  { key = "Minus",  mods = "Control",       action = "DecreaseFontSize" },
+  { key = "Key0",   mods = "Control",       action = "ResetFontSize"    },
 
-  # Fullscreen
-  { key = "F11", action = "ToggleFullscreen" },
+  # Fullscreen / Maximizar
+  { key = "F11",    mods = "None",          action = "ToggleFullscreen" },
+  { key = "F",      mods = "Control|Shift", action = "ToggleFullscreen" },
 
-  # Clear + scrollback
-  { key = "L", mods = "Control", chars = "\u000c" },
+  # Limpar tela + scrollback
+  { key = "L",      mods = "Control",       chars = "\u000c" },           # Ctrl+L
+  { key = "K",      mods = "Control",       action = "ClearLogNotice" },  # limpa mais agressivo
 
-  # Scroll manual
-  { key = "K", mods = "Control|Shift", action = "ScrollPageUp" },
-  { key = "J", mods = "Control|Shift", action = "ScrollPageDown" },
+  # Scroll mais confortável
+  { key = "PageUp",   mods = "Shift",     action = "ScrollPageUp",   mode = "~Alt" },
+  { key = "PageDown", mods = "Shift",     action = "ScrollPageDown", mode = "~Alt" },
+  { key = "Up",       mods = "Control|Shift", action = "ScrollLineUp"   },
+  { key = "Down",     mods = "Control|Shift", action = "ScrollLineDown" },
 
-  # tmux splits (Command = Super / ⌘)
-  { key = "D", mods = "Command",       chars = "\u0002\"" },
-  { key = "D", mods = "Command|Shift", chars = "\u0002%" },
-  { key = "O", mods = "Command",       chars = "\u0002o" },
+  # tmux-like splits (usando Super/Windows = mais ergonômico no Linux)
+  { key = "D", mods = "Super",        chars = "\u0002\""  },   # split horizontal
+  { key = "D", mods = "Super|Shift",  chars = "\u0002%"   },   # split vertical
+  { key = "Z", mods = "Super",        chars = "\u0002z"   },   # zoom pane
+  { key = "O", mods = "Super",        chars = "\u0002o"   },   # next pane
+
+  # Zellij常用快捷键 (se mudar para zellij)
+  # { key = "P", mods = "Super", chars = "\u0010" },   # modo pane (exemplo)
 ]
