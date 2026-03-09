@@ -22,7 +22,39 @@
     "tray",
     "clock"
   ],
-  
+
+  "group/connection": {
+    "orientation": "horizontal",
+    "modules": [
+      "network",
+      "custom/vpn"
+    ]
+  },
+
+  "group/hardware": {
+    "orientation": "horizontal",
+    "modules": [
+      "cpu",
+      "battery"
+    ]
+  },
+
+  "pulseaudio": {
+    "scroll-step": 5, // %, can be a float
+    "format": "{volume}% {icon}",
+    "format-bluetooth": "{volume}% {icon} ",
+    "format-bluetooth-muted": "  ",
+    "format-muted": " ",
+    "format-icons": {
+      "headphone": " ",
+      "hands-free": " ",
+      "headset": " ",
+      "phone": " ",
+      "portable": " ",
+      "car": " ",
+      "default": [" ", " ", " "]
+    },
+
   "niri/workspaces": {
     "format": "{icon}",
     "format-icons": {
