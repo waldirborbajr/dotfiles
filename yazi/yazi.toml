@@ -1,0 +1,55 @@
+show_symlink = true
+sort_by = "natural"  # Sort naturally, e.g. 1.md < 2.md < 10.md
+sort_translit = true # Transliterate filenames for sorting, i.e. replaces Â as A, Æ as AE, etc.
+
+[mgr]
+ratio = [2, 3, 5]
+linemode = "size"
+show_hidden = true
+
+[opener]
+edit = [
+  { run = "$EDITOR %s", block = true, for = "unix" },
+  { run = "%EDITOR% %s", block = true, for = "windows" },
+]
+extract = [
+  { run = 'ya pub extract --list "$@"', desc = "Extract here", for = "unix" },
+  { run = 'ya pub extract --list %*', desc = "Extract here", for = "windows" },
+]
+visidata = [
+	{ run = 'vd "$@"', block = true, desc = "Open in VisiData" },
+]
+sqlite = [
+	{ run = 'sqlite3 "$@"', block = true, desc = "Open in sqlite3 CLI" },
+]
+
+[open]
+prepend_rules = [
+	{ url = "*.csv", use = ["edit", "visidata"] },
+	{ url = "*.tsv", use = ["edit", "visidata"] },
+	{ url = "*.db", use = ["sqlite", "visidata"] },
+	{ url = "*.json", use = ["edit", "visidata"] },
+	{ url = "*.sql", use = ["edit", "sqlite", "visidata"] },
+	{ url = "*.sqlite3", use = ["sqlite", "visidata"] },
+]
+
+[plugin]
+prepend_fetchers = [
+  { id = "git", name = "*", run = "git" },
+  { id = "git", name = "*/", run = "git" },
+]
+
+prepend_previewers = [
+  { url = "*.tar*", run = 'piper --format=url -- tar tf "$1"' },
+  { url = "*.epub", run = 'piper -- epr -d "$1"' },
+  { url = "*.yml.enc", run = 'piper -- bundle exec rails encrypted:show "$1" | bat --language yaml --force-colorization --paging=never --wrap=character --line-range :1000 --style=plain' },
+  { url = "*.plist", run = 'piper -- plutil -p "$1"' },
+  { url = "**/.git/objects/**/*", run = 'piper -- git cat-file -p "$1"' },
+  { url = "**/.ssh/*config*", run = 'piper -- bat --language="SSH Config" --force-colorization --paging=never --wrap=character --line-range :1000 --style=plain "$1"' },
+  { url = "text/csv", run = "miller" },
+  { url = "text/*", run = 'piper -- bat --force-colorization --paging=never --wrap=character --line-range :1000 --style=plain "$1"' },
+  { url = "application/sqlite3", run = 'piper -- sqlite3 "$1" .schema | sed "s/;/;\n/g" | bat --language sql --force-colorization --paging=never --wrap=character --line-range :1000 --style=plain' },
+  { url = "*/xml", run = "code" },
+  { url = "*/javascript", run = "code" },
+  { url = "*/", run = 'piper -- eza -TL=3 --almost-all --ignore-glob=".git|.DS_Store|.localized|desktop.ini|.@__*" --color=always --icons=always --group-directories-first --no-quotes "$1"' },
+]
