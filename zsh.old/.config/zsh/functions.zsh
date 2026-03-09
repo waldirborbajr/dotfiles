@@ -5,39 +5,56 @@
 # Transformei em função (mais seguro e legível)
 syshealth() {
 
-  pkgfix
+  source /etc/os-release
 
-  echo "🧹 Cleaning system..."
-  sudo rm -rf /var/lib/apt/lists/*
-  sudo nala update && sudo nala upgrade -y
-  sudo nala autoremove -y
-  sudo nala autopurge -y
-  sudo nala clean
+  echo "🧠 Detecting OS..."
+
+  if command -v nala >/dev/null 2>&1 || command -v apt >/dev/null 2>&1; then
+    echo "🐧 Ubuntu/Debian based system detected"
   
+    sudo nala install -f
+    sudo dpkg --configure -a
+
+    echo "🧹 Cleaning system..."
+    sudo rm -rf /var/lib/apt/lists/*
+    sudo nala update && sudo nala upgrade -y 2>/dev/null || sudo apt update && sudo apt upgrade -y
+    sudo nala autoremove -y 2>/dev/null || sudo apt autoremove -y
+    sudo nala autopurge -y 2>/dev/null || true
+    sudo nala clean 2>/dev/null || sudo apt clean
+
+  elif command -v dnf >/dev/null 2>&1; then
+    echo "🎩 Fedora based system detected"
+
+    echo "🧹 Cleaning system..."
+    sudo dnf upgrade --refresh -y
+    sudo dnf autoremove -y
+    sudo dnf clean all
+
+  else
+    echo "❌ Unsupported package manager"
+    return 1
+  fi
+
+
   echo "📦 Updating Flatpaks..."
   flatpak update -y 2>/dev/null && flatpak uninstall --unused -y 2>/dev/null
-  
+
   echo "📦 Updating Snaps..."
   sudo snap refresh 2>/dev/null
-  
+
   echo "⚙️ Updating Rust..."
   rustup update 2>/dev/null
 
   echo "⚙️ Updating all GO binaries..."
-  gup update
+  gup update 2>/dev/null
 
   echo "⚙️ Updating installed Rust executables..."
-  cargo install-update -a
-  
-  echo "⚙️ Updating Yazi packages"
-  ya pkg upgrade
-  
-  echo "🎉 System updated!"
-}
+  cargo install-update -a 2>/dev/null
 
-pkgfix() {
-  sudo nala install -f
-  sudo dpkg --configure -a
+  echo "⚙️ Updating Yazi packages..."
+  ya pkg upgrade 2>/dev/null
+
+  echo "🎉 System updated!"
 }
 
 dockerzap() {
