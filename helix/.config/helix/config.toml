@@ -1,23 +1,23 @@
-theme = "catppuccin_mocha_blur"  # fallback to "catppuccin_mocha" if blur variant not installed[](https://github.com/catppuccin/helix)
+theme = "catppuccin_mocha_blur"  # fallback to "catppuccin_mocha" if not installed
 
 [editor]
 true-color = true
-auto-save = true                # auto-save on focus lost / buffer change – great for dev
-auto-format = true              # format on :w using LSP formatter when available
+auto-save = true
+auto-format = true
 bufferline = "multiple"
 mouse = true
 line-number = "relative"
 cursorline = true
-color-modes = true              # nice visual feedback for modes
-idle-timeout = 200              # good balance for LSP hover / diagnostics
-scroll-lines = 3                # smooth scrolling feel
-text-width = 100                # modern screen friendly
+color-modes = true
+idle-timeout = 200
+scroll-lines = 3
+text-width = 100
 gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
-end-of-line-diagnostics = "hint"  # less intrusive than error/warning
+end-of-line-diagnostics = "hint"
 
 [editor.inline-diagnostics]
-cursor-line = "error"           # only show errors on the line with cursor
-other-lines = "disable"         # keep editor clean
+cursor-line = "error"
+other-lines = "disable"
 
 [editor.cursor-shape]
 insert = "bar"
@@ -28,42 +28,43 @@ select = "underline"
 left = ["mode", "spinner", "version-control", "file-name"]
 center = ["file-base-name", "read-only-indicator", "file-modification-indicator"]
 right = ["diagnostics", "selections", "primary-selection-length", "position", "total-line-numbers", "file-encoding", "file-type"]
-separator = "│"                 # clean vertical bar
+separator = "│"
 
 [editor.lsp]
 enable = true
-auto-signature-help = false     # avoid popup spam; trigger manually when needed
-display-messages = true         # show LSP messages in statusline
-display-inlay-hints = true      # fantastic for Rust / TS / etc. (types, params)
+auto-signature-help = false
+display-messages = true
+display-inlay-hints = true
 snippets = true
 goto-reference-include-declaration = false
 
-[editor.completion]
+# Completion settings – now flat under [editor]
 auto-completion = true
-completion-trigger-len = 1      # trigger early for better UX
-completion-replace = true       # replace word on selection
+completion-trigger-len = 1
+completion-replace = true
 completion-timeout = 15
+preview-completion-insert = true   # optional: instant preview/insert on selection
 
 [editor.soft-wrap]
 enable = true
-max-wrap = 25                   # effectively wraps around ~100-120 columns
+max-wrap = 25
 max-indent-retain = 0
-wrap-indicator = "↪ "           # nice visual cue
+wrap-indicator = "↪ "
 
 [editor.indent-guides]
 render = true
-character = "╎"                 # subtle vertical line
-# rainbow = "dim"               # uncomment for subtle rainbow effect
+character = "╎"
+# rainbow = "dim"  # uncomment for rainbow guides
 
 [editor.file-picker]
-hidden = false                  # show dotfiles by default
-parents = true                  # respect parent .gitignore etc.
+hidden = false
+parents = true
 git-ignore = true
 git-global = true
 git-exclude = true
 
 # ──────────────────────────────────────────────────────────────
-# Keybindings – productivity focused for development
+# Keybindings
 # ──────────────────────────────────────────────────────────────
 
 [keys.normal]
@@ -72,16 +73,13 @@ git-exclude = true
 "0"  = "goto_line_start"
 "G"  = "goto_file_end"
 
-# Buffer navigation
-"A-<" = "goto_previous_buffer"   # Alt + <
-"A->" = "goto_next_buffer"       # Alt + >
-"A-w" = ":buffer-close"          # Alt + w close buffer
+"A-<" = "goto_previous_buffer"
+"A->" = "goto_next_buffer"
+"A-w" = ":buffer-close"
 
-# Improved * / # word under cursor search (Vim style)
 "*" = "search_selection"
 "#" = ["search_selection", "search_prev"]
 
-# Lazygit (very useful!)
 "C-g" = [
   ":new",
   ":insert-output lazygit",
@@ -90,30 +88,24 @@ git-exclude = true
   ":reload-all"
 ]
 
-# Yazi file picker (community favorite; slight cleanup)
 "C-y" = [
   ":sh rm -f /tmp/helix-yazi-chooser",
   ":insert-output yazi %{buffer_name} --chooser-file=/tmp/helix-yazi-chooser",
-  # Optional restore terminal – comment out if issues in your terminal
-  # ":sh printf '\\x1b[?1049h\\x1b[?2004h' > /dev/tty",
+  # ":sh printf '\\x1b[?1049h\\x1b[?2004h' > /dev/tty",  # comment if terminal glitches
   ":open %sh{cat /tmp/helix-yazi-chooser}",
   ":redraw",
-  ":set mouse false",   # sometimes needed after external program
+  ":set mouse false",
   ":set mouse true"
 ]
 
-# Extra dev helpers
-"A-f" = ":format"                         # manual LSP format
+"A-f" = ":format"
 "C-o" = "jump_backward"
 "C-i" = "jump_forward"
 
-# Space as pseudo-leader (most common community pattern)
 [keys.normal.space]
-l = ":toggle lsp.display-inlay-hints"     # toggle inlay hints
-w = ":write"                              # <Space>w → save
-q = ":quit"                               # <Space>q → quit
-# x = "extend_to_line_bounds"             # optional <Space>x
-# Add more as needed, e.g. f = ":format"
+l = ":toggle lsp.display-inlay-hints"
+w = ":write"
+q = ":quit"
 
 [keys.select]
 i = "select_textobject_inner"
@@ -122,7 +114,4 @@ a = "select_textobject_around"
 "X" = "select_line_above"
 
 [keys.insert]
-# jj to exit insert (correct Helix syntax – allows typing real "jj" too)
-j = { j = "normal_mode" }
-# Alternative: uncomment for jk instead
-# k = { j = "normal_mode" }  # or swap to whatever you prefer
+j = { j = "normal_mode" }  # jj to exit insert
