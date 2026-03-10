@@ -1,169 +1,117 @@
-# Global defaults (applies unless overridden per language)
-# You can add this at the top if you want even more consistency:
-# [editor]
-# indent = { tab-width = 4, unit = "\t" }  # But per-language overrides are safer
+theme = "catppuccin_mocha_blur"  # fallback to "catppuccin_mocha" if blur not found
 
-####################################################################################################
-# Go — Official style: tabs (gofmt uses tabs), but visual width often 8; we set 4 as you prefer
-####################################################################################################
-[language-server.gopls]
-command = "gopls"
-
-[language-server.gopls.config]
-gofumpt = true
-staticcheck = true
-semanticTokens = true
-usePlaceholders = true
-completeUnimported = true
-vulncheck = "Imports"  # or "All" if you want more security checks
-
-[language-server.gopls.config.hints]
-compositeLiteralFields = true
-parameterNames = true
-rangeVariableTypes = true
-
-[language-server.golangci-lint-lsp]
-command = "golangci-lint-langserver"
-
-[[language]]
-name = "go"
-scope = "source.go"
-injection-regex = "go"
-file-types = ["go"]
-roots = ["go.work", "go.mod", "go.sum"]
+[editor]
+true-color = true
+auto-save = true
 auto-format = true
-formatter = { command = "goimports" }  # or "gofumpt" if you prefer stricter
-comment-token = "//"
-block-comment-tokens = { start = "/*", end = "*/" }
-language-servers = ["gopls", "golangci-lint-lsp"]
-indent = { tab-width = 4, unit = "\t" }
-persistent-diagnostic-sources = ["gopls"]
+bufferline = "multiple"
+mouse = true
+line-number = "relative"
+cursorline = true
+color-modes = true
+idle-timeout = 200
+scroll-lines = 3
+text-width = 100
+gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
+end-of-line-diagnostics = "hint"
 
-####################################################################################################
-# Rust — tabs 4 (non-official, rustfmt default is spaces 4; clippy may warn on tabs in some teams)
-####################################################################################################
-[language-server.rust-analyzer]
-command = "rust-analyzer"
+# Completion settings – flat under [editor]
+auto-completion = true
+completion-trigger-len = 1
+completion-replace = true
+completion-timeout = 15
+preview-completion-insert = true   # instant preview on select
 
-# Recommended rust-analyzer tweaks for better dev experience
-[language-server.rust-analyzer.config]
-check.command = "clippy"  # Use clippy instead of cargo check for better lints
-checkOnSave = true
-cargo.loadOutDirsFromCheck = true
-procMacro.enable = true
+[editor.inline-diagnostics]
+cursor-line = "error"
+other-lines = "disable"
 
-[language-server.rust-analyzer.config.inlayHints]
-lifetimeElisionHints.enable = "skip_trivial"
-closureReturnTypeHints.enable = "with_block"
-bindingModeHints.enable = true
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
 
-[[language]]
-name = "rust"
-scope = "source.rust"
-injection-regex = "rs|rust"
-file-types = ["rs"]
-roots = ["Cargo.toml", "Cargo.lock"]
-auto-format = true
-# formatter = { command = "rustfmt" }  # Uncomment if you want explicit; Helix uses rust-analyzer format by default
-comment-tokens = ["//", "///", "//!"]
-block-comment-tokens = [
-  { start = "/*", end = "*/" },
-  { start = "/**", end = "*/" },
-  { start = "/*!", end = "*/" }
+[editor.statusline]
+left = ["mode", "spinner", "version-control", "file-name"]
+center = ["file-base-name", "read-only-indicator", "file-modification-indicator"]
+right = ["diagnostics", "selections", "primary-selection-length", "position", "total-line-numbers", "file-encoding", "file-type"]
+separator = "│"
+
+[editor.lsp]
+enable = true
+auto-signature-help = false
+display-messages = true
+display-inlay-hints = true
+snippets = true
+goto-reference-include-declaration = false
+
+[editor.soft-wrap]
+enable = true
+max-wrap = 25
+max-indent-retain = 0
+wrap-indicator = "↪ "
+
+[editor.indent-guides]
+render = true
+character = "╎"
+# rainbow = "dim"
+
+[editor.file-picker]
+hidden = false
+parents = true
+git-ignore = true
+git-global = true
+git-exclude = true
+
+# ──────────────────────────────────────────────────────────────
+# Keybindings
+# ──────────────────────────────────────────────────────────────
+
+[keys.normal]
+"%"  = "match_brackets"
+"$"  = "goto_line_end"
+"0"  = "goto_line_start"
+"G"  = "goto_file_end"
+
+"A-<" = "goto_previous_buffer"
+"A->" = "goto_next_buffer"
+"A-w" = ":buffer-close"
+
+"*" = "search_selection"
+"#" = ["search_selection", "search_prev"]
+
+"C-g" = [
+  ":new",
+  ":insert-output lazygit",
+  ":buffer-close!",
+  ":redraw",
+  ":reload-all"
 ]
-language-servers = ["rust-analyzer"]
-indent = { tab-width = 4, unit = "\t" }
-persistent-diagnostic-sources = ["rustc", "clippy"]
 
-####################################################################################################
-# Dockerfile (Docker) — Use official docker-langserver
-####################################################################################################
-[language-server.docker-langserver]
-command = "docker-langserver"
-args = ["--stdio"]
+"C-y" = [
+  ":sh rm -f /tmp/helix-yazi-chooser",
+  ":insert-output yazi %{buffer_name} --chooser-file=/tmp/helix-yazi-chooser",
+  # ":sh printf '\\x1b[?1049h\\x1b[?2004h' > /dev/tty",  # optional/terminal-dependent
+  ":open %sh{cat /tmp/helix-yazi-chooser}",
+  ":redraw",
+  ":set mouse false",
+  ":set mouse true"
+]
 
-[[language]]
-name = "dockerfile"
-scope = "source.dockerfile"
-file-types = ["Dockerfile", "dockerfile"]
-roots = ["Dockerfile", "docker-compose.yml"]  # or .yaml
-auto-format = false  # docker-langserver doesn't format well; use external if needed
-language-servers = ["docker-langserver"]
-indent = { tab-width = 4, unit = "\t" }
-comment-token = "#"
+"A-f" = ":format"
+"C-o" = "jump_backward"
+"C-i" = "jump_forward"
 
-####################################################################################################
-# Markdown (Markup) — Optional LSP like marksman for links/headings
-####################################################################################################
-# Optional: add marksman for better Markdown (headings, links, completion)
-# [language-server.marksman]
-# command = "marksman"
-# args = ["server"]
+[keys.normal.space]
+l = ":toggle lsp.display-inlay-hints"
+w = ":write"
+q = ":quit"
 
-[[language]]
-name = "markdown"
-scope = "source.md"
-injection-regex = "md|markdown"
-file-types = ["md", "markdown"]
-roots = []
-auto-format = false  # Usually no auto-format needed; or add prettier/dprint if wanted
-language-servers = []  # ["marksman"] if installed
-indent = { tab-width = 4, unit = "\t" }
-comment-token = "<!--"  # or nothing; Markdown uses HTML comments
+[keys.select]
+i = "select_textobject_inner"
+a = "select_textobject_around"
+"A-x" = "extend_to_line_bounds"
+"X" = "select_line_above"
 
-####################################################################################################
-# Nix — nixd + alejandra (your choice, good!)
-####################################################################################################
-[language-server.nixd]
-command = "nixd"
-
-# Optional: better NixOS/Home-Manager completions (adjust to your flake path)
-[language-server.nixd.config.nixd]
-# Example for NixOS flake (uncomment/adapt):
-# nixpkgs.expr = "import (builtins.getFlake \"/etc/nixos\").inputs.nixpkgs { }"
-# options.nixos.expr = "(builtins.getFlake \"/etc/nixos\").nixosConfigurations.${builtins.getEnv \"HOSTNAME\"}.options"
-
-[language-server.nixd.config.formatting]
-command = ["alejandra"]
-
-[[language]]
-name = "nix"
-scope = "source.nix"
-injection-regex = "nix"
-file-types = ["nix", "flake.nix", "shell.nix"]
-roots = ["flake.nix", "shell.nix", "default.nix"]
-auto-format = true
-formatter = { command = "alejandra" }
-comment-token = "#"
-language-servers = ["nixd"]
-indent = { tab-width = 4, unit = "\t" }
-
-####################################################################################################
-# Shell (bash/sh/zsh) — bash-language-server + shellcheck lint
-####################################################################################################
-[language-server.bash-language-server]
-command = "bash-language-server"
-args = ["start"]
-
-# Optional: shellcheck integration (via efm-langserver or directly)
-# [language-server.efm-shellcheck]
-# command = "efm-langserver"
-
-[[language]]
-name = "bash"
-scope = "source.bash"
-injection-regex = "bash|sh|z?sh"
-file-types = ["sh", "bash", "zsh", "bashrc", "zshrc"]
-roots = []
-auto-format = false  # Shell formatters can be destructive; use shfmt manually if needed
-language-servers = ["bash-language-server"]
-indent = { tab-width = 4, unit = "\t" }
-comment-token = "#"
-
-# Optional: add sh for plain POSIX shell if you use it separately
-[[language]]
-name = "sh"
-scope = "source.sh"
-file-types = ["sh"]
-indent = { tab-width = 4, unit = "\t" }
-language-servers = ["bash-language-server"]  # bash-ls handles sh too
+[keys.insert]
+j = { j = "normal_mode" }  # jj → normal mode
