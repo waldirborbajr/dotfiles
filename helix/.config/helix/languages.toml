@@ -1,4 +1,9 @@
-theme = "catppuccin_mocha_blur"  # fallback to "catppuccin_mocha" if blur not found
+
+# ──────────────────────────────────────────────────────────────
+# Helix Editor Configuration
+# ──────────────────────────────────────────────────────────────
+
+theme = "catppuccin_mocha"
 
 [editor]
 true-color = true
@@ -14,13 +19,6 @@ scroll-lines = 3
 text-width = 100
 gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
 end-of-line-diagnostics = "hint"
-
-# Completion settings – flat under [editor]
-auto-completion = true
-completion-trigger-len = 1
-completion-replace = true
-completion-timeout = 15
-preview-completion-insert = true   # instant preview on select
 
 [editor.inline-diagnostics]
 cursor-line = "error"
@@ -39,10 +37,10 @@ separator = "│"
 
 [editor.lsp]
 enable = true
-auto-signature-help = false
 display-messages = true
 display-inlay-hints = true
 snippets = true
+auto-signature-help = false
 goto-reference-include-declaration = false
 
 [editor.soft-wrap]
@@ -54,7 +52,6 @@ wrap-indicator = "↪ "
 [editor.indent-guides]
 render = true
 character = "╎"
-# rainbow = "dim"
 
 [editor.file-picker]
 hidden = false
@@ -68,10 +65,10 @@ git-exclude = true
 # ──────────────────────────────────────────────────────────────
 
 [keys.normal]
-"%"  = "match_brackets"
-"$"  = "goto_line_end"
-"0"  = "goto_line_start"
-"G"  = "goto_file_end"
+"%" = "match_brackets"
+"$" = "goto_line_end"
+"0" = "goto_line_start"
+"G" = "goto_file_end"
 
 "A-<" = "goto_previous_buffer"
 "A->" = "goto_next_buffer"
@@ -91,11 +88,8 @@ git-exclude = true
 "C-y" = [
   ":sh rm -f /tmp/helix-yazi-chooser",
   ":insert-output yazi %{buffer_name} --chooser-file=/tmp/helix-yazi-chooser",
-  # ":sh printf '\\x1b[?1049h\\x1b[?2004h' > /dev/tty",  # optional/terminal-dependent
   ":open %sh{cat /tmp/helix-yazi-chooser}",
-  ":redraw",
-  ":set mouse false",
-  ":set mouse true"
+  ":redraw"
 ]
 
 "A-f" = ":format"
@@ -114,4 +108,5 @@ a = "select_textobject_around"
 "X" = "select_line_above"
 
 [keys.insert]
-j = { j = "normal_mode" }  # jj → normal mode
+j = { j = "normal_mode" }
+
