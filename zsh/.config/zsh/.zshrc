@@ -23,9 +23,6 @@ bindkey -v
 # makes the change quicker https://thevaluable.dev/zsh-install-configure-mouseless/
 export KEYTIMEOUT=1
 
-## Aliases
-source $ZDOTDIR/aliases.zsh
-
 ## Plugins
 source $ZDOTDIR/plugins.zsh
 
@@ -33,7 +30,7 @@ source $ZDOTDIR/plugins.zsh
 # 👉 CUSTOM SOURCES
 # -------------------------------------------
 source "$ZDOTDIR/functions.zsh"
-# source "$ZDOTDIR/aliases.zsh"
+source "$ZDOTDIR/aliases.zsh"
 # source "$ZDOTDIR/hack.zsh"
 
 ## GOLang
