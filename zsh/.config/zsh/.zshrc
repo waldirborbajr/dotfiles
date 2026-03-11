@@ -29,6 +29,13 @@ source $ZDOTDIR/aliases.zsh
 ## Plugins
 source $ZDOTDIR/plugins.zsh
 
+# -------------------------------------------
+# 👉 CUSTOM SOURCES
+# -------------------------------------------
+source "$ZDOTDIR/functions.zsh"
+# source "$ZDOTDIR/aliases.zsh"
+# source "$ZDOTDIR/hack.zsh"
+
 ## GOLang
 export PATH=$PATH:/usr/local/go/bin
 export GOPATH=$HOME/go
