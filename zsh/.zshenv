@@ -27,8 +27,8 @@ export ZDOTDIR=${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}
 
 # Set up default editor
 # ------------------------------------------------------------------------------
-#export EDITOR=nvim
-#export VISUAL=nvim
+export EDITOR=nvim
+export VISUAL=nvim
 
 # History (must be here so it applies everywhere)
 export HISTFILE="$ZDOTDIR/.zhistory"
