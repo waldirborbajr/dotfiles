@@ -1,4 +1,8 @@
 #######################################
+# 🚀 ELITE TROOP - ALIASES + FZF + GIT
+#######################################
+
+#######################################
 # Editor
 #######################################
 alias vim="nvim"
@@ -8,7 +12,7 @@ alias edit="nvim $ZDOTDIR/.zshrc"
 #######################################
 # Shell / Config
 #######################################
-alias reload="source $ZDOTDIR/.zshrc"
+alias reload="exec zsh"
 
 #######################################
 # Navigation
@@ -16,6 +20,15 @@ alias reload="source $ZDOTDIR/.zshrc"
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
+
+# fzf navigation
+cdf() {
+  cd "$(fd --type d | fzf)"
+}
+
+vf() {
+  nvim "$(fd --type f | fzf)"
+}
 
 #######################################
 # Modern ls (eza)
@@ -25,7 +38,7 @@ alias ll="eza -lg --icons --group-directories-first"
 alias la="eza -lag --icons --group-directories-first"
 
 #######################################
-# Colors / CLI improvements
+# CLI improvements
 #######################################
 alias grep="grep --color=auto"
 alias diff="diff --color=auto"
@@ -40,7 +53,13 @@ alias df="df -h"
 alias chmodx="chmod +x"
 
 #######################################
-# Git
+# Modern replacements
+#######################################
+alias cat="bat"
+alias find="fd"
+
+#######################################
+# Git base
 #######################################
 alias g="git"
 alias ga="git add"
@@ -54,6 +73,7 @@ alias gca="git commit --amend --no-edit"
 alias gce="git commit --amend"
 
 alias gco="git checkout"
+alias gsw="git switch"
 alias gn="git checkout -b"
 
 alias gcl="git clone --recursive"
@@ -63,7 +83,8 @@ alias gds="git diff --staged"
 
 alias gi="git init"
 
-alias gl="git log --graph --all --pretty=format:'%C(magenta)%h %C(white)%an %ar%C(auto) %D%n%s%n'"
+alias gl="git log --graph --decorate --all --oneline"
+alias gll="git log --pretty=format:'%C(magenta)%h %C(white)%an %ar%C(auto) %D%n%s%n'"
 
 alias gm="git merge"
 alias gp="git push"
@@ -73,6 +94,94 @@ alias gr="git reset"
 alias gs="git status --short"
 
 alias ghc="gh repo create --private --source=. --remote=origin && git push -u --all && gh browse"
+
+#######################################
+# 🔥 GIT + FZF (ABSURDO)
+#######################################
+
+gcof() {
+  local branch
+  branch=$(git branch --all | sed 's/.* //' | sort -u | fzf --height 40% --reverse) || return
+  git checkout "${branch#remotes/origin/}"
+}
+
+gcor() {
+  git for-each-ref --sort=-committerdate refs/heads/ \
+    --format='%(refname:short)' | fzf | xargs git checkout
+}
+
+gcf() {
+  local commit
+  commit=$(git log --oneline --color=always | fzf \
+    --ansi \
+    --preview 'git show --color=always {1}' \
+    --height 80%) || return
+  echo $commit | awk '{print $1}' | xargs git checkout
+}
+
+gdf() {
+  git diff --name-only | fzf \
+    --preview 'git diff --color=always {}' \
+    --height 80% | xargs git diff
+}
+
+gaf() {
+  git status --short | fzf -m \
+    --preview 'git diff --color=always {2}' \
+    | awk '{print $2}' | xargs git add
+}
+
+grf() {
+  git status --short | fzf -m \
+    | awk '{print $2}' | xargs git restore
+}
+
+gstf() {
+  git stash list | fzf \
+    --preview 'git stash show -p --color=always {1}' \
+    | awk -F: '{print $1}' | xargs git stash apply
+}
+
+gbdf() {
+  git branch | fzf | xargs git branch -D
+}
+
+#######################################
+# 🔍 Search (fzf + rg)
+#######################################
+
+rgf() {
+  local file
+  file=$(rg --line-number --no-heading --color=always "" | \
+    fzf --ansi \
+        --delimiter : \
+        --preview 'bat --color=always {1} --highlight-line {2}' \
+        --height 80%) || return
+
+  nvim "$(echo $file | cut -d: -f1)"
+}
+
+#######################################
+# 🐳 Docker
+#######################################
+alias dc="docker compose"
+alias dps='docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"'
+alias dl="docker logs --tail=100"
+
+dkill() {
+  docker ps --format "{{.Names}}" | fzf | xargs docker kill
+}
+
+dlogf() {
+  docker ps --format "{{.Names}}" | fzf | xargs docker logs -f
+}
+
+#######################################
+# 🧠 Processes
+#######################################
+killf() {
+  ps -ef | fzf | awk '{print $2}' | xargs kill -9
+}
 
 #######################################
 # Dotfiles
@@ -92,13 +201,6 @@ alias sync-commit-notes="git-notes add --all && git-notes commit -m sync && git-
 
 alias cj-pull="pass git pull; git-notes pull; git-when pull; git-ledger pull"
 alias cj-status="pass git status; git-notes status; git-when status; git-ledger status"
-
-#######################################
-# Docker
-#######################################
-alias dc="docker compose"
-alias dps='docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"'
-alias dl="docker logs --tail=100"
 
 #######################################
 # Tmux
