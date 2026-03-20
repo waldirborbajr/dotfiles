@@ -6,12 +6,18 @@
 . "$HOME/.cargo/env"
 [[ -f $HOME/.zprofile ]] && source $HOME/.zprofile
 
-# Go (prepend no PATH)
+# Go
 export PATH="/usr/local/go/bin:$PATH"
 export GOPATH="$HOME/go"
 
 # -------------------------------------------
-# ⚡ COMPLETION (com cache)
+# 🔌 PLUGINS (ANTES DO COMPINIT)
+# -------------------------------------------
+
+source $ZDOTDIR/plugins.zsh
+
+# -------------------------------------------
+# ⚡ COMPLETION (rápido)
 # -------------------------------------------
 
 autoload -U compinit
@@ -19,6 +25,7 @@ compinit -d ~/.zcompdump
 
 zstyle ':completion:*' menu select
 
+# Navegação no histórico com setas (inteligente)
 autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
 zle -N up-line-or-beginning-search
@@ -28,12 +35,11 @@ bindkey "^[[A" up-line-or-beginning-search
 bindkey "^[[B" down-line-or-beginning-search
 
 # -------------------------------------------
-# 🔍 FZF (clean)
+# 🔍 FZF (tunado)
 # -------------------------------------------
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# Melhor UX
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
@@ -41,17 +47,27 @@ export FZF_DEFAULT_OPTS='
   --height 60%
   --layout=reverse
   --border
+  --info=inline
   --preview "bat --style=numbers --color=always {} | head -500"
+  --bind "ctrl-/:toggle-preview"
 '
 
+# atalhos extras
+bindkey '^P' fzf-file-widget
+bindkey '^O' fzf-cd-widget
+
 # -------------------------------------------
-# 🧠 ATUIN (depois dos binds)
+# 🧠 ATUIN (histórico GOD MODE)
 # -------------------------------------------
 
 export ATUIN_NOBIND="true"
 eval "$(atuin init zsh)"
 
+# Ctrl+R inteligente
 bindkey '^R' atuin-search
+
+# Sync + config avançada
+export ATUIN_CONFIG_DIR="$HOME/.config/atuin"
 
 # -------------------------------------------
 # 🧠 VI MODE
@@ -60,18 +76,18 @@ bindkey '^R' atuin-search
 bindkey -v
 export KEYTIMEOUT=1
 
-# -------------------------------------------
-# 🔌 PLUGINS / CUSTOM
-# -------------------------------------------
+# ESC rápido
+bindkey -M viins 'jj' vi-cmd-mode
 
-source $ZDOTDIR/plugins.zsh
+# -------------------------------------------
+# 🔌 CUSTOM
+# -------------------------------------------
 
 source "$ZDOTDIR/functions.zsh"
 source "$ZDOTDIR/aliases.zsh"
-# source "$ZDOTDIR/hack.zsh"
 
 # -------------------------------------------
-# ⭐ PROMPT (Starship)
+# ⭐ PROMPT
 # -------------------------------------------
 
 export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
