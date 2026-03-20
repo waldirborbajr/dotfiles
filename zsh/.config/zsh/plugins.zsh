@@ -1,6 +1,4 @@
-# -------------------------------------------
-# 🔌 Plugin Loader (refinado)
-# -------------------------------------------
+# Plugin loader otimizado
 
 function plugin-load {
   local plugin repo commitsha plugdir initfile initfiles=()
@@ -10,7 +8,6 @@ function plugin-load {
     repo="$plugin"
     clone_args=(-q --depth 1 --recursive --shallow-submodules)
 
-    # Pin por commit
     if [[ "$plugin" == *'@'* ]]; then
       repo="${plugin%@*}"
       commitsha="${plugin#*@}"
@@ -32,14 +29,12 @@ function plugin-load {
 
     if [[ ! -e $initfile ]]; then
       initfiles=($plugdir/*.{plugin.zsh,zsh-theme,zsh,sh}(N))
-      (( $#initfiles )) || { echo >&2 "No init file found '$repo'." && continue }
+      (( $#initfiles )) || continue
       ln -sf $initfiles[1] $initfile
     fi
 
-    # IMPORTANTE: atualizar fpath antes de carregar
     fpath+=$plugdir
 
-    # Lazy load se tiver zsh-defer
     if (( $+functions[zsh-defer] )); then
       zsh-defer source $initfile
     else
@@ -48,14 +43,11 @@ function plugin-load {
   done
 }
 
-# -------------------------------------------
-# 📦 Plugins (ordem IMPORTA)
-# -------------------------------------------
-
 repos=(
+  'romkatv/zsh-defer'                      # performance absurda
   'zsh-users/zsh-completions'
   'zsh-users/zsh-autosuggestions'
-  'zsh-users/zsh-syntax-highlighting'  # SEMPRE último
+  'zsh-users/zsh-syntax-highlighting'      # SEMPRE último
 )
 
 plugin-load $repos
