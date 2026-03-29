@@ -97,23 +97,23 @@ export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
 # 🧩 ZELLIJ
 # -------------------------------------------
 
-if [[ -n "$ZELLIJ" ]]; then
-  preexec() {
-      zellij action rename-pane "⚙ ${1%% *}"
-  }
-
-  precmd() {
-      local name
-      name=$(git rev-parse --show-toplevel 2>/dev/null)
-
-      if [[ -n "$name" ]]; then
-          name=$(basename "$name")
-      else
-          name=$(basename "$PWD")
-      fi
-
-      zellij action rename-pane "$name"
-  }
-fi
-
-(( $+commands[zellij] )) && eval "$(zellij setup --generate-auto-start zsh)"
+# if [[ -n "$ZELLIJ" ]]; then
+#   preexec() {
+#       zellij action rename-pane "⚙ ${1%% *}"
+#   }
+#
+#   precmd() {
+#       local name
+#       name=$(git rev-parse --show-toplevel 2>/dev/null)
+#
+#       if [[ -n "$name" ]]; then
+#           name=$(basename "$name")
+#       else
+#           name=$(basename "$PWD")
+#       fi
+#
+#       zellij action rename-pane "$name"
+#   }
+# fi
+#
+# (( $+commands[zellij] )) && eval "$(zellij setup --generate-auto-start zsh)"
