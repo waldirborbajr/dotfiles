@@ -5,8 +5,8 @@ hash = "6fa6a05a81c98dd000fbca3cca6e9682"
 
 [[plugin.deps]]
 use = "llanosrocas/yaziline"
-rev = "34afcba"
-hash = "1cd2446f8976eb11e549612fd80e3645"
+rev = "d9cc2cb"
+hash = "b6073aadf2f9a1d5389a6d389f33f69c"
 
 [[plugin.deps]]
 use = "llanosrocas/githead"
@@ -80,8 +80,8 @@ hash = "f8530ee84fee95dbcc26bb1d8d8019c7"
 
 [[plugin.deps]]
 use = "Lil-Dank/lazygit"
-rev = "0e56060"
-hash = "ab2e66065a94cca4886b303518e44bd8"
+rev = "8c4086c"
+hash = "85316b5e9abeae2531d3e5d02a094381"
 
 [flavor]
 deps = []
