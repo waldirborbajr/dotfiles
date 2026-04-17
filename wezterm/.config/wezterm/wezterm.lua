@@ -5,19 +5,34 @@ local config = {}
 -- ── PLATFORM ──────────────────────────────────────────────────────────────
 local IS_MACOS = wezterm.target_triple:find("apple") ~= nil
 
--- ── RENDER (ESTÁVEL) ──────────────────────────────────────────────────────
+-- ── RENDER (ESTABILIDADE + PERFORMANCE) ───────────────────────────────────
 if IS_MACOS then
   config.front_end = "WebGpu"
   config.webgpu_power_preference = "LowPower"
   config.max_fps = 60
+  config.animation_fps = 30
+  config.macos_window_background_blur = 0
 else
   config.front_end = "OpenGL"
   config.max_fps = 60
+  config.animation_fps = 30
 end
 
--- ── FONT ──────────────────────────────────────────────────────────────────
+-- ── FONT (OTIMIZADA) ──────────────────────────────────────────────────────
 config.font = wezterm.font("JetBrainsMono Nerd Font")
 config.font_size = IS_MACOS and 12 or 11
+config.line_height = 1.2
+
+-- desativa ligaduras → melhora performance
+config.harfbuzz_features = { "calt=0", "liga=0", "clig=0" }
+
+-- cache maior → menos redraw
+config.max_glyphs = 4096
+
+-- ── PERFORMANCE ───────────────────────────────────────────────────────────
+config.scrollback_lines = 5000
+config.cursor_blink_rate = 0
+config.enable_scroll_bar = false
 
 -- ── UI ────────────────────────────────────────────────────────────────────
 config.color_scheme = "Catppuccin Macchiato"
@@ -28,22 +43,17 @@ config.enable_tab_bar = true
 config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = true
 
--- ── PERF ──────────────────────────────────────────────────────────────────
-config.scrollback_lines = 10000
-config.cursor_blink_rate = 0
-
 -- ── LEADER ────────────────────────────────────────────────────────────────
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 600 }
 
--- ── PROJECT SCAN (SEGURO) ─────────────────────────────────────────────────
+-- ── PROJECT SCAN (SEGURO E RÁPIDO) ────────────────────────────────────────
 local function scan_projects()
   local home = os.getenv("HOME")
-  local base = home .. "/prj"
 
   local success, stdout = wezterm.run_child_process({
     "bash", "-c",
-    "test -d " .. base .. " || base=" .. home .. "/dev; " ..
-    "find $base -maxdepth 1 -mindepth 1 -type d 2>/dev/null"
+    "dir=" .. home .. "/prj; [ -d \"$dir\" ] || dir=" .. home .. "/dev; " ..
+    "find \"$dir\" -mindepth 1 -maxdepth 1 -type d 2>/dev/null"
   })
 
   if not success or not stdout then
@@ -66,7 +76,7 @@ end
 
 local projects = scan_projects()
 
--- ── OPEN PROJECT (SEM RACE CONDITION) ─────────────────────────────────────
+-- ── OPEN PROJECT (SAFE) ───────────────────────────────────────────────────
 local function open_project(window, pane, project)
   window:perform_action(
     act.SwitchToWorkspace {
@@ -76,7 +86,6 @@ local function open_project(window, pane, project)
     pane
   )
 
-  -- editor
   window:perform_action(
     act.SpawnTab {
       cwd = project.path,
@@ -85,7 +94,6 @@ local function open_project(window, pane, project)
     pane
   )
 
-  -- terminal
   window:perform_action(
     act.SpawnTab {
       cwd = project.path
@@ -105,7 +113,7 @@ end
 
 config.ssh_domains = ssh_hosts
 
--- ── KEYS ──────────────────────────────────────────────────────────────────
+-- ── KEYBINDINGS ───────────────────────────────────────────────────────────
 config.keys = {
   -- projects
   {
