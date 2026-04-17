@@ -1,35 +1,61 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
 
-local config = {
-  -- ── CORE ────────────────────────────────────────────────────────────────
-  front_end = "OpenGL",
-  max_fps = 60,
-  animation_fps = 30,
+local config = {}
 
-  -- ── FONT ────────────────────────────────────────────────────────────────
-  font = wezterm.font("JetBrainsMono Nerd Font"),
-  font_size = 11,
-  line_height = 1.2,
+-- ── PLATFORM DETECTION ─────────────────────────────────────────────────────
+local is_macos = wezterm.target_triple:find("apple") ~= nil
 
-  -- ── BUFFER ──────────────────────────────────────────────────────────────
-  scrollback_lines = 10000,
-  cursor_blink_rate = 0,
+-- ── CORE (STABLE RENDERING) ────────────────────────────────────────────────
+if is_macos then
+  config.front_end = "WebGpu"
+  config.webgpu_power_preference = "LowPower" -- ideal p/ M1/M2
+  config.max_fps = 60
+  config.animation_fps = 60
+else
+  config.front_end = "OpenGL" -- mais estável no Linux
+  config.max_fps = 60
+  config.animation_fps = 30
+end
 
-  -- ── UI ──────────────────────────────────────────────────────────────────
-  color_scheme = "Catppuccin Macchiato",
-  window_decorations = "RESIZE",
-  window_padding = { left = 8, right = 8, top = 6, bottom = 0 },
+-- ── FONT ──────────────────────────────────────────────────────────────────
+config.font = wezterm.font("JetBrainsMono Nerd Font")
+config.font_size = is_macos and 12 or 11
+config.line_height = 1.2
 
-  enable_tab_bar = true,
-  use_fancy_tab_bar = false,
-  hide_tab_bar_if_only_one_tab = true,
+-- ── PERFORMANCE ───────────────────────────────────────────────────────────
+config.scrollback_lines = 10000
+config.cursor_blink_rate = 0
+config.enable_scroll_bar = false
 
-  -- ── LEADER ──────────────────────────────────────────────────────────────
-  leader = { key = "a", mods = "CTRL", timeout_milliseconds = 600 },
+-- ── APPEARANCE ────────────────────────────────────────────────────────────
+config.color_scheme = "Catppuccin Macchiato"
+
+config.window_decorations = "RESIZE"
+config.window_padding = {
+  left = 8,
+  right = 8,
+  top = 6,
+  bottom = 0,
 }
 
--- ── PROJECTS (EXPLÍCITO = CONFIÁVEL) ──────────────────────────────────────
+if is_macos then
+  config.native_macos_fullscreen_mode = true
+end
+
+-- ── TAB BAR ───────────────────────────────────────────────────────────────
+config.enable_tab_bar = true
+config.use_fancy_tab_bar = false
+config.hide_tab_bar_if_only_one_tab = true
+
+-- ── LEADER ────────────────────────────────────────────────────────────────
+config.leader = {
+  key = "a",
+  mods = "CTRL",
+  timeout_milliseconds = 600,
+}
+
+-- ── PROJECTS (EXPLÍCITO = ROBUSTO) ─────────────────────────────────────────
 local HOME = os.getenv("HOME")
 
 local projects = {
@@ -38,7 +64,7 @@ local projects = {
   { id = "rust", path = HOME .. "/prj/backend-rust" },
 }
 
--- ── CORE ACTION (SEM RACE CONDITION) ──────────────────────────────────────
+-- ── SAFE WORKSPACE LAUNCHER ───────────────────────────────────────────────
 local function open_project(window, pane, project)
   -- workspace isolado
   window:perform_action(
@@ -49,7 +75,7 @@ local function open_project(window, pane, project)
     pane
   )
 
-  -- editor
+  -- editor (tab 1)
   window:perform_action(
     act.SpawnTab {
       cwd = project.path,
@@ -58,7 +84,7 @@ local function open_project(window, pane, project)
     pane
   )
 
-  -- shell limpo
+  -- shell (tab 2)
   window:perform_action(
     act.SpawnTab {
       cwd = project.path,
@@ -67,9 +93,9 @@ local function open_project(window, pane, project)
   )
 end
 
--- ── KEYS ──────────────────────────────────────────────────────────────────
+-- ── KEYBINDINGS ───────────────────────────────────────────────────────────
 config.keys = {
-  -- launcher de projetos
+  -- project launcher
   {
     key = "p",
     mods = "LEADER",
@@ -107,22 +133,36 @@ config.keys = {
   { key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
   { key = "l", mods = "LEADER", action = act.ActivatePaneDirection("Right") },
 
-  -- reload seguro
+  -- reload config
   { key = "r", mods = "LEADER", action = act.ReloadConfiguration },
 }
 
 -- ── COPY / PASTE ──────────────────────────────────────────────────────────
-table.insert(config.keys, {
-  key = "v",
-  mods = "CTRL|SHIFT",
-  action = act.PasteFrom("Clipboard"),
-})
+if is_macos then
+  table.insert(config.keys, {
+    key = "v",
+    mods = "CMD",
+    action = act.PasteFrom("Clipboard"),
+  })
 
-table.insert(config.keys, {
-  key = "c",
-  mods = "CTRL|SHIFT",
-  action = act.CopyTo("Clipboard"),
-})
+  table.insert(config.keys, {
+    key = "c",
+    mods = "CMD",
+    action = act.CopyTo("Clipboard"),
+  })
+else
+  table.insert(config.keys, {
+    key = "v",
+    mods = "CTRL|SHIFT",
+    action = act.PasteFrom("Clipboard"),
+  })
+
+  table.insert(config.keys, {
+    key = "c",
+    mods = "CTRL|SHIFT",
+    action = act.CopyTo("Clipboard"),
+  })
+end
 
 -- ── MOUSE ─────────────────────────────────────────────────────────────────
 config.mouse_bindings = {
