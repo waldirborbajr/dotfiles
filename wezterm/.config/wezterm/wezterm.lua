@@ -2,18 +2,66 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 local act = wezterm.action
 
+-- ── FILE HELPERS ─────────────────────────────────────────────────────
+local function file_exists(path)
+  local f = io.open(path, "r")
+  if f then f:close() return true end
+  return false
+end
+
+-- ── STACK DETECTION ──────────────────────────────────────────────────
+local function detect_stack(path)
+  if file_exists(path .. "/docker-compose.yml") then
+    return "docker"
+  elseif file_exists(path .. "/Cargo.toml") then
+    return "rust"
+  elseif file_exists(path .. "/go.mod") then
+    return "go"
+  else
+    return "unknown"
+  end
+end
+
+-- ── PROJECT PROFILES (custom behavior per project) ────────────────────
+local project_profiles = {
+  ["infra"] = {
+    stack = "docker",
+    services = { "docker compose up" },
+    logs = { "docker compose logs -f" },
+  },
+
+  ["api"] = {
+    stack = "go",
+    services = { "air || go run ." },
+    logs = { "echo 'Go logs'" },
+  },
+
+  ["backend-rust"] = {
+    stack = "rust",
+    services = { "cargo watch -x run || cargo run" },
+    logs = { "echo 'Rust logs'" },
+  },
+}
+
+-- ── PROJECT SCANNER ──────────────────────────────────────────────────
 local function scan_projects()
   local home = os.getenv("HOME")
-  local dirs = wezterm.run_child_process({
+
+  local stdout = wezterm.run_child_process({
     "bash",
     "-c",
     "find " .. home .. "/dev -maxdepth 1 -type d",
   })
 
   local projects = {}
-  for line in dirs:gmatch("[^\r\n]+") do
-    local name = line:match(".*/(.*)")
-    table.insert(projects, { name = name, path = line })
+
+  if stdout then
+    for line in stdout:gmatch("[^\r\n]+") do
+      local name = line:match(".*/(.*)")
+      if name and name ~= "dev" then
+        table.insert(projects, { name = name, path = line })
+      end
+    end
   end
 
   return projects
@@ -21,19 +69,103 @@ end
 
 local projects = scan_projects()
 
--- Font & Rendering
+-- ── COMMAND RUNNER ───────────────────────────────────────────────────
+local function run_commands(window, pane, commands)
+  if not commands then return end
+  for _, cmd in ipairs(commands) do
+    wezterm.sleep_ms(200)
+    window:perform_action(act.SendString(cmd .. "\n"), pane)
+  end
+end
+
+-- ── IDE SESSIONIZER ──────────────────────────────────────────────────
+local function open_project_ide(window, pane, project)
+  local profile = project_profiles[project.name]
+  local stack = profile and profile.stack or detect_stack(project.path)
+
+  -- Switch workspace
+  window:perform_action(
+    act.SwitchToWorkspace {
+      name = project.name,
+      cwd = project.path,
+    },
+    pane
+  )
+
+  wezterm.sleep_ms(200)
+
+  -- Editor (left)
+  window:perform_action(
+    act.SpawnTab {
+      cwd = project.path,
+      args = { "nvim" },
+    },
+    pane
+  )
+
+  wezterm.sleep_ms(200)
+
+  -- Split right
+  window:perform_action(
+    act.SplitHorizontal { domain = "CurrentPaneDomain" },
+    pane
+  )
+
+  wezterm.sleep_ms(200)
+
+  -- Services (top-right)
+  if profile and profile.services then
+    run_commands(window, pane, profile.services)
+  else
+    if stack == "docker" then
+      run_commands(window, pane, { "docker compose up" })
+    elseif stack == "go" then
+      run_commands(window, pane, { "go run ." })
+    elseif stack == "rust" then
+      run_commands(window, pane, { "cargo run" })
+    end
+  end
+
+  -- Logs (bottom-right)
+  window:perform_action(
+    act.SplitVertical { domain = "CurrentPaneDomain" },
+    pane
+  )
+
+  wezterm.sleep_ms(200)
+
+  if profile and profile.logs then
+    run_commands(window, pane, profile.logs)
+  else
+    if stack == "docker" then
+      run_commands(window, pane, { "docker compose logs -f" })
+    else
+      run_commands(window, pane, { "echo 'logs'" })
+    end
+  end
+
+  -- Git UI (new tab)
+  wezterm.sleep_ms(200)
+  window:perform_action(
+    act.SpawnTab {
+      cwd = project.path,
+      args = { "lazygit" },
+    },
+    pane
+  )
+end
+
+-- ── FONT & RENDERING ─────────────────────────────────────────────────
 config.font_size = 11
 config.line_height = 1.2
 config.font = wezterm.font("JetBrainsMono Nerd Font")
-config.freetype_load_target = "Light"
-config.freetype_render_target = "HorizontalLcd"
 
--- Performance: renderer & GPU
+-- ── PERFORMANCE ──────────────────────────────────────────────────────
 config.front_end = "WebGpu"
 config.webgpu_power_preference = "HighPerformance"
 config.enable_wayland = true
 
--- Colors & Appearance
+-- ── APPEARANCE ───────────────────────────────────────────────────────
 config.color_scheme = "Catppuccin Macchiato"
 config.colors = {
   cursor_bg = "#7aa2f7",
@@ -44,207 +176,101 @@ config.inactive_pane_hsb = {
   brightness = 0.6,
 }
 
--- Window
+-- ── WINDOW ───────────────────────────────────────────────────────────
 config.window_decorations = "RESIZE"
 config.window_padding = { left = 8, right = 8, top = 6, bottom = 0 }
-config.window_background_opacity = 1.0
 config.initial_cols = 220
 config.initial_rows = 50
 
--- Scrollback & Performance
+-- ── SCROLLBACK ───────────────────────────────────────────────────────
 config.scrollback_lines = 10000
 config.max_fps = 120
 config.cursor_blink_rate = 0
 
--- Tab bar
-config.enable_tab_bar = true          -- habilitado para suporte a tabs
+-- ── TAB BAR ──────────────────────────────────────────────────────────
+config.enable_tab_bar = true
 config.use_fancy_tab_bar = false
-config.hide_tab_bar_if_only_one_tab = true  -- esconde se houver só uma tab
+config.hide_tab_bar_if_only_one_tab = true
 
--- Leader (prefixo estilo tmux)
+-- ── LEADER KEY ───────────────────────────────────────────────────────
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 800 }
+config.default_workspace = "main"
 
--- ── WORKSPACES (session-like) ─────────────────────────────────────────
--- Alternar entre workspaces (tipo session switcher)
-{ key = "w", mods = "LEADER", action = act.ShowLauncherArgs { flags = "WORKSPACES" } },
+-- ── KEYBINDINGS ──────────────────────────────────────────────────────
+config.keys = {
 
--- Criar novo workspace com nome
-{ key = "W", mods = "LEADER|SHIFT", action = act.PromptInputLine {
-  description = "New Workspace Name",
-  action = wezterm.action_callback(function(window, pane, line)
-    if line then
-      window:perform_action(
-        act.SwitchToWorkspace {
-          name = line,
-        },
-        pane
-      )
-    end
-  end),
-} },
+  -- Workspaces
+  { key = "w", mods = "LEADER", action = act.ShowLauncherArgs { flags = "WORKSPACES" } },
+  { key = "W", mods = "LEADER|SHIFT", action = act.SwitchToWorkspace },
+  { key = "N", mods = "LEADER|SHIFT", action = act.SwitchToWorkspace },
 
--- Criar workspace rápido (nome automático)
-{ key = "n", mods = "LEADER|SHIFT", action = act.SwitchToWorkspace },
-
--- ── SESSIONIZER (fzf-like) ────────────────────────────────────────────
-{
-  key = "p",
-  mods = "LEADER",
-  action = act.InputSelector {
-    title = "Select Project",
-    choices = (function()
-      local choices = {}
-      for _, proj in ipairs(projects) do
-        table.insert(choices, {
-          id = proj.name,
-          label = proj.name .. " (" .. proj.path .. ")",
-        })
-      end
-      return choices
-    end)(),
-    action = wezterm.action_callback(function(window, pane, id, label)
-      if not id then return end
-
-      for _, proj in ipairs(projects) do
-        if proj.name == id then
-          -- muda/cria workspace
-          window:perform_action(
-            act.SwitchToWorkspace {
-              name = proj.name,
-              cwd = proj.path,
-            },
-            pane
-          )
-
-          -- opcional: abre nvim automaticamente
-          window:perform_action(
-            act.SpawnTab {
-              cwd = proj.path,
-              args = { "nvim" },
-            },
-            pane
-          )
-
-          return
+  -- Sessionizer
+  {
+    key = "p",
+    mods = "LEADER",
+    action = act.InputSelector {
+      title = "🚀 Projects",
+      choices = (function()
+        local choices = {}
+        for _, proj in ipairs(projects) do
+          table.insert(choices, {
+            id = proj.name,
+            label = "📁 " .. proj.name .. " → " .. proj.path,
+          })
         end
-      end
-    end),
+        return choices
+      end)(),
+      action = wezterm.action_callback(function(window, pane, id)
+        if not id then return end
+        for _, proj in ipairs(projects) do
+          if proj.name == id then
+            open_project_ide(window, pane, proj)
+            return
+          end
+        end
+      end),
+    },
   },
-},
 
--- ── LEADER (tmux-style) ───────────────────────────────────────────────
--- Tabs
-{ key = "c", mods = "LEADER", action = act.SpawnTab("CurrentPaneDomain") },
-{ key = "x", mods = "LEADER", action = act.CloseCurrentTab({ confirm = false }) },
-{ key = "n", mods = "LEADER", action = act.ActivateTabRelative(1) },
-{ key = "p", mods = "LEADER", action = act.ActivateTabRelative(-1) },
+  -- Tabs
+  { key = "c", mods = "LEADER", action = act.SpawnTab("CurrentPaneDomain") },
+  { key = "x", mods = "LEADER", action = act.CloseCurrentTab({ confirm = false }) },
+  { key = "n", mods = "LEADER", action = act.ActivateTabRelative(1) },
+  { key = "P", mods = "LEADER|SHIFT", action = act.ActivateTabRelative(-1) },
 
--- Navegação direta por número (1–9)
-{ key = "1", mods = "LEADER", action = act.ActivateTab(0) },
-{ key = "2", mods = "LEADER", action = act.ActivateTab(1) },
-{ key = "3", mods = "LEADER", action = act.ActivateTab(2) },
-{ key = "4", mods = "LEADER", action = act.ActivateTab(3) },
-{ key = "5", mods = "LEADER", action = act.ActivateTab(4) },
+  -- Pane splits
+  { key = "%", mods = "LEADER|SHIFT", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+  { key = '"', mods = "LEADER|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
 
--- ── PANES ────────────────────────────────────────────────────────────
--- Split igual tmux (% e ")
-{ key = "%", mods = "LEADER|SHIFT", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-{ key = '"', mods = "LEADER|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+  -- Pane control
+  { key = "z", mods = "LEADER", action = act.TogglePaneZoomState },
+  { key = "h", mods = "LEADER", action = act.ActivatePaneDirection("Left") },
+  { key = "j", mods = "LEADER", action = act.ActivatePaneDirection("Down") },
+  { key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
+  { key = "l", mods = "LEADER", action = act.ActivatePaneDirection("Right") },
 
--- Fechar pane
-{ key = "x", mods = "LEADER|SHIFT", action = act.CloseCurrentPane({ confirm = false }) },
+  -- Resize panes
+  { key = "H", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Left", 5 }) },
+  { key = "J", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Down", 5 }) },
+  { key = "K", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Up", 5 }) },
+  { key = "L", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Right", 5 }) },
 
--- Zoom pane (toggle)
-{ key = "z", mods = "LEADER", action = act.TogglePaneZoomState },
+  -- Utilities
+  { key = "[", mods = "LEADER", action = act.ActivateCopyMode },
+  { key = "r", mods = "LEADER", action = act.ReloadConfiguration },
+  { key = "s", mods = "LEADER", action = act.ShowLauncher },
+}
 
--- Navegação estilo vim (hjkl)
-{ key = "h", mods = "LEADER", action = act.ActivatePaneDirection("Left") },
-{ key = "j", mods = "LEADER", action = act.ActivatePaneDirection("Down") },
-{ key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
-{ key = "l", mods = "LEADER", action = act.ActivatePaneDirection("Right") },
-
--- Resize panes (HJKL)
-{ key = "H", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Left", 5 }) },
-{ key = "J", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Down", 5 }) },
-{ key = "K", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Up", 5 }) },
-{ key = "L", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Right", 5 }) },
-
--- ── UTILIDADES ───────────────────────────────────────────────────────
--- Copy mode (igual tmux prefix + [)
-{ key = "[", mods = "LEADER", action = act.ActivateCopyMode },
-
--- Renomear tab
-{ key = ",", mods = "LEADER", action = act.PromptInputLine {
-  description = "Rename tab",
-  action = wezterm.action_callback(function(window, pane, line)
-    if line then
-      window:active_tab():set_title(line)
-    end
-  end),
-} },
-
--- Reload config
-{ key = "r", mods = "LEADER", action = act.ReloadConfiguration },
-
--- Abrir launcher (tipo tmux choose-tree)
-{ key = "s", mods = "LEADER", action = act.ShowLauncher },
-
--- -- Keys
--- config.keys = {
---   -- ── TABS ─────────────────────────────────────────────────────────────
---   { key = "t",         mods = "CTRL|SHIFT", action = act.SpawnTab("CurrentPaneDomain") },
---   { key = "w",         mods = "CTRL|SHIFT", action = act.CloseCurrentTab({ confirm = false }) },
---   { key = "Tab",       mods = "CTRL",       action = act.ActivateTabRelative(1) },
---   { key = "Tab",       mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
---   { key = "1",         mods = "CTRL|SHIFT", action = act.ActivateTab(0) },
---   { key = "2",         mods = "CTRL|SHIFT", action = act.ActivateTab(1) },
---   { key = "3",         mods = "CTRL|SHIFT", action = act.ActivateTab(2) },
---   { key = "4",         mods = "CTRL|SHIFT", action = act.ActivateTab(3) },
---   { key = "5",         mods = "CTRL|SHIFT", action = act.ActivateTab(4) },
-
---   -- ── PANES ────────────────────────────────────────────────────────────
---   { key = "w", mods = "CMD",       action = act.CloseCurrentPane({ confirm = false }) },
---   { key = "v", mods = "CTRL|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
---   { key = "h", mods = "CTRL|SHIFT", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
---   { key = "z", mods = "CTRL|SHIFT", action = act.TogglePaneZoomState },
-
---   -- Pane navigation
---   { key = "LeftArrow",  mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Left") },
---   { key = "RightArrow", mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Right") },
---   { key = "UpArrow",    mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Up") },
---   { key = "DownArrow",  mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Down") },
-
---   -- Pane resize
---   { key = "LeftArrow",  mods = "CTRL|SHIFT|ALT", action = act.AdjustPaneSize({ "Left",  5 }) },
---   { key = "RightArrow", mods = "CTRL|SHIFT|ALT", action = act.AdjustPaneSize({ "Right", 5 }) },
---   { key = "UpArrow",    mods = "CTRL|SHIFT|ALT", action = act.AdjustPaneSize({ "Up",    5 }) },
---   { key = "DownArrow",  mods = "CTRL|SHIFT|ALT", action = act.AdjustPaneSize({ "Down",  5 }) },
-
---   -- ── MISC ─────────────────────────────────────────────────────────────
---   { key = "l",     mods = "CTRL",       action = act.SendString("clear\n") },
---   { key = "=",     mods = "CTRL",       action = act.IncreaseFontSize },
---   { key = "-",     mods = "CTRL",       action = act.DecreaseFontSize },
---   { key = "0",     mods = "CTRL",       action = act.ResetFontSize },
---   { key = "c",     mods = "CTRL|SHIFT", action = act.ActivateCopyMode },
---   { key = "Space", mods = "CTRL|SHIFT", action = act.QuickSelect },
---   { key = "o",     mods = "CTRL|SHIFT", action = act.OpenLinkAtMouseCursor },
--- }
-
--- Mouse
+-- ── MOUSE ────────────────────────────────────────────────────────────
 config.mouse_bindings = {
   {
     event = { Down = { streak = 1, button = "Right" } },
     mods = "NONE",
     action = act.PasteFrom("Clipboard"),
   },
-  {
-    event = { Down = { streak = 1, button = "Middle" } },
-    mods = "NONE",
-    action = act.OpenLinkAtMouseCursor,
-  },
 }
 
--- SSH
+-- ── SSH ──────────────────────────────────────────────────────────────
 config.ssh_domains = {
   {
     name = "rpi",
