@@ -1,110 +1,122 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
-
 local config = {}
 
--- ── PLATFORM DETECTION ─────────────────────────────────────────────────────
-local is_macos = wezterm.target_triple:find("apple") ~= nil
+-- ── PLATFORM ──────────────────────────────────────────────────────────────
+local IS_MACOS = wezterm.target_triple:find("apple") ~= nil
 
--- ── CORE (STABLE RENDERING) ────────────────────────────────────────────────
-if is_macos then
+-- ── RENDER (ESTÁVEL) ──────────────────────────────────────────────────────
+if IS_MACOS then
   config.front_end = "WebGpu"
-  config.webgpu_power_preference = "LowPower" -- ideal p/ M1/M2
+  config.webgpu_power_preference = "LowPower"
   config.max_fps = 60
-  config.animation_fps = 60
 else
-  config.front_end = "OpenGL" -- mais estável no Linux
+  config.front_end = "OpenGL"
   config.max_fps = 60
-  config.animation_fps = 30
 end
 
 -- ── FONT ──────────────────────────────────────────────────────────────────
 config.font = wezterm.font("JetBrainsMono Nerd Font")
-config.font_size = is_macos and 12 or 11
-config.line_height = 1.2
+config.font_size = IS_MACOS and 12 or 11
 
--- ── PERFORMANCE ───────────────────────────────────────────────────────────
-config.scrollback_lines = 10000
-config.cursor_blink_rate = 0
-config.enable_scroll_bar = false
-
--- ── APPEARANCE ────────────────────────────────────────────────────────────
+-- ── UI ────────────────────────────────────────────────────────────────────
 config.color_scheme = "Catppuccin Macchiato"
-
 config.window_decorations = "RESIZE"
-config.window_padding = {
-  left = 8,
-  right = 8,
-  top = 6,
-  bottom = 0,
-}
+config.window_padding = { left = 8, right = 8, top = 6, bottom = 0 }
 
-if is_macos then
-  config.native_macos_fullscreen_mode = true
-end
-
--- ── TAB BAR ───────────────────────────────────────────────────────────────
 config.enable_tab_bar = true
 config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = true
 
+-- ── PERF ──────────────────────────────────────────────────────────────────
+config.scrollback_lines = 10000
+config.cursor_blink_rate = 0
+
 -- ── LEADER ────────────────────────────────────────────────────────────────
-config.leader = {
-  key = "a",
-  mods = "CTRL",
-  timeout_milliseconds = 600,
-}
+config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 600 }
 
--- ── PROJECTS (EXPLÍCITO = ROBUSTO) ─────────────────────────────────────────
-local HOME = os.getenv("HOME")
+-- ── PROJECT SCAN (SEGURO) ─────────────────────────────────────────────────
+local function scan_projects()
+  local home = os.getenv("HOME")
+  local base = home .. "/prj"
 
-local projects = {
-  { id = "api", path = HOME .. "/prj/api" },
-  { id = "infra", path = HOME .. "/prj/infra" },
-  { id = "rust", path = HOME .. "/prj/backend-rust" },
-}
+  local success, stdout = wezterm.run_child_process({
+    "bash", "-c",
+    "test -d " .. base .. " || base=" .. home .. "/dev; " ..
+    "find $base -maxdepth 1 -mindepth 1 -type d 2>/dev/null"
+  })
 
--- ── SAFE WORKSPACE LAUNCHER ───────────────────────────────────────────────
+  if not success or not stdout then
+    return {}
+  end
+
+  local projects = {}
+  for line in stdout:gmatch("[^\r\n]+") do
+    local name = line:match(".*/(.*)")
+    if name then
+      table.insert(projects, {
+        id = name,
+        path = line
+      })
+    end
+  end
+
+  return projects
+end
+
+local projects = scan_projects()
+
+-- ── OPEN PROJECT (SEM RACE CONDITION) ─────────────────────────────────────
 local function open_project(window, pane, project)
-  -- workspace isolado
   window:perform_action(
     act.SwitchToWorkspace {
       name = project.id,
-      cwd = project.path,
+      cwd = project.path
     },
     pane
   )
 
-  -- editor (tab 1)
+  -- editor
   window:perform_action(
     act.SpawnTab {
       cwd = project.path,
-      args = { "nvim" },
+      args = { "nvim" }
     },
     pane
   )
 
-  -- shell (tab 2)
+  -- terminal
   window:perform_action(
     act.SpawnTab {
-      cwd = project.path,
+      cwd = project.path
     },
     pane
   )
 end
 
--- ── KEYBINDINGS ───────────────────────────────────────────────────────────
+-- ── SSH DOMAINS ───────────────────────────────────────────────────────────
+local ssh_hosts = wezterm.default_ssh_domains()
+
+for _, dom in ipairs(ssh_hosts) do
+  dom.assume_shell = "Posix"
+  dom.local_echo_threshold_ms = 250
+  dom.timeout = 120
+end
+
+config.ssh_domains = ssh_hosts
+
+-- ── KEYS ──────────────────────────────────────────────────────────────────
 config.keys = {
-  -- project launcher
+  -- projects
   {
     key = "p",
     mods = "LEADER",
     action = act.InputSelector {
-      title = "Projects",
+      title = "🚀 Projects",
       choices = (function()
         local t = {}
         for _, p in ipairs(projects) do
-          table.insert(t, { id = p.id, label = p.id })
+          table.insert(t, { id = p.id, label = "📁 " .. p.id })
         end
         return t
       end)(),
@@ -120,6 +132,13 @@ config.keys = {
     },
   },
 
+  -- SSH
+  {
+    key = "S",
+    mods = "LEADER|SHIFT",
+    action = act.ShowLauncherArgs { flags = "SSH_DOMAINS" },
+  },
+
   -- tabs
   { key = "c", mods = "LEADER", action = act.SpawnTab("CurrentPaneDomain") },
   { key = "x", mods = "LEADER", action = act.CloseCurrentTab({ confirm = false }) },
@@ -133,35 +152,17 @@ config.keys = {
   { key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
   { key = "l", mods = "LEADER", action = act.ActivatePaneDirection("Right") },
 
-  -- reload config
+  -- reload
   { key = "r", mods = "LEADER", action = act.ReloadConfiguration },
 }
 
 -- ── COPY / PASTE ──────────────────────────────────────────────────────────
-if is_macos then
-  table.insert(config.keys, {
-    key = "v",
-    mods = "CMD",
-    action = act.PasteFrom("Clipboard"),
-  })
-
-  table.insert(config.keys, {
-    key = "c",
-    mods = "CMD",
-    action = act.CopyTo("Clipboard"),
-  })
+if IS_MACOS then
+  table.insert(config.keys, { key = "v", mods = "CMD", action = act.PasteFrom("Clipboard") })
+  table.insert(config.keys, { key = "c", mods = "CMD", action = act.CopyTo("Clipboard") })
 else
-  table.insert(config.keys, {
-    key = "v",
-    mods = "CTRL|SHIFT",
-    action = act.PasteFrom("Clipboard"),
-  })
-
-  table.insert(config.keys, {
-    key = "c",
-    mods = "CTRL|SHIFT",
-    action = act.CopyTo("Clipboard"),
-  })
+  table.insert(config.keys, { key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") })
+  table.insert(config.keys, { key = "c", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") })
 end
 
 -- ── MOUSE ─────────────────────────────────────────────────────────────────
