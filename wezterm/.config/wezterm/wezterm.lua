@@ -1,49 +1,49 @@
 local wezterm = require("wezterm")
-local config = wezterm.config_builder()
 local act = wezterm.action
 
--- ── BASICS ────────────────────────────────────────────────────────────────
-config.font = wezterm.font("JetBrainsMono Nerd Font")
-config.font_size = 11
-config.line_height = 1.2
+local config = {
+  -- ── CORE ────────────────────────────────────────────────────────────────
+  front_end = "OpenGL",
+  max_fps = 60,
+  animation_fps = 30,
 
-config.front_end = "OpenGL"
-config.max_fps = 60
-config.animation_fps = 30
+  -- ── FONT ────────────────────────────────────────────────────────────────
+  font = wezterm.font("JetBrainsMono Nerd Font"),
+  font_size = 11,
+  line_height = 1.2,
 
-config.scrollback_lines = 10000
-config.cursor_blink_rate = 0
+  -- ── BUFFER ──────────────────────────────────────────────────────────────
+  scrollback_lines = 10000,
+  cursor_blink_rate = 0,
 
--- ── APPEARANCE ────────────────────────────────────────────────────────────
-config.color_scheme = "Catppuccin Macchiato"
-config.colors = {
-  cursor_bg = "#7aa2f7",
-  cursor_border = "#7aa2f7",
+  -- ── UI ──────────────────────────────────────────────────────────────────
+  color_scheme = "Catppuccin Macchiato",
+  window_decorations = "RESIZE",
+  window_padding = { left = 8, right = 8, top = 6, bottom = 0 },
+
+  enable_tab_bar = true,
+  use_fancy_tab_bar = false,
+  hide_tab_bar_if_only_one_tab = true,
+
+  -- ── LEADER ──────────────────────────────────────────────────────────────
+  leader = { key = "a", mods = "CTRL", timeout_milliseconds = 600 },
 }
 
-config.window_decorations = "RESIZE"
-config.window_padding = { left = 8, right = 8, top = 6, bottom = 0 }
+-- ── PROJECTS (EXPLÍCITO = CONFIÁVEL) ──────────────────────────────────────
+local HOME = os.getenv("HOME")
 
--- ── TAB BAR ───────────────────────────────────────────────────────────────
-config.enable_tab_bar = true
-config.use_fancy_tab_bar = false
-config.hide_tab_bar_if_only_one_tab = true
-
--- ── LEADER ────────────────────────────────────────────────────────────────
-config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 600 }
-
--- ── SIMPLE PROJECT LAUNCHER (SEM SCAN AUTOMÁTICO) ─────────────────────────
 local projects = {
-  { name = "api", path = os.getenv("HOME") .. "/prj/api" },
-  { name = "infra", path = os.getenv("HOME") .. "/prj/infra" },
-  { name = "backend-rust", path = os.getenv("HOME") .. "/prj/backend-rust" },
+  { id = "api", path = HOME .. "/prj/api" },
+  { id = "infra", path = HOME .. "/prj/infra" },
+  { id = "rust", path = HOME .. "/prj/backend-rust" },
 }
 
+-- ── CORE ACTION (SEM RACE CONDITION) ──────────────────────────────────────
 local function open_project(window, pane, project)
-  -- workspace
+  -- workspace isolado
   window:perform_action(
     act.SwitchToWorkspace {
-      name = project.name,
+      name = project.id,
       cwd = project.path,
     },
     pane
@@ -58,47 +58,34 @@ local function open_project(window, pane, project)
     pane
   )
 
-  -- split + run app
+  -- shell limpo
   window:perform_action(
-    act.SplitHorizontal { domain = "CurrentPaneDomain" },
-    pane
-  )
-
-  window:perform_action(
-    act.SendString("clear\n"),
-    pane
-  )
-
-  -- split logs
-  window:perform_action(
-    act.SplitVertical { domain = "CurrentPaneDomain" },
-    pane
-  )
-
-  window:perform_action(
-    act.SendString("clear\n"),
+    act.SpawnTab {
+      cwd = project.path,
+    },
     pane
   )
 end
 
--- ── KEYBINDINGS ───────────────────────────────────────────────────────────
+-- ── KEYS ──────────────────────────────────────────────────────────────────
 config.keys = {
-  -- launcher
+  -- launcher de projetos
   {
     key = "p",
     mods = "LEADER",
     action = act.InputSelector {
-      title = "🚀 Projects",
+      title = "Projects",
       choices = (function()
         local t = {}
         for _, p in ipairs(projects) do
-          table.insert(t, { id = p.name, label = p.name })
+          table.insert(t, { id = p.id, label = p.id })
         end
         return t
       end)(),
       action = wezterm.action_callback(function(window, pane, id)
+        if not id then return end
         for _, p in ipairs(projects) do
-          if p.name == id then
+          if p.id == id then
             open_project(window, pane, p)
             return
           end
@@ -120,11 +107,11 @@ config.keys = {
   { key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
   { key = "l", mods = "LEADER", action = act.ActivatePaneDirection("Right") },
 
-  -- reload
+  -- reload seguro
   { key = "r", mods = "LEADER", action = act.ReloadConfiguration },
 }
 
--- ── COPY/PASTE ────────────────────────────────────────────────────────────
+-- ── COPY / PASTE ──────────────────────────────────────────────────────────
 table.insert(config.keys, {
   key = "v",
   mods = "CTRL|SHIFT",
