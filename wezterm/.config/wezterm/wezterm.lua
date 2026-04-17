@@ -8,7 +8,12 @@ config.line_height = 1.2
 config.font = wezterm.font("JetBrainsMono Nerd Font")
 config.freetype_load_target = "Light"
 config.freetype_render_target = "HorizontalLcd"
-config.cell_width = 0.9
+-- config.cell_width = 0.9  -- non-default cell width causes extra layout recalculations
+
+-- Performance: renderer & GPU
+config.front_end = "WebGpu"
+config.webgpu_power_preference = "HighPerformance"
+config.enable_wayland = true  -- avoids XWayland overhead on Linux/Wayland
 
 -- Colors & Appearance
 config.color_scheme = "Catppuccin Macchiato"
@@ -24,20 +29,21 @@ config.inactive_pane_hsb = {
 -- Window
 config.window_decorations = "RESIZE"
 config.window_padding = { left = 8, right = 8, top = 6, bottom = 0 }
-config.window_background_opacity = 0.95
-config.macos_window_background_blur = 20
+-- config.window_background_opacity = 0.95  -- transparency forces compositing every frame
+-- config.macos_window_background_blur = 20 -- expensive blur, macOS only
+config.window_background_opacity = 1.0
 config.initial_cols = 220
 config.initial_rows = 50
 
 -- Scrollback & Performance
-config.scrollback_lines = 10000
+config.scrollback_lines = 10000  -- keep reasonable; 50k+ increases memory usage
 config.max_fps = 120
-config.animation_fps = 60
-config.cursor_blink_rate = 500
+-- config.animation_fps = 60  -- unused when tab bar is disabled, skip to reduce overhead
+config.cursor_blink_rate = 0  -- blinking cursor causes constant redraws; 0 = disabled
 
 -- Tab bar
 config.enable_tab_bar = false
-config.use_fancy_tab_bar = false
+config.use_fancy_tab_bar = false  -- fancy tab bar uses more resources
 
 -- Keys
 config.keys = {
