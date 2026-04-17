@@ -47,30 +47,43 @@ local project_profiles = {
   ["backend-rust"] = { stack = "rust", services = { "cargo watch -x run || cargo run" }, logs = { "echo 'Rust logs'" } },
 }
 
--- ── PROJECT SCANNER (flexível) ───────────────────────────────────────
+-- ── PROJECT SCANNER (fixed + more robust) ───────────────────────────────────────
 local function scan_projects()
   local home = os.getenv("HOME")
   local dir = home .. "/prj"
-  if not file_exists(dir) then dir = home .. "/dev" end
-  if not file_exists(dir) then return {} end
+  if not file_exists(dir) then
+    dir = home .. "/dev"
+  end
+  if not file_exists(dir) then
+    wezterm.log_warn("Neither ~/prj nor ~/dev directory found")
+    return {}
+  end
 
-  local stdout = wezterm.run_child_process({
-    "bash", "-c", "find " .. dir .. " -maxdepth 1 -type d 2>/dev/null | tail -n +2"
+  -- Run the command and properly capture all three return values
+  local success, stdout, stderr = wezterm.run_child_process({
+    "bash", "-c",
+    "find " .. dir .. " -maxdepth 1 -type d 2>/dev/null | tail -n +2"
   })
 
+  if not success then
+    wezterm.log_error("Failed to scan projects in " .. dir .. (stderr and ": " .. stderr or ""))
+    return {}
+  end
+
+  if not stdout or stdout == "" then
+    return {}
+  end
+
   local projects = {}
-  if stdout then
-    for line in stdout:gmatch("[^\r\n]+") do
-      local name = line:match(".*/(.*)")
-      if name and name ~= "" and name ~= "prj" and name ~= "dev" then
-        table.insert(projects, { name = name, path = line })
-      end
+  for line in stdout:gmatch("[^\r\n]+") do
+    local name = line:match(".*/(.*)")
+    if name and name ~= "" and name ~= "prj" and name ~= "dev" then
+      table.insert(projects, { name = name, path = line })
     end
   end
+
   return projects
 end
-
-local projects = scan_projects()
 
 -- ── COMMAND RUNNER ───────────────────────────────────────────────────
 local function run_commands(window, pane, commands)
