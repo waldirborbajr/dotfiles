@@ -8,12 +8,11 @@ config.line_height = 1.2
 config.font = wezterm.font("JetBrainsMono Nerd Font")
 config.freetype_load_target = "Light"
 config.freetype_render_target = "HorizontalLcd"
--- config.cell_width = 0.9  -- non-default cell width causes extra layout recalculations
 
 -- Performance: renderer & GPU
 config.front_end = "WebGpu"
 config.webgpu_power_preference = "HighPerformance"
-config.enable_wayland = true  -- avoids XWayland overhead on Linux/Wayland
+config.enable_wayland = true
 
 -- Colors & Appearance
 config.color_scheme = "Catppuccin Macchiato"
@@ -29,33 +28,38 @@ config.inactive_pane_hsb = {
 -- Window
 config.window_decorations = "RESIZE"
 config.window_padding = { left = 8, right = 8, top = 6, bottom = 0 }
--- config.window_background_opacity = 0.95  -- transparency forces compositing every frame
--- config.macos_window_background_blur = 20 -- expensive blur, macOS only
 config.window_background_opacity = 1.0
 config.initial_cols = 220
 config.initial_rows = 50
 
 -- Scrollback & Performance
-config.scrollback_lines = 10000  -- keep reasonable; 50k+ increases memory usage
+config.scrollback_lines = 10000
 config.max_fps = 120
--- config.animation_fps = 60  -- unused when tab bar is disabled, skip to reduce overhead
-config.cursor_blink_rate = 0  -- blinking cursor causes constant redraws; 0 = disabled
+config.cursor_blink_rate = 0
 
 -- Tab bar
-config.enable_tab_bar = false
-config.use_fancy_tab_bar = false  -- fancy tab bar uses more resources
+config.enable_tab_bar = true          -- habilitado para suporte a tabs
+config.use_fancy_tab_bar = false
+config.hide_tab_bar_if_only_one_tab = true  -- esconde se houver só uma tab
 
 -- Keys
 config.keys = {
-  -- Close pane
-  { key = "w", mods = "CMD", action = act.CloseCurrentPane({ confirm = false }) },
+  -- ── TABS ─────────────────────────────────────────────────────────────
+  { key = "t",         mods = "CTRL|SHIFT", action = act.SpawnTab("CurrentPaneDomain") },
+  { key = "w",         mods = "CTRL|SHIFT", action = act.CloseCurrentTab({ confirm = false }) },
+  { key = "Tab",       mods = "CTRL",       action = act.ActivateTabRelative(1) },
+  { key = "Tab",       mods = "CTRL|SHIFT", action = act.ActivateTabRelative(-1) },
+  { key = "1",         mods = "CTRL|SHIFT", action = act.ActivateTab(0) },
+  { key = "2",         mods = "CTRL|SHIFT", action = act.ActivateTab(1) },
+  { key = "3",         mods = "CTRL|SHIFT", action = act.ActivateTab(2) },
+  { key = "4",         mods = "CTRL|SHIFT", action = act.ActivateTab(3) },
+  { key = "5",         mods = "CTRL|SHIFT", action = act.ActivateTab(4) },
 
-  -- Split panes
+  -- ── PANES ────────────────────────────────────────────────────────────
+  { key = "w", mods = "CMD",       action = act.CloseCurrentPane({ confirm = false }) },
   { key = "v", mods = "CTRL|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
   { key = "h", mods = "CTRL|SHIFT", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-
-  -- Clear
-  { key = "l", mods = "CTRL", action = act.SendString("clear\n") },
+  { key = "z", mods = "CTRL|SHIFT", action = act.TogglePaneZoomState },
 
   -- Pane navigation
   { key = "LeftArrow",  mods = "CTRL|SHIFT", action = act.ActivatePaneDirection("Left") },
@@ -69,15 +73,11 @@ config.keys = {
   { key = "UpArrow",    mods = "CTRL|SHIFT|ALT", action = act.AdjustPaneSize({ "Up",    5 }) },
   { key = "DownArrow",  mods = "CTRL|SHIFT|ALT", action = act.AdjustPaneSize({ "Down",  5 }) },
 
-  -- Zoom pane
-  { key = "z", mods = "CTRL|SHIFT", action = act.TogglePaneZoomState },
-
-  -- Font size
-  { key = "=", mods = "CTRL", action = act.IncreaseFontSize },
-  { key = "-", mods = "CTRL", action = act.DecreaseFontSize },
-  { key = "0", mods = "CTRL", action = act.ResetFontSize },
-
-  -- Copy mode & quick select
+  -- ── MISC ─────────────────────────────────────────────────────────────
+  { key = "l",     mods = "CTRL",       action = act.SendString("clear\n") },
+  { key = "=",     mods = "CTRL",       action = act.IncreaseFontSize },
+  { key = "-",     mods = "CTRL",       action = act.DecreaseFontSize },
+  { key = "0",     mods = "CTRL",       action = act.ResetFontSize },
   { key = "c",     mods = "CTRL|SHIFT", action = act.ActivateCopyMode },
   { key = "Space", mods = "CTRL|SHIFT", action = act.QuickSelect },
   { key = "o",     mods = "CTRL|SHIFT", action = act.OpenLinkAtMouseCursor },
