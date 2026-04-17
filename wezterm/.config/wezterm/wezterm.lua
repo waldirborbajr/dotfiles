@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- WezTerm Configuration - Fixed & Clean Version
+-- WezTerm Configuration - Fully Fixed (April 2026)
 -- ─────────────────────────────────────────────────────────────────────────────
 
 local wezterm = require("wezterm")
@@ -11,12 +11,7 @@ local function is_macos()
   return string.find(wezterm.target_triple, "apple%-darwin") ~= nil
 end
 
-local function is_linux()
-  return string.find(wezterm.target_triple, "unknown%-linux") ~= nil
-end
-
 local IS_MACOS = is_macos()
-local IS_LINUX = is_linux()
 
 -- ── FILE HELPERS ───────────────────────────────────────────────────────────
 local function file_exists(path)
@@ -80,7 +75,6 @@ local function scan_projects()
   return projects
 end
 
--- Scan projects AFTER function definition
 local projects = scan_projects()
 
 -- ── COMMAND RUNNER ─────────────────────────────────────────────────────────
@@ -222,8 +216,8 @@ config.keys = {
     },
   },
 
-  -- SSH Domains
-  { key = "S", mods = "LEADER|SHIFT", action = act.ShowLauncherArgs { flags = "SSH_DOMAINS" } },
+  -- SSH Domains → Use DOMAINS flag (this is the correct way)
+  { key = "S", mods = "LEADER|SHIFT", action = act.ShowLauncherArgs { flags = "DOMAINS" } },
 
   -- Tabs
   { key = "c", mods = "LEADER", action = act.SpawnTab("CurrentPaneDomain") },
@@ -252,7 +246,7 @@ config.keys = {
   { key = "s", mods = "LEADER", action = act.ShowLauncher },
 }
 
--- Copy/Paste (platform specific)
+-- Copy/Paste per platform
 if IS_MACOS then
   table.insert(config.keys, { key = "v", mods = "CMD", action = act.PasteFrom("Clipboard") })
   table.insert(config.keys, { key = "c", mods = "CMD", action = act.CopyTo("Clipboard") })
