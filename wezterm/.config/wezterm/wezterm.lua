@@ -75,6 +75,7 @@ local projects = scan_projects()
 
 -- ── OPEN PROJECT (SAFE) ───────────────────────────────────────────────────
 local function open_project(window, pane, project)
+  -- workspace
   window:perform_action(
     act.SwitchToWorkspace {
       name = project.id,
@@ -83,18 +84,25 @@ local function open_project(window, pane, project)
     pane
   )
 
+  -- TAB 1 (editor)
   window:perform_action(
-    act.SpawnTab {
-      cwd = project.path,
-      args = { "nvim" }
-    },
+    act.SpawnTab "CurrentPaneDomain",
     pane
   )
 
   window:perform_action(
-    act.SpawnTab {
-      cwd = project.path
-    },
+    act.SendString("cd " .. project.path .. " && nvim\n"),
+    pane
+  )
+
+  -- TAB 2 (shell)
+  window:perform_action(
+    act.SpawnTab "CurrentPaneDomain",
+    pane
+  )
+
+  window:perform_action(
+    act.SendString("cd " .. project.path .. "\n"),
     pane
   )
 end
