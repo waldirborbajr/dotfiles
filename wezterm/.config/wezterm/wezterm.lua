@@ -1,19 +1,12 @@
---
--- ██╗    ██╗███████╗███████╗████████╗███████╗██████╗ ███╗   ███╗
--- ██║    ██║██╔════╝╚══███╔╝╚══██╔══╝██╔════╝██╔══██╗████╗ ████║
--- ██║ █╗ ██║█████╗    ███╔╝    ██║   █████╗  ██████╔╝██╔████╔██║
--- ██║███╗██║██╔══╝   ███╔╝     ██║   ██╔══╝  ██╔══██╗██║╚██╔╝██║
--- ╚███╔███╔╝███████╗███████╗   ██║   ███████╗██║  ██║██║ ╚═╝ ██║
---  ╚══╝╚══╝ ╚══════╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝
--- A GPU-accelerated cross-platform terminal emulator
--- https://wezfurlong.org/wezterm/
-----
+-- ─────────────────────────────────────────────────────────────────────────────
+-- WezTerm Configuration - Fixed & Clean Version
+-- ─────────────────────────────────────────────────────────────────────────────
 
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 local act = wezterm.action
 
--- ── PLATFORM DETECTION ──────────────────────────────────────────────────
+-- ── PLATFORM DETECTION ─────────────────────────────────────────────────────
 local function is_macos()
   return string.find(wezterm.target_triple, "apple%-darwin") ~= nil
 end
@@ -25,14 +18,17 @@ end
 local IS_MACOS = is_macos()
 local IS_LINUX = is_linux()
 
--- ── FILE HELPERS ─────────────────────────────────────────────────────
+-- ── FILE HELPERS ───────────────────────────────────────────────────────────
 local function file_exists(path)
   local f = io.open(path, "r")
-  if f then f:close() return true end
+  if f then 
+    f:close() 
+    return true 
+  end
   return false
 end
 
--- ── STACK DETECTION ──────────────────────────────────────────────────
+-- ── STACK DETECTION ────────────────────────────────────────────────────────
 local function detect_stack(path)
   if file_exists(path .. "/docker-compose.yml") then return "docker" end
   if file_exists(path .. "/Cargo.toml") then return "rust" end
@@ -40,14 +36,14 @@ local function detect_stack(path)
   return "unknown"
 end
 
--- ── PROJECT PROFILES ─────────────────────────────────────────────────
+-- ── PROJECT PROFILES ───────────────────────────────────────────────────────
 local project_profiles = {
   ["infra"] = { stack = "docker", services = { "docker compose up" }, logs = { "docker compose logs -f" } },
   ["api"] = { stack = "go", services = { "air || go run ." }, logs = { "echo 'Go logs - air running'" } },
   ["backend-rust"] = { stack = "rust", services = { "cargo watch -x run || cargo run" }, logs = { "echo 'Rust logs'" } },
 }
 
--- ── PROJECT SCANNER (fixed + more robust) ───────────────────────────────────────
+-- ── PROJECT SCANNER (FIXED) ────────────────────────────────────────────────
 local function scan_projects()
   local home = os.getenv("HOME")
   local dir = home .. "/prj"
@@ -59,7 +55,6 @@ local function scan_projects()
     return {}
   end
 
-  -- Run the command and properly capture all three return values
   local success, stdout, stderr = wezterm.run_child_process({
     "bash", "-c",
     "find " .. dir .. " -maxdepth 1 -type d 2>/dev/null | tail -n +2"
@@ -85,7 +80,10 @@ local function scan_projects()
   return projects
 end
 
--- ── COMMAND RUNNER ───────────────────────────────────────────────────
+-- Scan projects AFTER function definition
+local projects = scan_projects()
+
+-- ── COMMAND RUNNER ─────────────────────────────────────────────────────────
 local function run_commands(window, pane, commands)
   if not commands then return end
   local delay = IS_MACOS and 80 or 40
@@ -95,7 +93,7 @@ local function run_commands(window, pane, commands)
   end
 end
 
--- ── IDE SESSIONIZER ──────────────────────────────────────────────────
+-- ── IDE SESSIONIZER ────────────────────────────────────────────────────────
 local function open_project_ide(window, pane, project)
   local profile = project_profiles[project.name]
   local stack = profile and profile.stack or detect_stack(project.path)
@@ -113,9 +111,12 @@ local function open_project_ide(window, pane, project)
   if profile and profile.services then
     run_commands(window, pane, profile.services)
   else
-    if stack == "docker" then run_commands(window, pane, { "docker compose up" })
-    elseif stack == "go" then run_commands(window, pane, { "go run ." })
-    elseif stack == "rust" then run_commands(window, pane, { "cargo run" })
+    if stack == "docker" then 
+      run_commands(window, pane, { "docker compose up" })
+    elseif stack == "go" then 
+      run_commands(window, pane, { "go run ." })
+    elseif stack == "rust" then 
+      run_commands(window, pane, { "cargo run" })
     end
   end
 
@@ -136,7 +137,7 @@ local function open_project_ide(window, pane, project)
   window:perform_action(act.SpawnTab { cwd = project.path, args = { "lazygit" } }, pane)
 end
 
--- ── FONT & PERFORMANCE ───────────────────────────────────────────────
+-- ── FONT & PERFORMANCE ─────────────────────────────────────────────────────
 config.font = wezterm.font("JetBrainsMono Nerd Font")
 config.font_size = IS_MACOS and 12 or 11
 config.line_height = IS_MACOS and 1.3 or 1.2
@@ -159,71 +160,59 @@ config.scrollback_lines = 10000
 config.cursor_blink_rate = 0
 config.harfbuzz_features = { "calt=0", "liga=0" }
 
--- ── APPEARANCE ───────────────────────────────────────────────────────
+-- ── APPEARANCE ─────────────────────────────────────────────────────────────
 config.color_scheme = "Catppuccin Macchiato"
 config.colors = { cursor_bg = "#7aa2f7", cursor_border = "#7aa2f7" }
 config.inactive_pane_hsb = { saturation = 0.8, brightness = 0.7 }
 
--- ── WINDOW ───────────────────────────────────────────────────────────
+-- ── WINDOW ─────────────────────────────────────────────────────────────────
 config.window_decorations = "RESIZE"
 config.window_padding = { left = 8, right = 8, top = 6, bottom = 0 }
 config.initial_cols = 200
 config.initial_rows = 48
-if IS_MACOS then config.native_macos_fullscreen_mode = true end
+if IS_MACOS then 
+  config.native_macos_fullscreen_mode = true 
+end
 
--- ── TAB BAR ──────────────────────────────────────────────────────────
+-- ── TAB BAR ────────────────────────────────────────────────────────────────
 config.enable_tab_bar = true
 config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = true
 
--- ── LEADER ───────────────────────────────────────────────────────────
+-- ── LEADER ─────────────────────────────────────────────────────────────────
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 600 }
 config.default_workspace = "main"
 
--- ── SSH DOMAINS (MELHOR VERSÃO PARA VÁRIOS SERVIDORES) ───────────────
+-- ── SSH DOMAINS ────────────────────────────────────────────────────────────
 local ssh_hosts = wezterm.default_ssh_domains()
-
--- Aplica otimizações automáticas em TODOS os hosts do seu ~/.ssh/config
 for _, dom in ipairs(ssh_hosts) do
   dom.assume_shell = "Posix"
-  dom.local_echo_threshold_ms = 250      -- ótimo para maioria das conexões
+  dom.local_echo_threshold_ms = 250
   dom.timeout = 120
-  -- dom.multiplexing = "WezTerm"         -- descomente se instalar wezterm no servidor
 end
-
--- Se precisar de um host com configuração especial (ex: RPi), descomente abaixo:
--- table.insert(ssh_hosts, {
---   name = "rpi",
---   remote_address = "192.168.1.110",
---   username = "raspi",
---   ssh_option = { identityfile = "~/.ssh/id_ed25519" },
---   assume_shell = "Posix",
---   local_echo_threshold_ms = 400,
--- })
-
 config.ssh_domains = ssh_hosts
 
--- ── KEYBINDINGS ──────────────────────────────────────────────────────
+-- ── KEYBINDINGS ────────────────────────────────────────────────────────────
 config.keys = {
   -- Workspaces
   { key = "w", mods = "LEADER", action = act.ShowLauncherArgs { flags = "WORKSPACES" } },
   { key = "W", mods = "LEADER|SHIFT", action = act.SwitchToWorkspace },
 
-  -- Projects
+  -- Projects (LEADER + p)
   {
     key = "p", mods = "LEADER",
     action = act.InputSelector {
       title = "🚀 Open Project",
       choices = (function()
         local choices = {}
-        for _, proj in ipairs(projects) do
+        for _, proj in ipairs(projects or {}) do
           table.insert(choices, { id = proj.name, label = "📁 " .. proj.name })
         end
         return choices
       end)(),
       action = wezterm.action_callback(function(window, pane, id)
         if not id then return end
-        for _, proj in ipairs(projects) do
+        for _, proj in ipairs(projects or {}) do
           if proj.name == id then
             open_project_ide(window, pane, proj)
             return
@@ -233,7 +222,7 @@ config.keys = {
     },
   },
 
-  -- SSH Domains (novo atalho recomendado)
+  -- SSH Domains
   { key = "S", mods = "LEADER|SHIFT", action = act.ShowLauncherArgs { flags = "SSH_DOMAINS" } },
 
   -- Tabs
@@ -246,7 +235,6 @@ config.keys = {
   { key = "%", mods = "LEADER|SHIFT", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
   { key = '"', mods = "LEADER|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
   { key = "z", mods = "LEADER", action = act.TogglePaneZoomState },
-
   { key = "h", mods = "LEADER", action = act.ActivatePaneDirection("Left") },
   { key = "j", mods = "LEADER", action = act.ActivatePaneDirection("Down") },
   { key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
@@ -264,7 +252,7 @@ config.keys = {
   { key = "s", mods = "LEADER", action = act.ShowLauncher },
 }
 
--- Copy/Paste por plataforma
+-- Copy/Paste (platform specific)
 if IS_MACOS then
   table.insert(config.keys, { key = "v", mods = "CMD", action = act.PasteFrom("Clipboard") })
   table.insert(config.keys, { key = "c", mods = "CMD", action = act.CopyTo("Clipboard") })
@@ -273,7 +261,7 @@ else
   table.insert(config.keys, { key = "c", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") })
 end
 
--- ── MOUSE ────────────────────────────────────────────────────────────
+-- ── MOUSE ──────────────────────────────────────────────────────────────────
 config.mouse_bindings = {
   { event = { Down = { streak = 1, button = "Right" } }, mods = "NONE", action = act.PasteFrom("Clipboard") },
 }
