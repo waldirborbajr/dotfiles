@@ -136,7 +136,7 @@ config.keys = {
   {
     key = "S",
     mods = "LEADER|SHIFT",
-    action = act.ShowLauncherArgs { flags = "SSH_DOMAINS" },
+    action = act.ShowLauncherArgs { flags = "DOMAINS" },
   },
 
   -- tabs
