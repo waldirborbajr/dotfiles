@@ -5,7 +5,7 @@ local config = {}
 -- ── PLATFORM ──────────────────────────────────────────────────────────────
 local IS_MACOS = wezterm.target_triple:find("apple") ~= nil
 
--- ── RENDER (ESTABILIDADE + PERFORMANCE) ───────────────────────────────────
+-- ── RENDER ────────────────────────────────────────────────────────────────
 if IS_MACOS then
   config.front_end = "WebGpu"
   config.webgpu_power_preference = "LowPower"
@@ -18,18 +18,15 @@ else
   config.animation_fps = 30
 end
 
--- ── FONT (OTIMIZADA) ──────────────────────────────────────────────────────
+-- ── FONT ──────────────────────────────────────────────────────────────────
 config.font = wezterm.font("JetBrainsMono Nerd Font")
 config.font_size = IS_MACOS and 12 or 11
 config.line_height = 1.2
 
--- desativa ligaduras → melhora performance
+-- performance
 config.harfbuzz_features = { "calt=0", "liga=0", "clig=0" }
-
--- ── PERFORMANCE ───────────────────────────────────────────────────────────
 config.scrollback_lines = 5000
 config.cursor_blink_rate = 0
-config.enable_scroll_bar = false
 
 -- ── UI ────────────────────────────────────────────────────────────────────
 config.color_scheme = "Catppuccin Macchiato"
@@ -43,7 +40,7 @@ config.hide_tab_bar_if_only_one_tab = true
 -- ── LEADER ────────────────────────────────────────────────────────────────
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 600 }
 
--- ── PROJECT SCAN (SEGURO E RÁPIDO) ────────────────────────────────────────
+-- ── PROJECT SCAN ──────────────────────────────────────────────────────────
 local function scan_projects()
   local home = os.getenv("HOME")
 
@@ -53,18 +50,13 @@ local function scan_projects()
     "find \"$dir\" -mindepth 1 -maxdepth 1 -type d 2>/dev/null"
   })
 
-  if not success or not stdout then
-    return {}
-  end
+  if not success or not stdout then return {} end
 
   local projects = {}
   for line in stdout:gmatch("[^\r\n]+") do
     local name = line:match(".*/(.*)")
     if name then
-      table.insert(projects, {
-        id = name,
-        path = line
-      })
+      table.insert(projects, { id = name, path = line })
     end
   end
 
@@ -73,49 +65,29 @@ end
 
 local projects = scan_projects()
 
--- ── OPEN PROJECT (SAFE) ───────────────────────────────────────────────────
+-- ── OPEN PROJECT ──────────────────────────────────────────────────────────
 local function open_project(window, pane, project)
-  -- workspace
   window:perform_action(
-    act.SwitchToWorkspace {
-      name = project.id,
-      cwd = project.path
-    },
+    act.SwitchToWorkspace { name = project.id, cwd = project.path },
     pane
   )
 
-  -- TAB 1 (editor)
-  window:perform_action(
-    act.SpawnTab "CurrentPaneDomain",
-    pane
-  )
+  -- editor
+  window:perform_action(act.SpawnTab("CurrentPaneDomain"), pane)
+  window:perform_action(act.SendString("cd " .. project.path .. " && nvim\n"), pane)
 
-  window:perform_action(
-    act.SendString("cd " .. project.path .. " && nvim\n"),
-    pane
-  )
-
-  -- TAB 2 (shell)
-  window:perform_action(
-    act.SpawnTab "CurrentPaneDomain",
-    pane
-  )
-
-  window:perform_action(
-    act.SendString("cd " .. project.path .. "\n"),
-    pane
-  )
+  -- shell
+  window:perform_action(act.SpawnTab("CurrentPaneDomain"), pane)
+  window:perform_action(act.SendString("cd " .. project.path .. "\n"), pane)
 end
 
--- ── SSH DOMAINS ───────────────────────────────────────────────────────────
+-- ── SSH ───────────────────────────────────────────────────────────────────
 local ssh_hosts = wezterm.default_ssh_domains()
-
 for _, dom in ipairs(ssh_hosts) do
   dom.assume_shell = "Posix"
   dom.local_echo_threshold_ms = 250
   dom.timeout = 120
 end
-
 config.ssh_domains = ssh_hosts
 
 -- ── KEYBINDINGS ───────────────────────────────────────────────────────────
@@ -145,7 +117,7 @@ config.keys = {
     },
   },
 
-  -- SSH
+  -- SSH / domains
   {
     key = "S",
     mods = "LEADER|SHIFT",
@@ -155,18 +127,32 @@ config.keys = {
   -- tabs
   { key = "c", mods = "LEADER", action = act.SpawnTab("CurrentPaneDomain") },
   { key = "x", mods = "LEADER", action = act.CloseCurrentTab({ confirm = false }) },
+  { key = "n", mods = "LEADER", action = act.ActivateTabRelative(1) },
+  { key = "p", mods = "LEADER|SHIFT", action = act.ActivateTabRelative(-1) },
 
-  -- panes
-  { key = "-", mods = "LEADER|SHIFT", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-  { key = '|', mods = "LEADER|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+  -- splits (REFINADO)
+  { key = "-", mods = "LEADER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+  { key = "|", mods = "LEADER|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
 
+  -- panes navigation
   { key = "h", mods = "LEADER", action = act.ActivatePaneDirection("Left") },
   { key = "j", mods = "LEADER", action = act.ActivatePaneDirection("Down") },
   { key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
   { key = "l", mods = "LEADER", action = act.ActivatePaneDirection("Right") },
 
-  -- reload
+  -- zoom
+  { key = "z", mods = "LEADER", action = act.TogglePaneZoomState },
+
+  -- resize
+  { key = "H", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Left", 5 }) },
+  { key = "J", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Down", 5 }) },
+  { key = "K", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Up", 5 }) },
+  { key = "L", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Right", 5 }) },
+
+  -- utils
+  { key = "[", mods = "LEADER", action = act.ActivateCopyMode },
   { key = "r", mods = "LEADER", action = act.ReloadConfiguration },
+  { key = "s", mods = "LEADER", action = act.ShowLauncher },
 }
 
 -- ── COPY / PASTE ──────────────────────────────────────────────────────────
