@@ -31,7 +31,7 @@ config.cursor_blink_rate = 0
 -- ── UI ────────────────────────────────────────────────────────────────────
 config.color_scheme = "Catppuccin Macchiato"
 config.window_decorations = "RESIZE"
-config.window_padding = { left = 8, right = 8, top = 2, bottom = 8 }
+config.window_padding = { left = 6, right = 6, top = 0, bottom = 0 }
 
 config.enable_tab_bar = true
 config.use_fancy_tab_bar = false
