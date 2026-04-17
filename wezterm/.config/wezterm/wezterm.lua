@@ -33,8 +33,6 @@ config.color_scheme = "Catppuccin Macchiato"
 config.window_decorations = "RESIZE"
 config.window_padding = { left = 8, right = 8, top = 8, bottom = 8 }
 
-config.line_height = 1.2
-
 config.enable_tab_bar = true
 config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = true
