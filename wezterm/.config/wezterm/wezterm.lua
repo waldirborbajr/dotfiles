@@ -21,7 +21,7 @@ end
 -- ── FONT ──────────────────────────────────────────────────────────────────
 config.font = wezterm.font("JetBrainsMono Nerd Font")
 config.font_size = IS_MACOS and 12 or 11
--- config.line_height = 1.2
+config.line_height = 1.2
 
 -- performance
 config.harfbuzz_features = { "calt=0", "liga=0", "clig=0" }
@@ -31,7 +31,7 @@ config.cursor_blink_rate = 0
 -- ── UI ────────────────────────────────────────────────────────────────────
 config.color_scheme = "Catppuccin Macchiato"
 config.window_decorations = "RESIZE"
-config.window_padding = { left = 6, right = 6, top = 0, bottom = 0 }
+config.window_padding = { left = 6, right = 6, top = 0, bottom = 10 }
 
 config.enable_tab_bar = true
 config.use_fancy_tab_bar = false
