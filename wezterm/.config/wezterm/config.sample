@@ -1,0 +1,88 @@
+# =============================================
+# ~/.ssh/config - Configuração otimizada 2026
+# =============================================
+
+# ==================== CONFIGURAÇÕES GLOBAIS ====================
+Host *
+    AddKeysToAgent yes
+    UseKeychain yes                  # macOS: mantém a chave na keychain
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+    TCPKeepAlive yes
+    ForwardAgent yes                 # útil para git pull/push dentro dos servidores
+    IdentitiesOnly yes               # usa apenas as chaves especificadas (mais seguro)
+    IdentityFile ~/.ssh/id_ed25519   # chave padrão (ed25519 é recomendada)
+
+# ==================== SERVIDORES ====================
+
+# ── Raspberry Pi (seu exemplo anterior)
+Host rpi
+    HostName 192.168.1.110
+    User raspi
+    IdentityFile ~/.ssh/id_ed25519
+    ServerAliveInterval 30           # mais frequente porque é local/lento
+
+# ── Servidor de Produção
+Host prod
+    HostName prod.exemplo.com
+    User deploy
+    IdentityFile ~/.ssh/id_ed25519_prod
+    Port 22
+
+# ── Servidor de Staging
+Host staging
+    HostName staging.exemplo.com
+    User deploy
+    IdentityFile ~/.ssh/id_ed25519_staging
+    Port 2222
+
+# ── Servidor de Desenvolvimento / Homologação
+Host dev
+    HostName dev.exemplo.com
+    User devuser
+    IdentityFile ~/.ssh/id_ed25519_dev
+
+# ── Servidor com Bastion/Jump Host (muito comum)
+Host internal-server
+    HostName 10.0.0.50
+    User admin
+    ProxyJump bastion               # pula pelo bastion automaticamente
+
+Host bastion
+    HostName bastion.exemplo.com
+    User jumphost
+    IdentityFile ~/.ssh/id_ed25519_bastion
+
+# ── Grupo de servidores (usando padrão)
+Host web*
+    User ubuntu
+    IdentityFile ~/.ssh/id_ed25519_web
+    ServerAliveInterval 45
+
+Host web01
+    HostName 192.168.10.21
+
+Host web02
+    HostName 192.168.10.22
+
+# ── Banco de dados (mais restrito)
+Host db-prod
+    HostName db.prod.exemplo.com
+    User dbadmin
+    IdentityFile ~/.ssh/id_ed25519_db
+    ForwardAgent no                  # segurança extra para banco
+
+# ==================== OUTROS EXEMPLOS ÚTEIS ====================
+
+# Host com porta diferente e chave específica
+Host git-server
+    HostName git.minhaempresa.internal
+    User git
+    Port 2222
+    IdentityFile ~/.ssh/id_ed25519_git
+
+# Servidor na nuvem (AWS, DigitalOcean, etc)
+Host aws-prod
+    HostName ec2-54-123-45-67.compute-1.amazonaws.com
+    User ec2-user
+    IdentityFile ~/.ssh/aws-prod-key.pem
