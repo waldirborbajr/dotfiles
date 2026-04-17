@@ -26,9 +26,6 @@ config.line_height = 1.2
 -- desativa ligaduras → melhora performance
 config.harfbuzz_features = { "calt=0", "liga=0", "clig=0" }
 
--- cache maior → menos redraw
-config.max_glyphs = 4096
-
 -- ── PERFORMANCE ───────────────────────────────────────────────────────────
 config.scrollback_lines = 5000
 config.cursor_blink_rate = 0
