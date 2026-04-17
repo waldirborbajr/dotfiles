@@ -28,63 +28,34 @@ local IS_LINUX = is_linux()
 -- ── FILE HELPERS ─────────────────────────────────────────────────────
 local function file_exists(path)
   local f = io.open(path, "r")
-  if f then
-    f:close()
-    return true
-  end
+  if f then f:close() return true end
   return false
 end
 
 -- ── STACK DETECTION ──────────────────────────────────────────────────
 local function detect_stack(path)
-  if file_exists(path .. "/docker-compose.yml") then
-    return "docker"
-  elseif file_exists(path .. "/Cargo.toml") then
-    return "rust"
-  elseif file_exists(path .. "/go.mod") then
-    return "go"
-  else
-    return "unknown"
-  end
+  if file_exists(path .. "/docker-compose.yml") then return "docker" end
+  if file_exists(path .. "/Cargo.toml") then return "rust" end
+  if file_exists(path .. "/go.mod") then return "go" end
+  return "unknown"
 end
 
 -- ── PROJECT PROFILES ─────────────────────────────────────────────────
 local project_profiles = {
-  ["infra"] = {
-    stack = "docker",
-    services = { "docker compose up" },
-    logs = { "docker compose logs -f" },
-  },
-  ["api"] = {
-    stack = "go",
-    services = { "air || go run ." },
-    logs = { "echo 'Go logs - use air for hot reload'" },
-  },
-  ["backend-rust"] = {
-    stack = "rust",
-    services = { "cargo watch -x run || cargo run" },
-    logs = { "echo 'Rust logs'" },
-  },
+  ["infra"] = { stack = "docker", services = { "docker compose up" }, logs = { "docker compose logs -f" } },
+  ["api"] = { stack = "go", services = { "air || go run ." }, logs = { "echo 'Go logs - air running'" } },
+  ["backend-rust"] = { stack = "rust", services = { "cargo watch -x run || cargo run" }, logs = { "echo 'Rust logs'" } },
 }
 
--- ── PROJECT SCANNER (melhor dos dois) ────────────────────────────────
+-- ── PROJECT SCANNER (flexível) ───────────────────────────────────────
 local function scan_projects()
   local home = os.getenv("HOME")
-  local projects_dir = home .. "/prj"
-
-  -- Fallback para ~/dev se ~/prj não existir
-  if not file_exists(projects_dir) then
-    projects_dir = home .. "/dev"
-  end
-
-  if not file_exists(projects_dir) then
-    return {}
-  end
+  local dir = home .. "/prj"
+  if not file_exists(dir) then dir = home .. "/dev" end
+  if not file_exists(dir) then return {} end
 
   local stdout = wezterm.run_child_process({
-    "bash",
-    "-c",
-    "find " .. projects_dir .. " -maxdepth 1 -type d 2>/dev/null | tail -n +2",
+    "bash", "-c", "find " .. dir .. " -maxdepth 1 -type d 2>/dev/null | tail -n +2"
   })
 
   local projects = {}
@@ -101,58 +72,40 @@ end
 
 local projects = scan_projects()
 
--- ── COMMAND RUNNER (otimizado) ───────────────────────────────────────
+-- ── COMMAND RUNNER ───────────────────────────────────────────────────
 local function run_commands(window, pane, commands)
   if not commands then return end
-
-  -- Delay menor no Linux, um pouco maior no macOS para estabilidade
   local delay = IS_MACOS and 80 or 40
-
   for _, cmd in ipairs(commands) do
     wezterm.sleep_ms(delay)
     window:perform_action(act.SendString(cmd .. "\n"), pane)
   end
 end
 
--- ── IDE SESSIONIZER (melhorado) ──────────────────────────────────────
+-- ── IDE SESSIONIZER ──────────────────────────────────────────────────
 local function open_project_ide(window, pane, project)
   local profile = project_profiles[project.name]
   local stack = profile and profile.stack or detect_stack(project.path)
-
-  -- Delay base adaptativo
   local delay = IS_MACOS and 100 or 60
 
-  -- Switch workspace
-  window:perform_action(
-    act.SwitchToWorkspace { name = project.name, cwd = project.path },
-    pane
-  )
+  window:perform_action(act.SwitchToWorkspace { name = project.name, cwd = project.path }, pane)
   wezterm.sleep_ms(delay)
 
-  -- Tab 1: Neovim
-  window:perform_action(
-    act.SpawnTab { cwd = project.path, args = { "nvim" } },
-    pane
-  )
+  window:perform_action(act.SpawnTab { cwd = project.path, args = { "nvim" } }, pane)
   wezterm.sleep_ms(delay)
 
-  -- Split horizontal → Services pane
   window:perform_action(act.SplitHorizontal { domain = "CurrentPaneDomain" }, pane)
   wezterm.sleep_ms(delay)
 
   if profile and profile.services then
     run_commands(window, pane, profile.services)
   else
-    if stack == "docker" then
-      run_commands(window, pane, { "docker compose up" })
-    elseif stack == "go" then
-      run_commands(window, pane, { "go run ." })
-    elseif stack == "rust" then
-      run_commands(window, pane, { "cargo run" })
+    if stack == "docker" then run_commands(window, pane, { "docker compose up" })
+    elseif stack == "go" then run_commands(window, pane, { "go run ." })
+    elseif stack == "rust" then run_commands(window, pane, { "cargo run" })
     end
   end
 
-  -- Split vertical → Logs pane
   window:perform_action(act.SplitVertical { domain = "CurrentPaneDomain" }, pane)
   wezterm.sleep_ms(delay)
 
@@ -166,28 +119,23 @@ local function open_project_ide(window, pane, project)
     end
   end
 
-  -- Nova tab: Lazygit
   wezterm.sleep_ms(delay)
-  window:perform_action(
-    act.SpawnTab { cwd = project.path, args = { "lazygit" } },
-    pane
-  )
+  window:perform_action(act.SpawnTab { cwd = project.path, args = { "lazygit" } }, pane)
 end
 
--- ── FONT & RENDERING (melhor dos dois) ───────────────────────────────
+-- ── FONT & PERFORMANCE ───────────────────────────────────────────────
 config.font = wezterm.font("JetBrainsMono Nerd Font")
 config.font_size = IS_MACOS and 12 or 11
 config.line_height = IS_MACOS and 1.3 or 1.2
 
--- Performance otimizada
 if IS_MACOS then
   config.front_end = "WebGpu"
-  config.webgpu_power_preference = "LowPower"        -- mais eficiente em Mac
+  config.webgpu_power_preference = "LowPower"
   config.max_fps = 60
   config.animation_fps = 30
   config.macos_window_background_blur = 0
-else -- Linux
-  config.front_end = "WebGpu"                        -- preferível quando funciona bem
+else
+  config.front_end = "WebGpu"
   config.webgpu_power_preference = "HighPerformance"
   config.enable_wayland = true
   config.max_fps = 120
@@ -196,39 +144,51 @@ end
 
 config.scrollback_lines = 10000
 config.cursor_blink_rate = 0
-config.harfbuzz_features = { "calt=0", "liga=0" } -- desativa ligaduras para performance
+config.harfbuzz_features = { "calt=0", "liga=0" }
 
 -- ── APPEARANCE ───────────────────────────────────────────────────────
 config.color_scheme = "Catppuccin Macchiato"
-config.colors = {
-  cursor_bg = "#7aa2f7",
-  cursor_border = "#7aa2f7",
-}
+config.colors = { cursor_bg = "#7aa2f7", cursor_border = "#7aa2f7" }
+config.inactive_pane_hsb = { saturation = 0.8, brightness = 0.7 }
 
-config.inactive_pane_hsb = {
-  saturation = 0.8,
-  brightness = 0.7,
-}
-
--- ── WINDOW SETTINGS ──────────────────────────────────────────────────
+-- ── WINDOW ───────────────────────────────────────────────────────────
 config.window_decorations = "RESIZE"
 config.window_padding = { left = 8, right = 8, top = 6, bottom = 0 }
 config.initial_cols = 200
 config.initial_rows = 48
-
-if IS_MACOS then
-  config.native_macos_fullscreen_mode = true
-end
+if IS_MACOS then config.native_macos_fullscreen_mode = true end
 
 -- ── TAB BAR ──────────────────────────────────────────────────────────
 config.enable_tab_bar = true
 config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = true
-config.tab_bar_at_bottom = false
 
--- ── LEADER & DEFAULT ─────────────────────────────────────────────────
+-- ── LEADER ───────────────────────────────────────────────────────────
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 600 }
 config.default_workspace = "main"
+
+-- ── SSH DOMAINS (MELHOR VERSÃO PARA VÁRIOS SERVIDORES) ───────────────
+local ssh_hosts = wezterm.default_ssh_domains()
+
+-- Aplica otimizações automáticas em TODOS os hosts do seu ~/.ssh/config
+for _, dom in ipairs(ssh_hosts) do
+  dom.assume_shell = "Posix"
+  dom.local_echo_threshold_ms = 250      -- ótimo para maioria das conexões
+  dom.timeout = 120
+  -- dom.multiplexing = "WezTerm"         -- descomente se instalar wezterm no servidor
+end
+
+-- Se precisar de um host com configuração especial (ex: RPi), descomente abaixo:
+-- table.insert(ssh_hosts, {
+--   name = "rpi",
+--   remote_address = "192.168.1.110",
+--   username = "raspi",
+--   ssh_option = { identityfile = "~/.ssh/id_ed25519" },
+--   assume_shell = "Posix",
+--   local_echo_threshold_ms = 400,
+-- })
+
+config.ssh_domains = ssh_hosts
 
 -- ── KEYBINDINGS ──────────────────────────────────────────────────────
 config.keys = {
@@ -236,19 +196,15 @@ config.keys = {
   { key = "w", mods = "LEADER", action = act.ShowLauncherArgs { flags = "WORKSPACES" } },
   { key = "W", mods = "LEADER|SHIFT", action = act.SwitchToWorkspace },
 
-  -- Projects Sessionizer (melhor feature)
+  -- Projects
   {
-    key = "p",
-    mods = "LEADER",
+    key = "p", mods = "LEADER",
     action = act.InputSelector {
       title = "🚀 Open Project",
       choices = (function()
         local choices = {}
         for _, proj in ipairs(projects) do
-          table.insert(choices, {
-            id = proj.name,
-            label = "📁 " .. proj.name,
-          })
+          table.insert(choices, { id = proj.name, label = "📁 " .. proj.name })
         end
         return choices
       end)(),
@@ -263,6 +219,9 @@ config.keys = {
       end),
     },
   },
+
+  -- SSH Domains (novo atalho recomendado)
+  { key = "S", mods = "LEADER|SHIFT", action = act.ShowLauncherArgs { flags = "SSH_DOMAINS" } },
 
   -- Tabs
   { key = "c", mods = "LEADER", action = act.SpawnTab("CurrentPaneDomain") },
@@ -292,7 +251,7 @@ config.keys = {
   { key = "s", mods = "LEADER", action = act.ShowLauncher },
 }
 
--- Platform specific copy/paste
+-- Copy/Paste por plataforma
 if IS_MACOS then
   table.insert(config.keys, { key = "v", mods = "CMD", action = act.PasteFrom("Clipboard") })
   table.insert(config.keys, { key = "c", mods = "CMD", action = act.CopyTo("Clipboard") })
@@ -303,21 +262,7 @@ end
 
 -- ── MOUSE ────────────────────────────────────────────────────────────
 config.mouse_bindings = {
-  {
-    event = { Down = { streak = 1, button = "Right" } },
-    mods = "NONE",
-    action = act.PasteFrom("Clipboard"),
-  },
-}
-
--- ── SSH DOMAINS ──────────────────────────────────────────────────────
-config.ssh_domains = {
-  {
-    name = "rpi",
-    remote_address = "192.168.1.110",
-    username = "raspi",
-    ssh_option = { identityfile = "~/.ssh/id_ed25519" },
-  },
+  { event = { Down = { streak = 1, button = "Right" } }, mods = "NONE", action = act.PasteFrom("Clipboard") },
 }
 
 return config
