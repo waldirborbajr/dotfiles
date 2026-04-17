@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- WezTerm Configuration - Fully Fixed (April 2026)
+-- WezTerm Configuration - Stable Version (Fixed Broken Pipe + All Previous Issues)
 -- ─────────────────────────────────────────────────────────────────────────────
 
 local wezterm = require("wezterm")
@@ -38,7 +38,9 @@ local project_profiles = {
   ["backend-rust"] = { stack = "rust", services = { "cargo watch -x run || cargo run" }, logs = { "echo 'Rust logs'" } },
 }
 
--- ── PROJECT SCANNER (FIXED) ────────────────────────────────────────────────
+-- ── PROJECT SCANNER (Safe & Delayed) ───────────────────────────────────────
+local projects = {}
+
 local function scan_projects()
   local home = os.getenv("HOME")
   local dir = home .. "/prj"
@@ -56,7 +58,7 @@ local function scan_projects()
   })
 
   if not success then
-    wezterm.log_error("Failed to scan projects in " .. dir .. (stderr and ": " .. stderr or ""))
+    wezterm.log_error("Failed to scan projects: " .. (stderr or "unknown error"))
     return {}
   end
 
@@ -64,18 +66,23 @@ local function scan_projects()
     return {}
   end
 
-  local projects = {}
+  local found = {}
   for line in stdout:gmatch("[^\r\n]+") do
     local name = line:match(".*/(.*)")
     if name and name ~= "" and name ~= "prj" and name ~= "dev" then
-      table.insert(projects, { name = name, path = line })
+      table.insert(found, { name = name, path = line })
     end
   end
-
-  return projects
+  return found
 end
 
-local projects = scan_projects()
+-- Scan projects safely (after config is mostly built)
+wezterm.on("window-config-reloaded", function()
+  projects = scan_projects()
+end)
+
+-- Fallback: scan immediately in case the event doesn't fire on first load
+projects = scan_projects()
 
 -- ── COMMAND RUNNER ─────────────────────────────────────────────────────────
 local function run_commands(window, pane, commands)
@@ -188,11 +195,10 @@ config.ssh_domains = ssh_hosts
 
 -- ── KEYBINDINGS ────────────────────────────────────────────────────────────
 config.keys = {
-  -- Workspaces
   { key = "w", mods = "LEADER", action = act.ShowLauncherArgs { flags = "WORKSPACES" } },
   { key = "W", mods = "LEADER|SHIFT", action = act.SwitchToWorkspace },
 
-  -- Projects (LEADER + p)
+  -- Projects
   {
     key = "p", mods = "LEADER",
     action = act.InputSelector {
@@ -216,7 +222,7 @@ config.keys = {
     },
   },
 
-  -- SSH Domains → Use DOMAINS flag (this is the correct way)
+  -- SSH Domains (correct flag)
   { key = "S", mods = "LEADER|SHIFT", action = act.ShowLauncherArgs { flags = "DOMAINS" } },
 
   -- Tabs
@@ -246,7 +252,7 @@ config.keys = {
   { key = "s", mods = "LEADER", action = act.ShowLauncher },
 }
 
--- Copy/Paste per platform
+-- Copy/Paste
 if IS_MACOS then
   table.insert(config.keys, { key = "v", mods = "CMD", action = act.PasteFrom("Clipboard") })
   table.insert(config.keys, { key = "c", mods = "CMD", action = act.CopyTo("Clipboard") })
