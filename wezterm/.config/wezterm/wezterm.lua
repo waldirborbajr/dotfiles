@@ -50,7 +50,7 @@ local function scan_projects()
   local stdout = wezterm.run_child_process({
     "bash",
     "-c",
-    "find " .. home .. "/dev -maxdepth 1 -type d",
+    "find " .. home .. "/prj -maxdepth 1 -type d",
   })
 
   local projects = {}
@@ -58,7 +58,7 @@ local function scan_projects()
   if stdout then
     for line in stdout:gmatch("[^\r\n]+") do
       local name = line:match(".*/(.*)")
-      if name and name ~= "dev" then
+      if name and name ~= "prj" then
         table.insert(projects, { name = name, path = line })
       end
     end
