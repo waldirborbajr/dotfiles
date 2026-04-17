@@ -2,6 +2,10 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 local act = wezterm.action
 
+-- ── OS DETECTION ─────────────────────────────────────────────────────
+local is_macos = wezterm.target_triple:find("apple")
+local is_linux = wezterm.target_triple:find("linux")
+
 -- ── FILE HELPERS ─────────────────────────────────────────────────────
 local function file_exists(path)
   local f = io.open(path, "r")
@@ -22,24 +26,20 @@ local function detect_stack(path)
   end
 end
 
--- ── PROJECT PROFILES (custom behavior per project) ────────────────────
+-- ── PROJECT PROFILES ─────────────────────────────────────────────────
 local project_profiles = {
   ["infra"] = {
     stack = "docker",
     services = { "docker compose up" },
     logs = { "docker compose logs -f" },
   },
-
   ["api"] = {
     stack = "go",
     services = { "air || go run ." },
-    logs = { "echo 'Go logs'" },
   },
-
   ["backend-rust"] = {
     stack = "rust",
     services = { "cargo watch -x run || cargo run" },
-    logs = { "echo 'Rust logs'" },
   },
 }
 
@@ -83,7 +83,6 @@ local function open_project_ide(window, pane, project)
   local profile = project_profiles[project.name]
   local stack = profile and profile.stack or detect_stack(project.path)
 
-  -- Switch workspace
   window:perform_action(
     act.SwitchToWorkspace {
       name = project.name,
@@ -92,28 +91,22 @@ local function open_project_ide(window, pane, project)
     pane
   )
 
-  wezterm.sleep_ms(200)
+  wezterm.sleep_ms(150)
 
-  -- Editor (left)
+  -- Editor
   window:perform_action(
-    act.SpawnTab {
-      cwd = project.path,
-      args = { "nvim" },
-    },
+    act.SpawnTab { cwd = project.path, args = { "nvim" } },
     pane
   )
 
-  wezterm.sleep_ms(200)
+  wezterm.sleep_ms(150)
 
   -- Split right
-  window:perform_action(
-    act.SplitHorizontal { domain = "CurrentPaneDomain" },
-    pane
-  )
+  window:perform_action(act.SplitHorizontal({ domain = "CurrentPaneDomain" }), pane)
 
-  wezterm.sleep_ms(200)
+  wezterm.sleep_ms(150)
 
-  -- Services (top-right)
+  -- Services
   if profile and profile.services then
     run_commands(window, pane, profile.services)
   else
@@ -126,44 +119,44 @@ local function open_project_ide(window, pane, project)
     end
   end
 
-  -- Logs (bottom-right)
-  window:perform_action(
-    act.SplitVertical { domain = "CurrentPaneDomain" },
-    pane
-  )
+  -- Logs
+  window:perform_action(act.SplitVertical({ domain = "CurrentPaneDomain" }), pane)
 
-  wezterm.sleep_ms(200)
+  wezterm.sleep_ms(150)
 
-  if profile and profile.logs then
-    run_commands(window, pane, profile.logs)
+  if stack == "docker" then
+    run_commands(window, pane, { "docker compose logs -f" })
   else
-    if stack == "docker" then
-      run_commands(window, pane, { "docker compose logs -f" })
-    else
-      run_commands(window, pane, { "echo 'logs'" })
-    end
+    run_commands(window, pane, { "echo 'logs'" })
   end
 
-  -- Git UI (new tab)
-  wezterm.sleep_ms(200)
+  -- Git UI
+  wezterm.sleep_ms(150)
   window:perform_action(
-    act.SpawnTab {
-      cwd = project.path,
-      args = { "lazygit" },
-    },
+    act.SpawnTab { cwd = project.path, args = { "lazygit" } },
     pane
   )
 end
 
--- ── FONT & RENDERING ─────────────────────────────────────────────────
-config.font_size = 11
+-- ── FONT ─────────────────────────────────────────────────────────────
+config.font_size = is_macos and 12 or 11
 config.line_height = 1.2
 config.font = wezterm.font("JetBrainsMono Nerd Font")
 
--- ── PERFORMANCE ──────────────────────────────────────────────────────
+-- ── RENDER / PERFORMANCE ─────────────────────────────────────────────
 config.front_end = "WebGpu"
-config.webgpu_power_preference = "HighPerformance"
-config.enable_wayland = true
+
+if is_linux then
+  config.webgpu_power_preference = "HighPerformance"
+  config.enable_wayland = true
+  config.max_fps = 120
+elseif is_macos then
+  config.webgpu_power_preference = "HighPerformance"
+  config.max_fps = 120
+end
+
+config.cursor_blink_rate = 0
+config.scrollback_lines = 10000
 
 -- ── APPEARANCE ───────────────────────────────────────────────────────
 config.color_scheme = "Catppuccin Macchiato"
@@ -182,17 +175,17 @@ config.window_padding = { left = 8, right = 8, top = 6, bottom = 0 }
 config.initial_cols = 220
 config.initial_rows = 50
 
--- ── SCROLLBACK ───────────────────────────────────────────────────────
-config.scrollback_lines = 10000
-config.max_fps = 120
-config.cursor_blink_rate = 0
+-- macOS specific tweaks
+if is_macos then
+  config.native_macos_fullscreen_mode = true
+end
 
 -- ── TAB BAR ──────────────────────────────────────────────────────────
 config.enable_tab_bar = true
 config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = true
 
--- ── LEADER KEY ───────────────────────────────────────────────────────
+-- ── LEADER ───────────────────────────────────────────────────────────
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 800 }
 config.default_workspace = "main"
 
@@ -201,8 +194,6 @@ config.keys = {
 
   -- Workspaces
   { key = "w", mods = "LEADER", action = act.ShowLauncherArgs { flags = "WORKSPACES" } },
-  { key = "W", mods = "LEADER|SHIFT", action = act.SwitchToWorkspace },
-  { key = "N", mods = "LEADER|SHIFT", action = act.SwitchToWorkspace },
 
   -- Sessionizer
   {
@@ -215,7 +206,7 @@ config.keys = {
         for _, proj in ipairs(projects) do
           table.insert(choices, {
             id = proj.name,
-            label = "📁 " .. proj.name .. " → " .. proj.path,
+            label = "📁 " .. proj.name,
           })
         end
         return choices
@@ -235,30 +226,21 @@ config.keys = {
   -- Tabs
   { key = "c", mods = "LEADER", action = act.SpawnTab("CurrentPaneDomain") },
   { key = "x", mods = "LEADER", action = act.CloseCurrentTab({ confirm = false }) },
-  { key = "n", mods = "LEADER", action = act.ActivateTabRelative(1) },
-  { key = "P", mods = "LEADER|SHIFT", action = act.ActivateTabRelative(-1) },
 
-  -- Pane splits
+  -- Panes
   { key = "%", mods = "LEADER|SHIFT", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
   { key = '"', mods = "LEADER|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
 
-  -- Pane control
   { key = "z", mods = "LEADER", action = act.TogglePaneZoomState },
+
   { key = "h", mods = "LEADER", action = act.ActivatePaneDirection("Left") },
   { key = "j", mods = "LEADER", action = act.ActivatePaneDirection("Down") },
   { key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
   { key = "l", mods = "LEADER", action = act.ActivatePaneDirection("Right") },
 
-  -- Resize panes
-  { key = "H", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Left", 5 }) },
-  { key = "J", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Down", 5 }) },
-  { key = "K", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Up", 5 }) },
-  { key = "L", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Right", 5 }) },
-
   -- Utilities
   { key = "[", mods = "LEADER", action = act.ActivateCopyMode },
   { key = "r", mods = "LEADER", action = act.ReloadConfiguration },
-  { key = "s", mods = "LEADER", action = act.ShowLauncher },
 }
 
 -- ── MOUSE ────────────────────────────────────────────────────────────
@@ -267,16 +249,6 @@ config.mouse_bindings = {
     event = { Down = { streak = 1, button = "Right" } },
     mods = "NONE",
     action = act.PasteFrom("Clipboard"),
-  },
-}
-
--- ── SSH ──────────────────────────────────────────────────────────────
-config.ssh_domains = {
-  {
-    name = "rpi",
-    remote_address = "192.168.1.110",
-    username = "raspi",
-    ssh_option = { identityfile = "~/.ssh/id_ed25519" },
   },
 }
 
