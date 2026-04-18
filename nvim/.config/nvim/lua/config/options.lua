@@ -1,0 +1,69 @@
+local ok, scheme = pcall(function()
+	return vim.fn.system({
+		"gsettings",
+		"get",
+		"org.gnome.desktop.interface",
+		"color-scheme",
+	})
+end)
+
+if ok and vim.fn.trim(scheme, "") ~= "'prefer-dark'" then
+	vim.opt.background = "light"
+else
+	vim.opt.background = "dark"
+end
+
+vim.cmd("colorscheme nucharm")
+
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+vim.g.format_on_save = true
+vim.g.todo_file = "~/Projects/TODO.md"
+
+vim.opt.breakindent = true
+vim.opt.completeopt = "menu,menuone,preview,noselect"
+vim.opt.confirm = true
+vim.opt.cursorline = true
+vim.opt.cursorlineopt = "number"
+vim.opt.expandtab = true
+vim.opt.exrc = true -- source .nvim.lua
+vim.opt.guicursor:append("c:ver25")
+vim.opt.hlsearch = false
+vim.opt.inccommand = "split"
+vim.opt.incsearch = true
+vim.opt.linebreak = true
+vim.opt.list = true -- show invisible characters
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.scrolloff = 8
+vim.opt.shiftwidth = 4
+vim.opt.signcolumn = "yes"
+vim.opt.smartindent = true
+vim.opt.softtabstop = 4
+vim.opt.swapfile = false
+vim.opt.tabstop = 4
+vim.opt.termguicolors = true
+vim.opt.undofile = true
+vim.opt.undolevels = 10000
+vim.opt.updatetime = 200
+vim.opt.virtualedit = "block"
+vim.opt.winborder = "single"
+vim.opt.wrap = true
+
+vim.diagnostic.config({
+	severity_sort = true,
+	underline = { severity = vim.diagnostic.severity.ERROR },
+	signs = {
+		text = {
+			[vim.diagnostic.severity.ERROR] = "󰅚 ",
+			[vim.diagnostic.severity.WARN] = "󰀪 ",
+			[vim.diagnostic.severity.INFO] = "󰋽 ",
+			[vim.diagnostic.severity.HINT] = "󰌶 ",
+		},
+	},
+	virtual_text = {
+		spacing = 4,
+		source = "if_many",
+		prefix = "●",
+	},
+})
