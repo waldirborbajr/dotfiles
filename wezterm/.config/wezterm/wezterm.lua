@@ -40,6 +40,8 @@ config.hide_tab_bar_if_only_one_tab = true
 -- ── LEADER ────────────────────────────────────────────────────────────────
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 600 }
 
+config.window_close_confirmation = "NeverPrompt"
+
 -- ── PROJECT SCAN ──────────────────────────────────────────────────────────
 local function scan_projects()
 	local home = os.getenv("HOME")
