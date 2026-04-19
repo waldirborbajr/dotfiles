@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# by Andrey A. Ugolnik
+# https://github.com/reybits
+
+path=$1
+if [[ "$path" == \** ]]; then
+    session=${path:2}
+
+    # 1. header
+    echo -e "\033[1;34m$session\033[0m"
+
+    # 2. session path
+    session_path=$(tmux display-message -t "$session" -p '#{pane_current_path}' 2>/dev/null)
+    echo -e "\033[90m$session_path\033[0m"
+
+    # 3. windows in one line
+    windows=""
+    while IFS= read -r win; do
+        if [[ -n $windows ]]; then
+            windows="$windows \033[90m|\033[0m $win"
+        else
+            windows="$win"
+        fi
+    done < <(tmux list-windows -t "$session" -F "#{?window_active,\033[32m#{window_index}:#{window_name}\033[0m,\033[90m#{window_index}:#{window_name}\033[0m}" 2>/dev/null)
+    echo -e "$windows"
+
+    # 4. separator
+    echo -e "\033[90m────────────────────────────────────────────────────────────────────────────────\033[0m"
+
+    # 5. capture active pane content
+    tmux capture-pane -t "$session" -p -e 2>/dev/null
+
+elif [[ "$path" == \!* ]]; then
+    echo -e "\033[31mYou should export env variable SESSION_PATHS.\033[0m"
+    echo ""
+    echo "Example:"
+    echo "   SESSION_PATHS=~/projects:~/docs"
+    echo "   export SESSION_PATHS"
+
+elif [[ -n $path ]]; then
+    echo -e "\033[36mCreate session at:\033[0m"
+    echo ""
+
+    # show git branch if it's a repo
+    if git -C "$path" rev-parse --is-inside-work-tree &>/dev/null; then
+        branch=$(git -C "$path" branch --show-current 2>/dev/null)
+        echo -e "\033[33mGit branch:\033[0m $branch"
+        echo ""
+    fi
+
+    tree -L 1 -C --dirsfirst "$path"
+fi
