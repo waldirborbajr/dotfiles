@@ -11,22 +11,7 @@ vim.opt.expandtab = true
 vim.opt.smartindent = false
 vim.opt.wrap = false
 
--- Always hard wrap at 80 characters in every file
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
-    callback = function()
-        vim.opt_local.textwidth = 80
-        vim.opt_local.formatoptions:append("t") -- wrap text
-        vim.opt_local.smartindent = false
-    end,
-})
 
--- Disable auto comment continuation
-vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("no_auto_comment", { clear = true }),
-  callback = function()
-    vim.opt_local.formatoptions:remove({ "c", "r", "o" })
-  end,
-})
 
 -- backup and undo
 vim.opt.swapfile = false
@@ -67,5 +52,22 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function()
         vim.hl.on_yank()
     end,
+})
+
+-- Always hard wrap at 80 characters in every file
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
+    callback = function()
+        vim.opt_local.textwidth = 80
+        vim.opt_local.formatoptions:append("t") -- wrap text
+        vim.opt_local.smartindent = false
+    end,
+})
+
+-- Disable auto comment continuation
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("no_auto_comment", { clear = true }),
+  callback = function()
+    vim.opt_local.formatoptions:remove({ "c", "r", "o" })
+  end,
 })
 
