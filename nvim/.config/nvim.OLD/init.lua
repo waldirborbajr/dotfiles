@@ -51,6 +51,14 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
+-- Disable auto comment continuation
+vim.api.nvim_create_autocmd("FileType", {
+	group = vim.api.nvim_create_augroup("no_auto_comment", { clear = true }),
+	callback = function()
+		vim.opt_local.formatoptions:remove({ "c", "r", "o" })
+	end,
+})
+
 ----------------------
 -- Plugins Loaded at Startup --
 ----------------------
@@ -116,7 +124,8 @@ vim.pack.add({
 }, {
 	load = function(plug_data)
 		vim.api.nvim_create_autocmd("FileType", {
-			pattern = { "lua", "python", "c", "cpp" },
+			-- pattern = { "lua", "python", "c", "cpp" },
+			pattern = { "lua" },
 			callback = function()
 				vim.cmd.packadd(plug_data.spec.name)
 				require("mason").setup()
@@ -141,7 +150,8 @@ vim.pack.add({
 })
 
 -- Enable LSP servers
-vim.lsp.enable({ "lua_ls", "pyright", "clangd" })
+-- vim.lsp.enable({ "lua_ls", "pyright", "clangd" })
+vim.lsp.enable({ "lua_ls" })
 
 ----------------------
 -- Keymaps --
