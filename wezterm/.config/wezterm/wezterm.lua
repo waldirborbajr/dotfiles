@@ -1,210 +1,182 @@
--- Pull in the wezterm API
 local wezterm = require("wezterm")
-
--- Maximize window at startup
-wezterm.on("gui-startup", function(cmd)
-	local mux = wezterm.mux
-	local _, _, window = mux.spawn_window(cmd or {})
-	window:gui_window():maximize()
-end)
-
--- Center the terminal grid by distributing leftover pixels evenly as padding
-local function center_padding(window, pane)
-	local overrides = window:get_config_overrides() or {}
-
-	-- Reset padding to get accurate cell dimensions
-	overrides.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
-	window:set_config_overrides(overrides)
-
-	-- Measure after layout settles with zero padding
-	wezterm.time.call_after(0.1, function()
-		local win_dims = window:get_dimensions()
-		local tab_dims = pane:tab():get_size()
-
-		if tab_dims.cols > 0 and tab_dims.rows > 0 then
-			local cell_width = tab_dims.pixel_width / tab_dims.cols
-			local cell_height = tab_dims.pixel_height / tab_dims.rows
-
-			local extra_x = win_dims.pixel_width - math.floor(win_dims.pixel_width / cell_width) * cell_width
-			local extra_y = win_dims.pixel_height - math.floor(win_dims.pixel_height / cell_height) * cell_height
-
-			overrides = window:get_config_overrides() or {}
-			overrides.window_padding = {
-				left = math.floor(extra_x / 2),
-				right = math.ceil(extra_x / 2),
-				top = math.floor(extra_y / 2),
-				bottom = math.ceil(extra_y / 2),
-			}
-			window:set_config_overrides(overrides)
-		end
-	end)
-end
-
--- Custom event to trigger recentering
-wezterm.on("center-padding", function(window, pane)
-	center_padding(window, pane)
-end)
-
--- Maximize window on resize and center the grid
-wezterm.on("window-resized", function(window, pane)
-	center_padding(window, pane)
-end)
-
--- Re-maximize window when it regains focus (e.g. after macOS unlock).
--- Delayed to let macOS settle DPI after sleep/wake cycle (wezterm#4633).
-wezterm.on("window-focus-changed", function(window, pane)
-	if window:is_focused() then
-		wezterm.time.call_after(0.2, function()
-			window:maximize()
-		end)
-	end
-end)
-
--- This table will hold the configuration.
+local act = wezterm.action
 local config = {}
 
--- In newer versions of wezterm, use the config_builder which will
--- help provide clearer error messages
-if wezterm.config_builder then
-	config = wezterm.config_builder()
+-- ── PLATFORM ──────────────────────────────────────────────────────────────
+local IS_MACOS = wezterm.target_triple:find("apple") ~= nil
+
+-- ── RENDER ────────────────────────────────────────────────────────────────
+if IS_MACOS then
+	config.front_end = "WebGpu"
+	config.webgpu_power_preference = "LowPower"
+	config.max_fps = 60
+	config.animation_fps = 30
+	config.macos_window_background_blur = 0
+else
+	config.front_end = "OpenGL"
+	config.max_fps = 60
+	config.animation_fps = 30
 end
 
--- This is where you actually apply your config choices
+-- ── FONT ──────────────────────────────────────────────────────────────────
+config.font = wezterm.font("JetBrainsMono Nerd Font")
+config.font_size = IS_MACOS and 12 or 11
+config.line_height = 1.2
 
--- To use WezTerm's built-in multiplexer instead of tmux,
--- uncomment the following line:
--- require("mux").apply(config, wezterm)
+-- performance
+config.harfbuzz_features = { "calt=0", "liga=0", "clig=0" }
+config.scrollback_lines = 5000
+config.cursor_blink_rate = 0
 
--- Disabled: use_resize_increments rounds down on spurious DPI-change resizes
--- during macOS lock/unlock, compounding window shrink (wezterm#4633).
--- center_padding() already handles leftover pixel distribution.
-config.use_resize_increments = false
+-- ── UI ────────────────────────────────────────────────────────────────────
+config.color_scheme = "Catppuccin Macchiato"
+config.window_decorations = "RESIZE"
+config.window_padding = { left = 6, right = 6, top = 6, bottom = 16 }
 
--- Disable composed key when right Alt is pressed.
-config.send_composed_key_when_right_alt_is_pressed = false
-
--- Override font size keys to also recenter the grid
-config.keys = {
-	{
-		key = "=",
-		mods = "CMD",
-		action = wezterm.action.Multiple({
-			wezterm.action.IncreaseFontSize,
-			wezterm.action.EmitEvent("center-padding"),
-		}),
-	},
-	{
-		key = "-",
-		mods = "CMD",
-		action = wezterm.action.Multiple({
-			wezterm.action.DecreaseFontSize,
-			wezterm.action.EmitEvent("center-padding"),
-		}),
-	},
-	{
-		key = "0",
-		mods = "CMD",
-		action = wezterm.action.Multiple({
-			wezterm.action.ResetFontSize,
-			wezterm.action.EmitEvent("center-padding"),
-		}),
-	},
-	{
-		key = "=",
-		mods = "CTRL",
-		action = wezterm.action.Multiple({
-			wezterm.action.IncreaseFontSize,
-			wezterm.action.EmitEvent("center-padding"),
-		}),
-	},
-	{
-		key = "-",
-		mods = "CTRL",
-		action = wezterm.action.Multiple({
-			wezterm.action.DecreaseFontSize,
-			wezterm.action.EmitEvent("center-padding"),
-		}),
-	},
-	{
-		key = "0",
-		mods = "CTRL",
-		action = wezterm.action.Multiple({
-			wezterm.action.ResetFontSize,
-			wezterm.action.EmitEvent("center-padding"),
-		}),
-	},
-}
-
--- Disable the title bar (TITLE) but enable the resizable border (RESIZE).
--- On macOS, also disable the shadow (MACOS_FORCE_DISABLE_SHADOW)
--- that is normally drawn around the window.
-config.window_decorations = "RESIZE | MACOS_FORCE_DISABLE_SHADOW"
-
--- When there is only a single tab, the tab bar is hidden
+config.enable_tab_bar = true
+config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = true
 
--- config.color_scheme = "Gruvbox Dark (Gogh)"
--- config.color_scheme = "Tokyo Night"
-config.color_scheme = "Kanagawa (Gogh)"
+-- ── LEADER ────────────────────────────────────────────────────────────────
+config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 600 }
 
--- local font_name = "Mononoki Nerd Font"
--- config.font_size = 18.0
-local font_name = "JetBrainsMono Nerd Font"
-config.font = wezterm.font(font_name)
-config.font_size = 13.0
-config.line_height = 0.9
+-- ── PROJECT SCAN ──────────────────────────────────────────────────────────
+local function scan_projects()
+	local home = os.getenv("HOME")
 
--- Disable ligatures in most fonts.
--- https://wezfurlong.org/wezterm/config/font-shaping.html#advanced-font-shaping-options
--- https://learn.microsoft.com/en-us/typography/opentype/spec/featurelist
-config.harfbuzz_features = {
-	-- ==, >=, <=, !=, ===
-	"calt=0", -- Contextual Alternates.
-	"clig=0", -- Contextual Ligatures. (It makes no difference whether this option is disabled or enabled)
-	"liga=0", -- Standard Ligatures.
+	local success, stdout = wezterm.run_child_process({
+		"bash",
+		"-c",
+		"dir="
+			.. home
+			.. '/prj; [ -d "$dir" ] || dir='
+			.. home
+			.. "/dev; "
+			.. 'find "$dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null',
+	})
 
-	-- Slashed Zero: 0
-	"zero",
-}
-
-config.font_rules = {
-	-- non italic
-	{
-		intensity = "Normal",
-		italic = false,
-		font = wezterm.font(font_name, { weight = "Regular", style = "Normal" }),
-	},
-	{
-		intensity = "Bold",
-		italic = false,
-		font = wezterm.font(font_name, { weight = "Bold", style = "Normal" }),
-	},
-
-	-- italic
-	{
-		intensity = "Normal",
-		italic = true,
-		font = wezterm.font(font_name, { weight = "Regular", style = "Italic" }),
-	},
-	{
-		intensity = "Bold",
-		italic = true,
-		font = wezterm.font(font_name, { weight = "Bold", style = "Italic" }),
-	},
-}
-
--- Load custom config if it exists and merge it with defaults
-local custom_module_name = "custom"
-local path = wezterm.config_dir .. "/" .. custom_module_name .. ".lua"
-local f = io.open(path, "r")
-if f ~= nil then
-	io.close(f)
-
-	local custom = require(custom_module_name)
-	for k, v in pairs(custom) do
-		config[k] = v
+	if not success or not stdout then
+		return {}
 	end
+
+	local projects = {}
+	for line in stdout:gmatch("[^\r\n]+") do
+		local name = line:match(".*/(.*)")
+		if name then
+			table.insert(projects, { id = name, path = line })
+		end
+	end
+
+	return projects
 end
 
--- and finally, return the configuration to wezterm
+local projects = scan_projects()
+
+-- ── OPEN PROJECT ──────────────────────────────────────────────────────────
+local function open_project(window, pane, project)
+	window:perform_action(act.SwitchToWorkspace({ name = project.id, cwd = project.path }), pane)
+
+	-- editor
+	window:perform_action(act.SpawnTab("CurrentPaneDomain"), pane)
+	window:perform_action(act.SendString("cd " .. project.path .. " && nvim\n"), pane)
+
+	-- shell
+	window:perform_action(act.SpawnTab("CurrentPaneDomain"), pane)
+	window:perform_action(act.SendString("cd " .. project.path .. "\n"), pane)
+end
+
+-- ── SSH ───────────────────────────────────────────────────────────────────
+local ssh_hosts = wezterm.default_ssh_domains()
+for _, dom in ipairs(ssh_hosts) do
+	dom.assume_shell = "Posix"
+	dom.local_echo_threshold_ms = 250
+	dom.timeout = 120
+end
+config.ssh_domains = ssh_hosts
+
+-- ── KEYBINDINGS ───────────────────────────────────────────────────────────
+config.keys = {
+	-- projects
+	{
+		key = "p",
+		mods = "LEADER",
+		action = act.InputSelector({
+			title = "🚀 Projects",
+			choices = (function()
+				local t = {}
+				for _, p in ipairs(projects) do
+					table.insert(t, { id = p.id, label = "📁 " .. p.id })
+				end
+				return t
+			end)(),
+			action = wezterm.action_callback(function(window, pane, id)
+				if not id then
+					return
+				end
+				for _, p in ipairs(projects) do
+					if p.id == id then
+						open_project(window, pane, p)
+						return
+					end
+				end
+			end),
+		}),
+	},
+
+	-- SSH / domains
+	{
+		key = "S",
+		mods = "LEADER|SHIFT",
+		action = act.ShowLauncherArgs({ flags = "DOMAINS" }),
+	},
+
+	-- tabs
+	{ key = "c", mods = "LEADER", action = act.SpawnTab("CurrentPaneDomain") },
+	{ key = "x", mods = "LEADER", action = act.CloseCurrentTab({ confirm = false }) },
+	{ key = "n", mods = "LEADER", action = act.ActivateTabRelative(1) },
+	{ key = "p", mods = "LEADER|SHIFT", action = act.ActivateTabRelative(-1) },
+
+	-- splits (REFINADO)
+	{ key = "-", mods = "LEADER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+	{ key = "|", mods = "LEADER|SHIFT", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+
+	-- panes navigation
+	{ key = "h", mods = "LEADER", action = act.ActivatePaneDirection("Left") },
+	{ key = "j", mods = "LEADER", action = act.ActivatePaneDirection("Down") },
+	{ key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
+	{ key = "l", mods = "LEADER", action = act.ActivatePaneDirection("Right") },
+
+	-- zoom
+	{ key = "z", mods = "LEADER", action = act.TogglePaneZoomState },
+
+	-- resize
+	{ key = "H", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Left", 5 }) },
+	{ key = "J", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Down", 5 }) },
+	{ key = "K", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Up", 5 }) },
+	{ key = "L", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Right", 5 }) },
+
+	-- utils
+	{ key = "[", mods = "LEADER", action = act.ActivateCopyMode },
+	{ key = "r", mods = "LEADER", action = act.ReloadConfiguration },
+	{ key = "s", mods = "LEADER", action = act.ShowLauncher },
+}
+
+-- ── COPY / PASTE ──────────────────────────────────────────────────────────
+if IS_MACOS then
+	table.insert(config.keys, { key = "v", mods = "CMD", action = act.PasteFrom("Clipboard") })
+	table.insert(config.keys, { key = "c", mods = "CMD", action = act.CopyTo("Clipboard") })
+else
+	table.insert(config.keys, { key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") })
+	table.insert(config.keys, { key = "c", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") })
+end
+
+-- ── MOUSE ─────────────────────────────────────────────────────────────────
+config.mouse_bindings = {
+	{
+		event = { Down = { streak = 1, button = "Right" } },
+		mods = "NONE",
+		action = act.PasteFrom("Clipboard"),
+	},
+}
+
 return config
