@@ -20,6 +20,14 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
     end,
 })
 
+-- Disable auto comment continuation
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("no_auto_comment", { clear = true }),
+  callback = function()
+    vim.opt_local.formatoptions:remove({ "c", "r", "o" })
+  end,
+})
+
 -- backup and undo
 vim.opt.swapfile = false
 vim.opt.backup = false
