@@ -175,3 +175,12 @@ sudo usermod -a -G dialout $USER
 sudo dnf install chirp
 
 ```
+
+---
+
+## TRY
+
+```
+https://github.com/jpwol/nvim
+https://github.com/Not-Minimal/notdot <-
+```
