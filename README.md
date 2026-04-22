@@ -183,4 +183,6 @@ sudo dnf install chirp
 ```
 https://github.com/jpwol/nvim
 https://github.com/Not-Minimal/notdot <-
+
+https://github.com/vieitesss/nvim
 ```
