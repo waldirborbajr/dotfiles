@@ -166,7 +166,37 @@ require("noice").setup({
 -- Mason setup
 require("mason").setup()
 require("mason-lspconfig").setup({
-	ensure_installed = { "lua_ls", "basedpyright", "rust_analyzer", "emmet_ls", "eslint", "ts_ls", "tailwindcss" },
+	ensure_installed = {
+			"lua-language-server",
+		-- "pyright",
+		"stylua",
+		-- "typescript-language-server",
+		"rust-analyzer",
+		"gopls",
+		"json-lsp",
+		"bash-language-server",
+		-- "clangd",
+		-- "html-lsp",
+		-- "css-lsp",
+		-- "emmet-language-server",
+		-- "clang-format",
+		-- "prettier",
+		-- "eslint_d",
+		-- "tombi",
+		-- "autopep8",
+		"gofumpt",
+		-- "selene",
+		-- "flake8",
+		-- "cpplint",
+		"golangci-lint",
+		"docker-compose-language-service",
+		"dockerfile-language-server",
+		"gh-actions-language-server",
+		"yaml-language-server",
+		"yamlfmt",			
+			"lua_ls",
+		
+		},
 })
 
 -- nvim-tree setup
