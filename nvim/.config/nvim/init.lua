@@ -1,4 +1,5 @@
 require("config.options")
+require("config.keymaps")
 
 -- Plugins
 vim.pack.add({
@@ -12,7 +13,7 @@ vim.pack.add({
 	{ src = "https://github.com/mason-org/mason.nvim.git" },
 	{ src = "https://github.com/mason-org/mason-lspconfig.nvim.git" },
 	{ src = "https://github.com/neovim/nvim-lspconfig.git" },
-	{ src = "https://github.com/Saghen/blink.cmp", version = "v1.6.0" },
+	{ src = "https://github.com/Saghen/blink.cmp",                           version = "v1.6.0" },
 	{ src = "https://github.com/hrsh7th/nvim-cmp" },
 	{ src = "https://github.com/nvim-neo-tree/neo-tree.nvim" },
 	{ src = "https://github.com/echasnovski/mini.files" },
@@ -482,21 +483,6 @@ vim.diagnostic.config({
 	},
 })
 
---: Basic keymaps
--- Global keymaps (window navigation and file explorer)
-vim.keymap.set("n", "<C-h>", "<C-w>h", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-j>", "<C-w>j", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-k>", "<C-w>k", { noremap = true, silent = true })
-vim.keymap.set("n", "<C-l>", "<C-w>l", { noremap = true, silent = true })
--- Split window
-vim.keymap.set("n", "qq", ":split<Return>", { noremap = true, silent = true })
-vim.keymap.set("n", "sv", ":vsplit<Return>", { noremap = true, silent = true })
-
-vim.keymap.set("n", "<Space><Space>", ":Telescope find_files<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<Space>e", ":Neotree toggle<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<Space>t", "<Cmd>lua _toggle_terminal()<CR>", { noremap = true, silent = true })
-vim.keymap.set("n", "<Space>T", "<Cmd>lua _close_terminal_completely()<CR>", { noremap = true, silent = true })
---:
 
 -- Terminal keymaps
 function _G.set_terminal_keymaps()
