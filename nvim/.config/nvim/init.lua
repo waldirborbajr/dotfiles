@@ -116,7 +116,7 @@ function _close_terminal_completely()
 end
 
 -- Lazygit keybinding
-vim.keymap.set("n", "gg", "<Cmd>LazyGit<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>gg", "<Cmd>LazyGit<CR>", { noremap = true, silent = true })
 
 -- Colorscheme
 vim.cmd.colorscheme("tundra")
@@ -142,27 +142,6 @@ require("noice").setup({
 	},
 })
 
--- require("smear_cursor").setup({
--- cursor_color = "#ffffff",
---    particles_enabled = true,
---    stiffness = 0.5,
---    trailing_stiffness = 0.2,
---    trailing_exponent = 5,
---    damping = 0.6,
---    gradient_exponent = 0,
---    gamma = 1,
---    never_draw_over_target = true, -- if you want to actually see under the cursor
---    hide_target_hack = true,       -- same
---    particle_spread = 1,
---    particles_per_second = 500,
---    particles_per_length = 50,
---    particle_max_lifetime = 800,
---    particle_max_initial_velocity = 20,
---    particle_velocity_from_cursor = 0.5,
---    particle_damping = 0.10,
---    particle_gravity = -80,
---    min_distance_emit_particles = 0,
--- })
 -- Mason setup
 require("mason").setup()
 require("mason-lspconfig").setup({
@@ -273,20 +252,66 @@ require("supermaven-nvim").setup({
 
 -- Conform setup
 require("conform").setup({
-	format_on_save = {
-		timeout_ms = 500,
-		lsp_fallback = true,
-	},
 	formatters_by_ft = {
 		lua = { "stylua" },
-		go = { "goimports", "gofmt" },
-		rust = { "rustfmt", lsp_format = "fallback" },
-		json = { "biome" },
-		python = { "biome" },
-		htmldjango = { "biome" },
+		python = { "autopep8" },
 		javascript = { "biome" },
-		typescript = { "biome" },
+		typescript = { "prettier" },
+		json = { "prettier" },
+		toml = { "tombi" },
+		markdown = { "prettier" },
+		c = { "clang-format" },
+		cpp = { "clang-format" },
+		rust = { "rustfmt" },
+		go = { "gofumpt" },
+		yaml = { "yamlfmt" },
 	},
+	format_on_save = {
+		timeout_ms = 2000,
+		lsp_fallback = true,
+	},
+	formatters = {
+		prettier = {
+			inherit = true,
+			prepend_args = { "--tab-width", "4", "--use-tabs", "true" },
+		},
+		stylua = {
+			inherit = true,
+			prepend_args = { "--indent-type", "Tabs", "--indent-width", "4" },
+		},
+		clang_format = {
+			inherit = true,
+			prepend_args = { "--style={UseTab: ForIndentation, TabWidth: 4, IndentWidth: 4}" },
+		},
+		rustfmt = {
+			inherit = true,
+			prepend_args = { "--config", "hard_tabs=true", "--config", "tab_spaces=4" },
+		},
+		gofumpt = {
+			inherit = true,
+			prepend_args = { "--tabs=true", "--tabwidth=4" },
+		}, -- gofmt/gofumpt usa tabs por defecto, no necesita config extra
+		autopep8 = {
+			-- autopep8 no soporta tabs: fuerza 4 espacios por defecto (sin opción para tabs)
+			inherit = true,
+			prepend_args = { "--indent-size=4" },
+		},
+	},
+	--
+	-- format_on_save = {
+	-- 	timeout_ms = 500,
+	-- 	lsp_fallback = true,
+	-- },
+	-- formatters_by_ft = {
+	-- 	lua = { "stylua" },
+	-- 	go = { "goimports", "gofmt" },
+	-- 	rust = { "rustfmt", lsp_format = "fallback" },
+	-- 	json = { "biome" },
+	-- 	python = { "biome" },
+	-- 	htmldjango = { "biome" },
+	-- 	javascript = { "biome" },
+	-- 	typescript = { "biome" },
+	-- },
 })
 
 -- Lualine setup
@@ -352,7 +377,66 @@ require("lualine").setup({
 require("mini.files").setup()
 
 -- Oil setup
-require("oil").setup()
+require("oil").setup({
+	default_file_explorer = true,
+
+	-- columns = {
+	--  "icon",
+	--  "size",
+	--  "mtime",
+	-- },
+	columns = {
+		"icon",
+	},
+
+	delete_to_trash = true,
+	skip_confirm_for_simple_edits = true,
+	prompt_save_on_select_new_entry = true,
+	cleanup_delay_ms = 2000,
+
+	constrain_cursor = "name",
+	watch_for_changes = true,
+
+	keymaps = {
+		["g?"] = { "actions.show_help", mode = "n" },
+		["<CR>"] = "actions.select",
+		["sv"] = { "actions.select", opts = { vertical = true } },
+		["sh"] = { "actions.select", opts = { horizontal = true } },
+		["st"] = { "actions.select", opts = { tab = true } },
+		["-"] = { "actions.parent", mode = "n" },
+		["_"] = { "actions.open_cwd", mode = "n" },
+		["<BS>"] = { "actions.parent", mode = "n" }, -- Backspace para subir
+		["g."] = { "actions.toggle_hidden", mode = "n" },
+		["gs"] = { "actions.change_sort", mode = "n" },
+		["gx"] = "actions.open_external",
+		["q"] = { "actions.close", mode = "n" },
+		["<C-q>"] = { "actions.close", mode = "n" }, -- cerrar también con Ctrl+q
+		["<C-l>"] = "actions.refresh",
+	},
+
+	use_default_keymaps = false,
+
+	view_options = {
+		show_hidden = true,
+		natural_order = true,
+		case_insensitive = true,
+		sort = {
+			{ "type", "asc" },
+			{ "name", "asc" },
+		},
+		wrap = true,
+	},
+
+	float = {
+		padding = 2,
+		border = "rounded",
+	},
+
+	preview_win = {
+		update_on_cursor_moved = true,
+		preview_method = "fast_scratch",
+	},
+})
 
 -- nvim-notify setup
 require("notify").setup({
@@ -527,6 +611,11 @@ vim.keymap.set("n", "<Space><Space>", ":Telescope find_files<CR>", { noremap = t
 vim.keymap.set("n", "<Space>e", ":Neotree toggle<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<Space>t", "<Cmd>lua _toggle_terminal()<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<Space>T", "<Cmd>lua _close_terminal_completely()<CR>", { noremap = true, silent = true })
+
+-- vim.keymap.set("n", "<leader>-", "<Cmd>Oil<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>-", function()
+	require("oil").toggle_float()
+end, { desc = "Toggle Oil Float" }, { noremap = true, silent = true })
 --:
 
 -- Terminal keymaps
@@ -541,6 +630,16 @@ function _G.set_terminal_keymaps()
 end
 
 vim.cmd("autocmd! TermOpen term://*toggleterm#* lua set_terminal_keymaps()")
+--:
+
+-- Autocommands
+-- Disable auto comment continuation
+vim.api.nvim_create_autocmd("FileType", {
+	group = vim.api.nvim_create_augroup("no_auto_comment", { clear = true }),
+	callback = function()
+		vim.opt_local.formatoptions:remove({ "c", "r", "o" })
+	end,
+})
 --:
 
 -- LSP keymaps on attach
