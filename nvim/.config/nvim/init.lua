@@ -1,37 +1,4 @@
-vim.g.mapleader = " "
-vim.opt.relativenumber = true
-vim.o.background = "dark"
-vim.o.backup = false
-vim.o.expandtab = true
-vim.o.hlsearch = true
-vim.o.incsearch = true
-vim.o.number = true
-vim.o.scrolloff = 8
-vim.o.shiftwidth = 4
-vim.o.showmode = false
-vim.o.signcolumn = "yes"
-vim.o.smartindent = true
-vim.o.softtabstop = 4
-vim.o.swapfile = false
-vim.o.tabstop = 2
-vim.o.termguicolors = true
-vim.o.updatetime = 50
-vim.o.winborder = "rounded"
-vim.o.wrap = false
-vim.opt.title = true
-vim.opt.autoindent = true
-vim.opt.smartindent = true
-vim.opt.backspace = { "start", "eol", "indent" }
-vim.opt.path:append({ "**" }) -- Finding files - Search down into subfolders
-vim.opt.wildignore:append({ "*/node_modules/*" })
-vim.opt.splitbelow = true -- Put new windows below current
-vim.opt.splitright = true -- Put new windows right of current
--- Undercurl
-vim.cmd([[let &t_Cs = "\e[4:3m"]])
-vim.cmd([[let &t_Ce = "\e[4:0m"]])
-
--- Add asterisks in block comments
-vim.opt.formatoptions:append({ "r" })
+require("config.options")
 
 -- Plugins
 vim.pack.add({
