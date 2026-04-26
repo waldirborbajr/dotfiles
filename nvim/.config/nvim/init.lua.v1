@@ -1,6 +1,5 @@
 -- =============================================================
 -- Neovim 0.12 Optimized init.lua (Native-first, No Treesitter)
--- Compliant with Neovim 0.12 news (vim.lsp.enable, diagnostics, ui2, vim.pack)
 -- =============================================================
 
 vim.g.mapleader = " "
@@ -42,7 +41,7 @@ vim.cmd([[let &t_Ce = "\e[4:0m"]])
 -- Format options
 vim.opt.formatoptions:append({ "r" })
 
--- Native completion fallback (0.12)
+-- Native completion fallback
 vim.o.autocomplete = true
 
 -- ====================== Plugins ======================
@@ -71,7 +70,7 @@ vim.pack.add({
 	{ src = "https://github.com/windwp/nvim-autopairs" },
 })
 
--- ====================== UI2 (0.12 feature) ======================
+-- ====================== UI2 ======================
 require("vim._core.ui2").enable({
 	enable = true,
 	msg = {
@@ -197,10 +196,10 @@ require("neo-tree").setup({
 	},
 })
 
--- ====================== nvim-autopairs ======================
+-- ====================== nvim-autopairs (fixed for blink.cmp) ======================
 require("nvim-autopairs").setup({
 	disable_filetype = { "TelescopePrompt", "spectre_panel" },
-	check_ts = false,
+	check_ts = false, -- no Treesitter
 	enable_check_bracket_line = true,
 	ignored_next_char = "[%w%.]",
 })
@@ -222,7 +221,7 @@ require("supermaven-nvim").setup({
 	disable_keymaps = false,
 	condition = function()
 		return false
-	end,
+	end, -- change to true when you want to enable
 })
 
 -- ====================== Conform ======================
@@ -379,7 +378,7 @@ require("tiny-inline-diagnostic").setup({
 	},
 })
 
--- ====================== Blink.cmp (must be before get_lsp_capabilities) ======================
+-- ====================== Blink.cmp ======================
 require("blink.cmp").setup({
 	keymap = { preset = "default" },
 	appearance = {
@@ -394,7 +393,7 @@ require("blink.cmp").setup({
 	fuzzy = { implementation = "prefer_rust" },
 })
 
--- ====================== Native LSP (0.12 style) ======================
+-- ====================== Native LSP (0.12) ======================
 local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 vim.lsp.enable({ "lua_ls", "rust_analyzer", "gopls" })
@@ -427,7 +426,7 @@ vim.lsp.config("gopls", {
 	init_options = { usePlaceholders = false },
 })
 
--- ====================== Diagnostics (0.12 compliant) ======================
+-- ====================== Diagnostics ======================
 vim.diagnostic.config({
 	severity_sort = true,
 	update_in_insert = false,
@@ -502,7 +501,8 @@ require("nvim-tundra").setup({
 	plugins = { telescope = true },
 })
 
--- ====================== Autocmds ======================
+--
+
 local autocmd = vim.api.nvim_create_autocmd
 
 -- Disable auto comment continuation
@@ -534,5 +534,29 @@ autocmd("BufReadPost", {
 		end
 	end,
 })
+local autocmd = vim.api.nvim_create_autocmd
 
-print("Neovim 0.13 config loaded successfully!")
+-- Highlight on yank
+autocmd("TextYankPost", {
+	group = vim.api.nvim_create_augroup("yank_highlight", { clear = true }),
+	desc = "Highlight yanked text",
+	callback = function()
+		vim.highlight.on_yank({ higroup = "Visual", timeout = 150 })
+	end,
+})
+
+-- Restore cursor position
+autocmd("BufReadPost", {
+	group = vim.api.nvim_create_augroup("last_location", { clear = true }),
+	desc = "Go to last cursor position",
+	callback = function(args)
+		local mark = vim.api.nvim_buf_get_mark(args.buf, '"')
+		local line_count = vim.api.nvim_buf_line_count(args.buf)
+		if mark[1] > 0 and mark[1] <= line_count then
+			vim.cmd('normal! g`"zz')
+		end
+	end,
+})
+--:
+
+print("Neovim 0.12 config loaded successfully!")
