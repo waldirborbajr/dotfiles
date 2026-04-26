@@ -562,7 +562,19 @@ vim.lsp.config("basedpyright", {
 })
 
 vim.lsp.config("jsonls", {})
-vim.lsp.config("gopls", {})
+-- vim.lsp.config("gopls", {})
+vim.lsp.config("gopls", {
+	cmd = { "gopls" },
+	settings = {
+		gopls = {
+			experimentalPostfixCompletions = true,
+			analyses = { unusedparams = true, shadow = true },
+			staticcheck = true,
+			gofumpt = true,
+		},
+	},
+	init_options = { usePlaceholders = false },
+})
 --:
 
 -- Diagnostic configuration
