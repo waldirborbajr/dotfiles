@@ -43,8 +43,8 @@ vim.pack.add({
 	{ src = "https://github.com/rcarriga/nvim-notify" },
 	{ src = "https://github.com/MunifTanjim/nui.nvim" },
 	{ src = "https://github.com/folke/noice.nvim" },
-	{ src = "https://github.com/mason-org/mason.nvim.git" },
-	{ src = "https://github.com/mason-org/mason-lspconfig.nvim.git" },
+	-- { src = "https://github.com/mason-org/mason.nvim.git" },
+	-- { src = "https://github.com/mason-org/mason-lspconfig.nvim.git" },
 	{ src = "https://github.com/neovim/nvim-lspconfig.git" },
 	{ src = "https://github.com/Saghen/blink.cmp", version = "v1.6.0" },
 	{ src = "https://github.com/hrsh7th/nvim-cmp" },
@@ -144,15 +144,15 @@ require("noice").setup({
 })
 
 -- Mason setup
-require("mason").setup()
-require("mason-lspconfig").setup({
-	ensure_installed = {
-		"stylua",
-		-- "rust_analyzer",
-		-- "gopls",
-		"lua_ls",
-	},
-})
+-- require("mason").setup()
+-- require("mason-lspconfig").setup({
+-- 	ensure_installed = {
+-- 		"stylua",
+-- 		-- "rust_analyzer",
+-- 		-- "gopls",
+-- 		"lua_ls",
+-- 	},
+-- })
 
 -- nvim-tree setup
 vim.g.loaded_netrw = 1
@@ -298,21 +298,6 @@ require("conform").setup({
 			prepend_args = { "--indent-size=4" },
 		},
 	},
-	--
-	-- format_on_save = {
-	-- 	timeout_ms = 500,
-	-- 	lsp_fallback = true,
-	-- },
-	-- formatters_by_ft = {
-	-- 	lua = { "stylua" },
-	-- 	go = { "goimports", "gofmt" },
-	-- 	rust = { "rustfmt", lsp_format = "fallback" },
-	-- 	json = { "biome" },
-	-- 	python = { "biome" },
-	-- 	htmldjango = { "biome" },
-	-- 	javascript = { "biome" },
-	-- 	typescript = { "biome" },
-	-- },
 })
 
 -- Lualine setup
@@ -524,6 +509,20 @@ require("tiny-inline-diagnostic").setup({
 -- LSP Configuration (Neovim 0.12 native)
 local capabilities = require("blink.cmp").get_lsp_capabilities()
 
+-- Enable LSP servers
+vim.lsp.enable({
+	"lua_ls",
+	"rust_analyzer",
+	-- "bashls",
+	"gopls",
+	-- "helm_ls",
+	-- "pyright",
+	-- "rust-analyzer",
+	-- "texlab",
+	-- "ts_ls",
+	-- "yamlls",
+})
+
 vim.lsp.config("lua_ls", {
 	capabilities = capabilities,
 	settings = {
@@ -541,18 +540,18 @@ vim.lsp.config("lua_ls", {
 	},
 })
 
-vim.lsp.config("ts_ls", {
-	capabilities = capabilities,
-	settings = {
-		typescript = {
-			inlayHints = {
-				includeInlayParameterNameHints = "all",
-				includeInlayFunctionParameterTypeHints = true,
-				includeInlayVariableTypeHints = true,
-			},
-		},
-	},
-})
+-- vim.lsp.config("ts_ls", {
+-- 	capabilities = capabilities,
+-- 	settings = {
+-- 		typescript = {
+-- 			inlayHints = {
+-- 				includeInlayParameterNameHints = "all",
+-- 				includeInlayFunctionParameterTypeHints = true,
+-- 				includeInlayVariableTypeHints = true,
+-- 			},
+-- 		},
+-- 	},
+-- })
 
 vim.lsp.config("rust_analyzer", {
 	capabilities = capabilities,
@@ -562,25 +561,9 @@ vim.lsp.config("basedpyright", {
 	capabilities = capabilities,
 })
 
-vim.lsp.config("prisma", {
-	capabilities = capabilities,
-	cmd = { "prisma-language-server", "--stdio" },
-	filetypes = { "prisma" },
-	root_dir = require("lspconfig.util").root_pattern(".git", "package.json"),
-})
-
--- Enable LSP servers
-vim.lsp.enable({
-	"lua_ls",
-	-- "bashls",
-	-- "gopls",
-	-- "helm_ls",
-	-- "pyright",
-	-- "rust-analyzer",
-	-- "texlab",
-	-- "ts_ls",
-	-- "yamlls",
-})
+vim.lsp.config("jsonls", {})
+vim.lsp.config("gopls", {})
+--:
 
 -- Diagnostic configuration
 vim.diagnostic.config({
@@ -612,6 +595,11 @@ vim.keymap.set("n", "<Space><Space>", ":Telescope find_files<CR>", { noremap = t
 vim.keymap.set("n", "<Space>e", ":Neotree toggle<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<Space>t", "<Cmd>lua _toggle_terminal()<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<Space>T", "<Cmd>lua _close_terminal_completely()<CR>", { noremap = true, silent = true })
+
+vim.keymap.set("n", "<A-l>", ":BufferLineCycleNext<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<A-h>", ":BufferLineCyclePrev<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<C-w>", ":bdelete<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<A-w>", ":BufferLineCloseLeft<CR>:BufferLineCloseRight<CR>", { noremap = true, silent = true })
 
 -- vim.keymap.set("n", "<leader>-", "<Cmd>Oil<CR>", { noremap = true, silent = true })
 vim.keymap.set("n", "<leader>-", function()
