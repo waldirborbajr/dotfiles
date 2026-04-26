@@ -18,6 +18,7 @@ vim.o.termguicolors = true
 vim.o.updatetime = 50
 vim.o.winborder = "rounded"
 vim.o.wrap = false
+vim.o.autocomplete = true
 vim.opt.title = true
 vim.opt.autoindent = true
 vim.opt.smartindent = true
@@ -570,15 +571,15 @@ vim.lsp.config("prisma", {
 
 -- Enable LSP servers
 vim.lsp.enable({
+	"lua_ls",
 	-- "bashls",
 	-- "gopls",
-	"lua_ls",
+	-- "helm_ls",
 	-- "pyright",
 	-- "rust-analyzer",
 	-- "texlab",
 	-- "ts_ls",
 	-- "yamlls",
-	-- "helm_ls",
 })
 
 -- Diagnostic configuration
