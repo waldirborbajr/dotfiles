@@ -235,12 +235,12 @@ require("conform").setup({
 		json = { "prettier" },
 		toml = { "tombi" },
 		-- markdown = { "prettier" },
-					markdown = { "oxfmt", "prettier", stop_after_first = true },
+		markdown = { "oxfmt", "prettier", stop_after_first = true },
 		["markdown.mdx"] = { "oxfmt", "prettier", stop_after_first = true },
 		c = { "clang-format" },
 		cpp = { "clang-format" },
 		rust = { "rustfmt" },
---		go = { "gofumpt" },
+		--		go = { "gofumpt" },
 		go = { "goimports", "gofmt", stop_after_first = true },
 		yaml = { "yamlfmt" },
 	},
@@ -593,7 +593,5 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 		vim.opt_local.filetype = "toml"
 	end,
 })
-
-
 
 print("Neovim 0.13 config loaded successfully!")
