@@ -186,4 +186,8 @@ https://github.com/Not-Minimal/notdot <-
 
 https://github.com/vieitesss/nvim
 https://tduyng.com/blog/neovim-basic-setup/
+
+---
+https://github.com/justinmk/config/tree/master/.config/nvim
+
 ```
