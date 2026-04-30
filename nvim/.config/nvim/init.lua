@@ -25,8 +25,8 @@ vim.opt.list           = true
 vim.opt.listchars      = { tab = "» ", trail = "·", nbsp = "␣" }
 vim.opt.textwidth      = 80
 
-vim.opt.tabstop        = 4
-vim.opt.shiftwidth     = 4
+vim.opt.tabstop        = 2
+vim.opt.shiftwidth     = 2
 vim.opt.expandtab      = true
 vim.opt.smartindent    = true
 
@@ -508,17 +508,17 @@ vim.lsp.config("gopls", {
 })
 
 -- ====================== Diagnostics (0.12 compliant) ======================
-vim.diagnostic.config({
-	severity_sort = true,
-	update_in_insert = false,
-	float = { border = "rounded", source = "if_many" },
-	underline = true,
-	virtual_text = {
-		spacing = 2,
-		source = "if_many",
-		prefix = "●",
-	},
-})
+-- vim.diagnostic.config({
+-- 	severity_sort = true,
+-- 	update_in_insert = false,
+-- 	float = { border = "rounded", source = "if_many" },
+-- 	underline = true,
+-- 	virtual_text = {
+-- 		spacing = 2,
+-- 		source = "if_many",
+-- 		prefix = "●",
+-- 	},
+-- })
 
 -- ====================== Keymaps ======================
 vim.keymap.set("n", "<C-h>", "<C-w>h", { noremap = true, silent = true })
