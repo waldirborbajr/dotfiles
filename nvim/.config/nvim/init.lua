@@ -4,52 +4,51 @@
 -- =============================================================
 
 -- Leader
-vim.g.mapleader        = " "
-vim.g.maplocalleader   = " "
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
-
-vim.opt.number         = true
+vim.opt.number = true
 vim.opt.relativenumber = true
-vim.opt.signcolumn     = "yes"
-vim.opt.cursorline     = true
-vim.opt.wrap           = false
-vim.opt.scrolloff      = 8
-vim.opt.sidescrolloff  = 8
-vim.opt.cmdheight      = 1
-vim.opt.mouse          = "a"
-vim.opt.showmode       = false
-vim.opt.breakindent    = true
-vim.opt.updatetime     = 250
-vim.opt.timeoutlen     = 300
-vim.opt.list           = true
-vim.opt.listchars      = { tab = "» ", trail = "·", nbsp = "␣" }
-vim.opt.textwidth      = 80
+vim.opt.signcolumn = "yes"
+vim.opt.cursorline = true
+vim.opt.wrap = false
+vim.opt.scrolloff = 8
+vim.opt.sidescrolloff = 8
+vim.opt.cmdheight = 1
+vim.opt.mouse = "a"
+vim.opt.showmode = false
+vim.opt.breakindent = true
+vim.opt.updatetime = 250
+vim.opt.timeoutlen = 300
+vim.opt.list = true
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+vim.opt.textwidth = 80
 
-vim.opt.tabstop        = 2
-vim.opt.shiftwidth     = 2
-vim.opt.expandtab      = true
-vim.opt.smartindent    = true
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.expandtab = true
+vim.opt.smartindent = true
 
-vim.opt.ignorecase     = true
-vim.opt.smartcase      = true
-vim.opt.hlsearch       = true
-vim.opt.incsearch      = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.hlsearch = true
+vim.opt.incsearch = true
 
-vim.opt.splitright     = true
-vim.opt.splitbelow     = true
+vim.opt.splitright = true
+vim.opt.splitbelow = true
 
-vim.opt.undofile       = true
-vim.opt.swapfile       = false
+vim.opt.undofile = true
+vim.opt.swapfile = false
 
-vim.opt.termguicolors  = true
-vim.opt.guicursor      = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50"
-vim.opt.winborder      = "rounded" -- 0.12: native rounded borders everywhere
-vim.opt.completeopt    = "menu,menuone,noinsert,popup"
-vim.opt.autocomplete   = true      -- 0.12: native auto-completion
-vim.o.complete         = "o,.,i"   -- o: Omnifunc (LSP), .: Current buffer, i: Included files
+vim.opt.termguicolors = true
+vim.opt.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50"
+vim.opt.winborder = "rounded" -- 0.12: native rounded borders everywhere
+vim.opt.completeopt = "menu,menuone,noinsert,popup"
+vim.opt.autocomplete = true -- 0.12: native auto-completion
+vim.o.complete = "o,.,i" -- o: Omnifunc (LSP), .: Current buffer, i: Included files
 
 -- Use system clipboard
-vim.opt.clipboard      = "unnamedplus"
+vim.opt.clipboard = "unnamedplus"
 
 -- New UI opt-in
 -- require("vim._core.ui2").enable({})
@@ -59,27 +58,27 @@ vim.opt.inccommand = "split"
 
 -- Diagnostics
 vim.diagnostic.config({
-    virtual_text = {
-        current_line = true,
-        source = "if_many",
-        prefix = "●",
-        spacing = 20,
-    },
-    signs = {
-        text = {
-            [vim.diagnostic.severity.ERROR] = "●", --"",
-            [vim.diagnostic.severity.WARN] = "●", --"",
-            [vim.diagnostic.severity.INFO] = "●", --"",
-            [vim.diagnostic.severity.HINT] = "●", --"",
-        },
-    },
-    underline = true,
-    update_in_insert = false,
-    severity_sort = true,
-    float = {
-        border = "rounded",
-        source = true,
-    },
+	virtual_text = {
+		current_line = true,
+		source = "if_many",
+		prefix = "●",
+		spacing = 20,
+	},
+	signs = {
+		text = {
+			[vim.diagnostic.severity.ERROR] = "●", --"",
+			[vim.diagnostic.severity.WARN] = "●", --"",
+			[vim.diagnostic.severity.INFO] = "●", --"",
+			[vim.diagnostic.severity.HINT] = "●", --"",
+		},
+	},
+	underline = true,
+	update_in_insert = false,
+	severity_sort = true,
+	float = {
+		border = "rounded",
+		source = true,
+	},
 })
 
 -- ====================== Basic Options ======================
@@ -123,50 +122,32 @@ vim.diagnostic.config({
 -- vim.o.autocomplete = true
 
 -- ====================== Plugins ======================
-local gh = function(p) return "https://github.com/" .. p end
+local gh = function(p)
+	return "https://github.com/" .. p
+end
 
-vim.pack.add({	gh("sam4llis/nvim-tundra")})
-	vim.pack.add({gh("tpope/vim-sleuth")})
-
-vim.pack.add({	gh("rcarriga/nvim-notify")})
-
-vim.pack.add({	gh("MunifTanjim/nui.nvim")})
-
-vim.pack.add({	gh("folke/noice.nvim")})
-
-vim.pack.add({	gh("neovim/nvim-lspconfig")})
-
--- vim.pack.add({	gh("Saghen/blink.cmp", version = "v1.6.0")})
-
-vim.pack.add({	gh("nvim-neo-tree/neo-tree.nvim")})
-
-vim.pack.add({	gh("echasnovski/mini.files")})
-
-vim.pack.add({	gh("stevearc/oil.nvim")})
-
-vim.pack.add({	gh("nvim-lua/plenary.nvim")})
-
-vim.pack.add({	gh("nvim-telescope/telescope.nvim")})
-
-vim.pack.add({	gh("supermaven-inc/supermaven-nvim")})
-
-vim.pack.add({	gh("stevearc/conform.nvim")})
-
-vim.pack.add({	gh("rachartier/tiny-inline-diagnostic.nvim")})
-
-	vim.pack.add({gh("nvim-tree/nvim-web-devicons")})
-
-	vim.pack.add({gh("nvim-lualine/lualine.nvim")})
-
-	vim.pack.add({gh("sindrets/diffview.nvim")})
-
-vim.pack.add({	gh("akinsho/toggleterm.nvim")})
-
-	vim.pack.add({gh("folke/which-key.nvim")})
-
-vim.pack.add({	gh("kdheepak/lazygit.nvim")})
-
-vim.pack.add({	gh("windwp/nvim-autopairs")})
+vim.pack.add({ gh("sam4llis/nvim-tundra") })
+vim.pack.add({ gh("tpope/vim-sleuth") })
+vim.pack.add({ gh("rcarriga/nvim-notify") })
+vim.pack.add({ gh("MunifTanjim/nui.nvim") })
+vim.pack.add({ gh("folke/noice.nvim") })
+vim.pack.add({ gh("neovim/nvim-lspconfig") })
+vim.pack.add({ gh("Saghen/blink.cmp") })
+vim.pack.add({ gh("nvim-neo-tree/neo-tree.nvim") })
+vim.pack.add({ gh("echasnovski/mini.files") })
+vim.pack.add({ gh("stevearc/oil.nvim") })
+vim.pack.add({ gh("nvim-lua/plenary.nvim") })
+vim.pack.add({ gh("nvim-telescope/telescope.nvim") })
+vim.pack.add({ gh("supermaven-inc/supermaven-nvim") })
+vim.pack.add({ gh("stevearc/conform.nvim") })
+vim.pack.add({ gh("rachartier/tiny-inline-diagnostic.nvim") })
+vim.pack.add({ gh("nvim-tree/nvim-web-devicons") })
+vim.pack.add({ gh("nvim-lualine/lualine.nvim") })
+vim.pack.add({ gh("sindrets/diffview.nvim") })
+vim.pack.add({ gh("akinsho/toggleterm.nvim") })
+vim.pack.add({ gh("folke/which-key.nvim") })
+vim.pack.add({ gh("kdheepak/lazygit.nvim") })
+vim.pack.add({ gh("windwp/nvim-autopairs") })
 
 -- vim.pack.add({
 -- 	{ src = "https://github.com/sam4llis/nvim-tundra" },
