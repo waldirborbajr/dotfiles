@@ -149,31 +149,6 @@ vim.pack.add({ gh("folke/which-key.nvim") })
 vim.pack.add({ gh("kdheepak/lazygit.nvim") })
 vim.pack.add({ gh("windwp/nvim-autopairs") })
 
--- vim.pack.add({
--- 	{ src = "https://github.com/sam4llis/nvim-tundra" },
--- 	{ src = "https://github.com/tpope/vim-sleuth" },
--- 	{ src = "https://github.com/rcarriga/nvim-notify" },
--- 	{ src = "https://github.com/MunifTanjim/nui.nvim" },
--- 	{ src = "https://github.com/folke/noice.nvim" },
--- 	{ src = "https://github.com/neovim/nvim-lspconfig" },
--- 	{ src = "https://github.com/Saghen/blink.cmp", version = "v1.6.0" },
--- 	{ src = "https://github.com/nvim-neo-tree/neo-tree.nvim" },
--- 	{ src = "https://github.com/echasnovski/mini.files" },
--- 	{ src = "https://github.com/stevearc/oil.nvim" },
--- 	{ src = "https://github.com/nvim-lua/plenary.nvim" },
--- 	{ src = "https://github.com/nvim-telescope/telescope.nvim" },
--- 	{ src = "https://github.com/supermaven-inc/supermaven-nvim" },
--- 	{ src = "https://github.com/stevearc/conform.nvim" },
--- 	{ src = "https://github.com/rachartier/tiny-inline-diagnostic.nvim" },
--- 	{ src = "https://github.com/nvim-tree/nvim-web-devicons" },
--- 	{ src = "https://github.com/nvim-lualine/lualine.nvim" },
--- 	{ src = "https://github.com/sindrets/diffview.nvim" },
--- 	{ src = "https://github.com/akinsho/toggleterm.nvim" },
--- 	{ src = "https://github.com/folke/which-key.nvim" },
--- 	{ src = "https://github.com/kdheepak/lazygit.nvim" },
--- 	{ src = "https://github.com/windwp/nvim-autopairs" },
--- })
-
 -- ====================== UI2 (0.12 feature) ======================
 require("vim._core.ui2").enable({
 	enable = true,
@@ -615,27 +590,29 @@ local function augroup(name)
 end
 
 local function session_path()
-    local name = vim.fn.getcwd():gsub("[/\\:]", "_")
-    return vim.fn.stdpath("data") .. "/sessions/" .. name .. ".vim"
+	local name = vim.fn.getcwd():gsub("[/\\:]", "_")
+	return vim.fn.stdpath("data") .. "/sessions/" .. name .. ".vim"
 end
 
 vim.api.nvim_create_autocmd("VimEnter", {
-    nested = true,
-    callback = function()
-        if vim.fn.argc() > 0 then return end
-        local path = session_path()
-        if vim.fn.filereadable(path) == 1 then
-            vim.cmd("silent! source " .. vim.fn.fnameescape(path))
-        end
-    end,
+	nested = true,
+	callback = function()
+		if vim.fn.argc() > 0 then
+			return
+		end
+		local path = session_path()
+		if vim.fn.filereadable(path) == 1 then
+			vim.cmd("silent! source " .. vim.fn.fnameescape(path))
+		end
+	end,
 })
 
 vim.api.nvim_create_autocmd("VimLeavePre", {
-    callback = function()
-        local path = session_path()
-        vim.fn.mkdir(vim.fn.fnamemodify(path, ":h"), "p")
-        vim.cmd("mksession! " .. vim.fn.fnameescape(path))
-    end,
+	callback = function()
+		local path = session_path()
+		vim.fn.mkdir(vim.fn.fnamemodify(path, ":h"), "p")
+		vim.cmd("mksession! " .. vim.fn.fnameescape(path))
+	end,
 })
 
 -- Disable auto comment continuation
