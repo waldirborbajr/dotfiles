@@ -614,6 +614,30 @@ local function augroup(name)
 	return vim.api.nvim_create_augroup("user_" .. name, { clear = true })
 end
 
+local function session_path()
+    local name = vim.fn.getcwd():gsub("[/\\:]", "_")
+    return vim.fn.stdpath("data") .. "/sessions/" .. name .. ".vim"
+end
+
+vim.api.nvim_create_autocmd("VimEnter", {
+    nested = true,
+    callback = function()
+        if vim.fn.argc() > 0 then return end
+        local path = session_path()
+        if vim.fn.filereadable(path) == 1 then
+            vim.cmd("silent! source " .. vim.fn.fnameescape(path))
+        end
+    end,
+})
+
+vim.api.nvim_create_autocmd("VimLeavePre", {
+    callback = function()
+        local path = session_path()
+        vim.fn.mkdir(vim.fn.fnamemodify(path, ":h"), "p")
+        vim.cmd("mksession! " .. vim.fn.fnameescape(path))
+    end,
+})
+
 -- Disable auto comment continuation
 autocmd("FileType", {
 	group = vim.api.nvim_create_augroup("no_auto_comment", { clear = true }),
