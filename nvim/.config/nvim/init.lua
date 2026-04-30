@@ -125,30 +125,48 @@ vim.diagnostic.config({
 -- ====================== Plugins ======================
 local gh = function(p) return "https://github.com/" .. p end
 
-vim.pack.add({
-	gh("sam4llis/nvim-tundra"),
-	gh("tpope/vim-sleuth"),
-	gh("rcarriga/nvim-notify"),
-	gh("MunifTanjim/nui.nvim"),
-	gh("folke/noice.nvim"),
-	gh("neovim/nvim-lspconfig"),
-	gh("Saghen/blink.cmp", version = "v1.6.0"),
-	gh("nvim-neo-tree/neo-tree.nvim"),
-	gh("echasnovski/mini.files"),
-	gh("stevearc/oil.nvim"),
-	gh("nvim-lua/plenary.nvim"),
-	gh("nvim-telescope/telescope.nvim"),
-	gh("supermaven-inc/supermaven-nvim"),
-	gh("stevearc/conform.nvim"),
-	gh("rachartier/tiny-inline-diagnostic.nvim"),
-	gh("nvim-tree/nvim-web-devicons"),
-	gh("nvim-lualine/lualine.nvim"),
-	gh("sindrets/diffview.nvim"),
-	gh("akinsho/toggleterm.nvim"),
-	gh("folke/which-key.nvim"),
-	gh("kdheepak/lazygit.nvim"),
-	gh("windwp/nvim-autopairs"),
-})
+vim.pack.add({	gh("sam4llis/nvim-tundra")})
+	vim.pack.add({gh("tpope/vim-sleuth")})
+
+vim.pack.add({	gh("rcarriga/nvim-notify")})
+
+vim.pack.add({	gh("MunifTanjim/nui.nvim")})
+
+vim.pack.add({	gh("folke/noice.nvim")})
+
+vim.pack.add({	gh("neovim/nvim-lspconfig")})
+
+vim.pack.add({	gh("Saghen/blink.cmp", version = "v1.6.0")})
+
+vim.pack.add({	gh("nvim-neo-tree/neo-tree.nvim")})
+
+vim.pack.add({	gh("echasnovski/mini.files")})
+
+vim.pack.add({	gh("stevearc/oil.nvim")})
+
+vim.pack.add({	gh("nvim-lua/plenary.nvim")})
+
+vim.pack.add({	gh("nvim-telescope/telescope.nvim")})
+
+vim.pack.add({	gh("supermaven-inc/supermaven-nvim")})
+
+vim.pack.add({	gh("stevearc/conform.nvim")})
+
+vim.pack.add({	gh("rachartier/tiny-inline-diagnostic.nvim")})
+
+	vim.pack.add({gh("nvim-tree/nvim-web-devicons")})
+
+	vim.pack.add({gh("nvim-lualine/lualine.nvim")})
+
+	vim.pack.add({gh("sindrets/diffview.nvim")})
+
+vim.pack.add({	gh("akinsho/toggleterm.nvim")})
+
+	vim.pack.add({gh("folke/which-key.nvim")})
+
+vim.pack.add({	gh("kdheepak/lazygit.nvim")})
+
+vim.pack.add({	gh("windwp/nvim-autopairs")})
 
 -- vim.pack.add({
 -- 	{ src = "https://github.com/sam4llis/nvim-tundra" },
