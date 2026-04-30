@@ -136,7 +136,7 @@ vim.pack.add({	gh("folke/noice.nvim")})
 
 vim.pack.add({	gh("neovim/nvim-lspconfig")})
 
-vim.pack.add({	gh("Saghen/blink.cmp", version = "v1.6.0")})
+-- vim.pack.add({	gh("Saghen/blink.cmp", version = "v1.6.0")})
 
 vim.pack.add({	gh("nvim-neo-tree/neo-tree.nvim")})
 
