@@ -3,10 +3,10 @@
 -- Compliant with Neovim 0.12
 -- =============================================================
 
+-- -- ====================== Basic Options ======================
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
--- ====================== Basic Options ======================
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
@@ -21,6 +21,7 @@ vim.opt.breakindent = true
 vim.opt.updatetime = 250
 vim.opt.timeoutlen = 300
 vim.opt.list = true
+-- vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 vim.opt.textwidth = 80
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
@@ -36,10 +37,15 @@ vim.opt.undofile = true
 vim.opt.swapfile = false
 vim.opt.termguicolors = true
 vim.opt.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50"
-vim.opt.winborder = "rounded"
+vim.opt.winborder = "rounded" -- 0.12: native rounded borders everywhere
 vim.opt.completeopt = "menu,menuone,noinsert,popup"
-vim.opt.autocomplete = true
+vim.opt.autocomplete = true -- 0.12: native auto-completion
+vim.o.complete = "o,.,i" -- o: Omnifunc (LSP), .: Current buffer, i: Included files
+
+-- Use system clipboard
 vim.opt.clipboard = "unnamedplus"
+
+-- Preview substitutions live, as you type
 vim.opt.inccommand = "split"
 
 -- ====================== Plugins ======================
@@ -117,6 +123,26 @@ require("tiny-inline-diagnostic").setup({
 		show_code = true,
 		multilines = { enabled = true },
 	},
+})
+
+-- ====================== Supermaven ======================
+require("supermaven-nvim").setup({
+	keymaps = {
+		accept_suggestion = "<Tab>",
+		clear_suggestion = "<C-]>",
+		accept_word = "<C-j>",
+	},
+	ignore_filetypes = { cpp = true },
+	color = {
+		suggestion_color = "#ffffff",
+		cterm = 244,
+	},
+	log_level = "info",
+	disable_inline_completion = false,
+	disable_keymaps = false,
+	condition = function()
+		return false
+	end,
 })
 
 -- ====================== Lualine ======================
