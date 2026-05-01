@@ -1,0 +1,527 @@
+-- =============================================================
+-- Neovim 0.12 Optimized init.lua (Native-first, No Treesitter)
+-- Compliant with Neovim 0.12
+-- =============================================================
+
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
+-- ====================== Basic Options ======================
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.signcolumn = "yes"
+vim.opt.cursorline = true
+vim.opt.wrap = false
+vim.opt.scrolloff = 8
+vim.opt.sidescrolloff = 8
+vim.opt.cmdheight = 1
+vim.opt.mouse = "a"
+vim.opt.showmode = false
+vim.opt.breakindent = true
+vim.opt.updatetime = 250
+vim.opt.timeoutlen = 300
+vim.opt.list = true
+vim.opt.textwidth = 80
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.expandtab = true
+vim.opt.smartindent = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.hlsearch = true
+vim.opt.incsearch = true
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+vim.opt.undofile = true
+vim.opt.swapfile = false
+vim.opt.termguicolors = true
+vim.opt.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50"
+vim.opt.winborder = "rounded"
+vim.opt.completeopt = "menu,menuone,noinsert,popup"
+vim.opt.autocomplete = true
+vim.opt.clipboard = "unnamedplus"
+vim.opt.inccommand = "split"
+
+-- ====================== Plugins ======================
+local gh = function(p)
+	return "https://github.com/" .. p
+end
+
+vim.pack.add({
+	gh("sam4llis/nvim-tundra"),
+	gh("tpope/vim-sleuth"),
+	gh("rcarriga/nvim-notify"),
+	gh("MunifTanjim/nui.nvim"),
+	gh("folke/noice.nvim"),
+	gh("neovim/nvim-lspconfig"),
+	gh("Saghen/blink.cmp"),
+	gh("nvim-neo-tree/neo-tree.nvim"),
+	gh("echasnovski/mini.files"),
+	gh("stevearc/oil.nvim"),
+	gh("nvim-lua/plenary.nvim"),
+	gh("nvim-telescope/telescope.nvim"),
+	gh("supermaven-inc/supermaven-nvim"),
+	gh("stevearc/conform.nvim"),
+	gh("rachartier/tiny-inline-diagnostic.nvim"),
+	gh("nvim-tree/nvim-web-devicons"),
+	gh("nvim-lualine/lualine.nvim"),
+	gh("sindrets/diffview.nvim"),
+	gh("akinsho/toggleterm.nvim"),
+	gh("folke/which-key.nvim"),
+	gh("kdheepak/lazygit.nvim"),
+	gh("windwp/nvim-autopairs"),
+	gh("ibhagwan/fzf-lua"), -- ← fzf-lua adicionado
+})
+
+-- ====================== UI2 ======================
+require("vim._core.ui2").enable({
+	enable = true,
+	msg = {
+		target = "cmd",
+		pager = { height = 1 },
+		msg = { height = 0.5, timeout = 4500 },
+		dialog = { height = 0.5 },
+		cmd = { height = 0.5 },
+	},
+})
+
+-- ====================== Diagnostics ======================
+vim.diagnostic.config({
+	virtual_text = {
+		source = "if_many",
+		prefix = "●",
+		spacing = 20,
+	},
+	signs = {
+		text = {
+			[vim.diagnostic.severity.ERROR] = "",
+			[vim.diagnostic.severity.WARN] = "",
+			[vim.diagnostic.severity.INFO] = "",
+			[vim.diagnostic.severity.HINT] = "",
+		},
+	},
+	underline = true,
+	update_in_insert = false,
+	severity_sort = true,
+	float = { border = "rounded", source = true },
+})
+
+-- ====================== ToggleTerm ======================
+require("toggleterm").setup({
+	direction = "float",
+	open_mapping = [[<C-\>]],
+	insert_mappings = true,
+	terminal_mappings = true,
+	persist_size = true,
+	shade_terminals = true,
+	close_on_exit = false,
+	float_opts = { border = "rounded", winblend = 0 },
+	highlights = {
+		Normal = { guibg = "#0d0f15" },
+		NormalFloat = { link = "Normal" },
+		FloatBorder = { guifg = "#3d425a", guibg = "#0d0f15" },
+	},
+})
+
+local Terminal = require("toggleterm.terminal").Terminal
+local default_terminal = Terminal:new({ hidden = false })
+
+function _G._toggle_terminal()
+	default_terminal:toggle()
+end
+
+function _G._close_terminal_completely()
+	if default_terminal then
+		default_terminal:close()
+		default_terminal:shutdown()
+		default_terminal = Terminal:new({ hidden = false })
+	end
+end
+
+vim.keymap.set("n", "<leader>gg", "<Cmd>LazyGit<CR>", { noremap = true, silent = true })
+
+-- ====================== Colorscheme ======================
+vim.cmd.colorscheme("tundra")
+
+-- ====================== Which-key & Noice ======================
+require("config.which-key-config")
+
+require("noice").setup({
+	lsp = {
+		override = {
+			["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+			["vim.lsp.util.stylize_markdown"] = true,
+			["cmp.entry.get_documentation"] = true,
+		},
+	},
+	presets = {
+		bottom_search = true,
+		command_palette = true,
+		long_message_to_split = true,
+		inc_rename = false,
+		lsp_doc_border = false,
+	},
+})
+
+-- ====================== Neo-tree ======================
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+require("neo-tree").setup({
+	close_if_last_window = true,
+	popup_border_style = "rounded",
+	enable_git_status = true,
+	enable_modified_markers = true,
+	enable_diagnostics = true,
+	window = {
+		position = "left",
+		width = 30,
+		mapping_options = { noremap = true, nowait = true },
+		mappings = {
+			["<space>"] = "toggle_node",
+			["<2-LeftMouse>"] = "open",
+			["<cr>"] = "open",
+			["t"] = "open_tabnew",
+			["w"] = "open_window",
+			["C"] = "close_node",
+			["z"] = "close_all_nodes",
+			["a"] = { "add", config = { show_path = "relative" } },
+			["A"] = "add_directory",
+			["d"] = "delete",
+			["r"] = "rename",
+			["y"] = "copy_to_clipboard",
+			["x"] = "cut_to_clipboard",
+			["p"] = "paste_from_clipboard",
+			["c"] = "copy",
+			["m"] = "move",
+			["q"] = "close_window",
+			["R"] = "refresh",
+		},
+	},
+	filesystem = {
+		filtered_items = { hide_dotfiles = false, hide_gitignored = true, hide_hidden = false },
+		follow_current_file = { enabled = true },
+		use_libuv_file_watcher = true,
+	},
+})
+
+-- ====================== nvim-autopairs ======================
+require("nvim-autopairs").setup({
+	disable_filetype = { "TelescopePrompt", "spectre_panel" },
+	check_ts = false,
+	enable_check_bracket_line = true,
+	ignored_next_char = "[%w%.]",
+})
+
+-- ====================== Supermaven ======================
+require("supermaven-nvim").setup({
+	keymaps = { accept_suggestion = "<Tab>", clear_suggestion = "<C-]>", accept_word = "<C-j>" },
+	ignore_filetypes = { cpp = true },
+	color = { suggestion_color = "#ffffff", cterm = 244 },
+	condition = function()
+		return false
+	end,
+})
+
+-- ====================== Conform ======================
+require("conform").setup({
+	formatters_by_ft = {
+		lua = { "stylua" },
+		python = { "autopep8" },
+		javascript = { "biome" },
+		typescript = { "prettier" },
+		json = { "prettier" },
+		toml = { "tombi" },
+		markdown = { "oxfmt", "prettier", stop_after_first = true },
+		["markdown.mdx"] = { "oxfmt", "prettier", stop_after_first = true },
+		c = { "clang-format" },
+		cpp = { "clang-format" },
+		rust = { "rustfmt" },
+		go = { "goimports", "gofmt", stop_after_first = true },
+		yaml = { "yamlfmt" },
+	},
+	format_on_save = { timeout_ms = 2000, lsp_fallback = true },
+	formatters = {
+		prettier = { prepend_args = { "--tab-width", "4", "--use-tabs", "true" } },
+		stylua = { prepend_args = { "--indent-type", "Tabs", "--indent-width", "4" } },
+		clang_format = { prepend_args = { "--style={UseTab: ForIndentation, TabWidth: 4, IndentWidth: 4}" } },
+		rustfmt = { prepend_args = { "--config", "hard_tabs=true", "--config", "tab_spaces=4" } },
+	},
+})
+
+-- ====================== Lualine ======================
+require("lualine").setup({
+	options = {
+		theme = "tundra",
+		component_separators = { left = "", right = "" },
+		section_separators = { left = "", right = "" },
+	},
+	sections = {
+		lualine_a = { "mode" },
+		lualine_b = {
+			{
+				"branch",
+				fmt = function(str)
+					return #str > 5 and str:sub(1, 5) .. "…" or str
+				end,
+			},
+			"diff",
+		},
+		lualine_c = {
+			{
+				"filename",
+				path = 1,
+				file_status = true,
+				fmt = function(str)
+					local sep = package.config:sub(1, 1)
+					local parts = {}
+					for part in string.gmatch(str, "([^" .. sep .. "]+)") do
+						table.insert(parts, part)
+					end
+					if #parts == 1 then
+						return parts[1]
+					end
+					local result = {}
+					for i = 1, #parts - 1 do
+						table.insert(result, parts[i]:sub(1, 1))
+					end
+					table.insert(result, parts[#parts])
+					return table.concat(result, sep)
+				end,
+			},
+		},
+		lualine_x = { "diagnostics", "filetype" },
+		lualine_y = { "progress" },
+		lualine_z = { "location" },
+	},
+	inactive_sections = { lualine_c = { { "filename", path = 1, file_status = true } } },
+})
+
+-- ====================== Mini.files + Oil ======================
+require("mini.files").setup()
+
+require("oil").setup({
+	default_file_explorer = true,
+	columns = { "icon" },
+	delete_to_trash = false,
+	skip_confirm_for_simple_edits = false,
+	prompt_save_on_select_new_entry = true,
+	cleanup_delay_ms = 2000,
+	constrain_cursor = "editable",
+	keymaps = {
+		["g?"] = { "actions.show_help", mode = "n" },
+		["<CR>"] = "actions.select",
+		["<C-s>"] = { "actions.select", opts = { vertical = true } },
+		["<C-h>"] = { "actions.select", opts = { horizontal = true } },
+		["<C-t>"] = { "actions.select", opts = { tab = true } },
+		["<C-q>"] = { "actions.close", mode = "n" },
+		["<C-l>"] = "actions.refresh",
+		["-"] = { "actions.parent", mode = "n" },
+		["_"] = { "actions.open_cwd", mode = "n" },
+		["g."] = { "actions.toggle_hidden", mode = "n" },
+		["gx"] = "actions.open_external",
+	},
+	use_default_keymaps = true,
+	float = { padding = 2, border = "rounded" },
+	preview_win = { update_on_cursor_moved = true, preview_method = "fast_scratch" },
+})
+
+-- ====================== Notify ======================
+require("notify").setup({ render = "minimal", animation = { style = "slide" }, top_down = false, timeout = 2000 })
+
+-- ====================== Tiny Inline Diagnostic ======================
+require("tiny-inline-diagnostic").setup({
+	preset = "minimal",
+	transparent_bg = false,
+	transparent_cursorline = true,
+	hi = {
+		error = "DiagnosticError",
+		warn = "DiagnosticWarn",
+		info = "DiagnosticInfo",
+		hint = "DiagnosticHint",
+		arrow = "NonText",
+		background = "CursorLine",
+	},
+	options = { show_source = { enabled = false }, show_code = true, multilines = { enabled = false } },
+})
+
+-- ====================== Blink.cmp ======================
+require("blink.cmp").setup({
+	keymap = { preset = "default" },
+	appearance = { nerd_font_variant = "mono" },
+	completion = {
+		documentation = { auto_show = true },
+		accept = { auto_brackets = { enabled = true } },
+	},
+	sources = { default = { "lsp", "path", "snippets", "buffer" } },
+	fuzzy = { implementation = "prefer_rust" },
+})
+
+-- ====================== fzf-lua Configuration ======================
+require("fzf-lua").setup({
+	winopts = {
+		height = 0.85,
+		width = 0.80,
+		row = 0.35,
+		col = 0.50,
+		border = "rounded",
+		backdrop = 60,
+	},
+	files = { prompt = " Files❯ ", cmd = "fd --type f --hidden --exclude .git" },
+	grep = { prompt = " Grep❯ " },
+	buffers = { prompt = " Buffers❯ " },
+	colorscheme = { prompt = " Colorscheme❯ " },
+})
+
+-- Keymaps for fzf-lua
+vim.keymap.set("n", "<leader>ff", "<cmd>FzfLua files<CR>", { desc = "Find Files (fzf)" })
+vim.keymap.set("n", "<leader>fg", "<cmd>FzfLua live_grep<CR>", { desc = "Live Grep (fzf)" })
+vim.keymap.set("n", "<leader>fb", "<cmd>FzfLua buffers<CR>", { desc = "Buffers (fzf)" })
+vim.keymap.set("n", "<leader>fh", "<cmd>FzfLua help_tags<CR>", { desc = "Help Tags (fzf)" })
+vim.keymap.set("n", "<leader>fr", "<cmd>FzfLua oldfiles<CR>", { desc = "Recent Files (fzf)" })
+vim.keymap.set("n", "<leader>fc", "<cmd>FzfLua commands<CR>", { desc = "Commands (fzf)" })
+
+-- ====================== Native LSP ======================
+local capabilities = require("blink.cmp").get_lsp_capabilities()
+
+vim.lsp.enable({ "lua_ls", "rust_analyzer", "gopls" })
+
+vim.lsp.config("lua_ls", {
+	capabilities = capabilities,
+	settings = {
+		Lua = {
+			runtime = { version = "LuaJIT" },
+			workspace = { checkThirdParty = false, library = { vim.env.VIMRUNTIME, vim.fn.stdpath("data") .. "/site" } },
+			diagnostics = { globals = { "vim" } },
+			telemetry = { enable = false },
+			hint = { enable = true },
+		},
+	},
+})
+
+vim.lsp.config("rust_analyzer", {
+	capabilities = capabilities,
+	settings = {
+		["rust-analyzer"] = {
+			checkOnSave = { command = "clippy" },
+			inlayHints = { bindingModeHints = true, chainingHints = true, parameterHints = true, typeHints = true },
+		},
+	},
+})
+
+vim.lsp.config("gopls", {
+	capabilities = capabilities,
+	settings = {
+		gopls = {
+			analyses = { unusedparams = true, shadow = true },
+			staticcheck = true,
+			hints = { assignVariableTypes = true, parameterNames = true, rangeVariableTypes = true },
+		},
+	},
+	init_options = { usePlaceholders = false },
+})
+
+-- ====================== LSP Attach ======================
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(args)
+		local bufnr = args.buf
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		if not client then
+			return
+		end
+
+		local map = function(mode, lhs, rhs, desc)
+			vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc, noremap = true, silent = true })
+		end
+
+		map("n", "K", vim.lsp.buf.hover, "Hover Info")
+		map("n", "<C-k>", vim.lsp.buf.signature_help, "Signature Help")
+		map("n", "<leader>lnd", vim.lsp.buf.definition, "Go to Definition")
+		map("n", "<leader>lnD", vim.lsp.buf.declaration, "Go to Declaration")
+		map("n", "<leader>lni", vim.lsp.buf.implementation, "Go to Implementation")
+		map("n", "<leader>lnr", vim.lsp.buf.references, "References")
+		map("n", "<leader>lrn", vim.lsp.buf.rename, "Rename Symbol")
+		map({ "n", "v" }, "<leader>lra", vim.lsp.buf.code_action, "Code Action")
+		map("n", "<leader>lrf", function()
+			vim.lsp.buf.format({ async = true })
+		end, "Format Buffer")
+
+		if client:supports_method("textDocument/completion") then
+			vim.lsp.completion.enable(true, client.id, bufnr, { autotrigger = true })
+		end
+	end,
+})
+
+-- ====================== Tundra ======================
+require("nvim-tundra").setup({ plugins = { telescope = true } })
+
+-- ====================== Session Management ======================
+local function session_path()
+	local name = vim.fn.getcwd():gsub("[/\\:]", "_")
+	return vim.fn.stdpath("data") .. "/sessions/" .. name .. ".vim"
+end
+
+vim.api.nvim_create_autocmd("VimEnter", {
+	nested = true,
+	group = vim.api.nvim_create_augroup("user_session", { clear = true }),
+	callback = function()
+		if vim.fn.argc() > 0 then
+			return
+		end
+		local path = session_path()
+		if vim.fn.filereadable(path) == 1 then
+			vim.cmd("silent! source " .. vim.fn.fnameescape(path))
+		end
+	end,
+})
+
+vim.api.nvim_create_autocmd("VimLeavePre", {
+	group = vim.api.nvim_create_augroup("user_session", { clear = true }),
+	callback = function()
+		local path = session_path()
+		vim.fn.mkdir(vim.fn.fnamemodify(path, ":h"), "p")
+		vim.cmd("mksession! " .. vim.fn.fnameescape(path))
+	end,
+})
+
+-- ====================== General Autocmds ======================
+local autocmd = vim.api.nvim_create_autocmd
+local augroup = function(name)
+	return vim.api.nvim_create_augroup("user_" .. name, { clear = true })
+end
+
+autocmd("FileType", {
+	group = augroup("no_auto_comment"),
+	callback = function()
+		vim.opt_local.formatoptions:remove({ "c", "r", "o" })
+	end,
+})
+
+autocmd("TextYankPost", {
+	group = augroup("yank_highlight"),
+	callback = function()
+		vim.highlight.on_yank({ higroup = "Visual", timeout = 150 })
+	end,
+})
+
+autocmd("BufReadPost", {
+	group = augroup("last_location"),
+	callback = function(args)
+		local mark = vim.api.nvim_buf_get_mark(args.buf, '"')
+		local line_count = vim.api.nvim_buf_line_count(args.buf)
+		if mark[1] > 0 and mark[1] <= line_count then
+			vim.cmd('normal! g`"zz')
+		end
+	end,
+})
+
+autocmd("FileType", {
+	group = augroup("close_with_q"),
+	pattern = { "help", "qf", "notify", "lspinfo", "checkhealth" },
+	callback = function(event)
+		vim.bo[event.buf].buflisted = false
+		vim.keymap.set("n", "q", "<cmd>close<CR>", { buffer = event.buf, silent = true })
+	end,
+})
+
+print("Neovim 0.12 config loaded successfully!")
