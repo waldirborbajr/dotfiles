@@ -496,16 +496,60 @@ vim.lsp.config("lua_ls", {
 	},
 })
 
-vim.lsp.config("gopls", {
+vim.lsp.config("rust_analyzer", {
 	capabilities = capabilities,
+	cmd = { "rust-analyzer" },
+	filetypes = { "rust" },
+	root_markers = { "Cargo.toml", "rust-project.json", ".git" },
 	settings = {
-		gopls = {
-			experimentalPostfixCompletions = true,
-			analyses = { unusedparams = true, shadow = true },
-			staticcheck = true,
-			gofumpt = true,
+		["rust-analyzer"] = {
+			checkOnSave = {
+				command = "clippy",
+			},
+			inlayHints = {
+				bindingModeHints = { enable = true },
+				chainingHints = { enable = true },
+				closingBraceHints = { enable = true, minLines = 25 },
+				closureReturnTypeHints = { enable = "with_block" },
+				lifetimeElisionHints = { enable = "skip_trivial" },
+				parameterHints = { enable = true },
+				typeHints = { enable = true },
+			},
 		},
 	},
+})
+
+vim.lsp.config("gopls", {
+	capabilities = capabilities,
+	cmd = { "gopls" },
+	filetypes = { "go", "gomod", "gowork", "gotmpl" },
+	root_markers = { "go.work", "go.mod", ".git" },
+	settings = {
+		gopls = {
+			analyses = {
+				unusedparams = true,
+				shadow = true,
+			},
+			staticcheck = true,
+			hints = {
+				assignVariableTypes = true,
+				compositeLiteralFields = true,
+				compositeLiteralTypes = true,
+				constantValues = true,
+				functionTypeParameters = true,
+				parameterNames = true,
+				rangeVariableTypes = true,
+			},
+		},
+	},
+	-- settings = {
+	-- 	gopls = {
+	-- 		experimentalPostfixCompletions = true,
+	-- 		analyses = { unusedparams = true, shadow = true },
+	-- 		staticcheck = true,
+	-- 		gofumpt = true,
+	-- 	},
+	-- },
 	init_options = { usePlaceholders = false },
 })
 
@@ -700,87 +744,139 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {
-    callback = function(args)
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if not client then return end
+	callback = function(args)
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		if not client then
+			return
+		end
 
-        local buf = args.buf
+		local buf = args.buf
 
-        -- Enable LSP completions
-        if client:supports_method("textDocument/completion") then
-            vim.lsp.completion.enable(true, client.id, buf, { autotrigger = true })
-        end
+		-- Enable LSP completions
+		if client:supports_method("textDocument/completion") then
+			vim.lsp.completion.enable(true, client.id, buf, { autotrigger = true })
+		end
 
-        -- Format buffer on save
-        vim.api.nvim_create_autocmd("BufWritePre", {
-            buffer = buf,
-            callback = function()
-                vim.lsp.buf.format({ bufnr = buf, async = false })
-            end,
-        })
-    end,
-})vim.api.nvim_create_autocmd("LspAttach", {
-    callback = function(args)
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if not client then return end
+		-- Format buffer on save
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			buffer = buf,
+			callback = function()
+				vim.lsp.buf.format({ bufnr = buf, async = false })
+			end,
+		})
+	end,
+})
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(args)
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		if not client then
+			return
+		end
 
-        local buf = args.buf
+		local buf = args.buf
 
-        -- Enable LSP completions
-        if client:supports_method("textDocument/completion") then
-            vim.lsp.completion.enable(true, client.id, buf, { autotrigger = true })
-        end
+		-- Enable LSP completions
+		if client:supports_method("textDocument/completion") then
+			vim.lsp.completion.enable(true, client.id, buf, { autotrigger = true })
+		end
 
-        -- Format buffer on save
-        vim.api.nvim_create_autocmd("BufWritePre", {
-            buffer = buf,
-            callback = function()
-                vim.lsp.buf.format({ bufnr = buf, async = false })
-            end,
-        })
-    end,
+		-- Format buffer on save
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			buffer = buf,
+			callback = function()
+				vim.lsp.buf.format({ bufnr = buf, async = false })
+			end,
+		})
+	end,
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {
-    callback = function(args)
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if not client then return end
+	callback = function(args)
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		if not client then
+			return
+		end
 
-        local buf = args.buf
+		local buf = args.buf
 
-        -- Enable LSP completions
-        if client:supports_method("textDocument/completion") then
-            vim.lsp.completion.enable(true, client.id, buf, { autotrigger = true })
-        end
+		-- Enable LSP completions
+		if client:supports_method("textDocument/completion") then
+			vim.lsp.completion.enable(true, client.id, buf, { autotrigger = true })
+		end
 
-        -- Format buffer on save
-        vim.api.nvim_create_autocmd("BufWritePre", {
-            buffer = buf,
-            callback = function()
-                vim.lsp.buf.format({ bufnr = buf, async = false })
-            end,
-        })
-    end,
-})vim.api.nvim_create_autocmd("LspAttach", {
-    callback = function(args)
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-        if not client then return end
-
-        local buf = args.buf
-
-        -- Enable LSP completions
-        if client:supports_method("textDocument/completion") then
-            vim.lsp.completion.enable(true, client.id, buf, { autotrigger = true })
-        end
-
-        -- Format buffer on save
-        vim.api.nvim_create_autocmd("BufWritePre", {
-            buffer = buf,
-            callback = function()
-                vim.lsp.buf.format({ bufnr = buf, async = false })
-            end,
-        })
-    end,
+		-- Format buffer on save
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			buffer = buf,
+			callback = function()
+				vim.lsp.buf.format({ bufnr = buf, async = false })
+			end,
+		})
+	end,
 })
+
+vim.api.nvim_create_autocmd("LspAttach", {
+	callback = function(args)
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		if not client then
+			return
+		end
+
+		local buf = args.buf
+
+		-- Enable LSP completions
+		if client:supports_method("textDocument/completion") then
+			vim.lsp.completion.enable(true, client.id, buf, { autotrigger = true })
+		end
+
+		-- Format buffer on save
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			buffer = buf,
+			callback = function()
+				vim.lsp.buf.format({ bufnr = buf, async = false })
+			end,
+		})
+	end,
+})
+
+-- ---------------------------------------------------------------------------
+-- LSP debug helper — run :LspStatus
+-- ---------------------------------------------------------------------------
+function _G.LspStatus()
+	local buf = vim.api.nvim_get_current_buf()
+	local ft = vim.bo[buf].filetype
+	local clients = vim.lsp.get_clients({ bufnr = buf })
+
+	local lines = {
+		"=== LSP Status ===",
+		"Buffer: " .. buf .. "  Filetype: " .. (ft == "" and "<empty>" or ft),
+		"Clients attached: " .. #clients,
+	}
+
+	if #clients == 0 then
+		table.insert(lines, "  (none — server probably not installed or not started)")
+	else
+		for _, c in ipairs(clients) do
+			table.insert(lines, "  • " .. c.name .. " (id=" .. c.id .. ")")
+		end
+	end
+
+	local diags = vim.diagnostic.get(buf)
+	table.insert(lines, "Diagnostics in buffer: " .. #diags)
+	if #diags > 0 then
+		for _, d in ipairs(diags) do
+			local sev = vim.diagnostic.severity[d.severity] or "?"
+			table.insert(lines, string.format("  [%s] L%d: %s", sev, d.lnum + 1, d.message:gsub("\n", " ")))
+		end
+	end
+
+	-- Print to :messages
+	for _, l in ipairs(lines) do
+		vim.notify(l, vim.log.levels.INFO)
+	end
+end
+
+vim.api.nvim_create_user_command("LspStatus", function()
+	_G.LspStatus()
+end, { desc = "Show LSP/diagnostic status" })
 
 print("Neovim 0.13 config loaded successfully!")
