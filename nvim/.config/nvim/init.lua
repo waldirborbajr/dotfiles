@@ -148,6 +148,7 @@ vim.pack.add({ gh("akinsho/toggleterm.nvim") })
 vim.pack.add({ gh("folke/which-key.nvim") })
 vim.pack.add({ gh("kdheepak/lazygit.nvim") })
 vim.pack.add({ gh("windwp/nvim-autopairs") })
+vim.pack.add({ gh("ibhagwan/fzf-lua") })
 
 -- ====================== UI2 (0.12 feature) ======================
 require("vim._core.ui2").enable({
