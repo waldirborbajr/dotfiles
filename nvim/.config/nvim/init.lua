@@ -21,7 +21,7 @@ vim.opt.breakindent = true
 vim.opt.updatetime = 250
 vim.opt.timeoutlen = 300
 vim.opt.list = true
-vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
+-- vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 vim.opt.textwidth = 80
 
 vim.opt.tabstop = 2
@@ -80,46 +80,6 @@ vim.diagnostic.config({
 		source = true,
 	},
 })
-
--- ====================== Basic Options ======================
--- vim.o.background = "dark"
--- vim.o.backup = false
--- vim.o.swapfile = false
--- vim.o.expandtab = true
--- vim.o.shiftwidth = 2
--- vim.o.tabstop = 2
--- vim.o.softtabstop = 2
--- vim.o.smartindent = true
--- vim.o.autoindent = true
--- vim.opt.backspace = { "start", "eol", "indent" }
-
--- vim.o.number = true
--- vim.o.relativenumber = true
--- vim.o.scrolloff = 8
--- vim.o.signcolumn = "yes"
--- vim.o.showmode = false
--- vim.o.wrap = false
--- vim.o.termguicolors = true
--- vim.o.updatetime = 50
--- vim.o.winborder = "rounded"
--- vim.o.hlsearch = true
--- vim.o.incsearch = true
-
--- vim.opt.title = true
--- vim.opt.path:append({ "**" })
--- vim.opt.wildignore:append({ "*/node_modules/*" })
--- vim.opt.splitbelow = true
--- vim.opt.splitright = true
-
--- -- Undercurl support
--- vim.cmd([[let &t_Cs = "\e[4:3m"]])
--- vim.cmd([[let &t_Ce = "\e[4:0m"]])
-
--- -- Format options
--- vim.opt.formatoptions:append({ "r" })
-
--- -- Native completion fallback (0.12)
--- vim.o.autocomplete = true
 
 -- ====================== Plugins ======================
 local gh = function(p)
