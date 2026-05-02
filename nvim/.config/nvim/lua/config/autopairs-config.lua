@@ -1,3 +1,5 @@
+return false
+
 local autopairs = require("nvim-autopairs") -- import nvim-autopairs
 
 -- setup autopairs
