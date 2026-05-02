@@ -276,7 +276,7 @@ require("noice").setup({
 	},
 })
 
--- ====================== fzf-lua (Substituiu Telescope) ======================
+-- ====================== fzf-lua ======================
 require("fzf-lua").setup({
 	winopts = {
 		height = 0.90,
@@ -287,18 +287,15 @@ require("fzf-lua").setup({
 		backdrop = 70,
 		preview = { default = "bat" },
 	},
-	files = { prompt = " Files❯ " },
-	grep = { prompt = " Grep❯ " },
-	buffers = { prompt = " Buffers❯ " },
 })
 
--- ====================== fzf-lua Keymaps ======================
-vim.keymap.set("n", "<leader>ff", "<cmd>FzfLua files<CR>", { desc = "Find Files" })
-vim.keymap.set("n", "<leader>fg", "<cmd>FzfLua live_grep<CR>", { desc = "Live Grep" })
-vim.keymap.set("n", "<leader>fb", "<cmd>FzfLua buffers<CR>", { desc = "Buffers" })
-vim.keymap.set("n", "<leader>fh", "<cmd>FzfLua help_tags<CR>", { desc = "Help Tags" })
-vim.keymap.set("n", "<leader>fr", "<cmd>FzfLua oldfiles<CR>", { desc = "Recent Files" })
-vim.keymap.set("n", "<Space><Space>", "<cmd>FzfLua files<CR>", { desc = "Find Files" })
+-- Keymaps fzf-lua (garantido)
+vim.keymap.set("n", "<leader>ff", "<cmd>FzfLua files<CR>", { desc = "Find Files", silent = true })
+vim.keymap.set("n", "<leader>fg", "<cmd>FzfLua live_grep<CR>", { desc = "Live Grep", silent = true })
+vim.keymap.set("n", "<leader>fb", "<cmd>FzfLua buffers<CR>", { desc = "Buffers", silent = true })
+vim.keymap.set("n", "<leader>fh", "<cmd>FzfLua help_tags<CR>", { desc = "Help Tags", silent = true })
+vim.keymap.set("n", "<leader>fr", "<cmd>FzfLua oldfiles<CR>", { desc = "Recent Files", silent = true })
+vim.keymap.set("n", "<Space><Space>", "<cmd>FzfLua files<CR>", { desc = "Find Files", silent = true })
 
 -- ====================== Blink.cmp ======================
 require("blink.cmp").setup({
@@ -426,3 +423,9 @@ autocmd("BufReadPost", {
 
 
 print("Neovim 0.12 config loaded successfully!")
+
+-- Limpeza de keymaps antigos do Telescope (caso ainda existam)
+pcall(vim.keymap.del, "n", "<Space><Space>")
+pcall(function()
+  vim.cmd("silent! delcommand Telescope")
+end)
