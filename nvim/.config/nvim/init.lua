@@ -259,6 +259,7 @@ vim.keymap.set("n", "<leader>gg", "<Cmd>LazyGit<CR>", { noremap = true, silent =
 -- ====================== Which-key & Noice ======================
 require("config.which-key-config")
 
+-- ====================== Noice ======================
 require("noice").setup({
 	lsp = {
 		override = {
@@ -396,36 +397,16 @@ local function session_path()
 end
 
 vim.api.nvim_create_autocmd("VimEnter", {
-  nested = true,
-  group = vim.api.nvim_create_augroup("user_session", { clear = true }),
-  callback = function()
-    -- Clean up stale Telescope references before session loads
-    pcall(vim.keymap.del, "n", "<Space><Space>")
-    pcall(vim.keymap.del, "n", "<leader>ff")
-    pcall(vim.keymap.del, "n", "<leader>fg")
-    pcall(vim.keymap.del, "n", "<leader>fb")
-    pcall(vim.keymap.del, "n", "<leader>fh")
-    pcall(function() vim.cmd("silent! delcommand Telescope") end)
-
-    if vim.fn.argc() > 0 then return end
-    local path = session_path()
-    if vim.fn.filereadable(path) == 1 then
-      vim.cmd("silent! source " .. vim.fn.fnameescape(path))
-    end
-  end,
+	nested = true,
+	group = vim.api.nvim_create_augroup("user_session", { clear = true }),
+	callback = function()
+		if vim.fn.argc() > 0 then return end
+		local path = session_path()
+		if vim.fn.filereadable(path) == 1 then
+			vim.cmd("silent! source " .. vim.fn.fnameescape(path))
+		end
+	end,
 })
-
--- vim.api.nvim_create_autocmd("VimEnter", {
--- 	nested = true,
--- 	group = vim.api.nvim_create_augroup("user_session", { clear = true }),
--- 	callback = function()
--- 		if vim.fn.argc() > 0 then return end
--- 		local path = session_path()
--- 		if vim.fn.filereadable(path) == 1 then
--- 			vim.cmd("silent! source " .. vim.fn.fnameescape(path))
--- 		end
--- 	end,
--- })
 
 vim.api.nvim_create_autocmd("VimLeavePre", {
 	group = vim.api.nvim_create_augroup("user_session", { clear = true }),
@@ -461,5 +442,26 @@ autocmd("BufReadPost", {
 	end,
 })
 
+-- Keymaps 
+
+-- System Clipboard
+vim.keymap.set({ "n", "v" }, "<leader>c", '"+y', { desc = "copy to system clipboard" })
+vim.keymap.set({ "n", "v" }, "<leader>x", '"+d', { desc = "cut to system clipboard" })
+vim.keymap.set({ "n", "v" }, "<leader>p", '"+p', { desc = "paste to system clipboard" })
+
+-- Window Switching 
+vim.keymap.set("n", "<leader>ww", "<C-w>w", { desc = "focus windows" })
+
+-- Row movee
+vim.keymap.set("n", "<A-j>", ":m .+1<CR>==", { desc = "Move line down" })
+vim.keymap.set("n", "<A-k>", ":m .-2<CR>==", { desc = "Move line up" })
+vim.keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
+vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
+
+-- Resize Window
+vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", { desc = "Increase window height" })
+vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", { desc = "Decrease window height" })
+vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease window width" })
+vim.keymap.set("n", "<C-Right>", ":vertical resize +2<CR>", { desc = "Increase window width" })
 
 print("Neovim 0.12 config loaded successfully!")
