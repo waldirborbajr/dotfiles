@@ -1,6 +1,6 @@
 -- =============================================================
 -- Neovim 0.12 Optimized init.lua (Native-first, No Treesitter)
--- Compliant with Neovim 0.12 - Versão Final
+-- Compliant with Neovim 0.12
 -- =============================================================
 
 vim.g.mapleader = " "
@@ -57,6 +57,7 @@ vim.pack.add({
 	gh("Saghen/blink.cmp"),
 	gh("stevearc/oil.nvim"),
 	gh("nvim-lua/plenary.nvim"),
+	gh("nvim-telescope/telescope.nvim"),
 	gh("supermaven-inc/supermaven-nvim"),
 	gh("stevearc/conform.nvim"),
 	gh("rachartier/tiny-inline-diagnostic.nvim"),
@@ -70,9 +71,10 @@ vim.pack.add({
 	gh("ibhagwan/fzf-lua"),
 })
 
--- ====================== Tundra ======================
--- require("nvim-tundra").setup({ plugins = { telescope = true } })
-require("nvim-tundra").setup({  })
+-- ====================== Tundra (deve vir antes do Lualine) ======================
+require("nvim-tundra").setup({
+	plugins = { telescope = true },
+})
 vim.cmd.colorscheme("tundra")
 
 -- ====================== UI2 ======================
@@ -124,7 +126,6 @@ require("tiny-inline-diagnostic").setup({
 })
 
 -- ====================== Lualine ======================
--- ====================== Lualine (corrigido - sem "no lsp" prematuro) ======================
 require("lualine").setup({
 	options = {
 		theme = "tundra",
@@ -150,16 +151,11 @@ require("lualine").setup({
 			{
 				function()
 					local clients = vim.lsp.get_clients({ bufnr = 0 })
-					if #clients == 0 then
-						return ""  -- Não mostra nada se não tiver LSP
-					end
+					if #clients == 0 then return " no lsp" end
 					local names = {}
-					for _, c in ipairs(clients) do
-						table.insert(names, c.name)
-					end
+					for _, c in ipairs(clients) do table.insert(names, c.name) end
 					return " " .. table.concat(names, ", ")
 				end,
-				color = { fg = "#a6e3a1" },
 			},
 			"filetype",
 		},
@@ -202,7 +198,7 @@ vim.keymap.set("n", "<leader>-", function()
 	require("oil").toggle_float()
 end, { desc = "Open Oil (Float)", noremap = true, silent = true })
 
--- ====================== Supermaven (Sempre Ativado) ======================
+-- ====================== Supermaven ======================
 require("supermaven-nvim").setup({
 	keymaps = {
 		accept_suggestion = "<Tab>",
@@ -210,16 +206,11 @@ require("supermaven-nvim").setup({
 		accept_word = "<C-j>",
 	},
 	ignore_filetypes = { cpp = true },
-	color = {
-		suggestion_color = "#ffffff",
-		cterm = 244,
-	},
+	color = { suggestion_color = "#ffffff", cterm = 244 },
 	log_level = "info",
 	disable_inline_completion = false,
 	disable_keymaps = false,
-	condition = function()
-		return false
-	end,
+	condition = function() return true end,
 })
 
 -- ====================== ToggleTerm ======================
@@ -276,7 +267,7 @@ require("noice").setup({
 	},
 })
 
--- ====================== fzf-lua (Substituiu Telescope) ======================
+-- ====================== fzf-lua ======================
 require("fzf-lua").setup({
 	winopts = {
 		height = 0.90,
@@ -285,20 +276,14 @@ require("fzf-lua").setup({
 		col = 0.50,
 		border = "rounded",
 		backdrop = 70,
-		preview = { default = "bat" },
 	},
-	files = { prompt = " Files❯ " },
-	grep = { prompt = " Grep❯ " },
-	buffers = { prompt = " Buffers❯ " },
 })
 
--- ====================== fzf-lua Keymaps ======================
 vim.keymap.set("n", "<leader>ff", "<cmd>FzfLua files<CR>", { desc = "Find Files" })
 vim.keymap.set("n", "<leader>fg", "<cmd>FzfLua live_grep<CR>", { desc = "Live Grep" })
 vim.keymap.set("n", "<leader>fb", "<cmd>FzfLua buffers<CR>", { desc = "Buffers" })
 vim.keymap.set("n", "<leader>fh", "<cmd>FzfLua help_tags<CR>", { desc = "Help Tags" })
 vim.keymap.set("n", "<leader>fr", "<cmd>FzfLua oldfiles<CR>", { desc = "Recent Files" })
-vim.keymap.set("n", "<Space><Space>", "<cmd>FzfLua files<CR>", { desc = "Find Files" })
 
 -- ====================== Blink.cmp ======================
 require("blink.cmp").setup({
@@ -363,7 +348,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 -- Inlay Hints globais
 vim.lsp.inlay_hint.enable(true)
 
--- ====================== Auto-save ======================
+-- ====================== Auto-save Inteligente ======================
 vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost" }, {
 	callback = function()
 		if vim.bo.buftype == "" and vim.bo.modifiable and vim.bo.modified then
@@ -423,6 +408,5 @@ autocmd("BufReadPost", {
 		end
 	end,
 })
-
 
 print("Neovim 0.12 config loaded successfully!")

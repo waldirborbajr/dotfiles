@@ -1,12 +1,12 @@
 -- =============================================================
 -- Neovim 0.12 Optimized init.lua (Native-first, No Treesitter)
--- Compliant with Neovim 0.12 - Versão Final
+-- Compliant with Neovim 0.12
 -- =============================================================
 
+-- -- ====================== Basic Options ======================
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
--- ====================== Basic Options ======================
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
@@ -21,6 +21,7 @@ vim.opt.breakindent = true
 vim.opt.updatetime = 250
 vim.opt.timeoutlen = 300
 vim.opt.list = true
+-- vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 vim.opt.textwidth = 80
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
@@ -36,10 +37,15 @@ vim.opt.undofile = true
 vim.opt.swapfile = false
 vim.opt.termguicolors = true
 vim.opt.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50"
-vim.opt.winborder = "rounded"
+vim.opt.winborder = "rounded" -- 0.12: native rounded borders everywhere
 vim.opt.completeopt = "menu,menuone,noinsert,popup"
-vim.opt.autocomplete = true
+vim.opt.autocomplete = true -- 0.12: native auto-completion
+vim.o.complete = "o,.,i" -- o: Omnifunc (LSP), .: Current buffer, i: Included files
+
+-- Use system clipboard
 vim.opt.clipboard = "unnamedplus"
+
+-- Preview substitutions live, as you type
 vim.opt.inccommand = "split"
 
 -- ====================== Plugins ======================
@@ -57,6 +63,7 @@ vim.pack.add({
 	gh("Saghen/blink.cmp"),
 	gh("stevearc/oil.nvim"),
 	gh("nvim-lua/plenary.nvim"),
+	gh("nvim-telescope/telescope.nvim"),
 	gh("supermaven-inc/supermaven-nvim"),
 	gh("stevearc/conform.nvim"),
 	gh("rachartier/tiny-inline-diagnostic.nvim"),
@@ -69,11 +76,6 @@ vim.pack.add({
 	gh("windwp/nvim-autopairs"),
 	gh("ibhagwan/fzf-lua"),
 })
-
--- ====================== Tundra ======================
--- require("nvim-tundra").setup({ plugins = { telescope = true } })
-require("nvim-tundra").setup({  })
-vim.cmd.colorscheme("tundra")
 
 -- ====================== UI2 ======================
 require("vim._core.ui2").enable({
@@ -123,8 +125,27 @@ require("tiny-inline-diagnostic").setup({
 	},
 })
 
+-- ====================== Supermaven ======================
+require("supermaven-nvim").setup({
+	keymaps = {
+		accept_suggestion = "<Tab>",
+		clear_suggestion = "<C-]>",
+		accept_word = "<C-j>",
+	},
+	ignore_filetypes = { cpp = true },
+	color = {
+		suggestion_color = "#ffffff",
+		cterm = 244,
+	},
+	log_level = "info",
+	disable_inline_completion = false,
+	disable_keymaps = false,
+	condition = function()
+		return false
+	end,
+})
+
 -- ====================== Lualine ======================
--- ====================== Lualine (corrigido - sem "no lsp" prematuro) ======================
 require("lualine").setup({
 	options = {
 		theme = "tundra",
@@ -150,16 +171,11 @@ require("lualine").setup({
 			{
 				function()
 					local clients = vim.lsp.get_clients({ bufnr = 0 })
-					if #clients == 0 then
-						return ""  -- Não mostra nada se não tiver LSP
-					end
+					if #clients == 0 then return " no lsp" end
 					local names = {}
-					for _, c in ipairs(clients) do
-						table.insert(names, c.name)
-					end
+					for _, c in ipairs(clients) do table.insert(names, c.name) end
 					return " " .. table.concat(names, ", ")
 				end,
-				color = { fg = "#a6e3a1" },
 			},
 			"filetype",
 		},
@@ -197,30 +213,11 @@ require("oil").setup({
 	preview_win = { update_on_cursor_moved = true, preview_method = "fast_scratch" },
 })
 
-vim.keymap.set("n", "<leader>e", "<cmd>Oil<CR>", { desc = "Open Oil", noremap = true, silent = true })
+-- Keymaps para Oil (corrigido)
+vim.keymap.set("n", "<leader>e", "<cmd>Oil<CR>",          { desc = "Open Oil", noremap = true, silent = true })
 vim.keymap.set("n", "<leader>-", function()
 	require("oil").toggle_float()
 end, { desc = "Open Oil (Float)", noremap = true, silent = true })
-
--- ====================== Supermaven (Sempre Ativado) ======================
-require("supermaven-nvim").setup({
-	keymaps = {
-		accept_suggestion = "<Tab>",
-		clear_suggestion = "<C-]>",
-		accept_word = "<C-j>",
-	},
-	ignore_filetypes = { cpp = true },
-	color = {
-		suggestion_color = "#ffffff",
-		cterm = 244,
-	},
-	log_level = "info",
-	disable_inline_completion = false,
-	disable_keymaps = false,
-	condition = function()
-		return false
-	end,
-})
 
 -- ====================== ToggleTerm ======================
 require("toggleterm").setup({
@@ -256,6 +253,9 @@ end
 
 vim.keymap.set("n", "<leader>gg", "<Cmd>LazyGit<CR>", { noremap = true, silent = true })
 
+-- ====================== Colorscheme ======================
+vim.cmd.colorscheme("tundra")
+
 -- ====================== Which-key & Noice ======================
 require("config.which-key-config")
 
@@ -276,7 +276,7 @@ require("noice").setup({
 	},
 })
 
--- ====================== fzf-lua (Substituiu Telescope) ======================
+-- ====================== fzf-lua ======================
 require("fzf-lua").setup({
 	winopts = {
 		height = 0.90,
@@ -285,20 +285,14 @@ require("fzf-lua").setup({
 		col = 0.50,
 		border = "rounded",
 		backdrop = 70,
-		preview = { default = "bat" },
 	},
-	files = { prompt = " Files❯ " },
-	grep = { prompt = " Grep❯ " },
-	buffers = { prompt = " Buffers❯ " },
 })
 
--- ====================== fzf-lua Keymaps ======================
 vim.keymap.set("n", "<leader>ff", "<cmd>FzfLua files<CR>", { desc = "Find Files" })
 vim.keymap.set("n", "<leader>fg", "<cmd>FzfLua live_grep<CR>", { desc = "Live Grep" })
 vim.keymap.set("n", "<leader>fb", "<cmd>FzfLua buffers<CR>", { desc = "Buffers" })
 vim.keymap.set("n", "<leader>fh", "<cmd>FzfLua help_tags<CR>", { desc = "Help Tags" })
 vim.keymap.set("n", "<leader>fr", "<cmd>FzfLua oldfiles<CR>", { desc = "Recent Files" })
-vim.keymap.set("n", "<Space><Space>", "<cmd>FzfLua files<CR>", { desc = "Find Files" })
 
 -- ====================== Blink.cmp ======================
 require("blink.cmp").setup({
@@ -317,18 +311,7 @@ local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 vim.lsp.enable({ "lua_ls", "rust_analyzer", "gopls" })
 
-vim.lsp.config("lua_ls", {
-	capabilities = capabilities,
-	settings = {
-		Lua = {
-			runtime = { version = "LuaJIT" },
-			workspace = { checkThirdParty = false, library = { vim.env.VIMRUNTIME } },
-			diagnostics = { globals = { "vim" } },
-			hint = { enable = true },
-		},
-	},
-})
-
+vim.lsp.config("lua_ls", { capabilities = capabilities, settings = { Lua = { runtime = { version = "LuaJIT" }, workspace = { checkThirdParty = false, library = { vim.env.VIMRUNTIME } }, diagnostics = { globals = { "vim" } }, hint = { enable = true } } } })
 vim.lsp.config("rust_analyzer", { capabilities = capabilities })
 vim.lsp.config("gopls", { capabilities = capabilities })
 
@@ -352,25 +335,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		map("n", "<leader>lrn", vim.lsp.buf.rename, "Rename")
 		map({ "n", "v" }, "<leader>lra", vim.lsp.buf.code_action, "Code Action")
 		map("n", "<leader>lrf", function() vim.lsp.buf.format({ async = true }) end, "Format")
-
-		map("n", "<leader>lih", function()
-			local enabled = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
-			vim.lsp.inlay_hint.enable(not enabled, { bufnr = bufnr })
-		end, "Toggle Inlay Hints")
 	end,
 })
 
--- Inlay Hints globais
-vim.lsp.inlay_hint.enable(true)
-
--- ====================== Auto-save ======================
-vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost" }, {
-	callback = function()
-		if vim.bo.buftype == "" and vim.bo.modifiable and vim.bo.modified then
-			vim.cmd("silent! write")
-		end
-	end,
-})
+-- ====================== Tundra ======================
+require("nvim-tundra").setup({ plugins = { telescope = true } })
 
 -- ====================== Session Management ======================
 local function session_path()
@@ -423,6 +392,5 @@ autocmd("BufReadPost", {
 		end
 	end,
 })
-
 
 print("Neovim 0.12 config loaded successfully!")
