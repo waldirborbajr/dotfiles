@@ -376,16 +376,36 @@ local function session_path()
 end
 
 vim.api.nvim_create_autocmd("VimEnter", {
-	nested = true,
-	group = vim.api.nvim_create_augroup("user_session", { clear = true }),
-	callback = function()
-		if vim.fn.argc() > 0 then return end
-		local path = session_path()
-		if vim.fn.filereadable(path) == 1 then
-			vim.cmd("silent! source " .. vim.fn.fnameescape(path))
-		end
-	end,
+  nested = true,
+  group = vim.api.nvim_create_augroup("user_session", { clear = true }),
+  callback = function()
+    -- Clean up stale Telescope references before session loads
+    pcall(vim.keymap.del, "n", "<Space><Space>")
+    pcall(vim.keymap.del, "n", "<leader>ff")
+    pcall(vim.keymap.del, "n", "<leader>fg")
+    pcall(vim.keymap.del, "n", "<leader>fb")
+    pcall(vim.keymap.del, "n", "<leader>fh")
+    pcall(function() vim.cmd("silent! delcommand Telescope") end)
+
+    if vim.fn.argc() > 0 then return end
+    local path = session_path()
+    if vim.fn.filereadable(path) == 1 then
+      vim.cmd("silent! source " .. vim.fn.fnameescape(path))
+    end
+  end,
 })
+
+-- vim.api.nvim_create_autocmd("VimEnter", {
+-- 	nested = true,
+-- 	group = vim.api.nvim_create_augroup("user_session", { clear = true }),
+-- 	callback = function()
+-- 		if vim.fn.argc() > 0 then return end
+-- 		local path = session_path()
+-- 		if vim.fn.filereadable(path) == 1 then
+-- 			vim.cmd("silent! source " .. vim.fn.fnameescape(path))
+-- 		end
+-- 	end,
+-- })
 
 vim.api.nvim_create_autocmd("VimLeavePre", {
 	group = vim.api.nvim_create_augroup("user_session", { clear = true }),
@@ -423,9 +443,3 @@ autocmd("BufReadPost", {
 
 
 print("Neovim 0.12 config loaded successfully!")
-
--- Limpeza de keymaps antigos do Telescope (caso ainda existam)
-pcall(vim.keymap.del, "n", "<Space><Space>")
-pcall(function()
-  vim.cmd("silent! delcommand Telescope")
-end)

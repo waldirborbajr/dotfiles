@@ -228,7 +228,7 @@ alias suspend="sudo pm-suspend"
 
 alias syslist="systemctl list-units --type=service --state=running"
 
-alias rmvim="rm -rf ~/.local/state/nvim ~/.local/share/nvim ~/.cache/nvim"
+alias rmvim="rm -rf ~/.config/nvim ~/.local/share/nvim ~/.cache/nvim ~/.local/state/nvim"
 
 #######################################
 # Utils
