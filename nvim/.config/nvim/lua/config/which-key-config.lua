@@ -12,29 +12,29 @@ wk.setup({
 
 wk.add({
 	-- Leader mappings
-	{ "<leader>e", ":Neotree toggle<CR>", desc = "Explorer" },
-	{ "<leader><space>", ":Telescope find_files<CR>", desc = "Find Files" },
-	{ "<leader>t", "<cmd>lua _toggle_terminal()<CR>", desc = "Terminal" },
-	{ "<leader>T", "<cmd>lua _close_terminal_completely()<CR>", desc = "Kill Terminal" },
+	-- { "<leader>e", ":Neotree toggle<CR>", desc = "Explorer" },
+	-- { "<leader><space>", ":Telescope find_files<CR>", desc = "Find Files" },
+	-- { "<leader>t", "<cmd>lua _toggle_terminal()<CR>", desc = "Terminal" },
+	-- { "<leader>T", "<cmd>lua _close_terminal_completely()<CR>", desc = "Kill Terminal" },
 	
 	-- Search group
-	{
-		"<leader>s",
-		group = "Search",
-		{ "<leader>sf", ":Telescope find_files<CR>", desc = "Find Files" },
-		{ "<leader>sg", ":Telescope live_grep<CR>", desc = "Grep" },
-		{ "<leader>sb", ":Telescope buffers<CR>", desc = "Buffers" },
-		{ "<leader>sh", ":Telescope help_tags<CR>", desc = "Help" },
-	},
+	-- {
+	-- 	"<leader>s",
+	-- 	group = "Search",
+	-- 	{ "<leader>sf", ":Telescope find_files<CR>", desc = "Find Files" },
+	-- 	{ "<leader>sg", ":Telescope live_grep<CR>", desc = "Grep" },
+	-- 	{ "<leader>sb", ":Telescope buffers<CR>", desc = "Buffers" },
+	-- 	{ "<leader>sh", ":Telescope help_tags<CR>", desc = "Help" },
+	-- },
 	
 	-- File group
-	{
-		"<leader>f",
-		group = "File",
-		{ "<leader>ff", ":Telescope find_files<CR>", desc = "Find" },
-		{ "<leader>fr", ":Telescope oldfiles<CR>", desc = "Recent" },
-		{ "<leader>fn", ":enew<CR>", desc = "New" },
-	},
+	-- {
+	-- 	"<leader>f",
+	-- 	group = "File",
+	-- 	{ "<leader>ff", ":Telescope find_files<CR>", desc = "Find" },
+	-- 	{ "<leader>fr", ":Telescope oldfiles<CR>", desc = "Recent" },
+	-- 	{ "<leader>fn", ":enew<CR>", desc = "New" },
+	-- },
 	
 	-- Workspace/project group
 	{
