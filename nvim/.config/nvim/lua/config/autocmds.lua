@@ -30,3 +30,18 @@ autocmd("FileType", {
     vim.opt_local.formatoptions:remove({ "c", "r", "o" })
   end,
 })
+
+-- Disable next line comments
+autocmd("BufEnter", {
+  callback = function()
+    vim.cmd("set formatoptions-=cro")
+    vim.cmd("setlocal formatoptions-=cro")
+  end,
+})
+
+autocmd({ "BufNewFile", "BufFilePre", "BufRead" }, {
+  pattern = { "*.mdx", "*.md" },
+  callback = function()
+    vim.cmd([[set filetype=markdown wrap linebreak nolist nospell]])
+  end,
+})

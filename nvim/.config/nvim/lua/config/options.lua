@@ -20,6 +20,10 @@ vim.opt.undofile = true
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
+-- spelling
+vim.opt.spell = false
+vim.opt.spelllang = { "en_us" }
+
 -- indent
 vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
@@ -39,3 +43,18 @@ vim.o.winblend = 0
 
 -- clipboard
 vim.opt.clipboard = ""
+
+-- misc
+vim.opt.guicursor = ""
+vim.opt.isfname:append("@-@")
+vim.opt.signcolumn = "yes"
+vim.opt.updatetime = 50
+
+-- Default splitting will cause your main splits to jump when opening an edgebar.
+-- To prevent this, set `splitkeep` to either `screen` or `topline`.
+vim.opt.splitkeep = "screen"
+
+-- open splits in a more natural direction
+-- https://vimtricks.com/p/open-splits-more-naturally/
+vim.opt.splitright = true
+vim.opt.splitbelow = true
