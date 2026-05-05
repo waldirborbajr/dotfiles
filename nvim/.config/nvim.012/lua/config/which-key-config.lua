@@ -60,15 +60,15 @@ wk.add({
 	},
 	
 	-- LSP Navigation group
-	{
-		"<leader>ln",
-		group = "Navigate",
-		{ "<leader>lnd", vim.lsp.buf.definition, desc = "Definition" },
-		{ "<leader>lnD", vim.lsp.buf.declaration, desc = "Declaration" },
-		{ "<leader>lni", vim.lsp.buf.implementation, desc = "Implementation" },
-		{ "<leader>lnr", vim.lsp.buf.references, desc = "References" },
-		{ "<leader>lnt", vim.lsp.buf.type_definition, desc = "Type Definition" },
-	},
+	-- {
+	-- 	"<leader>ln",
+	-- 	group = "Navigate",
+	-- 	{ "<leader>lnd", vim.lsp.buf.definition, desc = "Definition" },
+	-- 	{ "<leader>lnD", vim.lsp.buf.declaration, desc = "Declaration" },
+	-- 	{ "<leader>lni", vim.lsp.buf.implementation, desc = "Implementation" },
+	-- 	{ "<leader>lnr", vim.lsp.buf.references, desc = "References" },
+	-- 	{ "<leader>lnt", vim.lsp.buf.type_definition, desc = "Type Definition" },
+	-- },
 	
 	-- LSP Refactor group
 	{
