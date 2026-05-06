@@ -4,13 +4,51 @@
     "height": 32,
     "spacing": 4,
 
-    "modules-left": ["niri/workspaces", "niri/window"],
+    // "modules-left": ["niri/workspaces", "niri/window"],
+    // "modules-center": ["clock"],
+    // "modules-right": ["bluetooth", "network", "battery", "pulseaudio", "tray"],
+  "modules-left": ["niri/workspaces", "niri/window"],
     "modules-center": ["clock"],
-    "modules-right": ["bluetooth", "network", "battery", "pulseaudio", "tray"],
+    "modules-right": ["idle_inhibitor", "cpu", "memory", "temperature", "backlight", "battery", "bluetooth", "network", "pulseaudio", "tray"],
+
 
     "clock": {
         "format": "{:%a %d %b  %H:%M}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+
+  "cpu": {
+        "format": "󰍛 {usage}%",
+        "interval": 5
+    },
+
+    "memory": {
+        "format": "󰘚 {percentage}%",
+        "interval": 10
+    },
+
+    "temperature": {
+        "format": "{icon} {temperatureC}°C",
+        "format-icons": ["", "", "󰔄"],
+        "critical-threshold": 80,
+        "interval": 10
+    },
+
+    "backlight": {
+        "format": "{icon} {percent}%",
+        "format-icons": ["󰃚", "󰃛", "󰃜", "󰃝", "󰃞", "󰃟", "󰃠"],
+        "on-scroll-up": "brightnessctl set +5%",
+        "on-scroll-down": "brightnessctl set 5%-"
+    },
+
+  "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "☕",
+            "deactivated": "󰤄"
+        },
+        "tooltip-format-activated": "Não dormir ativado",
+        "tooltip-format-deactivated": "Não dormir desativado"
     },
 
     "niri/workspaces": {
