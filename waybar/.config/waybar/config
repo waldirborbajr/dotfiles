@@ -1,0 +1,76 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 32,
+    "spacing": 4,
+
+    "modules-left": ["niri/workspaces", "niri/window"],
+    "modules-center": ["clock"],
+    "modules-right": ["bluetooth", "network", "battery", "pulseaudio", "tray"],
+
+    "clock": {
+        "format": "{:%a %d %b  %H:%M}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+
+    "niri/workspaces": {
+        "format": "{icon}",
+        "format-icons": {
+            "active": "",
+            "default": ""
+        },
+        "all-outputs": false
+    },
+
+    "niri/window": {
+        "format": "{}",
+        "max-length": 60,
+        "rewrite": {
+            "(.*) - Mozilla Firefox": "🌍 $1",
+            "(.*) - Brave": "🌍 $1"
+        }
+    },
+
+    "battery": {
+        "bat": "BAT0",          // ← verifique com: ls /sys/class/power_supply/
+        "adapter": "ADP0",
+        "interval": 10,
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
+    },
+
+    "network": {
+        "format-wifi": " {essid} ({signalStrength}%)",
+        "format-ethernet": "󰈀 {ipaddr}",
+        "format-disconnected": "󰤮 Desconectado",
+        "tooltip-format": "{ifname} • {ipaddr}",
+        "on-click": "nm-connection-editor"
+    },
+
+  "bluetooth": {
+    "format": " {status}",
+    "format-disabled": "󰂲",
+    "format-connected": " {num_connections}",
+    "format-on": "",
+    "tooltip-format": "{controller_alias}\n{controller_address}",
+    "tooltip-format-connected": "{controller_alias}\n{controller_address}\n\n{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias} {device_address}",
+    "on-click": "blueman-manager"
+    },
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰝟 Mudo",
+        "format-icons": ["", "", ""],
+        "on-click": "pavucontrol"
+    },
+
+    "tray": {
+        "spacing": 10
+    }
+}

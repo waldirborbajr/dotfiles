@@ -120,7 +120,8 @@ layout {
 // ============================================================
 
 // QuickShell / launcher
-spawn-sh-at-startup "qs"
+// spawn-sh-at-startup "qs"
+spawn-at-startup "waybar"
 
 // ============================================================
 // GENERAL SETTINGS
