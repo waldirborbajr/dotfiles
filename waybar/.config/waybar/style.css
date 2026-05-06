@@ -10,6 +10,19 @@ window#waybar {
     border-bottom: 3px solid #89b4fa;
 }
 
+#custom-notification {
+    padding: 0 12px;
+    margin: 0 4px;
+}
+
+#custom-notification.notification {
+    color: #f38ba8;
+}
+
+#custom-notification.dnd {
+    color: #a6e3a1;
+}
+
 #workspaces button {
     padding: 0 10px;
     margin: 0 2px;
