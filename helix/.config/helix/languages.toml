@@ -1,11 +1,3 @@
-# nguage-server.rust-analyzer.config]
-#    | ^
-# invalid table header
-# duplicate key `config` in table `language-server.rust-analyzer`Global defaults (applies unless overridden per language)
-# You can add this at the top if you want even more consistency:
-# [editor]
-# indent = { tab-width = 4, unit = "\t" }  # But per-language overrides are safer
-
 ####################################################################################################
 # Go — Official style: tabs (gofmt uses tabs), but visual width often 8; we set 4 as you prefer
 ####################################################################################################
@@ -43,30 +35,25 @@ indent = { tab-width = 4, unit = "\t" }
 persistent-diagnostic-sources = ["gopls"]
 
 ####################################################################################################
-# Rust — tabs 4 (non-official, rustfmt default is spaces 4; clippy may warn on tabs in some teams)
+# Rust
 ####################################################################################################
 [language-server.rust-analyzer]
 command = "rust-analyzer"
-config.check.command = "clippy"
-config.cachePriming.enable = false
-config.inlayHints.bindingModeHints.enable = false
-config.inlayHints.closingBraceHints.minLines = 10
-config.inlayHints.closureReturnTypeHints.enable = "with_block"
-config.inlayHints.discriminantHints.enable = "fieldless"
-config.inlayHints.lifetimeElisionHints.enable = "skip_trivial"
-config.inlayHints.typeHints.hideClosureInitialization = false
 
-# Recommended rust-analyzer tweaks for better dev experience
+# Configurações do rust-analyzer
 [language-server.rust-analyzer.config]
-check.command = "clippy"  # Use clippy instead of cargo check for better lints
+check.command = "clippy"
 checkOnSave = true
 cargo.loadOutDirsFromCheck = true
 procMacro.enable = true
 
+# Inlay Hints (sugestões inline)
 [language-server.rust-analyzer.config.inlayHints]
-lifetimeElisionHints.enable = "skip_trivial"
-closureReturnTypeHints.enable = "with_block"
 bindingModeHints.enable = true
+closureReturnTypeHints.enable = "with_block"
+discriminantHints.enable = "fieldless"
+lifetimeElisionHints.enable = "skip_trivial"
+typeHints.hideClosureInitialization = false
 
 [[language]]
 name = "rust"
@@ -75,15 +62,14 @@ injection-regex = "rs|rust"
 file-types = ["rs"]
 roots = ["Cargo.toml", "Cargo.lock"]
 auto-format = true
-# formatter = { command = "rustfmt" }  # Uncomment if you want explicit; Helix uses rust-analyzer format by default
+language-servers = ["rust-analyzer"]
+indent = { tab-width = 4, unit = "\t" }
 comment-tokens = ["//", "///", "//!"]
 block-comment-tokens = [
   { start = "/*", end = "*/" },
   { start = "/**", end = "*/" },
   { start = "/*!", end = "*/" }
 ]
-language-servers = ["rust-analyzer"]
-indent = { tab-width = 4, unit = "\t" }
 persistent-diagnostic-sources = ["rustc", "clippy"]
 
 ####################################################################################################
