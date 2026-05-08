@@ -17,6 +17,13 @@ end-of-line-diagnostics = "hint"
 trim-trailing-whitespace = true
 trim-final-newlines = true
 
+[editor.auto-save]
+focus-lost = true
+
+[editor.auto-save.after-delay]
+enable = true
+timeout = 1500
+
 [editor.inline-diagnostics]
 cursor-line = "error"
 other-lines = "disable"
