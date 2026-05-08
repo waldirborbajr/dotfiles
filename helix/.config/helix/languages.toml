@@ -1,4 +1,7 @@
-# Global defaults (applies unless overridden per language)
+# nguage-server.rust-analyzer.config]
+#    | ^
+# invalid table header
+# duplicate key `config` in table `language-server.rust-analyzer`Global defaults (applies unless overridden per language)
 # You can add this at the top if you want even more consistency:
 # [editor]
 # indent = { tab-width = 4, unit = "\t" }  # But per-language overrides are safer

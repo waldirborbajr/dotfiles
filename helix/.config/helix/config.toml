@@ -2,7 +2,7 @@ theme = "catppuccin_mocha_blur"
 
 [editor]
 true-color = true
-auto-save = true
+# auto-save = true
 auto-format = true
 bufferline = "multiple"
 mouse = true
@@ -100,6 +100,10 @@ git-exclude = true
 l = ":toggle lsp.display-inlay-hints"
 w = ":write"
 q = ":quit"
+L = ":theme alucard"
+D = ":theme dracula"
+Y = ":sh echo -n %{buffer_name} | pbcopy"
+M = ":set-language markdown"
 
 [keys.select]
 i = "select_textobject_inner"
@@ -110,8 +114,3 @@ a = "select_textobject_around"
 [keys.insert]
 j = { j = "normal_mode" }
 
-[keys.normal.space]
-L = ":theme alucard"
-D = ":theme dracula"
-Y = ":sh echo -n %{buffer_name} | pbcopy"
-M = ":set-language markdown"
