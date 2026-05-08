@@ -44,6 +44,14 @@ persistent-diagnostic-sources = ["gopls"]
 ####################################################################################################
 [language-server.rust-analyzer]
 command = "rust-analyzer"
+config.check.command = "clippy"
+config.cachePriming.enable = false
+config.inlayHints.bindingModeHints.enable = false
+config.inlayHints.closingBraceHints.minLines = 10
+config.inlayHints.closureReturnTypeHints.enable = "with_block"
+config.inlayHints.discriminantHints.enable = "fieldless"
+config.inlayHints.lifetimeElisionHints.enable = "skip_trivial"
+config.inlayHints.typeHints.hideClosureInitialization = false
 
 # Recommended rust-analyzer tweaks for better dev experience
 [language-server.rust-analyzer.config]
