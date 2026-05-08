@@ -14,6 +14,8 @@ scroll-lines = 3
 text-width = 100
 gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
 end-of-line-diagnostics = "hint"
+trim-trailing-whitespace = true
+trim-final-newlines = true
 
 [editor.inline-diagnostics]
 cursor-line = "error"
