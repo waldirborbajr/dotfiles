@@ -65,10 +65,10 @@ git-global = true
 git-exclude = true
 
 [keys.normal]
-"%" = "match_brackets"
-"$" = "goto_line_end"
-"0" = "goto_line_start"
-"G" = "goto_file_end"
+# "%" = "match_brackets"
+# "$" = "goto_line_end"
+# "0" = "goto_line_start"
+# "G" = "goto_file_end"
 
 "A-<" = "goto_previous_buffer"
 "A->" = "goto_next_buffer"
@@ -113,4 +113,3 @@ a = "select_textobject_around"
 
 [keys.insert]
 j = { j = "normal_mode" }
-
