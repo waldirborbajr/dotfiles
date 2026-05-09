@@ -95,6 +95,7 @@ git-exclude = true
 "A-f" = ":format"
 "C-o" = "jump_backward"
 "C-i" = "jump_forward"
+"yy" = ["extend_to_line_bounds", "yank", "normal_mode"]
 
 [keys.normal.space]
 l = ":toggle lsp.display-inlay-hints"
