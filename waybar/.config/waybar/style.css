@@ -1,43 +1,91 @@
 * {
-    font-family: "JetBrains Mono", "Font Awesome 6 Free", sans-serif;
-    font-size: 13.5px;
-    font-weight: 600;
+  font-family: "Inter", "JetBrainsMono Nerd Font", sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  min-height: 0;
 }
 
 window#waybar {
-    background: rgba(30, 30, 46, 0.95);
-    color: #cdd6f4;
-    border-bottom: 3px solid #89b4fa;
-}
-
-#custom-notification {
-    padding: 0 12px;
-    margin: 0 4px;
-}
-
-#custom-notification.notification {
-    color: #f38ba8;
-}
-
-#custom-notification.dnd {
-    color: #a6e3a1;
-}
-
-#workspaces button {
-    padding: 0 10px;
-    margin: 0 2px;
-}
-
-#workspaces button.active {
-    background: #89b4fa;
-    color: #1e1e2e;
-    border-radius: 6px;
+  background: transparent;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #window {
-    margin: 0 12px;
+  color: white;
+  background-color: black;
+  padding: 0 25px;
+  min-width: 200px;
+  border-radius: 0px 0px 10px 10px;
+  margin-top: -1px;
 }
 
-#battery.warning { color: #f9e2af; }
-#battery.critical { color: #f38ba8; }
+#tray,
+#idle_inhibitor,
+#bluetooth,
+#pulseaudio,
+#network,
+#battery,
+#clock {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 3px 3px;
+  padding: 0px 10px;
+  border-radius: 20px;
+  color: white;
+}
 
+#workspaces {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 3px 4px;
+  padding: 0 5px;
+  border-radius: 20px;
+}
+
+#workspaces button {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  text-shadow: none;
+
+  color: rgba(255, 255, 255, 0.3); 
+  font-size: 12px; 
+  
+  padding: 2px 1px; 
+  margin: 0px;
+}
+
+#workspaces button.active {
+  color: #ffffff;
+  font-size: 14px; 
+}
+
+#workspaces button.urgent {
+  color: #f38ba8;
+}
+
+/* Remove hover background */
+#workspaces button:hover {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+#bluetooth {
+  font-size: 14px;
+}
+#tray {
+  margin: 3px 3px;
+  padding: 0px 10px;
+  border-radius: 20px;
+}
+
+#battery {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+#battery.charging { border-color: #a6e3a1; }
+#battery.warning { border-color: #ff9900; }
+#battery.critical { border-color: #ff4444; }
+#battery.plugged { border-color: #cba6f7; }
+
+#clock {
+  font-weight: 700;
+}
