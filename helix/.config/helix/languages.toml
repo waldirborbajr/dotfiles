@@ -35,12 +35,14 @@
 # # XML
 # npm i -g @redhat/lemminx
 
-
 ####################################################################################################
-# Helix languages.toml - Configuração Completa e Equilibrada
+# Helix languages.toml - Unified Balanced Config (2026)
 ####################################################################################################
 
-# =================================== Go ===================================
+# ================================================================================================
+# GO
+# ================================================================================================
+
 [language-server.gopls]
 command = "gopls"
 
@@ -65,28 +67,18 @@ name = "go"
 scope = "source.go"
 injection-regex = "go"
 file-types = ["go"]
-roots = ["go.work", "go.mod", "go.sum"]
+roots = ["go.work", "go.mod"]
 auto-format = true
 formatter = { command = "goimports" }
-comment-token = "//"
-block-comment-tokens = { start = "/*", end = "*/" }
-indent = { tab-width = 4, unit = "\t" }
-
-[[language]]
-name = "go"
-scope = "source.go"
-injection-regex = "go"
-file-types = ["go"]
-roots = ["go.work", "go.mod", "go.sum"]
-auto-format = true
-formatter = { command = "goimports" }
-comment-token = "//"
-block-comment-tokens = { start = "/*", end = "*/" }
 language-servers = ["gopls", "golangci-lint-lsp"]
+comment-token = "//"
+block-comment-tokens = { start = "/*", end = "*/" }
 indent = { tab-width = 4, unit = "\t" }
 
+# ================================================================================================
+# RUST
+# ================================================================================================
 
-# =================================== Rust ===================================
 [language-server.rust-analyzer]
 command = "rust-analyzer"
 
@@ -104,8 +96,13 @@ files.excludeDirs = [".git", "target", "node_modules"]
 
 [language-server.rust-analyzer.config.inlayHints]
 enable = true
+
 parameterHints.enable = true
+bindingModeHints.enable = true
+
 typeHints.enable = true
+typeHints.hideClosureInitialization = false
+
 chainingHints.enable = true
 closureReturnTypeHints.enable = "with_block"
 lifetimeElisionHints.enable = "skip_trivial"
@@ -119,7 +116,7 @@ name = "rust"
 scope = "source.rust"
 injection-regex = "rs|rust"
 file-types = ["rs"]
-roots = ["Cargo.toml", "Cargo.lock"]
+roots = ["Cargo.toml"]
 auto-format = true
 formatter = { command = "rustfmt" }
 language-servers = ["rust-analyzer"]
@@ -135,8 +132,79 @@ block-comment-tokens = [
 
 persistent-diagnostic-sources = ["rustc", "clippy"]
 
+# ================================================================================================
+# LUA
+# ================================================================================================
 
-# =================================== TOML ===================================
+[language-server.lua-language-server]
+command = "lua-language-server"
+
+[[language]]
+name = "lua"
+scope = "source.lua"
+injection-regex = "lua"
+file-types = ["lua"]
+roots = ["init.lua", ".luarc.json", ".stylua.toml"]
+auto-format = true
+formatter = { command = "stylua" }
+language-servers = ["lua-language-server"]
+indent = { tab-width = 2, unit = "  " }
+comment-token = "--"
+
+# ================================================================================================
+# TYPESCRIPT / JAVASCRIPT
+# ================================================================================================
+
+[language-server.typescript-language-server]
+command = "typescript-language-server"
+args = ["--stdio"]
+
+[[language]]
+name = "typescript"
+scope = "source.ts"
+file-types = ["ts", "tsx"]
+roots = ["package.json", "tsconfig.json"]
+auto-format = true
+formatter = { command = "prettier", args = ["--parser", "typescript"] }
+language-servers = ["typescript-language-server"]
+indent = { tab-width = 2, unit = "  " }
+
+[[language]]
+name = "javascript"
+scope = "source.js"
+file-types = ["js", "jsx", "mjs", "cjs"]
+roots = ["package.json"]
+auto-format = true
+formatter = { command = "prettier", args = ["--parser", "babel"] }
+language-servers = ["typescript-language-server"]
+indent = { tab-width = 2, unit = "  " }
+
+# ================================================================================================
+# PYTHON
+# ================================================================================================
+
+[language-server.pylsp]
+command = "pylsp"
+
+[[language]]
+name = "python"
+scope = "source.python"
+file-types = ["py", "pyi"]
+roots = ["pyproject.toml", "setup.py", "requirements.txt"]
+auto-format = true
+formatter = { command = "black", args = ["-"] }
+language-servers = ["pylsp"]
+indent = { tab-width = 4, unit = "    " }
+comment-token = "#"
+
+# ================================================================================================
+# TOML
+# ================================================================================================
+
+[language-server.taplo]
+command = "taplo"
+args = ["lsp", "stdio"]
+
 [[language]]
 name = "toml"
 scope = "source.toml"
@@ -149,12 +217,14 @@ language-servers = ["taplo"]
 indent = { tab-width = 2, unit = "  " }
 comment-token = "#"
 
-[language-server.taplo]
-command = "taplo"
-args = ["lsp", "stdio"]
+# ================================================================================================
+# JSON / JSONC
+# ================================================================================================
 
+[language-server.vscode-json-language-server]
+command = "vscode-json-language-server"
+args = ["--stdio"]
 
-# =================================== JSON / JSONC ===================================
 [[language]]
 name = "json"
 scope = "source.json"
@@ -162,16 +232,31 @@ injection-regex = "json"
 file-types = ["json", "jsonc"]
 roots = []
 auto-format = true
-formatter = { command = "jq", args = ["--indent", "2"] }
+formatter = { command = "prettier", args = ["--parser", "json"] }
 language-servers = ["vscode-json-language-server"]
 indent = { tab-width = 2, unit = "  " }
 
-[language-server.vscode-json-language-server]
-command = "vscode-json-language-server"
-args = ["--stdio"]
+# ================================================================================================
+# YAML
+# ================================================================================================
 
+[[language]]
+name = "yaml"
+scope = "source.yaml"
+file-types = ["yml", "yaml"]
+roots = []
+auto-format = true
+formatter = { command = "prettier", args = ["--parser", "yaml"] }
+indent = { tab-width = 2, unit = "  " }
+comment-token = "#"
 
-# =================================== XML ===================================
+# ================================================================================================
+# XML
+# ================================================================================================
+
+[language-server.lemminx]
+command = "lemminx"
+
 [[language]]
 name = "xml"
 scope = "source.xml"
@@ -183,39 +268,10 @@ language-servers = ["lemminx"]
 indent = { tab-width = 2, unit = "  " }
 comment-token = "<!--"
 
-[language-server.lemminx]
-command = "lemminx"
+# ================================================================================================
+# NIX
+# ================================================================================================
 
-
-# =================================== Dockerfile ===================================
-[language-server.docker-langserver]
-command = "docker-langserver"
-args = ["--stdio"]
-
-[[language]]
-name = "dockerfile"
-scope = "source.dockerfile"
-file-types = ["Dockerfile", "dockerfile"]
-roots = ["Dockerfile", "docker-compose.yml", "compose.yaml"]
-auto-format = false
-language-servers = ["docker-langserver"]
-indent = { tab-width = 4, unit = "\t" }
-comment-token = "#"
-
-
-# =================================== Markdown ===================================
-[[language]]
-name = "markdown"
-scope = "source.md"
-injection-regex = "md|markdown"
-file-types = ["md", "markdown", "mdx"]
-auto-format = false
-language-servers = []
-indent = { tab-width = 2, unit = "  " }
-comment-token = "<!--"
-
-
-# =================================== Nix ===================================
 [language-server.nixd]
 command = "nixd"
 
@@ -231,8 +287,46 @@ language-servers = ["nixd"]
 indent = { tab-width = 2, unit = "  " }
 comment-token = "#"
 
+# ================================================================================================
+# DOCKERFILE
+# ================================================================================================
 
-# =================================== Shell ===================================
+[language-server.docker-langserver]
+command = "docker-langserver"
+args = ["--stdio"]
+
+[[language]]
+name = "dockerfile"
+scope = "source.dockerfile"
+file-types = ["Dockerfile", "dockerfile"]
+roots = ["Dockerfile", "docker-compose.yml", "compose.yaml"]
+auto-format = false
+language-servers = ["docker-langserver"]
+indent = { tab-width = 4, unit = "\t" }
+comment-token = "#"
+
+# ================================================================================================
+# MARKDOWN
+# ================================================================================================
+
+[language-server.marksman]
+command = "marksman"
+args = ["server"]
+
+[[language]]
+name = "markdown"
+scope = "source.md"
+injection-regex = "md|markdown"
+file-types = ["md", "markdown", "mdx"]
+auto-format = false
+language-servers = ["marksman"]
+indent = { tab-width = 2, unit = "  " }
+comment-token = "<!--"
+
+# ================================================================================================
+# SHELL / BASH / ZSH
+# ================================================================================================
+
 [language-server.bash-language-server]
 command = "bash-language-server"
 args = ["start"]
@@ -241,16 +335,15 @@ args = ["start"]
 name = "bash"
 scope = "source.bash"
 injection-regex = "bash|sh|z?sh"
-file-types = ["sh", "bash", "zsh", "bashrc", "zshrc"]
-auto-format = false
-language-servers = ["bash-language-server"]
-indent = { tab-width = 4, unit = "\t" }
-comment-token = "#"
-
-[[language]]
-name = "sh"
-scope = "source.sh"
-file-types = ["sh"]
+file-types = [
+  "sh",
+  "bash",
+  "zsh",
+  ".bashrc",
+  ".zshrc",
+  ".profile",
+  ".bash_profile"
+]
 auto-format = false
 language-servers = ["bash-language-server"]
 indent = { tab-width = 4, unit = "\t" }
