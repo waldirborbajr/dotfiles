@@ -1,8 +1,6 @@
 ####################################################################################################
-# Helix languages.toml - Configuração Completa e Equilibrada
+# Go
 ####################################################################################################
-
-# =================================== Go ===================================
 [language-server.gopls]
 command = "gopls"
 
@@ -35,25 +33,14 @@ block-comment-tokens = { start = "/*", end = "*/" }
 language-servers = ["gopls", "golangci-lint-lsp"]
 indent = { tab-width = 4, unit = "\t" }
 
-[[language]]
-name = "go"
-scope = "source.go"
-injection-regex = "go"
-file-types = ["go"]
-roots = ["go.work", "go.mod", "go.sum"]
-auto-format = true
-formatter = { command = "goimports" }
-comment-token = "//"
-block-comment-tokens = { start = "/*", end = "*/" }
-language-servers = ["gopls", "golangci-lint-lsp"]
-indent = { tab-width = 4, unit = "\t" }
-
-
-# =================================== Rust ===================================
+####################################################################################################
+# Rust — Configuração Robusta
+####################################################################################################
 [language-server.rust-analyzer]
 command = "rust-analyzer"
 
 [language-server.rust-analyzer.config]
+# Checagem
 checkOnSave = true
 check = { command = "clippy" }
 
@@ -63,17 +50,20 @@ cargo.allFeatures = true
 procMacro.enable = true
 procMacro.attributes.enable = true
 
+# Performance
 files.excludeDirs = [".git", "target", "node_modules"]
 
+# Inlay Hints
 [language-server.rust-analyzer.config.inlayHints]
-enable = true
+bindingModeHints.enable = true
+closureReturnTypeHints.enable = "with_block"
+discriminantHints.enable = "fieldless"
+lifetimeElisionHints.enable = "skip_trivial"
 parameterHints.enable = true
 typeHints.enable = true
 chainingHints.enable = true
-closureReturnTypeHints.enable = "with_block"
-lifetimeElisionHints.enable = "skip_trivial"
-discriminantHints.enable = "fieldless"
 
+# Diagnósticos
 [language-server.rust-analyzer.config.diagnostics]
 enable = true
 
@@ -91,64 +81,15 @@ indent = { tab-width = 4, unit = "\t" }
 comment-tokens = ["//", "///", "//!"]
 block-comment-tokens = [
   { start = "/*", end = "*/" },
-  { start = "/**", end = "*/" }
+  { start = "/**", end = "*/" },
+  { start = "/*!", end = "*/" }
 ]
 
 persistent-diagnostic-sources = ["rustc", "clippy"]
 
-
-# =================================== TOML ===================================
-[[language]]
-name = "toml"
-scope = "source.toml"
-injection-regex = "toml"
-file-types = ["toml", "Cargo.lock"]
-roots = []
-auto-format = true
-formatter = { command = "taplo", args = ["fmt", "-"] }
-language-servers = ["taplo"]
-indent = { tab-width = 2, unit = "  " }
-comment-token = "#"
-
-[language-server.taplo]
-command = "taplo"
-args = ["lsp", "stdio"]
-
-
-# =================================== JSON / JSONC ===================================
-[[language]]
-name = "json"
-scope = "source.json"
-injection-regex = "json"
-file-types = ["json", "jsonc"]
-roots = []
-auto-format = true
-formatter = { command = "jq", args = ["--indent", "2"] }
-language-servers = ["vscode-json-language-server"]
-indent = { tab-width = 2, unit = "  " }
-
-[language-server.vscode-json-language-server]
-command = "vscode-json-language-server"
-args = ["--stdio"]
-
-
-# =================================== XML ===================================
-[[language]]
-name = "xml"
-scope = "source.xml"
-injection-regex = "xml"
-file-types = ["xml", "svg", "xsd", "xsl"]
-roots = []
-auto-format = false
-language-servers = ["lemminx"]
-indent = { tab-width = 2, unit = "  " }
-comment-token = "<!--"
-
-[language-server.lemminx]
-command = "lemminx"
-
-
-# =================================== Dockerfile ===================================
+####################################################################################################
+# Dockerfile
+####################################################################################################
 [language-server.docker-langserver]
 command = "docker-langserver"
 args = ["--stdio"]
@@ -164,19 +105,24 @@ indent = { tab-width = 4, unit = "\t" }
 comment-token = "#"
 
 
-# =================================== Markdown ===================================
+####################################################################################################
+# Markdown
+####################################################################################################
 [[language]]
 name = "markdown"
 scope = "source.md"
 injection-regex = "md|markdown"
 file-types = ["md", "markdown", "mdx"]
+roots = []
 auto-format = false
-language-servers = []
+language-servers = []          # adicione "marksman" se quiser
 indent = { tab-width = 2, unit = "  " }
 comment-token = "<!--"
 
 
-# =================================== Nix ===================================
+####################################################################################################
+# Nix
+####################################################################################################
 [language-server.nixd]
 command = "nixd"
 
@@ -193,7 +139,9 @@ indent = { tab-width = 2, unit = "  " }
 comment-token = "#"
 
 
-# =================================== Shell ===================================
+####################################################################################################
+# Shell (bash / sh)
+####################################################################################################
 [language-server.bash-language-server]
 command = "bash-language-server"
 args = ["start"]
@@ -203,6 +151,7 @@ name = "bash"
 scope = "source.bash"
 injection-regex = "bash|sh|z?sh"
 file-types = ["sh", "bash", "zsh", "bashrc", "zshrc"]
+roots = []
 auto-format = false
 language-servers = ["bash-language-server"]
 indent = { tab-width = 4, unit = "\t" }

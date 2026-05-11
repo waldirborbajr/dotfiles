@@ -35,19 +35,6 @@ block-comment-tokens = { start = "/*", end = "*/" }
 language-servers = ["gopls", "golangci-lint-lsp"]
 indent = { tab-width = 4, unit = "\t" }
 
-[[language]]
-name = "go"
-scope = "source.go"
-injection-regex = "go"
-file-types = ["go"]
-roots = ["go.work", "go.mod", "go.sum"]
-auto-format = true
-formatter = { command = "goimports" }
-comment-token = "//"
-block-comment-tokens = { start = "/*", end = "*/" }
-language-servers = ["gopls", "golangci-lint-lsp"]
-indent = { tab-width = 4, unit = "\t" }
-
 
 # =================================== Rust ===================================
 [language-server.rust-analyzer]
@@ -95,57 +82,6 @@ block-comment-tokens = [
 ]
 
 persistent-diagnostic-sources = ["rustc", "clippy"]
-
-
-# =================================== TOML ===================================
-[[language]]
-name = "toml"
-scope = "source.toml"
-injection-regex = "toml"
-file-types = ["toml", "Cargo.lock"]
-roots = []
-auto-format = true
-formatter = { command = "taplo", args = ["fmt", "-"] }
-language-servers = ["taplo"]
-indent = { tab-width = 2, unit = "  " }
-comment-token = "#"
-
-[language-server.taplo]
-command = "taplo"
-args = ["lsp", "stdio"]
-
-
-# =================================== JSON / JSONC ===================================
-[[language]]
-name = "json"
-scope = "source.json"
-injection-regex = "json"
-file-types = ["json", "jsonc"]
-roots = []
-auto-format = true
-formatter = { command = "jq", args = ["--indent", "2"] }
-language-servers = ["vscode-json-language-server"]
-indent = { tab-width = 2, unit = "  " }
-
-[language-server.vscode-json-language-server]
-command = "vscode-json-language-server"
-args = ["--stdio"]
-
-
-# =================================== XML ===================================
-[[language]]
-name = "xml"
-scope = "source.xml"
-injection-regex = "xml"
-file-types = ["xml", "svg", "xsd", "xsl"]
-roots = []
-auto-format = false
-language-servers = ["lemminx"]
-indent = { tab-width = 2, unit = "  " }
-comment-token = "<!--"
-
-[language-server.lemminx]
-command = "lemminx"
 
 
 # =================================== Dockerfile ===================================
