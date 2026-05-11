@@ -20,7 +20,7 @@ end
 
 -- ── FONT ──────────────────────────────────────────────────────────────────
 config.font = wezterm.font("JetBrainsMono Nerd Font")
-config.font_size = IS_MACOS and 12 or 11
+config.font_size = IS_MACOS and 14 or 12
 config.line_height = 1.2
 
 -- performance
