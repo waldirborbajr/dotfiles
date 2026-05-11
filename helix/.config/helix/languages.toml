@@ -1,3 +1,8 @@
+# Essenciais
+# cargo install stylua taplo
+# npm install -g prettier typescript-language-server
+# pip install black python-lsp-server
+
 # ####################################################################################################
 # # Go — Official style: tabs (gofmt uses tabs), but visual width often 8; we set 4 as you prefer
 # ####################################################################################################
