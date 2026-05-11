@@ -225,9 +225,9 @@ config.default_cursor_style = "SteadyBar"
 -- ── UI ────────────────────────────────────────────────────────────────
 config.color_scheme = "Catppuccin Macchiato"
 config.window_decorations = "NONE"
-config.window_padding = { left = 8, right = 8, top = 8, bottom = 12 }
+config.window_padding = { left = 8, right = 8, top = 4, bottom = 4 }
 
-config.enable_tab_bar = true
+config.enable_tab_bar = false
 config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = false
 config.tab_bar_at_bottom = true
