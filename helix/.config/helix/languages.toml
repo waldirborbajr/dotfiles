@@ -1,3 +1,41 @@
+# # Go
+# go install golang.org/x/tools/gopls@latest
+# go install golang.org/x/tools/cmd/goimports@latest
+# go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+# go install github.com/nametake/golangci-lint-langserver@latest
+
+# # Rust
+# rustup component add rust-analyzer rustfmt clippy
+
+# # Lua
+# cargo install stylua
+# npm i -g lua-language-server
+
+# # JS/TS/YAML/JSON
+# npm i -g typescript-language-server typescript prettier
+
+# # Python
+# pip install python-lsp-server black
+
+# # TOML
+# cargo install taplo-cli
+
+# # Nix
+# nix profile install nixpkgs#alejandra nixpkgs#nixd
+
+# # Docker
+# npm i -g dockerfile-language-server-nodejs
+
+# # Bash
+# npm i -g bash-language-server
+
+# # Markdown
+# cargo install marksman
+
+# # XML
+# npm i -g @redhat/lemminx
+
+
 ####################################################################################################
 # Helix languages.toml - Configuração Completa e Equilibrada
 ####################################################################################################
@@ -32,7 +70,6 @@ auto-format = true
 formatter = { command = "goimports" }
 comment-token = "//"
 block-comment-tokens = { start = "/*", end = "*/" }
-language-servers = ["gopls", "golangci-lint-lsp"]
 indent = { tab-width = 4, unit = "\t" }
 
 [[language]]
@@ -86,9 +123,11 @@ roots = ["Cargo.toml", "Cargo.lock"]
 auto-format = true
 formatter = { command = "rustfmt" }
 language-servers = ["rust-analyzer"]
+
 indent = { tab-width = 4, unit = "\t" }
 
 comment-tokens = ["//", "///", "//!"]
+
 block-comment-tokens = [
   { start = "/*", end = "*/" },
   { start = "/**", end = "*/" }

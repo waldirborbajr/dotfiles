@@ -1,25 +1,27 @@
-theme = "catppuccin_mocha_blur"
+# ====================== THEME ======================
+theme = "nord"
 
+# ====================== EDITOR ======================
 [editor]
 true-color = true
-# auto-save = true
 auto-format = true
 bufferline = "multiple"
 mouse = true
 line-number = "relative"
 cursorline = true
 color-modes = true
-idle-timeout = 200
+idle-timeout = 250
 scroll-lines = 3
+scrolloff = 8
 text-width = 100
 gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
 end-of-line-diagnostics = "hint"
 trim-trailing-whitespace = true
 trim-final-newlines = true
 
+# Auto-save inteligente
 [editor.auto-save]
 focus-lost = true
-
 [editor.auto-save.after-delay]
 enable = true
 timeout = 1500
@@ -33,6 +35,7 @@ insert = "bar"
 normal = "block"
 select = "underline"
 
+# Statusline aprimorada
 [editor.statusline]
 left = ["mode", "spinner", "version-control", "file-name"]
 center = ["file-base-name", "read-only-indicator", "file-modification-indicator"]
@@ -45,7 +48,6 @@ display-messages = true
 display-inlay-hints = true
 snippets = true
 auto-signature-help = false
-goto-reference-include-declaration = false
 
 [editor.soft-wrap]
 enable = true
@@ -55,7 +57,7 @@ wrap-indicator = "↪ "
 
 [editor.indent-guides]
 render = true
-character = "╎"
+character = "▏"          # mudei para este (fica mais limpo)
 
 [editor.file-picker]
 hidden = false
@@ -64,19 +66,18 @@ git-ignore = true
 git-global = true
 git-exclude = true
 
+# ====================== KEYBINDINGS ======================
 [keys.normal]
-# "%" = "match_brackets"
-# "$" = "goto_line_end"
-# "0" = "goto_line_start"
-# "G" = "goto_file_end"
-
+# Navegação de buffers
 "A-<" = "goto_previous_buffer"
 "A->" = "goto_next_buffer"
 "A-w" = ":buffer-close"
 
+# Busca
 "*" = "search_selection"
 "#" = ["search_selection", "search_prev"]
 
+# Ferramentas externas
 "C-g" = [
   ":new",
   ":insert-output lazygit",
@@ -100,8 +101,6 @@ git-exclude = true
 l = ":toggle lsp.display-inlay-hints"
 w = ":write"
 q = ":quit"
-L = ":theme alucard"
-D = ":theme dracula"
 Y = ":sh echo -n %{buffer_name} | pbcopy"
 M = ":set-language markdown"
 
@@ -113,3 +112,4 @@ a = "select_textobject_around"
 
 [keys.insert]
 j = { j = "normal_mode" }
+"C-s" = ":w"          # salvar com Ctrl+S
