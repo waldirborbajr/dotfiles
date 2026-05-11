@@ -1,182 +1,50 @@
-# Essenciais
-# cargo install stylua taplo
-# npm install -g prettier typescript-language-server
-# pip install black python-lsp-server
+# # Go
+# go install golang.org/x/tools/gopls@latest
+# go install golang.org/x/tools/cmd/goimports@latest
+# go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+# go install github.com/nametake/golangci-lint-langserver@latest
 
-# ####################################################################################################
-# # Go — Official style: tabs (gofmt uses tabs), but visual width often 8; we set 4 as you prefer
-# ####################################################################################################
-# [language-server.gopls]
-# command = "gopls"
-
-# [language-server.gopls.config]
-# gofumpt = true
-# staticcheck = true
-# semanticTokens = true
-# usePlaceholders = true
-# completeUnimported = true
-# vulncheck = "Imports"  # or "All" if you want more security checks
-
-# [language-server.gopls.config.hints]
-# compositeLiteralFields = true
-# parameterNames = true
-# rangeVariableTypes = true
-
-# [language-server.golangci-lint-lsp]
-# command = "golangci-lint-langserver"
-
-# [[language]]
-# name = "go"
-# scope = "source.go"
-# injection-regex = "go"
-# file-types = ["go"]
-# roots = ["go.work", "go.mod", "go.sum"]
-# auto-format = true
-# formatter = { command = "goimports" }  # or "gofumpt" if you prefer stricter
-# comment-token = "//"
-# block-comment-tokens = { start = "/*", end = "*/" }
-# language-servers = ["gopls", "golangci-lint-lsp"]
-# indent = { tab-width = 4, unit = "\t" }
-# persistent-diagnostic-sources = ["gopls"]
-
-# ####################################################################################################
 # # Rust
-# ####################################################################################################
-# [language-server.rust-analyzer]
-# command = "rust-analyzer"
+# rustup component add rust-analyzer rustfmt clippy
 
-# # Configurações do rust-analyzer
-# [language-server.rust-analyzer.config]
-# check.command = "clippy"
-# checkOnSave = true
-# cargo.loadOutDirsFromCheck = true
-# procMacro.enable = true
+# # Lua
+# cargo install stylua
+# npm i -g lua-language-server
 
-# # Inlay Hints (sugestões inline)
-# [language-server.rust-analyzer.config.inlayHints]
-# bindingModeHints.enable = true
-# closureReturnTypeHints.enable = "with_block"
-# discriminantHints.enable = "fieldless"
-# lifetimeElisionHints.enable = "skip_trivial"
-# typeHints.hideClosureInitialization = false
+# # JS/TS/YAML/JSON
+# npm i -g typescript-language-server typescript prettier
 
-# [[language]]
-# name = "rust"
-# scope = "source.rust"
-# injection-regex = "rs|rust"
-# file-types = ["rs"]
-# roots = ["Cargo.toml", "Cargo.lock"]
-# auto-format = true
-# language-servers = ["rust-analyzer"]
-# indent = { tab-width = 4, unit = "\t" }
-# comment-tokens = ["//", "///", "//!"]
-# block-comment-tokens = [
-#   { start = "/*", end = "*/" },
-#   { start = "/**", end = "*/" },
-#   { start = "/*!", end = "*/" }
-# ]
-# persistent-diagnostic-sources = ["rustc", "clippy"]
+# # Python
+# pip install python-lsp-server black
 
-# ####################################################################################################
-# # Dockerfile (Docker) — Use official docker-langserver
-# ####################################################################################################
-# [language-server.docker-langserver]
-# command = "docker-langserver"
-# args = ["--stdio"]
+# # TOML
+# cargo install taplo-cli
 
-# [[language]]
-# name = "dockerfile"
-# scope = "source.dockerfile"
-# file-types = ["Dockerfile", "dockerfile"]
-# roots = ["Dockerfile", "docker-compose.yml"]  # or .yaml
-# auto-format = false  # docker-langserver doesn't format well; use external if needed
-# language-servers = ["docker-langserver"]
-# indent = { tab-width = 4, unit = "\t" }
-# comment-token = "#"
+# # Nix
+# nix profile install nixpkgs#alejandra nixpkgs#nixd
 
-# ####################################################################################################
-# # Markdown (Markup) — Optional LSP like marksman for links/headings
-# ####################################################################################################
-# # Optional: add marksman for better Markdown (headings, links, completion)
-# # [language-server.marksman]
-# # command = "marksman"
-# # args = ["server"]
+# # Docker
+# npm i -g dockerfile-language-server-nodejs
 
-# [[language]]
-# name = "markdown"
-# scope = "source.md"
-# injection-regex = "md|markdown"
-# file-types = ["md", "markdown"]
-# roots = []
-# auto-format = false  # Usually no auto-format needed; or add prettier/dprint if wanted
-# language-servers = []  # ["marksman"] if installed
-# indent = { tab-width = 4, unit = "\t" }
-# comment-token = "<!--"  # or nothing; Markdown uses HTML comments
+# # Bash
+# npm i -g bash-language-server
 
-# ####################################################################################################
-# # Nix — nixd + alejandra (your choice, good!)
-# ####################################################################################################
-# [language-server.nixd]
-# command = "nixd"
+# # Markdown
+# cargo install marksman
 
-# # Optional: better NixOS/Home-Manager completions (adjust to your flake path)
-# [language-server.nixd.config.nixd]
-# # Example for NixOS flake (uncomment/adapt):
-# # nixpkgs.expr = "import (builtins.getFlake \"/etc/nixos\").inputs.nixpkgs { }"
-# # options.nixos.expr = "(builtins.getFlake \"/etc/nixos\").nixosConfigurations.${builtins.getEnv \"HOSTNAME\"}.options"
-
-# [language-server.nixd.config.formatting]
-# command = ["alejandra"]
-
-# [[language]]
-# name = "nix"
-# scope = "source.nix"
-# injection-regex = "nix"
-# file-types = ["nix", "flake.nix", "shell.nix"]
-# roots = ["flake.nix", "shell.nix", "default.nix"]
-# auto-format = true
-# formatter = { command = "alejandra" }
-# comment-token = "#"
-# language-servers = ["nixd"]
-# indent = { tab-width = 4, unit = "\t" }
-
-# ####################################################################################################
-# # Shell (bash/sh/zsh) — bash-language-server + shellcheck lint
-# ####################################################################################################
-# [language-server.bash-language-server]
-# command = "bash-language-server"
-# args = ["start"]
-
-# # Optional: shellcheck integration (via efm-langserver or directly)
-# # [language-server.efm-shellcheck]
-# # command = "efm-langserver"
-
-# [[language]]
-# name = "bash"
-# scope = "source.bash"
-# injection-regex = "bash|sh|z?sh"
-# file-types = ["sh", "bash", "zsh", "bashrc", "zshrc"]
-# roots = []
-# auto-format = false  # Shell formatters can be destructive; use shfmt manually if needed
-# language-servers = ["bash-language-server"]
-# indent = { tab-width = 4, unit = "\t" }
-# comment-token = "#"
-
-# # Optional: add sh for plain POSIX shell if you use it separately
-# [[language]]
-# name = "sh"
-# scope = "source.sh"
-# file-types = ["sh"]
-# indent = { tab-width = 4, unit = "\t" }
-# language-servers = ["bash-language-server"]  # bash-ls handles sh too
-
+# # XML
+# npm i -g @redhat/lemminx
 
 
 ####################################################################################################
-# Helix Languages Configuration - Versão Otimizada 2026
+# Helix Languages Configuration - Versão Unificada e Equilibrada (2026)
+# Melhorias combinadas da v1.0 + v2.0
 ####################################################################################################
 
-# ================================== Go ==================================
+# ================================================================================================
+# GO
+# ================================================================================================
+
 [language-server.gopls]
 command = "gopls"
 
@@ -198,58 +66,107 @@ command = "golangci-lint-langserver"
 
 [[language]]
 name = "go"
+scope = "source.go"
+injection-regex = "go"
 file-types = ["go"]
-roots = ["go.work", "go.mod"]
+roots = ["go.work", "go.mod", "go.sum"]
 auto-format = true
 formatter = { command = "goimports" }
 language-servers = ["gopls", "golangci-lint-lsp"]
+comment-token = "//"
+block-comment-tokens = { start = "/*", end = "*/" }
 indent = { tab-width = 4, unit = "\t" }
 
-# ================================== Rust ==================================
+# ================================================================================================
+# RUST
+# ================================================================================================
+
 [language-server.rust-analyzer]
 command = "rust-analyzer"
 
 [language-server.rust-analyzer.config]
-check.command = "clippy"
 checkOnSave = true
+check = { command = "clippy" }
+
 cargo.loadOutDirsFromCheck = true
+cargo.allFeatures = true
+
 procMacro.enable = true
+procMacro.attributes.enable = true
+
+files.excludeDirs = [".git", "target", "node_modules"]
 
 [language-server.rust-analyzer.config.inlayHints]
+enable = true
+
+parameterHints.enable = true
 bindingModeHints.enable = true
-closureReturnTypeHints.enable = "with_block"
-discriminantHints.enable = "fieldless"
-lifetimeElisionHints.enable = "skip_trivial"
+
+typeHints.enable = true
 typeHints.hideClosureInitialization = false
+
+chainingHints.enable = true
+
+closureReturnTypeHints.enable = "with_block"
+
+lifetimeElisionHints.enable = "skip_trivial"
+
+discriminantHints.enable = "fieldless"
+
+[language-server.rust-analyzer.config.diagnostics]
+enable = true
 
 [[language]]
 name = "rust"
+scope = "source.rust"
+injection-regex = "rs|rust"
 file-types = ["rs"]
-roots = ["Cargo.toml"]
+roots = ["Cargo.toml", "Cargo.lock"]
 auto-format = true
+formatter = { command = "rustfmt" }
 language-servers = ["rust-analyzer"]
+
 indent = { tab-width = 4, unit = "\t" }
 
-# ================================== Lua (Importante para WezTerm) ==================================
+comment-tokens = ["//", "///", "//!"]
+
+block-comment-tokens = [
+  { start = "/*", end = "*/" },
+  { start = "/**", end = "*/" }
+]
+
+persistent-diagnostic-sources = ["rustc", "clippy"]
+
+# ================================================================================================
+# LUA
+# ================================================================================================
+
 [language-server.lua-language-server]
 command = "lua-language-server"
 
 [[language]]
 name = "lua"
+scope = "source.lua"
+injection-regex = "lua"
 file-types = ["lua"]
-roots = ["init.lua", ".luarc.json"]
+roots = ["init.lua", ".luarc.json", ".stylua.toml"]
 auto-format = true
 formatter = { command = "stylua" }
 language-servers = ["lua-language-server"]
 indent = { tab-width = 2, unit = "  " }
+comment-token = "--"
 
-# ================================== TypeScript / JavaScript ==================================
+# ================================================================================================
+# TYPESCRIPT / JAVASCRIPT
+# ================================================================================================
+
 [language-server.typescript-language-server]
 command = "typescript-language-server"
 args = ["--stdio"]
 
 [[language]]
 name = "typescript"
+scope = "source.ts"
 file-types = ["ts", "tsx"]
 roots = ["package.json", "tsconfig.json"]
 auto-format = true
@@ -259,83 +176,180 @@ indent = { tab-width = 2, unit = "  " }
 
 [[language]]
 name = "javascript"
-file-types = ["js", "jsx"]
+scope = "source.js"
+file-types = ["js", "jsx", "mjs", "cjs"]
 roots = ["package.json"]
 auto-format = true
 formatter = { command = "prettier", args = ["--parser", "babel"] }
 language-servers = ["typescript-language-server"]
 indent = { tab-width = 2, unit = "  " }
 
-# ================================== Python ==================================
+# ================================================================================================
+# PYTHON
+# ================================================================================================
+
 [language-server.pylsp]
 command = "pylsp"
 
 [[language]]
 name = "python"
+scope = "source.python"
 file-types = ["py", "pyi"]
 roots = ["pyproject.toml", "setup.py", "requirements.txt"]
 auto-format = true
-formatter = { command = "black" }
+formatter = { command = "black", args = ["-"] }
 language-servers = ["pylsp"]
 indent = { tab-width = 4, unit = "    " }
+comment-token = "#"
 
-# ================================== Nix ==================================
+# ================================================================================================
+# TOML
+# ================================================================================================
+
+[language-server.taplo]
+command = "taplo"
+args = ["lsp", "stdio"]
+
+[[language]]
+name = "toml"
+scope = "source.toml"
+injection-regex = "toml"
+file-types = ["toml", "Cargo.lock"]
+roots = []
+auto-format = true
+formatter = { command = "taplo", args = ["fmt", "-"] }
+language-servers = ["taplo"]
+indent = { tab-width = 2, unit = "  " }
+comment-token = "#"
+
+# ================================================================================================
+# JSON / JSONC
+# ================================================================================================
+
+[language-server.vscode-json-language-server]
+command = "vscode-json-language-server"
+args = ["--stdio"]
+
+[[language]]
+name = "json"
+scope = "source.json"
+injection-regex = "json"
+file-types = ["json", "jsonc"]
+roots = []
+auto-format = true
+formatter = { command = "prettier", args = ["--parser", "json"] }
+language-servers = ["vscode-json-language-server"]
+indent = { tab-width = 2, unit = "  " }
+
+# ================================================================================================
+# YAML
+# ================================================================================================
+
+[[language]]
+name = "yaml"
+scope = "source.yaml"
+file-types = ["yml", "yaml"]
+roots = []
+auto-format = true
+formatter = { command = "prettier", args = ["--parser", "yaml"] }
+indent = { tab-width = 2, unit = "  " }
+comment-token = "#"
+
+# ================================================================================================
+# XML
+# ================================================================================================
+
+[language-server.lemminx]
+command = "lemminx"
+
+[[language]]
+name = "xml"
+scope = "source.xml"
+injection-regex = "xml"
+file-types = ["xml", "svg", "xsd", "xsl"]
+roots = []
+auto-format = false
+language-servers = ["lemminx"]
+indent = { tab-width = 2, unit = "  " }
+comment-token = "<!--"
+
+# ================================================================================================
+# NIX
+# ================================================================================================
+
 [language-server.nixd]
 command = "nixd"
 
 [[language]]
 name = "nix"
+scope = "source.nix"
+injection-regex = "nix"
 file-types = ["nix"]
-roots = ["flake.nix", "shell.nix"]
+roots = ["flake.nix", "shell.nix", "default.nix"]
 auto-format = true
 formatter = { command = "alejandra" }
 language-servers = ["nixd"]
 indent = { tab-width = 2, unit = "  " }
+comment-token = "#"
 
-# ================================== Markdown ==================================
+# ================================================================================================
+# DOCKERFILE
+# ================================================================================================
+
+[language-server.docker-langserver]
+command = "docker-langserver"
+args = ["--stdio"]
+
+[[language]]
+name = "dockerfile"
+scope = "source.dockerfile"
+file-types = ["Dockerfile", "dockerfile"]
+roots = ["Dockerfile", "docker-compose.yml", "compose.yaml"]
+auto-format = false
+language-servers = ["docker-langserver"]
+indent = { tab-width = 4, unit = "\t" }
+comment-token = "#"
+
+# ================================================================================================
+# MARKDOWN
+# ================================================================================================
+
 [language-server.marksman]
 command = "marksman"
 args = ["server"]
 
 [[language]]
 name = "markdown"
-file-types = ["md", "markdown"]
+scope = "source.md"
+injection-regex = "md|markdown"
+file-types = ["md", "markdown", "mdx"]
 auto-format = false
 language-servers = ["marksman"]
 indent = { tab-width = 2, unit = "  " }
+comment-token = "<!--"
 
-# ================================== Outros formatos úteis ==================================
-[[language]]
-name = "yaml"
-file-types = ["yml", "yaml"]
-auto-format = true
-formatter = { command = "prettier", args = ["--parser", "yaml"] }
-indent = { tab-width = 2, unit = "  " }
+# ================================================================================================
+# SHELL / BASH / ZSH
+# ================================================================================================
 
-[[language]]
-name = "json"
-file-types = ["json"]
-auto-format = true
-formatter = { command = "prettier", args = ["--parser", "json"] }
-indent = { tab-width = 2, unit = "  " }
-
-[[language]]
-name = "toml"
-file-types = ["toml"]
-auto-format = true
-formatter = { command = "taplo", args = ["fmt", "-"] }
-indent = { tab-width = 2, unit = "  " }
-
-[[language]]
-name = "dockerfile"
-file-types = ["Dockerfile", "dockerfile"]
-auto-format = false
-language-servers = ["docker-langserver"]
-indent = { tab-width = 4, unit = "\t" }
+[language-server.bash-language-server]
+command = "bash-language-server"
+args = ["start"]
 
 [[language]]
 name = "bash"
-file-types = ["sh", "bash", "zsh"]
+scope = "source.bash"
+injection-regex = "bash|sh|z?sh"
+file-types = [
+  "sh",
+  "bash",
+  "zsh",
+  ".bashrc",
+  ".zshrc",
+  ".profile",
+  ".bash_profile"
+]
 auto-format = false
 language-servers = ["bash-language-server"]
 indent = { tab-width = 4, unit = "\t" }
+comment-token = "#"
