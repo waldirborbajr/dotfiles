@@ -181,7 +181,6 @@
 
 -- return config
 
-
 local wezterm = require("wezterm")
 local act = wezterm.action
 local config = wezterm.config_builder()
@@ -247,13 +246,13 @@ config.window_close_confirmation = "NeverPrompt"
 config.hyperlink_rules = wezterm.default_hyperlink_rules()
 
 table.insert(config.hyperlink_rules, {
-  regex = [[\b[A-Z]{2,10}-\d{3,8}\b]],           -- Jira: PROJ-12345
+  regex = [[\b[A-Z]{2,10}-\d{3,8}\b]],           -- Jira tickets
   format = "https://yourcompany.atlassian.net/browse/$0",
 })
 
 table.insert(config.hyperlink_rules, {
-  regex = [[#(\d+)]],                            -- GitHub #12345
-  format = "https://github.com/YOUR_ORG/YOUR_REPO/pull/$1", -- ← altere
+  regex = [[#(\d+)]],                            -- GitHub PRs/Issues
+  format = "https://github.com/YOUR_ORG/YOUR_REPO/pull/$1", -- ← altere aqui
 })
 
 table.insert(config.hyperlink_rules, {
@@ -274,7 +273,7 @@ wezterm.on("bell", function(window, pane)
   if not window:is_focused() then
     window:toast_notification(
       "WezTerm",
-      "✓ Comando finalizado: " .. (pane:get_foreground_process_name() or "terminal"),
+      "✓ Comando finalizado",
       nil,
       5000
     )
@@ -311,23 +310,24 @@ end)
 -- ── DYNAMIC TAB TITLE ─────────────────────────────────────────────────
 wezterm.on("format-tab-title", function(tab, _, _, _, _, _)
   local pane = tab.active_pane
-  local title = pane.title or "terminal"
-
   local proc = pane.foreground_process_name:match("([^/]+)$") or ""
 
   if proc == "hx" or proc == "nvim" then
     local dir = pane.title:match("([^/]+)$") or "editor"
-    title = (proc == "hx" and "" or "") .. " " .. dir
-  elseif proc ~= "" and not proc:match("zsh|bash|fish|sh") then
-    title = proc
-  else
-    local cwd = pane.current_working_dir
-    if cwd then
-      title = cwd.file_path:match("([^/]+)/?$") or cwd.file_path
-    end
+    return { { Text = " " .. (proc == "hx" and "" or "") .. " " .. dir .. " " } }
   end
 
-  return { { Text = " " .. title .. " " } }
+  if proc ~= "" and not proc:match("zsh|bash|fish|sh") then
+    return { { Text = " " .. proc .. " " } }
+  end
+
+  local cwd = pane.current_working_dir
+  if cwd then
+    local dir = cwd.file_path:match("([^/]+)/?$") or cwd.file_path
+    return { { Text = " " .. dir .. " " } }
+  end
+
+  return { { Text = " " .. (pane.title or "terminal") .. " " } }
 end)
 
 -- ── PROJECTS ──────────────────────────────────────────────────────────
@@ -351,15 +351,21 @@ local function scan_projects()
   return projects
 end
 
--- ── OPEN PROJECT COM LAYOUT ───────────────────────────────────────────
+-- ── OPEN PROJECT COM LAYOUT FIXO ───────────────────────────────────────
 local function open_project(window, pane, project)
-  window:perform_action(act.SwitchToWorkspace({ name = project.id, cwd = project.path }), pane)
+  window:perform_action(
+    act.SwitchToWorkspace({ name = project.id, cwd = project.path }),
+    pane
+  )
 
-  wezterm.time.call_after(0.15, function()
-    -- Editor principal à esquerda (Helix ou Neovim)
-    window:perform_action(act.SendString("cd " .. project.path .. " && " .. EDITOR_CMD .. "\n"), pane)
+  wezterm.time.call_after(0.2, function()
+    -- Editor principal (Helix ou Neovim) à esquerda
+    window:perform_action(
+      act.SendString("cd " .. project.path .. " && " .. EDITOR_CMD .. "\n"),
+      pane
+    )
 
-    -- Split vertical à direita
+    -- Split vertical (terminal direito)
     window:perform_action(act.SplitPane({
       direction = "Right",
       size = { Percent = 45 },
@@ -380,7 +386,6 @@ end
 
 -- ── KEYBINDINGS ───────────────────────────────────────────────────────
 config.keys = {
-  -- Projects
   {
     key = "p",
     mods = "LEADER",
@@ -408,7 +413,7 @@ config.keys = {
   { key = "w", mods = "LEADER", action = act.ShowLauncherArgs({ flags = "WORKSPACES" }) },
   { key = "f", mods = "LEADER", action = act.ToggleFullScreen },
 
-  -- Resize
+  -- Resize Panes
   { key = "h", mods = "LEADER", action = act.AdjustPaneSize({ "Left", 6 }) },
   { key = "j", mods = "LEADER", action = act.AdjustPaneSize({ "Down", 6 }) },
   { key = "k", mods = "LEADER", action = act.AdjustPaneSize({ "Up", 6 }) },
@@ -442,7 +447,7 @@ config.keys = {
   { key = "S", mods = "LEADER|SHIFT", action = act.ShowLauncherArgs({ flags = "DOMAINS" }) },
 }
 
--- Copy/Paste
+-- Copy / Paste
 if IS_MACOS then
   table.insert(config.keys, { key = "v", mods = "CMD", action = act.PasteFrom("Clipboard") })
   table.insert(config.keys, { key = "c", mods = "CMD", action = act.CopyTo("Clipboard") })
@@ -451,7 +456,7 @@ else
   table.insert(config.keys, { key = "c", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") })
 end
 
--- Mouse
+-- Mouse Bindings
 config.mouse_bindings = {
   {
     event = { Up = { streak = 1, button = "Left" } },
