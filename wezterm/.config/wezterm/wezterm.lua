@@ -184,15 +184,28 @@
 
 local wezterm = require("wezterm")
 local act = wezterm.action
-local config = wezterm.config_builder()  -- Recomendado
+local config = wezterm.config_builder()
 
 local IS_MACOS = wezterm.target_triple:find("apple") ~= nil
 
--- ── RENDER ────────────────────────────────────────────────────────────────
+-- ====================== EDITOR PREFERENCE ======================
+local function get_editor()
+  -- Prioriza Helix (hx), fallback para nvim
+  local success, stdout = wezterm.run_child_process({ "which", "hx" })
+  if success and stdout and stdout:match("hx") then
+    return "hx"
+  end
+  return "nvim"
+end
+
+local EDITOR = get_editor()
+local EDITOR_CMD = EDITOR == "hx" and "hx" or "nvim"
+
+-- ── RENDER & PERFORMANCE ───────────────────────────────────────────────
 if IS_MACOS then
   config.front_end = "WebGpu"
   config.webgpu_power_preference = "LowPower"
-  config.macos_window_background_blur = 20  -- leve blur fica bonito
+  config.macos_window_background_blur = 20
 else
   config.front_end = "OpenGL"
 end
@@ -200,9 +213,9 @@ end
 config.max_fps = 120
 config.animation_fps = 60
 
--- ── FONT ──────────────────────────────────────────────────────────────────
+-- ── FONT ───────────────────────────────────────────────────────────────
 config.font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Medium" })
-config.font_size = IS_MACOS and 14 or 12
+config.font_size = IS_MACOS and 13 or 12
 config.line_height = 1.1
 config.harfbuzz_features = { "calt=0", "liga=0", "clig=0" }
 
@@ -210,14 +223,14 @@ config.scrollback_lines = 10000
 config.cursor_blink_rate = 0
 config.default_cursor_style = "SteadyBar"
 
--- ── UI ────────────────────────────────────────────────────────────────────
+-- ── UI ────────────────────────────────────────────────────────────────
 config.color_scheme = "Catppuccin Macchiato"
 config.window_decorations = "NONE"
 config.window_padding = { left = 8, right = 8, top = 8, bottom = 12 }
 
 config.enable_tab_bar = true
 config.use_fancy_tab_bar = false
-config.hide_tab_bar_if_only_one_tab = false  -- melhor com status customizado
+config.hide_tab_bar_if_only_one_tab = false
 config.tab_bar_at_bottom = true
 config.tab_max_width = 32
 
@@ -226,45 +239,55 @@ config.inactive_pane_hsb = {
   brightness = 0.65,
 }
 
--- ── LEADER ────────────────────────────────────────────────────────────────
+-- ── LEADER ────────────────────────────────────────────────────────────
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 800 }
 config.window_close_confirmation = "NeverPrompt"
 
--- ── PROJECTS (melhorado) ─────────────────────────────────────────────────
-local projects_cache = nil
+-- ── HYPERLINK RULES ───────────────────────────────────────────────────
+config.hyperlink_rules = wezterm.default_hyperlink_rules()
 
-local function scan_projects()
-  if projects_cache then return projects_cache end
+table.insert(config.hyperlink_rules, {
+  regex = [[\b[A-Z]{2,10}-\d{3,8}\b]],           -- Jira: PROJ-12345
+  format = "https://yourcompany.atlassian.net/browse/$0",
+})
 
-  local home = os.getenv("HOME")
-  local dirs = { home .. "/prj", home .. "/dev", home .. "/projects" }
+table.insert(config.hyperlink_rules, {
+  regex = [[#(\d+)]],                            -- GitHub #12345
+  format = "https://github.com/YOUR_ORG/YOUR_REPO/pull/$1", -- ← altere
+})
 
-  local cmd = 'for d in "' .. table.concat(dirs, '" "') .. '"; do [ -d "$d" ] && find "$d" -mindepth 1 -maxdepth 1 -type d 2>/dev/null; done'
+table.insert(config.hyperlink_rules, {
+  regex = [[\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?\b]],
+  format = "http://$0",
+})
 
-  local success, stdout, stderr = wezterm.run_child_process({ "bash", "-c", cmd })
+-- ── BELL NOTIFICATION ─────────────────────────────────────────────────
+config.audible_bell = "SystemBeep"
+config.visual_bell = {
+  fade_in_function = "EaseIn",
+  fade_out_function = "EaseOut",
+  fade_in_duration_ms = 150,
+  fade_out_duration_ms = 300,
+}
 
-  local projects = {}
-  if success and stdout then
-    for line in stdout:gmatch("[^\r\n]+") do
-      local name = line:match(".*/(.*)")
-      if name then
-        table.insert(projects, { id = name, path = line })
-      end
-    end
+wezterm.on("bell", function(window, pane)
+  if not window:is_focused() then
+    window:toast_notification(
+      "WezTerm",
+      "✓ Comando finalizado: " .. (pane:get_foreground_process_name() or "terminal"),
+      nil,
+      5000
+    )
   end
+end)
 
-  projects_cache = projects
-  return projects
-end
-
--- ── STATUS BAR CUSTOMIZADA ───────────────────────────────────────────────
-wezterm.on("update-status", function(window, pane)
+-- ── STATUS BAR ────────────────────────────────────────────────────────
+wezterm.on("update-status", function(window, _)
   local workspace = window:active_workspace()
-  local hostname = wezterm.hostname():match("^[^.]+")  -- só o hostname curto
-
+  local hostname = wezterm.hostname():match("^[^.]+")
   local date = wezterm.strftime("%H:%M")
-  local battery = ""
 
+  local battery = ""
   if IS_MACOS then
     for _, b in ipairs(wezterm.battery_info()) do
       local icon = b.state == "Charging" and "󰂄" or "󰁹"
@@ -275,9 +298,9 @@ wezterm.on("update-status", function(window, pane)
 
   window:set_right_status(wezterm.format({
     { Foreground = { Color = "#a6adc8" } },
-    { Text = workspace .. "  " },
+    { Text = workspace .. "   " },
     { Foreground = { Color = "#9399b2" } },
-    { Text = hostname .. "  " },
+    { Text = hostname .. "   " },
     { Foreground = { Color = "#cba6f7" } },
     { Text = date },
     { Foreground = { Color = "#a6e3a1" } },
@@ -285,57 +308,77 @@ wezterm.on("update-status", function(window, pane)
   }))
 end)
 
--- ── TÍTULOS DE TAB DINÂMICOS ─────────────────────────────────────────────
-wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+-- ── DYNAMIC TAB TITLE ─────────────────────────────────────────────────
+wezterm.on("format-tab-title", function(tab, _, _, _, _, _)
   local pane = tab.active_pane
   local title = pane.title or "terminal"
 
-  -- Tenta pegar o processo principal
-  local proc = pane.foreground_process_name or ""
-  proc = proc:match("([^/]+)$") or proc
+  local proc = pane.foreground_process_name:match("([^/]+)$") or ""
 
-  if proc == "nvim" or proc == "vim" then
-    title = " " .. (pane.title:match("([^/]+)$") or "nvim")
-  elseif proc ~= "" and proc ~= "zsh" and proc ~= "bash" and proc ~= "fish" then
+  if proc == "hx" or proc == "nvim" then
+    local dir = pane.title:match("([^/]+)$") or "editor"
+    title = (proc == "hx" and "" or "") .. " " .. dir
+  elseif proc ~= "" and not proc:match("zsh|bash|fish|sh") then
     title = proc
-  end
-
-  -- Nome do diretório atual (se não for nvim)
-  if not title:find("nvim") then
+  else
     local cwd = pane.current_working_dir
     if cwd then
-      local dir = cwd.file_path:match("([^/]+)/?$") or cwd.file_path
-      title = dir
+      title = cwd.file_path:match("([^/]+)/?$") or cwd.file_path
     end
   end
 
-  if tab.is_active then
-    return { { Text = " " .. title .. " " } }
-  end
-  return { { Text = " " .. title:sub(1, 20) .. " " } }
+  return { { Text = " " .. title .. " " } }
 end)
 
--- ── OPEN PROJECT ─────────────────────────────────────────────────────────
+-- ── PROJECTS ──────────────────────────────────────────────────────────
+local function scan_projects()
+  local home = os.getenv("HOME")
+  local dirs = { home .. "/prj", home .. "/dev", home .. "/projects" }
+
+  local cmd = 'for d in "' .. table.concat(dirs, '" "') .. '"; do [ -d "$d" ] && find "$d" -mindepth 1 -maxdepth 1 -type d 2>/dev/null; done'
+
+  local _, stdout = wezterm.run_child_process({ "bash", "-c", cmd })
+  local projects = {}
+
+  if stdout then
+    for line in stdout:gmatch("[^\r\n]+") do
+      local name = line:match(".*/(.*)")
+      if name then
+        table.insert(projects, { id = name, path = line })
+      end
+    end
+  end
+  return projects
+end
+
+-- ── OPEN PROJECT COM LAYOUT ───────────────────────────────────────────
 local function open_project(window, pane, project)
   window:perform_action(act.SwitchToWorkspace({ name = project.id, cwd = project.path }), pane)
-  -- Primeira tab: Neovim
-  window:perform_action(act.SpawnTab("CurrentPaneDomain"), pane)
-  window:perform_action(act.SendString("cd " .. project.path .. " && nvim .\n"), pane)
-  -- Segunda tab: terminal limpo
-  window:perform_action(act.SpawnTab("CurrentPaneDomain"), pane)
-  window:perform_action(act.SendString("cd " .. project.path .. "\n"), pane)
+
+  wezterm.time.call_after(0.15, function()
+    -- Editor principal à esquerda (Helix ou Neovim)
+    window:perform_action(act.SendString("cd " .. project.path .. " && " .. EDITOR_CMD .. "\n"), pane)
+
+    -- Split vertical à direita
+    window:perform_action(act.SplitPane({
+      direction = "Right",
+      size = { Percent = 45 },
+      cwd = project.path,
+    }), pane)
+
+    -- Split horizontal no painel direito (terminal inferior)
+    window:perform_action(act.SplitPane({
+      direction = "Down",
+      size = { Percent = 40 },
+      cwd = project.path,
+    }), pane)
+
+    -- Foca novamente no editor
+    window:perform_action(act.ActivatePaneDirection("Left"), pane)
+  end)
 end
 
--- ── SSH ───────────────────────────────────────────────────────────────────
-local ssh_domains = wezterm.default_ssh_domains()
-for _, dom in ipairs(ssh_domains) do
-  dom.assume_shell = "Posix"
-  dom.local_echo_threshold_ms = 200
-  dom.timeout = 180
-end
-config.ssh_domains = ssh_domains
-
--- ── KEYBINDINGS ───────────────────────────────────────────────────────────
+-- ── KEYBINDINGS ───────────────────────────────────────────────────────
 config.keys = {
   -- Projects
   {
@@ -362,13 +405,10 @@ config.keys = {
     }),
   },
 
-  -- Workspace quick switch
   { key = "w", mods = "LEADER", action = act.ShowLauncherArgs({ flags = "WORKSPACES" }) },
-
-  -- Fullscreen
   { key = "f", mods = "LEADER", action = act.ToggleFullScreen },
 
-  -- Resize panes (estilo Zellij)
+  -- Resize
   { key = "h", mods = "LEADER", action = act.AdjustPaneSize({ "Left", 6 }) },
   { key = "j", mods = "LEADER", action = act.AdjustPaneSize({ "Down", 6 }) },
   { key = "k", mods = "LEADER", action = act.AdjustPaneSize({ "Up", 6 }) },
@@ -379,7 +419,7 @@ config.keys = {
   { key = "k", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Down", 6 }) },
   { key = "l", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Left", 6 }) },
 
-  -- Navigation (Ctrl para não conflitar)
+  -- Navigation
   { key = "h", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Left") },
   { key = "j", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Down") },
   { key = "k", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Up") },
@@ -395,17 +435,14 @@ config.keys = {
   { key = "n", mods = "LEADER", action = act.ActivateTabRelative(1) },
   { key = "p", mods = "LEADER|SHIFT", action = act.ActivateTabRelative(-1) },
 
-  -- Zoom + Misc
   { key = "z", mods = "LEADER", action = act.TogglePaneZoomState },
   { key = "[", mods = "LEADER", action = act.ActivateCopyMode },
   { key = "r", mods = "LEADER", action = act.ReloadConfiguration },
   { key = "s", mods = "LEADER", action = act.ShowLauncher },
-
-  -- SSH
   { key = "S", mods = "LEADER|SHIFT", action = act.ShowLauncherArgs({ flags = "DOMAINS" }) },
 }
 
--- Copy/Paste por plataforma
+-- Copy/Paste
 if IS_MACOS then
   table.insert(config.keys, { key = "v", mods = "CMD", action = act.PasteFrom("Clipboard") })
   table.insert(config.keys, { key = "c", mods = "CMD", action = act.CopyTo("Clipboard") })
@@ -417,6 +454,11 @@ end
 -- Mouse
 config.mouse_bindings = {
   {
+    event = { Up = { streak = 1, button = "Left" } },
+    mods = IS_MACOS and "CMD" or "CTRL",
+    action = act.OpenLinkAtMouseCursor,
+  },
+  {
     event = { Down = { streak = 1, button = "Right" } },
     mods = "NONE",
     action = act.PasteFrom("Clipboard"),
@@ -424,5 +466,3 @@ config.mouse_bindings = {
 }
 
 return config
-
-
