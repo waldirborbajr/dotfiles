@@ -8,7 +8,7 @@
 
 # Go
 export PATH="/usr/local/go/bin:$PATH"
-export GOPATH="$HOME/go"
+export GOPATH="$HOME/go/bin"
 
 # -------------------------------------------
 # 🔌 PLUGINS (ANTES DO COMPINIT)
