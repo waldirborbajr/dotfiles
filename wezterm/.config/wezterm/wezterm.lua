@@ -248,8 +248,27 @@ config.keys = {
   { key = "l", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Right") },
 
   -- Splits
-  { key = "h", mods = "LEADER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-  { key = "v", mods = "LEADER", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+  -- { key = "h", mods = "LEADER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+  -- { key = "v", mods = "LEADER", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+  -- Split para esquerda/direita
+{
+  key = "v",
+  mods = "LEADER",
+  action = act.SplitPane({
+    direction = "Right",
+    domain = "CurrentPaneDomain",
+  }),
+},
+
+-- Split para cima/baixo
+{
+  key = "h",
+  mods = "LEADER",
+  action = act.SplitPane({
+    direction = "Down",
+    domain = "CurrentPaneDomain",
+  }),
+},
 
   -- Tabs
   { key = "c", mods = "LEADER", action = act.SpawnTab("CurrentPaneDomain") },
