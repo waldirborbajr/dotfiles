@@ -183,18 +183,24 @@ local function open_project(window, pane, project)
     )
 
     -- Split vertical (terminal direito)
-    window:perform_action(act.SplitPane({
-      direction = "Right",
-      size = { Percent = 45 },
-      cwd = project.path,
-    }), pane)
+    -- window:perform_action(act.SplitPane({
+    --   direction = "Right",
+    --   size = { Percent = 45 },
+    --   cwd = project.path,
+    -- }), pane)
+      action = act.SplitPane({
+  direction = "Right",
+})
 
     -- Split horizontal no painel direito (terminal inferior)
-    window:perform_action(act.SplitPane({
-      direction = "Down",
-      size = { Percent = 40 },
-      cwd = project.path,
-    }), pane)
+    -- window:perform_action(act.SplitPane({
+    --   direction = "Down",
+    --   size = { Percent = 40 },
+    --   cwd = project.path,
+    -- }), pane)
+      action = act.SplitPane({
+  direction = "Down",
+})
 
     -- Foca novamente no editor
     window:perform_action(act.ActivatePaneDirection("Left"), pane)
@@ -251,22 +257,20 @@ config.keys = {
   -- { key = "h", mods = "LEADER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
   -- { key = "v", mods = "LEADER", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
   -- Split para esquerda/direita
+-- Splits
 {
   key = "v",
   mods = "LEADER",
   action = act.SplitPane({
     direction = "Right",
-    domain = "CurrentPaneDomain",
   }),
 },
 
--- Split para cima/baixo
 {
   key = "h",
   mods = "LEADER",
   action = act.SplitPane({
     direction = "Down",
-    domain = "CurrentPaneDomain",
   }),
 },
 
