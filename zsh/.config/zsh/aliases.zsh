@@ -273,13 +273,13 @@ alias gadog='PAGER="less -F -X" git log --all --decorate --oneline --graph'
 
 # alias syslist="systemctl list-units --type=service --state=running"
 
-# alias rmvim="rm -rf ~/.local/share/nvim ~/.cache/nvim ~/.local/state/nvim"
+alias rmvim="rm -rf ~/.local/share/nvim ~/.cache/nvim ~/.local/state/nvim"
 
 # #######################################
 # # Utils
 # #######################################
-# alias lg="lazygit"
-# alias yz="yazi"
+alias lg="lazygit"
+alias yz="yazi"
 
 # alias c="clear"
 # alias e="exit"
@@ -292,7 +292,7 @@ alias gadog='PAGER="less -F -X" git log --all --decorate --oneline --graph'
 # #######################################
 # # Misc
 # #######################################
-# alias todo="nvim ~/.todo"
-# alias '?'="gpt"
-# alias '??'="duck"
-# alias '???'="google"
+alias todo="nvim ~/.todo"
+alias '?'="gpt"
+alias '??'="duck"
+alias '???'="google"
