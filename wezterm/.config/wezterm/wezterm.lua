@@ -31,7 +31,7 @@ config.animation_fps = 60
 
 -- ── FONT ───────────────────────────────────────────────────────────────
 config.font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Medium" })
-config.font_size = IS_MACOS and 13 or 12
+config.font_size = IS_MACOS and 16 or 12
 config.line_height = 1.1
 config.harfbuzz_features = { "calt=0", "liga=0", "clig=0" }
 
