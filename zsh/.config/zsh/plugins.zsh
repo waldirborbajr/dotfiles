@@ -1,53 +1,30 @@
-# Plugin loader otimizado
+# =========================================================
+# Plugins
+# =========================================================
 
-function plugin-load {
-  local plugin repo commitsha plugdir initfile initfiles=()
-  : ${ZPLUGINDIR:=${ZDOTDIR:-~/.config/zsh}/plugins}
+ZPLUGINDIR="${ZDOTDIR:-$HOME/.config/zsh}/plugins"
 
-  for plugin in "$@"; do
-    repo="$plugin"
-    clone_args=(-q --depth 1 --recursive --shallow-submodules)
+_zplugin_load() {
+  local plugin_path="${ZPLUGINDIR}/${2}"
+  if [[ ! -d "$plugin_path" ]]; then
+    mkdir -p "$ZPLUGINDIR"
+    echo "Installing ${2}..."
+    git clone --depth=1 "https://github.com/${1}/${2}" "$plugin_path" \
+      || { echo "ERROR: failed to install ${2}" >&2; return 1; }
+  fi
+  source "${plugin_path}/${2}.plugin.zsh"
+}
 
-    if [[ "$plugin" == *'@'* ]]; then
-      repo="${plugin%@*}"
-      commitsha="${plugin#*@}"
-      clone_args+=(--no-checkout)
-    fi
-
-    plugdir=$ZPLUGINDIR/${repo:t}
-    initfile=$plugdir/${repo:t}.plugin.zsh
-
-    if [[ ! -d $plugdir ]]; then
-      echo "Cloning $repo..."
-      git clone "${clone_args[@]}" https://github.com/$repo $plugdir
-
-      if [[ -n "$commitsha" ]]; then
-        git -C $plugdir fetch -q origin "$commitsha"
-        git -C $plugdir checkout -q "$commitsha"
-      fi
-    fi
-
-    if [[ ! -e $initfile ]]; then
-      initfiles=($plugdir/*.{plugin.zsh,zsh-theme,zsh,sh}(N))
-      (( $#initfiles )) || continue
-      ln -sf $initfiles[1] $initfile
-    fi
-
-    fpath+=$plugdir
-
-    if (( $+functions[zsh-defer] )); then
-      zsh-defer source $initfile
-    else
-      source $initfile
-    fi
+zplugin-update() {
+  local dir
+  for dir in "${ZPLUGINDIR}"/*/; do
+    echo "Updating ${dir:t}..."
+    git -C "$dir" pull --ff-only
   done
 }
 
-repos=(
-  'romkatv/zsh-defer'                      # performance absurda
-  'zsh-users/zsh-completions'
-  'zsh-users/zsh-autosuggestions'
-  'zsh-users/zsh-syntax-highlighting'      # SEMPRE último
-)
-
-plugin-load $repos
+_zplugin_load zsh-users zsh-autosuggestions
+_zplugin_load zsh-users zsh-history-substring-search
+_zplugin_load jeffreytse zsh-vi-mode
+_zplugin_load zdharma-continuum fast-syntax-highlighting
+_zplugin_load agkozak zsh-z

@@ -1,253 +1,298 @@
-#######################################
-# 🚀 ELITE TROOP - ALIASES + FZF + GIT
-#######################################
+# Better ls
+alias ls='eza --icons'
 
-#######################################
-# Editor
-#######################################
-alias vim="nvim"
-alias nv="nvim"
-alias edit="nvim $ZDOTDIR/.zshrc"
+# Detailed listing
+alias ll='eza -lh --icons --git'
 
-#######################################
-# Shell / Config
-#######################################
-alias reload="exec zsh"
+# Detailed listing including hidden files
+alias la='eza -lah --icons --git'
 
-#######################################
+# Tree view
+alias tree='eza --tree --icons'
+
+# Reuse ls completions for eza (avoids defining a separate completion function)
+compdef eza=ls
+
+# Better cat
+alias cat='bat'
+
+# =========================================================
+# Core utilities
+# =========================================================
+
+alias grep='rg --color=auto'
+alias diff='diff --color=auto'
+alias df='df -h'
+
+# =========================================================
 # Navigation
-#######################################
-alias ..="cd .."
-alias ...="cd ../.."
-alias ....="cd ../../.."
+# =========================================================
 
-# fzf navigation
-cdf() {
-  cd "$(fd --type d | fzf)"
-}
+alias -- -='cd -'  # -- prevents - being parsed as a flag; cd - jumps to previous directory
 
-vf() {
-  nvim "$(fd --type f | fzf)"
-}
+# =========================================================
+# Editor
+# =========================================================
 
-#######################################
-# Modern ls (eza)
-#######################################
-alias ls="eza --icons --group-directories-first"
-alias ll="eza -lg --icons --group-directories-first"
-alias la="eza -lag --icons --group-directories-first"
+alias vim='nvim'
 
-#######################################
-# CLI improvements
-#######################################
-alias grep="grep --color=auto"
-alias diff="diff --color=auto"
-alias ip="ip -c"
+# =========================================================
+# Git
+# =========================================================
 
-#######################################
-# Filesystem utils
-#######################################
-alias tree="tree -a"
-alias free="free -h"
-alias df="df -h"
-alias chmodx="chmod +x"
+alias glog='PAGER="less -F -X" git log'                              # -F quit if one screen, -X no clear on exit
+alias gadog='PAGER="less -F -X" git log --all --decorate --oneline --graph'
 
-#######################################
-# Modern replacements
-#######################################
-alias cat="bat"
-alias find="fd"
+# #######################################
+# # 🚀 ELITE TROOP - ALIASES + FZF + GIT
+# #######################################
 
-#######################################
-# Git base
-#######################################
-alias g="git"
-alias ga="git add"
-alias gap="git add --patch"
+# #######################################
+# # Editor
+# #######################################
+# alias vim="nvim"
+# alias nv="nvim"
+# alias edit="nvim $ZDOTDIR/.zshrc"
 
-alias gb="git branch"
-alias gba="git branch --all"
+# #######################################
+# # Shell / Config
+# #######################################
+# alias reload="exec zsh"
 
-alias gc="git commit"
-alias gca="git commit --amend --no-edit"
-alias gce="git commit --amend"
+# #######################################
+# # Navigation
+# #######################################
+# alias ..="cd .."
+# alias ...="cd ../.."
+# alias ....="cd ../../.."
 
-alias gco="git checkout"
-alias gsw="git switch"
-alias gn="git checkout -b"
+# # fzf navigation
+# cdf() {
+#   cd "$(fd --type d | fzf)"
+# }
 
-alias gcl="git clone --recursive"
+# vf() {
+#   nvim "$(fd --type f | fzf)"
+# }
 
-alias gd="git diff"
-alias gds="git diff --staged"
+# #######################################
+# # Modern ls (eza)
+# #######################################
+# alias ls="eza --icons --group-directories-first"
+# alias ll="eza -lg --icons --group-directories-first"
+# alias la="eza -lag --icons --group-directories-first"
 
-alias gi="git init"
+# #######################################
+# # CLI improvements
+# #######################################
+# alias grep="grep --color=auto"
+# alias diff="diff --color=auto"
+# alias ip="ip -c"
 
-alias gl="git log --graph --decorate --all --oneline"
-alias gll="git log --pretty=format:'%C(magenta)%h %C(white)%an %ar%C(auto) %D%n%s%n'"
+# #######################################
+# # Filesystem utils
+# #######################################
+# alias tree="tree -a"
+# alias free="free -h"
+# alias df="df -h"
+# alias chmodx="chmod +x"
 
-alias gm="git merge"
-alias gp="git push"
-alias gu="git pull"
+# #######################################
+# # Modern replacements
+# #######################################
+# alias cat="bat"
+# alias find="fd"
 
-alias gr="git reset"
-alias gs="git status --short"
+# #######################################
+# # Git base
+# #######################################
+# alias g="git"
+# alias ga="git add"
+# alias gap="git add --patch"
 
-alias ghc="gh repo create --private --source=. --remote=origin && git push -u --all && gh browse"
+# alias gb="git branch"
+# alias gba="git branch --all"
 
-#######################################
-# 🔥 GIT + FZF (ABSURDO)
-#######################################
+# alias gc="git commit"
+# alias gca="git commit --amend --no-edit"
+# alias gce="git commit --amend"
 
-gcof() {
-  local branch
-  branch=$(git branch --all | sed 's/.* //' | sort -u | fzf --height 40% --reverse) || return
-  git checkout "${branch#remotes/origin/}"
-}
+# alias gco="git checkout"
+# alias gsw="git switch"
+# alias gn="git checkout -b"
 
-gcor() {
-  git for-each-ref --sort=-committerdate refs/heads/ \
-    --format='%(refname:short)' | fzf | xargs git checkout
-}
+# alias gcl="git clone --recursive"
 
-gcf() {
-  local commit
-  commit=$(git log --oneline --color=always | fzf \
-    --ansi \
-    --preview 'git show --color=always {1}' \
-    --height 80%) || return
-  echo $commit | awk '{print $1}' | xargs git checkout
-}
+# alias gd="git diff"
+# alias gds="git diff --staged"
 
-gdf() {
-  git diff --name-only | fzf \
-    --preview 'git diff --color=always {}' \
-    --height 80% | xargs git diff
-}
+# alias gi="git init"
 
-gaf() {
-  git status --short | fzf -m \
-    --preview 'git diff --color=always {2}' \
-    | awk '{print $2}' | xargs git add
-}
+# alias gl="git log --graph --decorate --all --oneline"
+# alias gll="git log --pretty=format:'%C(magenta)%h %C(white)%an %ar%C(auto) %D%n%s%n'"
 
-grf() {
-  git status --short | fzf -m \
-    | awk '{print $2}' | xargs git restore
-}
+# alias gm="git merge"
+# alias gp="git push"
+# alias gu="git pull"
 
-gstf() {
-  git stash list | fzf \
-    --preview 'git stash show -p --color=always {1}' \
-    | awk -F: '{print $1}' | xargs git stash apply
-}
+# alias gr="git reset"
+# alias gs="git status --short"
 
-gbdf() {
-  git branch | fzf | xargs git branch -D
-}
+# alias ghc="gh repo create --private --source=. --remote=origin && git push -u --all && gh browse"
 
-#######################################
-# 🔍 Search (fzf + rg)
-#######################################
+# #######################################
+# # 🔥 GIT + FZF (ABSURDO)
+# #######################################
 
-rgf() {
-  local file
-  file=$(rg --line-number --no-heading --color=always "" | \
-    fzf --ansi \
-        --delimiter : \
-        --preview 'bat --color=always {1} --highlight-line {2}' \
-        --height 80%) || return
+# gcof() {
+#   local branch
+#   branch=$(git branch --all | sed 's/.* //' | sort -u | fzf --height 40% --reverse) || return
+#   git checkout "${branch#remotes/origin/}"
+# }
 
-  nvim "$(echo $file | cut -d: -f1)"
-}
+# gcor() {
+#   git for-each-ref --sort=-committerdate refs/heads/ \
+#     --format='%(refname:short)' | fzf | xargs git checkout
+# }
 
-#######################################
-# 🐳 Docker
-#######################################
-alias dc="docker compose"
-alias dps='docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"'
-alias dl="docker logs --tail=100"
+# gcf() {
+#   local commit
+#   commit=$(git log --oneline --color=always | fzf \
+#     --ansi \
+#     --preview 'git show --color=always {1}' \
+#     --height 80%) || return
+#   echo $commit | awk '{print $1}' | xargs git checkout
+# }
 
-dkill() {
-  docker ps --format "{{.Names}}" | fzf | xargs docker kill
-}
+# gdf() {
+#   git diff --name-only | fzf \
+#     --preview 'git diff --color=always {}' \
+#     --height 80% | xargs git diff
+# }
 
-dlogf() {
-  docker ps --format "{{.Names}}" | fzf | xargs docker logs -f
-}
+# gaf() {
+#   git status --short | fzf -m \
+#     --preview 'git diff --color=always {2}' \
+#     | awk '{print $2}' | xargs git add
+# }
 
-#######################################
-# 🧠 Processes
-#######################################
-killf() {
-  ps -ef | fzf | awk '{print $2}' | xargs kill -9
-}
+# grf() {
+#   git status --short | fzf -m \
+#     | awk '{print $2}' | xargs git restore
+# }
 
-#######################################
-# Dotfiles
-#######################################
-alias dotfiles="/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
-alias d="/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
-alias dot="cd ~/dotfiles"
+# gstf() {
+#   git stash list | fzf \
+#     --preview 'git stash show -p --color=always {1}' \
+#     | awk -F: '{print $1}' | xargs git stash apply
+# }
 
-#######################################
-# Git repos shortcuts
-#######################################
-alias git-notes="git -C ~/notes"
-alias git-when="git -C ~/.when"
-alias git-ledger="git -C ~/.ledger"
+# gbdf() {
+#   git branch | fzf | xargs git branch -D
+# }
 
-alias sync-commit-notes="git-notes add --all && git-notes commit -m sync && git-notes pull && git-notes push"
+# #######################################
+# # 🔍 Search (fzf + rg)
+# #######################################
 
-alias cj-pull="pass git pull; git-notes pull; git-when pull; git-ledger pull"
-alias cj-status="pass git status; git-notes status; git-when status; git-ledger status"
+# rgf() {
+#   local file
+#   file=$(rg --line-number --no-heading --color=always "" | \
+#     fzf --ansi \
+#         --delimiter : \
+#         --preview 'bat --color=always {1} --highlight-line {2}' \
+#         --height 80%) || return
 
-#######################################
-# Tmux
-#######################################
-alias tmux="tmux -f ~/.config/tmux/tmux.conf"
-alias ta="tmux attach"
-alias tl="tmux list-sessions"
-alias tn="tmux new-session -s"
-alias ses="sh $XDG_CONFIG_HOME/tmux/tmux-sessionizer.sh"
+#   nvim "$(echo $file | cut -d: -f1)"
+# }
 
-#######################################
-# Ripgrep
-#######################################
-alias rg="rg --hidden --smart-case --glob='!.git/' --no-search-zip --trim \
---colors=line:fg:black --colors=line:style:bold \
---colors=path:fg:magenta --colors=match:style=nobold"
+# #######################################
+# # 🐳 Docker
+# #######################################
+# alias dc="docker compose"
+# alias dps='docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"'
+# alias dl="docker logs --tail=100"
 
-#######################################
-# System
-#######################################
-alias reboot="systemctl reboot"
-alias shutdown="sudo shutdown now"
-alias restart="sudo reboot"
-alias suspend="sudo pm-suspend"
+# dkill() {
+#   docker ps --format "{{.Names}}" | fzf | xargs docker kill
+# }
 
-alias syslist="systemctl list-units --type=service --state=running"
+# dlogf() {
+#   docker ps --format "{{.Names}}" | fzf | xargs docker logs -f
+# }
 
-alias rmvim="rm -rf ~/.local/share/nvim ~/.cache/nvim ~/.local/state/nvim"
+# #######################################
+# # 🧠 Processes
+# #######################################
+# killf() {
+#   ps -ef | fzf | awk '{print $2}' | xargs kill -9
+# }
 
-#######################################
-# Utils
-#######################################
-alias lg="lazygit"
-alias yz="yazi"
+# #######################################
+# # Dotfiles
+# #######################################
+# alias dotfiles="/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
+# alias d="/usr/bin/git --git-dir=$HOME/dotfiles/ --work-tree=$HOME"
+# alias dot="cd ~/dotfiles"
 
-alias c="clear"
-alias e="exit"
+# #######################################
+# # Git repos shortcuts
+# #######################################
+# alias git-notes="git -C ~/notes"
+# alias git-when="git -C ~/.when"
+# alias git-ledger="git -C ~/.ledger"
 
-#######################################
-# Paths
-#######################################
-alias prj="cd ~/prj"
+# alias sync-commit-notes="git-notes add --all && git-notes commit -m sync && git-notes pull && git-notes push"
 
-#######################################
-# Misc
-#######################################
-alias todo="nvim ~/.todo"
-alias '?'="gpt"
-alias '??'="duck"
-alias '???'="google"
+# alias cj-pull="pass git pull; git-notes pull; git-when pull; git-ledger pull"
+# alias cj-status="pass git status; git-notes status; git-when status; git-ledger status"
+
+# #######################################
+# # Tmux
+# #######################################
+# alias tmux="tmux -f ~/.config/tmux/tmux.conf"
+# alias ta="tmux attach"
+# alias tl="tmux list-sessions"
+# alias tn="tmux new-session -s"
+# alias ses="sh $XDG_CONFIG_HOME/tmux/tmux-sessionizer.sh"
+
+# #######################################
+# # Ripgrep
+# #######################################
+# alias rg="rg --hidden --smart-case --glob='!.git/' --no-search-zip --trim \
+# --colors=line:fg:black --colors=line:style:bold \
+# --colors=path:fg:magenta --colors=match:style=nobold"
+
+# #######################################
+# # System
+# #######################################
+# alias reboot="systemctl reboot"
+# alias shutdown="sudo shutdown now"
+# alias restart="sudo reboot"
+# alias suspend="sudo pm-suspend"
+
+# alias syslist="systemctl list-units --type=service --state=running"
+
+# alias rmvim="rm -rf ~/.local/share/nvim ~/.cache/nvim ~/.local/state/nvim"
+
+# #######################################
+# # Utils
+# #######################################
+# alias lg="lazygit"
+# alias yz="yazi"
+
+# alias c="clear"
+# alias e="exit"
+
+# #######################################
+# # Paths
+# #######################################
+# alias prj="cd ~/prj"
+
+# #######################################
+# # Misc
+# #######################################
+# alias todo="nvim ~/.todo"
+# alias '?'="gpt"
+# alias '??'="duck"
+# alias '???'="google"

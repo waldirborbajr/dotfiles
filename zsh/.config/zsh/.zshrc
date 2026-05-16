@@ -1,202 +1,113 @@
-# -------------------------------------------
-# ⚙️ BASE
-# -------------------------------------------
+# Powerful but minimal zsh configuration
+# Author: Radley E. Sidwell-Lewis
+# GitHub: https://www.github.com/radleylewis/zsh
+#
+# Uses:
+#   Plugins:      fast-syntax-highlighting, zsh-autosuggestions,
+#                 zsh-history-substring-search, zsh-vi-mode
+#   Prompt:       starship
+#   Navigation:   zoxide, fzf, fd
+#   CLI tools:    eza, bat, nvim, ripgrep
+#   Node:         nvm
 
-# Rust
-. "$HOME/.cargo/env"
-[[ -f $HOME/.zprofile ]] && source $HOME/.zprofile
+# =========================================================
+# History
+# =========================================================
 
-# Go
-export PATH="/usr/local/go/bin:$PATH"
-export GOPATH="$HOME/go/bin"
+HISTFILE="$XDG_STATE_HOME/zsh/history"
+HISTSIZE=100000
+SAVEHIST=100000
 
-# -------------------------------------------
-# 🔌 PLUGINS (ANTES DO COMPINIT)
-# -------------------------------------------
+setopt APPEND_HISTORY
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_FIND_NO_DUPS
 
-source $ZDOTDIR/plugins.zsh
+# =========================================================
+# Shell behaviour
+# =========================================================
 
-# -------------------------------------------
-# ⚡ COMPLETION (rápido)
-# -------------------------------------------
+setopt AUTOCD
+setopt NOBEEP
+setopt NUMERIC_GLOB_SORT  # sort file10 after file9, not after file1
 
-autoload -U compinit
-compinit -d ~/.zcompdump
+# =========================================================
+# Smart directory navigation
+# =========================================================
 
+# Initialize zoxide
+eval "$(zoxide init zsh)"
+
+# =========================================================
+# Completion
+# =========================================================
+
+# Load completion system
+autoload -Uz compinit
+
+# Initialize completion with cached metadata file
+compinit -d "$XDG_CACHE_HOME/zsh/zcompdump"
+
+# Enable interactive completion menu selection
 zstyle ':completion:*' menu select
 
-# Navegação no histórico com setas (inteligente)
-autoload -U up-line-or-beginning-search
-autoload -U down-line-or-beginning-search
-zle -N up-line-or-beginning-search
-zle -N down-line-or-beginning-search
+# Make completion case-insensitive
+# Example: "doc" can complete to "Documents"
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'  # lowercase input matches upper and lower
 
-# bindkey "^[[A" up-line-or-beginning-search
-# bindkey "^[[B" down-line-or-beginning-search
-bindkey '^P' history-beginning-search-backward
-bindkey '^N' history-beginning-search-forward
+# =========================================================
+# Fuzzy finder
+# =========================================================
 
-bindkey '^[[A' history-beginning-search-backward
-bindkey '^[[B' history-beginning-search-forward
-
-bindkey '^[[3~' delete-char
-
-# --- fzf support --------------------------------------------------------------
-
-configureFZF() {
-    export FZF_DEFAULT_OPTS='--height 75% --layout=reverse --border --no-hscroll --info inline-right'
-
-    # prefer fd
-    if command -v fd &> /dev/null ; then
-        export FZF_DEFAULT_COMMAND="fd --ignore-vcs -tl -tf"
-        export FZF_ALT_C_COMMAND="fd --ignore-vcs -tl -td"
-    else
-        # use ripgrep
-        if command -v rg &> /dev/null ; then
-            export FZF_DEFAULT_COMMAND='rg --follow --ignore-vcs --files'
-        fi
-    fi
-
-    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-}
-
-if command -v fzf &> /dev/null ; then
-    # Argument '--zsh' available starting v0.48
-    eval "$(fzf --zsh 2>/dev/null)"
-
-    configureFZF
-
-elif [ -f ~/.fzf.zsh ] ; then
-    # Used when installing fzf from a custom source or location
-    source ~/.fzf.zsh
-
-    configureFZF
+# macOS / Homebrew (Apple Silicon)
+if [[ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ]]; then
+  source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
+  source /opt/homebrew/opt/fzf/shell/completion.zsh
 fi
 
-# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-#
-# export FZF_DEFAULT_COMMAND='fd --type f --hidden --exclude .git'
-# export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-#
-# export FZF_DEFAULT_OPTS='
-#   --height 60%
-#   --layout=reverse
-#   --border
-#   --info=inline
-#   --preview "bat --style=numbers --color=always {} | head -500"
-#   --bind "ctrl-/:toggle-preview"
-# '
-#
-# # atalhos extras
-# bindkey '^P' fzf-file-widget
-# bindkey '^O' fzf-cd-widget
-
-# -------------------------------------------
-# 🧠 ATUIN (histórico GOD MODE)
-# -------------------------------------------
-
-export ATUIN_NOBIND="true"
-eval "$(atuin init zsh)"
-
-# Ctrl+R inteligente
-bindkey '^R' atuin-search
-
-# Sync + config avançada
-export ATUIN_CONFIG_DIR="$HOME/.config/atuin"
-
-# --- better cd command --------------------------------------------------------
-
-if command -v zoxide &> /dev/null ; then
-    eval "$(zoxide init zsh)"
-    alias cd='z'
+# macOS / Homebrew (Intel)
+if [[ -f /usr/local/opt/fzf/shell/key-bindings.zsh ]]; then
+  source /usr/local/opt/fzf/shell/key-bindings.zsh
+  source /usr/local/opt/fzf/shell/completion.zsh
 fi
 
-# --- convienient process searching and killing --------------------------------
+# Arch
+if [[ -f /usr/share/fzf/key-bindings.zsh ]]; then
+  source /usr/share/fzf/key-bindings.zsh
+  source /usr/share/fzf/completion.zsh
+fi
 
-alias psg='ps aux | grep -v grep | grep'
+# Ubuntu
+if [[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]]; then
+  source /usr/share/doc/fzf/examples/key-bindings.zsh
+  source /usr/share/doc/fzf/examples/completion.zsh
+fi
 
-psf() {
-    ps -Ar -o user,pid,ppid,start,time,command | fzf --query=$@ \
-        --header 'CTRL-R -> refresh, CTRL-Y -> kill' \
-        --header-lines=1 --height=75% --layout=reverse \
-        --info inline-right --border --nth=1,2,6 \
-        --no-hscroll \
-        --preview 'echo {2} {6..}' --preview-window up:2:wrap:follow \
-        --bind 'ctrl-r:reload(ps -Ar -o user,pid,ppid,start,time,command)' \
-        --bind 'ctrl-y:reload(kill {2} || ps -Ar -o user,pid,ppid,start,time,command)'
-}
+# =========================================================
+# Modular Config Files
+# =========================================================
 
-# --- extract files from any archive -------------------------------------------
-# Usage: ex <archive_name>
+# fzf configuration
+source "$ZDOTDIR/fzf.zsh"
 
-ex()
-{
-    if [ -f $1 ] ; then
-        case $1 in
-            *.tar.bz2) tar xjf $1 ;;
-            *.tar.gz) tar xzf $1 ;;
-            *.bz2) bunzip2 $1 ;;
-            *.rar) unrar x $1 ;;
-            *.gz) gunzip $1 ;;
-            *.tar) tar xf $1 ;;
-            *.tbz2) tar xjf $1 ;;
-            *.tgz) tar xzf $1 ;;
-            *.zip) 7zz x $1 ;;
-            *.Z) uncompress $1 ;;
-            *.7z) 7zz x $1 ;;
-            *) echo "'$1' cannot be extracted via extract()" ;;
-        esac
-    else
-        echo "'$1' is not a valid file"
-    fi
-}
-
-
-# -------------------------------------------
-# 🧠 VI MODE
-# -------------------------------------------
-
-bindkey -v
-export KEYTIMEOUT=1
-
-# ESC rápido
-bindkey -M viins 'jj' vi-cmd-mode
-
-# -------------------------------------------
-# 🔌 CUSTOM
-# -------------------------------------------
-
-source "$ZDOTDIR/functions.zsh"
+# Aliases
 source "$ZDOTDIR/aliases.zsh"
 
-# -------------------------------------------
-# ⭐ PROMPT
-# -------------------------------------------
+# Custom keybindings
+source "$ZDOTDIR/bindings.zsh"
 
-export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
-(( $+commands[starship] )) && eval "$(starship init zsh)"
+# Plugins and plugin manager
+source "$ZDOTDIR/plugins.zsh"
 
-# -------------------------------------------
-# 🧩 ZELLIJ
-# -------------------------------------------
+# Prompt/theme
+source "$ZDOTDIR/prompt.zsh"
 
-# if [[ -n "$ZELLIJ" ]]; then
-#   preexec() {
-#       zellij action rename-pane "⚙ ${1%% *}"
-#   }
-#
-#   precmd() {
-#       local name
-#       name=$(git rev-parse --show-toplevel 2>/dev/null)
-#
-#       if [[ -n "$name" ]]; then
-#           name=$(basename "$name")
-#       else
-#           name=$(basename "$PWD")
-#       fi
-#
-#       zellij action rename-pane "$name"
-#   }
-# fi
-#
-# (( $+commands[zellij] )) && eval "$(zellij setup --generate-auto-start zsh)"
+# =========================================================
+# Node / NVM
+# =========================================================
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
