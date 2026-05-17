@@ -28,3 +28,12 @@ export STARSHIP_CONFIG="$ZDOTDIR/starship.toml"
 # ---------- PATH ----------
 # Personal binaries/scripts
 export PATH="$HOME/.local/bin:$PATH"
+
+# Rust
+. "$HOME/.cargo/env"
+[[ -f $HOME/.zprofile ]] && source $HOME/.zprofile
+
+# Go
+export PATH="/usr/local/go/bin:$PATH"
+export GOPATH="$HOME/go/bin"
+
