@@ -39,3 +39,10 @@ autocmd({ 'BufNewFile', 'BufFilePre', 'BufRead' }, {
   pattern = { '*.mdx', '*.md' },
   callback = function() vim.cmd [[set filetype=markdown wrap linebreak nolist nospell]] end,
 })
+
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'gitsendemail', 'conf', 'editorconfig', 'qf', 'checkhealth', 'less' },
+  callback = function(event) vim.bo[event.buf].syntax = vim.bo[event.buf].filetype end,
+})
+
