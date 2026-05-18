@@ -4,7 +4,7 @@ theme = "nord"
 # ====================== EDITOR ======================
 [editor]
 true-color = true
-transparent = true          # ← Added for transparent background
+# transparent = true          # ← Added for transparent background
 auto-format = true
 bufferline = "multiple"
 mouse = true
