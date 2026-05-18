@@ -4,6 +4,7 @@ theme = "nord"
 # ====================== EDITOR ======================
 [editor]
 true-color = true
+transparent = true          # ← Added for transparent background
 auto-format = true
 bufferline = "multiple"
 mouse = true
@@ -57,7 +58,7 @@ wrap-indicator = "↪ "
 
 [editor.indent-guides]
 render = true
-character = "▏"          # mudei para este (fica mais limpo)
+character = "▏"        # mudei para este (fica mais limpo)
 
 [editor.file-picker]
 hidden = false
