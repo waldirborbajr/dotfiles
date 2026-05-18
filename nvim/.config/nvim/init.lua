@@ -284,10 +284,60 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
   --  Use CTRL+<hjkl> to switch between windows
   --
   --  See `:help wincmd` for a list of all window commands
-  vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-  vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-  vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-  vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
+vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
+vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
+vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+-- alternatives since I don't like to have my pinky curling in mac keyboard
+vim.keymap.set("n", "<leader>wh", "<C-w><C-h>", { desc = "Move focus to the left window" })
+vim.keymap.set("n", "<leader>wl", "<C-w><C-l>", { desc = "Move focus to the right window" })
+vim.keymap.set("n", "<leader>wj", "<C-w><C-j>", { desc = "Move focus to the lower window" })
+vim.keymap.set("n", "<leader>wk", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+
+vim.keymap.set("n", "<leader>ww", "<C-w>w", { desc = "Cycle thru window" })
+
+-- Split windows with <leader>
+vim.keymap.set("n", "<leader>wv", "<C-w>v", { desc = "Split window vertically" })
+vim.keymap.set("n", "<leader>ws", "<C-w>s", { desc = "Split window horizontally" })
+vim.keymap.set("n", "<leader>wq", ":q<CR>", { desc = "Quit current window" })
+vim.keymap.set("n", "<leader>wQ", ":qa!<CR>", { desc = "Quit all windows without saving" })
+
+-- Resize windows with <leader>
+vim.keymap.set("n", "<leader>w=", "<C-w>=", { desc = "Set window equal size" })
+vim.keymap.set("n", "<leader>w+", "5<C-w>+", { desc = "Bigger window vertically" })
+vim.keymap.set("n", "<leader>w-", "5<C-w>-", { desc = "Smaller window vertically" })
+vim.keymap.set("n", "<leader>w>", "15<C-w>>", { desc = "Bigger window horizontally" })
+vim.keymap.set("n", "<leader>w<", "15<C-w><", { desc = "Smaller window horizontally" })
+vim.keymap.set("n", "<leader>w_", "<C-w>_", { desc = "Maximize window" })
+
+-- Move windows around
+vim.keymap.set("n", "<leader>wH", "<C-w>H", { desc = "Move window to left" })
+vim.keymap.set("n", "<leader>wL", "<C-w>L", { desc = "Move window to right" })
+vim.keymap.set("n", "<leader>wJ", "<C-w>J", { desc = "Move window to lower" })
+vim.keymap.set("n", "<leader>wK", "<C-w>K", { desc = "Move window to upper" })
+
+-- Window tab
+vim.keymap.set("n", "<leader>wtn", ":tabe<CR>", { desc = "New tab" })
+vim.keymap.set("n", "<leader>wtt", "<C-w>T", { desc = "Open in new tab" })
+
+-- Buffer operations
+vim.keymap.set("n", "<leader>bd", ":bd<CR>", { desc = "Buffer delete" })
+vim.keymap.set("n", "<leader>bD", ":bd!<CR>", { desc = "Buffer DELETE" })
+vim.keymap.set("n", "<leader>bo", function()
+  -- Get the current buffer
+  local current_buf = vim.api.nvim_get_current_buf()
+
+  -- Get a list of all buffers
+  local buffers = vim.api.nvim_list_bufs()
+
+  for _, buf in ipairs(buffers) do
+    -- Check if the buffer is loaded and not the current buffer
+    if buf ~= current_buf and vim.api.nvim_buf_is_loaded(buf) then
+      -- Delete the buffer
+      vim.api.nvim_buf_delete(buf, { force = true })
+    end
+  end
+end, { desc = "Delete all buffers except me" })  
 
   -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
   -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
