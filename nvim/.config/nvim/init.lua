@@ -145,85 +145,129 @@ do
   -- NOTE: You can change these options as you wish!
   --  For more options, you can see `:help option-list`
 
-  -- Make line numbers default
-  vim.opt.number = true
-  -- You can also add relative line numbers, to help with jumping.
-  --  Experiment for yourself to see if you like it!
-  -- vim.o.relativenumber = true
+--   -- Make line numbers default
+--   vim.opt.number = true
+--   -- You can also add relative line numbers, to help with jumping.
+--   --  Experiment for yourself to see if you like it!
+--   -- vim.o.relativenumber = true
 
-  -- Enable mouse mode, can be useful for resizing splits for example!
-  vim.opt.mouse = 'a'
+--   -- Enable mouse mode, can be useful for resizing splits for example!
+--   vim.opt.mouse = 'a'
 
-  -- Don't show the mode, since it's already in the status line
-  vim.opt.showmode = false
+--   -- Don't show the mode, since it's already in the status line
+--   vim.opt.showmode = false
 
-  -- Sync clipboard between OS and Neovim.
-  --  Schedule the setting after `UiEnter` because it can increase startup-time.
-  --  Remove this option if you want your OS clipboard to remain independent.
-  --  See `:help 'clipboard'`
-  vim.schedule(function() vim.opt.clipboard = 'unnamedplus' end)
+--   -- Sync clipboard between OS and Neovim.
+--   --  Schedule the setting after `UiEnter` because it can increase startup-time.
+--   --  Remove this option if you want your OS clipboard to remain independent.
+--   --  See `:help 'clipboard'`
+--   vim.schedule(function() vim.opt.clipboard = 'unnamedplus' end)
 
--- Enable break indent
-vim.opt.breakindent = true
+-- -- Enable break indent
+-- vim.opt.breakindent = true
 
--- Save undo history
-vim.opt.undofile = true
+-- -- Save undo history
+-- vim.opt.undofile = true
 
--- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
+-- -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
+-- vim.opt.ignorecase = true
+-- vim.opt.smartcase = true
 
--- Keep signcolumn on by default
-vim.opt.signcolumn = "yes"
+-- -- Keep signcolumn on by default
+-- vim.opt.signcolumn = "yes"
 
--- Set vertical color column
-vim.opt.colorcolumn = "95"
+-- -- Set vertical color column
+-- vim.opt.colorcolumn = "95"
 
--- Decrease update time
-vim.opt.updatetime = 250
+-- -- Decrease update time
+-- vim.opt.updatetime = 250
 
--- Decrease mapped sequence wait time
-vim.opt.timeoutlen = 300
+-- -- Decrease mapped sequence wait time
+-- vim.opt.timeoutlen = 300
 
--- Configure how new splits should be opened
-vim.opt.splitright = true
-vim.opt.splitbelow = true
+-- -- Configure how new splits should be opened
+-- vim.opt.splitright = true
+-- vim.opt.splitbelow = true
 
-  -- Sets how neovim will display certain whitespace characters in the editor.
-  --  See `:help 'list'`
-  --  and `:help 'listchars'`
-  --
-  --  Notice listchars is set using `vim.opt` instead of `vim.o`.
-  --  It is very similar to `vim.o` but offers an interface for conveniently interacting with tables.
-  --   See `:help lua-options`
-  --   and `:help lua-guide-options`
-  vim.opt.list = true
-  vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+--   -- Sets how neovim will display certain whitespace characters in the editor.
+--   --  See `:help 'list'`
+--   --  and `:help 'listchars'`
+--   --
+--   --  Notice listchars is set using `vim.opt` instead of `vim.o`.
+--   --  It is very similar to `vim.o` but offers an interface for conveniently interacting with tables.
+--   --   See `:help lua-options`
+--   --   and `:help lua-guide-options`
+--   vim.opt.list = true
+--   vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
-  -- Use actual tab instead of space for indentation
-vim.api.nvim_create_autocmd({ "FileType" }, {
-  pattern = { "go", "rust" }, -- Replace with the desired filetype
-  group = vim.api.nvim_create_augroup("tab-for-indent", { clear = true }),
-  callback = function()
-    vim.bo.expandtab = false -- Use actual tab instead of space
-    -- vim.bo.tabstop = 4 -- Number of spaces per tab
-    -- vim.bo.shiftwidth = 4 -- Number of spaces for auto-indentation
-  end,
-})
+--   -- Use actual tab instead of space for indentation
+-- vim.api.nvim_create_autocmd({ "FileType" }, {
+--   pattern = { "go", "rust" }, -- Replace with the desired filetype
+--   group = vim.api.nvim_create_augroup("tab-for-indent", { clear = true }),
+--   callback = function()
+--     vim.bo.expandtab = false -- Use actual tab instead of space
+--     -- vim.bo.tabstop = 4 -- Number of spaces per tab
+--     -- vim.bo.shiftwidth = 4 -- Number of spaces for auto-indentation
+--   end,
+-- })
 
-  -- Preview substitutions live, as you type!
-  vim.opt.inccommand = 'split'
+--   -- Preview substitutions live, as you type!
+--   vim.opt.inccommand = 'split'
 
-  -- Show which line your cursor is on
-  vim.opt.cursorline = true
+--   -- Show which line your cursor is on
+--   vim.opt.cursorline = true
 
-  -- Minimal number of screen lines to keep above and below the cursor.
-  vim.opt.scrolloff = 10
+--   -- Minimal number of screen lines to keep above and below the cursor.
+--   vim.opt.scrolloff = 10
 
-  -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
-  -- instead raise a dialog asking if you wish to save the current file(s)
-  -- See `:help 'confirm'`
-  vim.opt.confirm = true
+--   -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
+--   -- instead raise a dialog asking if you wish to save the current file(s)
+--   -- See `:help 'confirm'`
+--   vim.opt.confirm = true
+
+-- ============================================================================
+-- Global editor options
+-- ============================================================================
+
+local options = {
+  number = true, -- show absolute line numbers
+  mouse = "a", -- enable mouse support
+  showmode = false, -- hide mode since statusline shows it
+  breakindent = true, -- preserve indentation on wrapped lines
+  undofile = true, -- persist undo history
+  ignorecase = true, -- case-insensitive search
+  smartcase = true, -- override ignorecase with uppercase search
+  signcolumn = "yes", -- always show sign column
+  colorcolumn = "95", -- highlight column width limit
+  updatetime = 250, -- faster update time
+  timeoutlen = 300, -- mapped sequence timeout
+  splitright = true, -- vertical splits open to the right
+  splitbelow = true, -- horizontal splits open below
+  list = true, -- show invisible characters
+  inccommand = "split", -- live preview substitutions
+  cursorline = true, -- highlight current line
+  scrolloff = 10, -- keep context around cursor
+  confirm = true, -- confirm unsaved changes before exit
+}
+
+for key, value in pairs(options) do
+  vim.opt[key] = value
+end
+
+-- Characters used for invisible symbols
+vim.opt.listchars = {
+  tab = "» ",
+  trail = "·",
+  nbsp = "␣",
+}
+
+-- Sync Neovim clipboard with system clipboard
+vim.schedule(function()
+  vim.opt.clipboard = "unnamedplus"
+end)
+
+-- Relative numbers (optional)
+vim.opt.relativenumber = true  
 
   -- [[ Basic Keymaps ]]
   --  See `:help vim.keymap.set()`
