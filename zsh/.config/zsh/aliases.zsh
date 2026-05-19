@@ -296,3 +296,10 @@ alias todo="nvim ~/.todo"
 alias '?'="gpt"
 alias '??'="duck"
 alias '???'="google"
+
+alias ls='ls -lah --color=always --group-directories-first'
+alias rm=' rm -I --preserve-root'
+alias cp='cp -i'
+alias mv='mv -i'
+alias mkdir='mkdir -p'
+alias ping='ping -c 5'
