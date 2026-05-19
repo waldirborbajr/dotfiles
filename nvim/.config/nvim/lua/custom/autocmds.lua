@@ -175,5 +175,16 @@ autocmd("BufEnter", {
   command = [[silent! normal zR]],
 })
 
+  -- Use actual tab instead of space for indentation
+autocmd({ "FileType" }, {
+  pattern = { "go", "rust" }, -- Replace with the desired filetype
+  group = augroup("tab-for-indent", { clear = true }),
+  callback = function()
+    vim.bo.expandtab = false -- Use actual tab instead of space
+    -- vim.bo.tabstop = 4 -- Number of spaces per tab
+    -- vim.bo.shiftwidth = 4 -- Number of spaces for auto-indentation
+  end,
+})
+
 -- Load custom indentation settings
 require("custom.indent")
