@@ -12,8 +12,11 @@ local autocmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
 
 -- ============================================================================
--- Restore last cursor position when reopening a file
+-- BUFFER HANDLING
 -- ============================================================================
+
+-- Restore last cursor position when reopening a file
+-- Moves cursor to the last position when you open a previously edited file
 autocmd("BufReadPost", {
   group = augroup("last_location", { clear = true }),
   desc = "Restore last cursor position",
@@ -27,9 +30,22 @@ autocmd("BufReadPost", {
   end,
 })
 
+-- Open all folds automatically when entering a buffer
+-- Expands all folded regions so all code is visible
+autocmd("BufEnter", {
+  group = augroup("open_folds", { clear = true }),
+  desc = "Open all folds on buffer enter",
+  command = [[silent! normal zR]],
+})
+
 -- ============================================================================
--- Disable automatic comment continuation
+-- COMMENT HANDLING (Consolidated)
 -- ============================================================================
+
+-- Disable automatic comment continuation on new lines
+-- Prevents vim from automatically inserting comment characters (# // --)
+-- when pressing Enter in a comment. Consolidates two separate autocmds
+-- into a single unified approach using both FileType and BufEnter events
 autocmd("FileType", {
   group = augroup("no_auto_comment", { clear = true }),
   desc = "Disable automatic comment continuation",
@@ -38,11 +54,9 @@ autocmd("FileType", {
   end,
 })
 
--- ============================================================================
--- Ensure comment continuation is disabled on buffer enter
--- ============================================================================
 autocmd("BufEnter", {
-  desc = "Disable next line comments",
+  group = augroup("no_auto_comment_buf", { clear = true }),
+  desc = "Ensure comment continuation is disabled on buffer enter",
   callback = function()
     vim.cmd([[set formatoptions-=cro]])
     vim.cmd([[setlocal formatoptions-=cro]])
@@ -50,9 +64,13 @@ autocmd("BufEnter", {
 })
 
 -- ============================================================================
--- Markdown specific settings
+-- FILETYPE-SPECIFIC SETTINGS
 -- ============================================================================
+
+-- Apply markdown-specific settings to .md and .mdx files
+-- Enables word wrapping, shows line breaks, disables list formatting and spell check
 autocmd({ "BufNewFile", "BufFilePre", "BufRead" }, {
+  group = augroup("markdown_settings", { clear = true }),
   desc = "Apply markdown settings",
   pattern = { "*.md", "*.mdx" },
   callback = function()
@@ -60,10 +78,10 @@ autocmd({ "BufNewFile", "BufFilePre", "BufRead" }, {
   end,
 })
 
--- ============================================================================
 -- Fix syntax highlighting for special buffer types
--- ============================================================================
+-- Ensures correct syntax highlighting for special filetypes
 autocmd("FileType", {
+  group = augroup("syntax_highlighting_fix", { clear = true }),
   desc = "Fix syntax highlighting for special buffers",
   pattern = {
     "gitsendemail",
@@ -78,10 +96,55 @@ autocmd("FileType", {
   end,
 })
 
+-- Set proper help lookup for Vim script files
+-- Allows pressing K on a Vim command to open help vertically
+autocmd("FileType", {
+  group = augroup("vim_help_lookup", { clear = true }),
+  desc = "Set keywordprg for Vim files",
+  pattern = "vim",
+  command = [[setlocal keywordprg=:vert\ help]],
+})
+
+-- Configure manual pages for indent-based folding
+-- Sets tab width for man pages to 1 space for proper formatting
+autocmd("FileType", {
+  group = augroup("man_page_indent", { clear = true }),
+  desc = "Configure man page indentation",
+  pattern = "man",
+  command = [[setlocal sw=1 ts=1]],
+})
+
+-- Use actual tabs instead of spaces for specific filetypes
+-- Go and Rust prefer hard tabs for indentation
+autocmd("FileType", {
+  pattern = { "go", "rust" },
+  group = augroup("tab_for_indent", { clear = true }),
+  desc = "Use tabs instead of spaces for Go and Rust",
+  callback = function()
+    vim.bo.expandtab = false -- Use actual tab character instead of spaces
+    -- vim.bo.tabstop = 4 -- Number of spaces per tab display
+    -- vim.bo.shiftwidth = 4 -- Number of spaces for auto-indentation
+  end,
+})
+
+-- Start Tree-sitter automatically for supported filetypes
+-- Enables syntax highlighting powered by Tree-sitter parser
+autocmd("FileType", {
+  group = augroup("treesitter_start", { clear = true }),
+  desc = "Start Tree-sitter automatically",
+  callback = function()
+    pcall(vim.treesitter.start)
+  end,
+})
+
 -- ============================================================================
+-- TEXT EDITING & DISPLAY
+-- ============================================================================
+
 -- Remove trailing whitespace before saving files
--- ============================================================================
+-- Cleans up unnecessary spaces at the end of lines
 autocmd("BufWritePre", {
+  group = augroup("remove_trailing_whitespace", { clear = true }),
   desc = "Remove trailing whitespace on save",
   callback = function()
     local view = vim.fn.winsaveview()
@@ -92,10 +155,10 @@ autocmd("BufWritePre", {
   end,
 })
 
--- ============================================================================
 -- Highlight yanked text
--- ============================================================================
+-- Visual feedback when text is copied/yanked to show selection
 autocmd("TextYankPost", {
+  group = augroup("highlight_yank", { clear = true }),
   desc = "Highlight yanked text",
   callback = function()
     vim.hl.on_yank()
@@ -103,9 +166,13 @@ autocmd("TextYankPost", {
 })
 
 -- ============================================================================
--- Change current working directory to terminal cwd
+-- TERMINAL & WORKING DIRECTORY
 -- ============================================================================
+
+-- Synchronize current working directory with terminal buffer
+-- Changes Neovim's working directory to match the terminal's directory
 autocmd({ "BufEnter", "TermEnter", "TermLeave" }, {
+  group = augroup("terminal_cwd_sync", { clear = true }),
   desc = "Sync cwd with terminal buffer",
   pattern = "term://*",
   callback = function()
@@ -117,10 +184,10 @@ autocmd({ "BufEnter", "TermEnter", "TermLeave" }, {
   end,
 })
 
--- ============================================================================
--- Save and restore scrolloff for terminal buffers
--- ============================================================================
+-- Save scrolloff value before entering terminal mode
+-- Removes scrolloff (context lines) when in terminal for better interactivity
 autocmd("TermEnter", {
+  group = augroup("terminal_scrolloff", { clear = true }),
   desc = "Save scrolloff before entering terminal",
   pattern = "term://*",
   callback = function()
@@ -129,7 +196,10 @@ autocmd("TermEnter", {
   end,
 })
 
+-- Restore scrolloff value after leaving terminal mode
+-- Restores the original scrolloff setting when exiting terminal
 autocmd("BufLeave", {
+  group = augroup("terminal_scrolloff_restore", { clear = true }),
   desc = "Restore scrolloff after leaving terminal",
   pattern = "term://*",
   callback = function()
@@ -140,51 +210,7 @@ autocmd("BufLeave", {
 })
 
 -- ============================================================================
--- Start Tree-sitter automatically for supported filetypes
+-- LOAD CUSTOM INDENTATION SETTINGS
 -- ============================================================================
-autocmd("FileType", {
-  desc = "Start Tree-sitter automatically",
-  callback = function()
-    pcall(vim.treesitter.start)
-  end,
-})
 
--- ============================================================================
--- Improve help lookup for Vim script files
--- ============================================================================
-autocmd("FileType", {
-  desc = "Set keywordprg for Vim files",
-  pattern = "vim",
-  command = [[setlocal keywordprg=:vert\ help]],
-})
-
--- ============================================================================
--- Configure manual pages for indent-based folding
--- ============================================================================
-autocmd("FileType", {
-  desc = "Configure man page indentation",
-  pattern = "man",
-  command = [[setlocal sw=1 ts=1]],
-})
-
--- ============================================================================
--- Open all folds automatically when entering a buffer
--- ============================================================================
-autocmd("BufEnter", {
-  desc = "Open all folds on buffer enter",
-  command = [[silent! normal zR]],
-})
-
-  -- Use actual tab instead of space for indentation
-autocmd({ "FileType" }, {
-  pattern = { "go", "rust" }, -- Replace with the desired filetype
-  group = augroup("tab-for-indent", { clear = true }),
-  callback = function()
-    vim.bo.expandtab = false -- Use actual tab instead of space
-    -- vim.bo.tabstop = 4 -- Number of spaces per tab
-    -- vim.bo.shiftwidth = 4 -- Number of spaces for auto-indentation
-  end,
-})
-
--- Load custom indentation settings
 require("custom.indent")
