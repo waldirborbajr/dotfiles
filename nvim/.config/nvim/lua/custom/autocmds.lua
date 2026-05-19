@@ -9,96 +9,133 @@
 --
 
 local autocmd = vim.api.nvim_create_autocmd
+local augroup = vim.api.nvim_create_augroup
 
 -- Restore cursor position
-autocmd('BufReadPost', {
-  group = vim.api.nvim_create_augroup('last_location', { clear = true }),
-  desc = 'Go to last cursor position',
+autocmd("BufReadPost", {
+  group = augroup("last_location", { clear = true }),
+  desc = "Go to last cursor position",
   callback = function(args)
     local mark = vim.api.nvim_buf_get_mark(args.buf, '"')
     local line_count = vim.api.nvim_buf_line_count(args.buf)
-    if mark[1] > 0 and mark[1] <= line_count then vim.cmd 'normal! g`"zz' end
+
+    if mark[1] > 0 and mark[1] <= line_count then
+      vim.cmd([[normal! g`"zz]])
+    end
   end,
 })
 
 -- Disable auto comment continuation
-autocmd('FileType', {
-  group = vim.api.nvim_create_augroup('no_auto_comment', { clear = true }),
-  callback = function() vim.opt_local.formatoptions:remove { 'c', 'r', 'o' } end,
-})
-
--- Disable next line comments
-autocmd('BufEnter', {
+autocmd("FileType", {
+  group = augroup("no_auto_comment", { clear = true }),
+  desc = "Disable auto comment continuation",
   callback = function()
-    vim.cmd 'set formatoptions-=cro'
-    vim.cmd 'setlocal formatoptions-=cro'
+    vim.opt_local.formatoptions:remove({ "c", "r", "o" })
   end,
 })
 
-autocmd({ 'BufNewFile', 'BufFilePre', 'BufRead' }, {
-  pattern = { '*.mdx', '*.md' },
-  callback = function() vim.cmd [[set filetype=markdown wrap linebreak nolist nospell]] end,
+-- Disable next line comments
+autocmd("BufEnter", {
+  desc = "Disable next line comments",
+  callback = function()
+    vim.cmd([[set formatoptions-=cro]])
+    vim.cmd([[setlocal formatoptions-=cro]])
+  end,
 })
 
-
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'gitsendemail', 'conf', 'editorconfig', 'qf', 'checkhealth', 'less' },
-  callback = function(event) vim.bo[event.buf].syntax = vim.bo[event.buf].filetype end,
+-- Markdown settings
+autocmd({ "BufNewFile", "BufFilePre", "BufRead" }, {
+  desc = "Markdown settings",
+  pattern = { "*.mdx", "*.md" },
+  callback = function()
+    vim.cmd([[set filetype=markdown wrap linebreak nolist nospell]])
+  end,
 })
 
--- autocmds {{{
-vim.api.nvim_create_autocmd('BufWritePre', {
-    desc = 'clear trailing whitespace on write',
-    callback = function()
-        local view = vim.fn.winsaveview()
-        vim.cmd([[ %s/\s\+$//e ]])
-        vim.fn.winrestview(view)
-    end,
+-- Fix syntax highlighting for special buffers
+autocmd("FileType", {
+  desc = "Fix syntax highlighting",
+  pattern = {
+    "gitsendemail",
+    "conf",
+    "editorconfig",
+    "qf",
+    "checkhealth",
+    "less",
+  },
+  callback = function(event)
+    vim.bo[event.buf].syntax = vim.bo[event.buf].filetype
+  end,
 })
 
-vim.api.nvim_create_autocmd('TextYankPost', {
-    desc = 'highlight selection on yank',
-    callback = function() vim.hl.on_yank() end,
+-- Clear trailing whitespace on write
+autocmd("BufWritePre", {
+  desc = "Clear trailing whitespace on write",
+  callback = function()
+    local view = vim.fn.winsaveview()
+
+    vim.cmd([[%s/\s\+$//e]])
+
+    vim.fn.winrestview(view)
+  end,
 })
 
-vim.api.nvim_create_autocmd({ 'BufEnter', 'TermEnter', 'TermLeave' }, {
-    desc = 'cd to terminal cwd on enter',
-    pattern = 'term://*',
-    callback = function()
-        local cwd = vim.fn.resolve('/proc/' .. vim.b.terminal_job_pid .. '/cwd')
-        if vim.fn.isdirectory(cwd) == 1 then
-            vim.fn.chdir(cwd)
-        end
-    end,
+-- Highlight selection on yank
+autocmd("TextYankPost", {
+  desc = "Highlight selection on yank",
+  callback = function()
+    vim.hl.on_yank()
+  end,
 })
 
-vim.api.nvim_create_autocmd('BufLeave', {
-    desc = 'restore scrolloff when leaving a terminal buffer',
-    pattern = 'term://*',
-    callback = function() vim.o.scrolloff = options.scrolloff end,
+-- CD to terminal cwd on enter
+autocmd({ "BufEnter", "TermEnter", "TermLeave" }, {
+  desc = "CD to terminal cwd on enter",
+  pattern = "term://*",
+  callback = function()
+    local cwd = vim.fn.resolve("/proc/" .. vim.b.terminal_job_pid .. "/cwd")
+
+    if vim.fn.isdirectory(cwd) == 1 then
+      vim.fn.chdir(cwd)
+    end
+  end,
 })
 
-vim.api.nvim_create_autocmd('FileType', {
-    desc = 'try to start treesitter for supported filetypes',
-    callback = function() pcall(vim.treesitter.start) end,
+-- Restore scrolloff when leaving a terminal buffer
+autocmd("BufLeave", {
+  desc = "Restore scrolloff when leaving a terminal buffer",
+  pattern = "term://*",
+  callback = function()
+    vim.o.scrolloff = options.scrolloff
+  end,
 })
 
-vim.api.nvim_create_autocmd('FileType', {
-    desc = 'set keywordprg for vim files',
-    pattern = 'vim',
-    command = [[ setlocal keywordprg=:vert\ help ]],
+-- Try to start treesitter for supported filetypes
+autocmd("FileType", {
+  desc = "Try to start treesitter for supported filetypes",
+  callback = function()
+    pcall(vim.treesitter.start)
+  end,
 })
 
-vim.api.nvim_create_autocmd('FileType', {
-    desc = 'set tab to 1 to enable folding by indent',
-    pattern = 'man',
-    command = [[ setlocal sw=1 ts=1 ]],
+-- Set keywordprg for vim files
+autocmd("FileType", {
+  desc = "Set keywordprg for vim files",
+  pattern = "vim",
+  command = [[setlocal keywordprg=:vert\ help]],
 })
 
-vim.api.nvim_create_autocmd('BufEnter', {
-    desc = 'unfold folds on buffer enter',
-    command = [[ silent! normal zR ]],
+-- Set tab to 1 to enable folding by indent
+autocmd("FileType", {
+  desc = "Set tab to 1 to enable folding by indent",
+  pattern = "man",
+  command = [[setlocal sw=1 ts=1]],
 })
--- }}}
 
-require 'custom.indent'
+-- Unfold folds on buffer enter
+autocmd("BufEnter", {
+  desc = "Unfold folds on buffer enter",
+  command = [[silent! normal zR]],
+})
+
+require("custom.indent")
