@@ -1,11 +1,15 @@
+local gh = function(p)
+	return "https://github.com/" .. p
+end
+
 vim.pack.add({
-    "https://github.com/bluz71/vim-moonfly-colors",
-    "https://github.com/nvim-mini/mini.nvim",
-    "https://github.com/rafamadriz/friendly-snippets",
-    { src = "https://github.com/nvim-treesitter/nvim-treesitter", branch = "main" },
-    "https://github.com/neovim/nvim-lspconfig",
-    "https://github.com/mason-org/mason.nvim",
-    "https://github.com/tpope/vim-fugitive",
+	gh("nvim-mini/mini.nvim"),
+	gh("stevearc/oil.nvim"),
+	gh("supermaven-inc/supermaven-nvim"),
+	gh("stevearc/conform.nvim"),
+    gh("neovim/nvim-lspconfig"),
+    gh("mason-org/mason.nvim"),    
+    gh("rafamadriz/friendly-snippets"),
 })
 
 -- mini files ----
