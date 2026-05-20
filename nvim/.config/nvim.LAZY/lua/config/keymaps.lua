@@ -1,19 +1,7 @@
--- Keymaps are automatically loaded on the VeryLazy event
--- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
--- Add any additional keymaps here
 
-local map = vim.keymap.set
--- clipboard ---------------------------------------------------------------
-map("n", "<C-y>", '"+y', { desc = "Copy to cliboard" })
-map("x", "<C-y>", '"+y', { desc = "Copy to cliboard" })
-map("n", "<C-p>", '"+p', { desc = "Paste from clipboard" })
-
--- Make 'c' key not copy to clipboard when changing a character.
-map("n", "c", '"_c', { desc = "Change without yanking" })
-map("n", "C", '"_C', { desc = "Change without yanking" })
-map("x", "c", '"_c', { desc = "Change without yanking" })
-map("x", "C", '"_C', { desc = "Change without yanking" })
-
+-- =============================================
+-- HELPER FUNCTION: DELETE CHAR OR BLANK LINE
+-- =============================================
 local function delete_char_or_blank_line()
   if vim.fn.col(".") == 1 and vim.fn.getline("."):match("^%s*$") then
     vim.api.nvim_feedkeys('"_dd', "n", false)
@@ -23,76 +11,172 @@ local function delete_char_or_blank_line()
   end
 end
 
--- Make 'x' key not copy to clipboard when deleting a character
-map("n", "x", delete_char_or_blank_line, { desc = "Delete character without yanking" })
-map("n", "X", delete_char_or_blank_line, { desc = "Delete character without yanking" })
-map("x", "x", '"_x', { desc = "Delete selection without yanking" })
-map("x", "X", '"_x', { desc = "Delete selection without yanking" })
+-- =============================================
+-- KEYMAP SHORTCUT FUNCTION
+-- =============================================
+local map = vim.keymap.set
+local opts = { noremap = true, silent = true }
 
--- Override nvim default behavior so it doesn't auto-yank when pasting on visual mode.
-map("x", "p", "P", { desc = "Paste content you've previourly yanked" })
-map("x", "P", "p", { desc = "Yank what you are going to override, then paste" })
+-- =============================================
+-- CLIPBOARD & REGISTER BEHAVIOR
+-- =============================================
+-- Copy / Paste to system clipboard
+map({ "n", "x" }, "<C-y>", '"+y', { desc = "Copy to system clipboard" })
+map("n", "<C-p>", '"+p', { desc = "Paste from system clipboard" })
 
------- xxxxx ------
+-- Delete / Change without yanking to default register
+map({ "n", "x" }, "<leader>d", [["_d]], { desc = "Delete without yanking" })
+map({ "n", "x" }, "c", [["_c]], { desc = "Change without yanking" })
+map({ "n", "x" }, "C", [["_C]], { desc = "Change line without yanking" })
 
--- Visual mode sorting and replacements
-vim.keymap.set("v", "<C-s>", "<cmd>sort<CR>")
-vim.keymap.set("v", "<leader>rr", '"hy:%s/<C-r>h//g<left><left>')
+-- Delete character or blank line without yanking
+map({ "n", "x" }, "x", delete_char_or_blank_line, { desc = "Delete char/line without yanking" })
+map({ "n", "x" }, "X", delete_char_or_blank_line, { desc = "Delete char/line without yanking" })
 
--- Move lines in visual mode
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
-vim.keymap.set("v", "K", ":m '>-2<CR>gv=gv")
+-- Visual paste behavior (does not overwrite register)
+map("x", "p", [["_dP]], { desc = "Paste over selection without losing register" })
+map("x", "P", "p", { desc = "Yank selection then paste" })
 
--- Indentation in visual mode
-vim.keymap.set("v", "<", "<gv", { desc = "Indent left in visual mode" })
-vim.keymap.set("v", ">", ">gv", { desc = "Indent right in visual mode" })
+-- =============================================
+-- MOVEMENT & CURSOR
+-- =============================================
+-- Better up/down with word wrap
+map({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true, desc = "Move down" })
+map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true, desc = "Move up" })
+map({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true, desc = "Move down" })
+map({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true, desc = "Move up" })
 
+-- Centered scrolling
+map("n", "<C-d>", "<C-d>zz", { desc = "Scroll down and center" })
+map("n", "<C-u>", "<C-u>zz", { desc = "Scroll up and center" })
+
+-- Centered search navigation
+map("n", "n", "nzzzv", { desc = "Next search result (centered)" })
+map("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
+
+-- Join lines without moving cursor
+map("n", "J", "mzJ`z", { desc = "Join lines without moving cursor" })
+
+-- Move lines with Alt (Normal, Insert, Visual)
+map("n", "<A-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move line down" })
+map("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move line up" })
+map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move line down in insert mode" })
+map("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move line up in insert mode" })
+map("v", "<A-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move selection down" })
+map("v", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move selection up" })
+
+-- =============================================
+-- VISUAL MODE ENHANCEMENTS
+-- =============================================
+-- Move selection up/down
+map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
+map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
+
+-- Indentation
+map("v", "<", "<gv", { desc = "Unindent and keep selection" })
+map("v", ">", ">gv", { desc = "Indent and keep selection" })
+
+-- Sort / Replace selection
+map("v", "<C-s>", "<cmd>sort<CR>", { desc = "Sort selection" })
+map("v", "<leader>rr", '"hy:%s/<C-r>h//g<Left><Left>', { desc = "Replace selection" })
+
+-- =============================================
+-- WINDOW & SPLIT MANAGEMENT
+-- =============================================
 -- Window navigation
-vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
-vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
-vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
-vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
+map("n", "<C-h>", "<C-w>h", { desc = "Go to left window", remap = true })
+map("n", "<C-j>", "<C-w>j", { desc = "Go to lower window", remap = true })
+map("n", "<C-k>", "<C-w>k", { desc = "Go to upper window", remap = true })
+map("n", "<C-l>", "<C-w>l", { desc = "Go to right window", remap = true })
 
 -- Window resizing
-vim.keymap.set("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase Window Height" })
-vim.keymap.set("n", "<C-Down>", "<cmd>resize -2<cr>", { desc = "Decrease Window Height" })
-vim.keymap.set("n", "<C-Left>", "<cmd>vertical resize -2<cr>", { desc = "Decrease Window Width" })
-vim.keymap.set("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width" })
+map("n", "<C-Up>", "<cmd>resize +2<CR>", { desc = "Increase height" })
+map("n", "<C-Down>", "<cmd>resize -2<CR>", { desc = "Decrease height" })
+map("n", "<C-Left>", "<cmd>vertical resize -2<CR>", { desc = "Decrease width" })
+map("n", "<C-Right>", "<cmd>vertical resize +2<CR>", { desc = "Increase width" })
 
--- Better up/down navigation
-vim.keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true, desc = "Down" })
-vim.keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true, desc = "Up" })
-vim.keymap.set({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true, desc = "Down" })
-vim.keymap.set({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true, desc = "Up" })
+-- Splits with leader
+map("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" })
+map("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" })
+map("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" })
+map("n", "<leader>sx", "<cmd>close<CR>", { desc = "Close current split" })
 
--- Move lines with Alt
-vim.keymap.set("n", "<A-j>", "<cmd>execute 'move .+' . v:count1<cr>==", { desc = "Move Down" })
-vim.keymap.set("n", "<A-k>", "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==", { desc = "Move Up" })
-vim.keymap.set("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { desc = "Move Down" })
-vim.keymap.set("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Up" })
-vim.keymap.set("v", "<A-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Down" })
-vim.keymap.set("v", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up" })
+-- =============================================
+-- BUFFERS & TABS
+-- =============================================
+-- Buffer navigation
+map("n", "<S-h>", "<cmd>bprevious<CR>", { desc = "Previous buffer" })
+map("n", "<S-l>", "<cmd>bnext<CR>", { desc = "Next buffer" })
+map("n", "[b", "<cmd>bprevious<CR>", { desc = "Previous buffer" })
+map("n", "]b", "<cmd>bnext<CR>", { desc = "Next buffer" })
+map("n", "<leader>bb", "<cmd>e #<CR>", { desc = "Switch to alternate buffer" })
+map("n", "<leader>`", "<cmd>e #<CR>", { desc = "Switch to alternate buffer" })
 
--- Buffers
-vim.keymap.set("n", "<S-h>", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
-vim.keymap.set("n", "<S-l>", "<cmd>bnext<cr>", { desc = "Next Buffer" })
-vim.keymap.set("n", "[b", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
-vim.keymap.set("n", "]b", "<cmd>bnext<cr>", { desc = "Next Buffer" })
-vim.keymap.set("n", "<leader>bb", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
-vim.keymap.set("n", "<leader>`", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
-vim.keymap.set("n", "<leader>bd", function() Snacks.bufdelete() end, { desc = "Delete Buffer" })
-vim.keymap.set("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Delete Other Buffers" })
-vim.keymap.set("n", "<leader>bD", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
+-- Buffer deletion
+map("n", "<leader>bd", function() Snacks.bufdelete() end, { desc = "Delete buffer" })
+map("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Delete other buffers" })
+map("n", "<leader>bD", "<cmd>bd<CR>", { desc = "Delete buffer + window" })
 
 -- Tab navigation
-vim.keymap.set("n", "<Tab>", "<cmd>bn<cr>")
-vim.keymap.set("n", "<S-Tab>", "<cmd>bp<cr>")
+map("n", "<Tab>", "<cmd>bn<CR>", { desc = "Next buffer (tab)" })
+map("n", "<S-Tab>", "<cmd>bp<CR>", { desc = "Previous buffer (tab)" })
 
--- Open parent directory
-vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+-- Tab operations
+map("n", "<leader>to", "<cmd>tabnew<CR>", { desc = "Open new tab" })
+map("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" })
+map("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Next tab" })
+map("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Previous tab" })
+map("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current file in new tab" })
 
--- Remove search highlights
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Remove search highlights" })
+-- =============================================
+-- MISCELLANEOUS
+-- =============================================
+
+-- Escape alternatives
+map("i", "<C-c>", "<Esc>", { desc = "Escape alternative in insert mode" })
+
+-- Clear search highlights
+map("n", "<C-c>", ":nohl<CR>", { desc = "Clear search highlight", silent = true })
+map("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highlights" })
+
+-- Replace word under cursor globally
+map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word under cursor globally" })
+
+-- Make current file executable
+map("n", "<leader>X", "<cmd>!chmod +x %<CR>", { desc = "Make file executable", silent = true })
+
+-- Open parent directory with Oil
+map("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory (Oil)" })
 
 -- Exit terminal mode
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+
+-- Toggle UndoTree (lazy-loaded)
+map("n", "<leader>u", function()
+  vim.cmd.packadd("nvim.undotree")
+  require("undotree").open()
+end, { desc = "Toggle UndoTree" })
+
+-- Restart Neovim configuration
+map("n", "<leader>re", "<cmd>restart<CR>", { desc = "Restart Neovim config" })
+
+-- Restart LSP
+map("n", "<leader>lr", function()
+  vim.cmd("lsp restart")
+  vim.notify("LSP restarted", vim.log.levels.INFO)
+end, { desc = "Restart LSP" })
+
+-- Format current buffer (built-in LSP)
+map("n", "<leader>f", vim.lsp.buf.format, { desc = "Format current buffer" })
+
+-- Copy current file path to clipboard
+map("n", "<leader>fp", function()
+  local filePath = vim.fn.expand("%:~")
+  vim.fn.setreg("+", filePath)
+  print("File path copied to clipboard: " .. filePath)
+end, { desc = "Copy file path to clipboard" })
+
+-- Source current file (quick reload)
+map("n", "<leader><leader>", function()
+  vim.cmd("so")
+end, { desc = "Source current file" })
