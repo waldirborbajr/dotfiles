@@ -4,4 +4,6 @@ Refactor my neovim.
 
 based on: https://github.com/Sin-cy/nvim-scratch
 and: https://github.com/Sin-cy/dotfiles
+and: https://github.com/adibhanna/nvim
+
 
