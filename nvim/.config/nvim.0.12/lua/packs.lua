@@ -8,8 +8,9 @@ vim.pack.add({
 	gh("supermaven-inc/supermaven-nvim"),
 	gh("stevearc/conform.nvim"),
     gh("neovim/nvim-lspconfig"),
-    gh("mason-org/mason.nvim"),    
+    gh("mason-org/mason.nvim"),
     gh("rafamadriz/friendly-snippets"),
+    gh("rmehri01/onenord.nvim"),
 })
 
 -- mini files ----
@@ -70,7 +71,7 @@ vim.keymap.set("n", "<leader>vh", function() MiniPick.builtin.help() end, { desc
 vim.keymap.set("n", "<leader>xx", function() MiniExtra.pickers.diagnostic() end, { desc = "Mini Picker Diagnostics" })
 vim.keymap.set("n", "<leader>pk", function() MiniExtra.pickers.keymaps() end, { desc = 'Search keymaps' })
 
---- mini completions --- 
+--- mini completions ---
 require("mini.completion").setup({
     lsp_completion = {
         auto_setup = true,

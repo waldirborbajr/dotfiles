@@ -10,14 +10,14 @@ local augroup = vim.api.nvim_create_augroup
 -- BUFFER & CURSOR
 -- ============================================================================
 -- Restore last cursor position when reopening a file
-autocmd('BufReadPost', {
-  group = augroup('last_location', { clear = true }),
-  desc = 'Restore last cursor position',
+autocmd("BufReadPost", {
+  group = augroup("last_location", { clear = true }),
+  desc = "Restore last cursor position",
   callback = function(args)
     local mark = vim.api.nvim_buf_get_mark(args.buf, '"')
     local line_count = vim.api.nvim_buf_line_count(args.buf)
     if mark[1] > 0 and mark[1] <= line_count then
-      vim.cmd [[normal! g`"zz]]
+      vim.cmd([[normal! g`"zz]])
     end
   end,
 })
@@ -26,16 +26,16 @@ autocmd('BufReadPost', {
 -- FOLDS & DISPLAY
 -- ============================================================================
 -- Open all folds automatically
-autocmd('BufEnter', {
-  group = augroup('open_folds', { clear = true }),
-  desc = 'Open all folds on buffer enter',
-  command = 'silent! normal! zR',
+autocmd("BufEnter", {
+  group = augroup("open_folds", { clear = true }),
+  desc = "Open all folds on buffer enter",
+  command = "silent! normal! zR",
 })
 
 -- Highlight yanked text
-autocmd('TextYankPost', {
-  group = augroup('highlight_yank', { clear = true }),
-  desc = 'Highlight yanked text',
+autocmd("TextYankPost", {
+  group = augroup("highlight_yank", { clear = true }),
+  desc = "Highlight yanked text",
   callback = function()
     vim.hl.on_yank()
   end,
@@ -45,12 +45,12 @@ autocmd('TextYankPost', {
 -- COMMENT HANDLING
 -- ============================================================================
 -- Disable automatic comment continuation on new lines
-autocmd({ 'FileType', 'BufEnter' }, {
-  group = augroup('no_auto_comment', { clear = true }),
-  desc = 'Disable automatic comment continuation',
+autocmd({ "FileType", "BufEnter" }, {
+  group = augroup("no_auto_comment", { clear = true }),
+  desc = "Disable automatic comment continuation",
   callback = function()
-    vim.opt_local.formatoptions:remove { 'c', 'r', 'o' }
-    vim.cmd [[setlocal formatoptions-=cro]]
+    vim.opt_local.formatoptions:remove({ "c", "r", "o" })
+    vim.cmd([[setlocal formatoptions-=cro]])
   end,
 })
 
@@ -58,46 +58,46 @@ autocmd({ 'FileType', 'BufEnter' }, {
 -- FILETYPE SPECIFIC SETTINGS
 -- ============================================================================
 -- Markdown settings
-autocmd({ 'BufNewFile', 'BufFilePre', 'BufRead' }, {
-  group = augroup('markdown_settings', { clear = true }),
-  desc = 'Apply markdown specific settings',
-  pattern = { '*.md', '*.mdx' },
+autocmd({ "BufNewFile", "BufFilePre", "BufRead" }, {
+  group = augroup("markdown_settings", { clear = true }),
+  desc = "Apply markdown specific settings",
+  pattern = { "*.md", "*.mdx" },
   callback = function()
-    vim.cmd [[set filetype=markdown wrap linebreak nolist nospell]]
+    vim.cmd([[set filetype=markdown wrap linebreak nolist nospell]])
   end,
 })
 
 -- Fix syntax highlighting for special buffers
-autocmd('FileType', {
-  group = augroup('syntax_highlighting_fix', { clear = true }),
-  desc = 'Fix syntax highlighting for special buffers',
-  pattern = { 'gitsendemail', 'conf', 'editorconfig', 'qf', 'checkhealth', 'less' },
+autocmd("FileType", {
+  group = augroup("syntax_highlighting_fix", { clear = true }),
+  desc = "Fix syntax highlighting for special buffers",
+  pattern = { "gitsendemail", "conf", "editorconfig", "qf", "checkhealth", "less" },
   callback = function(event)
     vim.bo[event.buf].syntax = vim.bo[event.buf].filetype
   end,
 })
 
 -- Vim filetype specific
-autocmd('FileType', {
-  group = augroup('vim_help_lookup', { clear = true }),
-  desc = 'Set keywordprg for Vim files',
-  pattern = 'vim',
-  command = 'setlocal keywordprg=:vert\\ help',
+autocmd("FileType", {
+  group = augroup("vim_help_lookup", { clear = true }),
+  desc = "Set keywordprg for Vim files",
+  pattern = "vim",
+  command = "setlocal keywordprg=:vert\\ help",
 })
 
 -- Man pages
-autocmd('FileType', {
-  group = augroup('man_page_indent', { clear = true }),
-  desc = 'Configure man page indentation',
-  pattern = 'man',
-  command = 'setlocal sw=1 ts=1',
+autocmd("FileType", {
+  group = augroup("man_page_indent", { clear = true }),
+  desc = "Configure man page indentation",
+  pattern = "man",
+  command = "setlocal sw=1 ts=1",
 })
 
 -- Use real tabs for Go and Rust
-autocmd('FileType', {
-  group = augroup('tab_for_indent', { clear = true }),
-  desc = 'Use hard tabs for Go and Rust',
-  pattern = { 'go', 'rust' },
+autocmd("FileType", {
+  group = augroup("tab_for_indent", { clear = true }),
+  desc = "Use hard tabs for Go and Rust",
+  pattern = { "go", "rust" },
   callback = function()
     vim.bo.expandtab = false
   end,
@@ -116,12 +116,12 @@ autocmd('FileType', {
 -- TEXT EDITING
 -- ============================================================================
 -- Remove trailing whitespace on save
-autocmd('BufWritePre', {
-  group = augroup('remove_trailing_whitespace', { clear = true }),
-  desc = 'Remove trailing whitespace on save',
+autocmd("BufWritePre", {
+  group = augroup("remove_trailing_whitespace", { clear = true }),
+  desc = "Remove trailing whitespace on save",
   callback = function()
     local view = vim.fn.winsaveview()
-    vim.cmd [[%s/\s\+$//e]]
+    vim.cmd([[%s/\s\+$//e]])
     vim.fn.winrestview(view)
   end,
 })
@@ -130,12 +130,12 @@ autocmd('BufWritePre', {
 -- TERMINAL BEHAVIOR
 -- ============================================================================
 -- Sync working directory with terminal
-autocmd({ 'BufEnter', 'TermEnter', 'TermLeave' }, {
-  group = augroup('terminal_cwd_sync', { clear = true }),
-  desc = 'Sync cwd with terminal buffer',
-  pattern = 'term://*',
+autocmd({ "BufEnter", "TermEnter", "TermLeave" }, {
+  group = augroup("terminal_cwd_sync", { clear = true }),
+  desc = "Sync cwd with terminal buffer",
+  pattern = "term://*",
   callback = function()
-    local cwd = vim.fn.resolve('/proc/' .. vim.b.terminal_job_pid .. '/cwd')
+    local cwd = vim.fn.resolve("/proc/" .. vim.b.terminal_job_pid .. "/cwd")
     if vim.fn.isdirectory(cwd) == 1 then
       vim.fn.chdir(cwd)
     end
@@ -143,20 +143,20 @@ autocmd({ 'BufEnter', 'TermEnter', 'TermLeave' }, {
 })
 
 -- Better terminal UX (scrolloff)
-autocmd('TermEnter', {
-  group = augroup('terminal_scrolloff', { clear = true }),
-  desc = 'Disable scrolloff in terminal',
-  pattern = 'term://*',
+autocmd("TermEnter", {
+  group = augroup("terminal_scrolloff", { clear = true }),
+  desc = "Disable scrolloff in terminal",
+  pattern = "term://*",
   callback = function()
     vim.b.saved_scrolloff = vim.o.scrolloff
     vim.o.scrolloff = 0
   end,
 })
 
-autocmd('BufLeave', {
-  group = augroup('terminal_scrolloff_restore', { clear = true }),
-  desc = 'Restore scrolloff after leaving terminal',
-  pattern = 'term://*',
+autocmd("BufLeave", {
+  group = augroup("terminal_scrolloff_restore", { clear = true }),
+  desc = "Restore scrolloff after leaving terminal",
+  pattern = "term://*",
   callback = function()
     if vim.b.saved_scrolloff ~= nil then
       vim.o.scrolloff = vim.b.saved_scrolloff
@@ -171,14 +171,14 @@ vim.api.nvim_create_user_command("PackAdd", function(opts)
   vim.pack.add(opts.fargs)
 end, {
   nargs = "+",
-  desc = "Add plugins (:PackAdd user/repo1 user/repo2)"
+  desc = "Add plugins (:PackAdd user/repo1 user/repo2)",
 })
 
 vim.api.nvim_create_user_command("PackDel", function(opts)
   vim.pack.del(opts.fargs)
 end, {
   nargs = "+",
-  desc = "Delete plugins (:PackDel plugin1 plugin2)"
+  desc = "Delete plugins (:PackDel plugin1 plugin2)",
 })
 
 vim.api.nvim_create_user_command("PackUpdate", function(opts)
@@ -190,10 +190,30 @@ vim.api.nvim_create_user_command("PackUpdate", function(opts)
   end
 end, {
   nargs = "*",
-  desc = "Update all plugins or specific ones (:PackUpdate [plugin1 plugin2])"
+  desc = "Update all plugins or specific ones (:PackUpdate [plugin1 plugin2])",
 })
 
--- ============================================================================
--- CUSTOM CONFIG
--- ============================================================================
-require 'core.indent'
+vim.api.nvim_create_user_command("SaveMacro", function(params)
+  local name = params.args
+  local dir = vim.fn.expand("~/.config/nvim/macros/")
+  local file = dir .. name .. ".macro"
+  local content = vim.fn.getreg("q")
+
+  vim.fn.mkdir(dir, "p")
+
+  vim.fn.writefile({ content }, file, "a")
+end, { nargs = 1 })
+
+vim.api.nvim_create_user_command("LoadMacro", function(params)
+  local name = params.args
+  local dir = vim.fn.expand("~/.config/nvim/macros/")
+  local file = dir .. name .. ".macro"
+
+  local content = vim.fn.readfile(file)
+
+  vim.fn.setreg("q", content)
+end, { nargs = 1 })
+
+vim.api.nvim_create_user_command("Reload", function()
+  vim.cmd(":source $MYVIMRC")
+end, {})
