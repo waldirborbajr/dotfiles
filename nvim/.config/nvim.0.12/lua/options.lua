@@ -52,6 +52,9 @@ end
 vim.g.loaded_netrw = 1       -- Disable netrw file explorer
 vim.g.loaded_netrwPlugin = 1 -- Disable netrw plugin component
 vim.g.netrw_banner = 0       -- Hide netrw banner (redundant if netrw disabled, kept for safety)
+-- g.netrw_banner = 0
+vim.g.netrw_winsize = 25
+vim.g.netrw_browse_split = 0
 
 -- Disable unused language providers (silence health check warnings)
 vim.g.loaded_node_provider = 0
@@ -162,19 +165,15 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
--- ============================================================================
--- FILETYPE DETECTION (Custom)
--- ============================================================================
-vim.filetype.add({
-  extension = {
-    gotmpl = "gotmpl",  -- Go templates (registered for gopls)
-    tmpl = "gotmpl",
-  },
-  filename = {
-    [".envrc"] = "sh",  -- direnv files use bash syntax
-  },
-  pattern = {
-    -- Treat tsconfig/jsconfig files as JSONC (allows comments)
-    ["[jt]sconfig.*.json"] = "jsonc",
-  },
-})
+
+
+-- Remap common typos
+vim.cmd("cnoreabbrev W! w!")
+vim.cmd("cnoreabbrev Q! q!")
+vim.cmd("cnoreabbrev Qall! qall!")
+vim.cmd("cnoreabbrev Wq wq")
+vim.cmd("cnoreabbrev Wa wa")
+vim.cmd("cnoreabbrev wQ wq")
+vim.cmd("cnoreabbrev WQ wq")
+vim.cmd("cnoreabbrev W w")
+vim.cmd("cnoreabbrev Q q")
