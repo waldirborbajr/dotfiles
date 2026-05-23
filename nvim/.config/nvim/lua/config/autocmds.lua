@@ -32,15 +32,6 @@ autocmd("BufEnter", {
   command = "silent! normal! zR",
 })
 
--- Highlight yanked text
-autocmd("TextYankPost", {
-  group = augroup("highlight_yank", { clear = true }),
-  desc = "Highlight yanked text",
-  callback = function()
-    vim.hl.on_yank()
-  end,
-})
-
 -- ============================================================================
 -- COMMENT HANDLING
 -- ============================================================================
@@ -217,3 +208,30 @@ end, { nargs = 1 })
 vim.api.nvim_create_user_command("Reload", function()
   vim.cmd(":source $MYVIMRC")
 end, {})
+
+-- Highlight the yanked text for 200ms
+local highlight_yank_group = vim.api.nvim_create_augroup("HighlightYank", {})
+vim.api.nvim_create_autocmd("TextYankPost", {
+  group = highlight_yank_group,
+  pattern = "*",
+  callback = function()
+    vim.hl.on_yank({
+      higroup = "IncSearch",
+      timeout = 200,
+    })
+  end,
+})
+
+-- format on save using efm langserver and configured formatters
+-- local lsp_fmt_group = vim.api.nvim_create_augroup("FormatOnSaveGroup", {})
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--   group = lsp_fmt_group,
+--   callback = function()
+--     require("mini.trailspace").trim()
+--     local efm = vim.lsp.get_clients({ name = "efm" })
+--     if vim.tbl_isempty(efm) then
+--       return
+--     end
+--     vim.lsp.buf.format({ name = "efm", async = true })
+--   end,
+-- })
