@@ -11,15 +11,15 @@ local augroup = vim.api.nvim_create_augroup
 -- ============================================================================
 -- Restore last cursor position when reopening a file
 autocmd("BufReadPost", {
-	group = augroup("last_location", { clear = true }),
-	desc = "Restore last cursor position",
-	callback = function(args)
-		local mark = vim.api.nvim_buf_get_mark(args.buf, '"')
-		local line_count = vim.api.nvim_buf_line_count(args.buf)
-		if mark[1] > 0 and mark[1] <= line_count then
-			vim.cmd([[normal! g`"zz]])
-		end
-	end,
+  group = augroup("last_location", { clear = true }),
+  desc = "Restore last cursor position",
+  callback = function(args)
+    local mark = vim.api.nvim_buf_get_mark(args.buf, '"')
+    local line_count = vim.api.nvim_buf_line_count(args.buf)
+    if mark[1] > 0 and mark[1] <= line_count then
+      vim.cmd([[normal! g`"zz]])
+    end
+  end,
 })
 
 -- ============================================================================
@@ -27,21 +27,21 @@ autocmd("BufReadPost", {
 -- ============================================================================
 -- Open all folds automatically
 autocmd("BufEnter", {
-	group = augroup("open_folds", { clear = true }),
-	desc = "Open all folds on buffer enter",
-	command = "silent! normal! zR",
+  group = augroup("open_folds", { clear = true }),
+  desc = "Open all folds on buffer enter",
+  command = "silent! normal! zR",
 })
 
 -- Highlight yanked text for 200ms
 autocmd("TextYankPost", {
-	group = augroup("highlight_yank", { clear = true }),
-	desc = "Highlight yanked text",
-	callback = function()
-		vim.hl.on_yank({
-			higroup = "IncSearch",
-			timeout = 200,
-		})
-	end,
+  group = augroup("highlight_yank", { clear = true }),
+  desc = "Highlight yanked text",
+  callback = function()
+    vim.hl.on_yank({
+      higroup = "IncSearch",
+      timeout = 200,
+    })
+  end,
 })
 
 -- ============================================================================
@@ -49,12 +49,12 @@ autocmd("TextYankPost", {
 -- ============================================================================
 -- Disable automatic comment continuation on new lines
 autocmd({ "FileType", "BufEnter" }, {
-	group = augroup("no_auto_comment", { clear = true }),
-	desc = "Disable automatic comment continuation",
-	callback = function()
-		vim.opt_local.formatoptions:remove({ "c", "r", "o" })
-		vim.cmd([[setlocal formatoptions-=cro]])
-	end,
+  group = augroup("no_auto_comment", { clear = true }),
+  desc = "Disable automatic comment continuation",
+  callback = function()
+    vim.opt_local.formatoptions:remove({ "c", "r", "o" })
+    vim.cmd([[setlocal formatoptions-=cro]])
+  end,
 })
 
 -- ============================================================================
@@ -62,48 +62,48 @@ autocmd({ "FileType", "BufEnter" }, {
 -- ============================================================================
 -- Markdown settings
 autocmd({ "BufNewFile", "BufFilePre", "BufRead" }, {
-	group = augroup("markdown_settings", { clear = true }),
-	desc = "Apply markdown specific settings",
-	pattern = { "*.md", "*.mdx" },
-	callback = function()
-		vim.cmd([[set filetype=markdown wrap linebreak nolist nospell]])
-	end,
+  group = augroup("markdown_settings", { clear = true }),
+  desc = "Apply markdown specific settings",
+  pattern = { "*.md", "*.mdx" },
+  callback = function()
+    vim.cmd([[set filetype=markdown wrap linebreak nolist nospell]])
+  end,
 })
 
 -- Fix syntax highlighting for special buffers
 autocmd("FileType", {
-	group = augroup("syntax_highlighting_fix", { clear = true }),
-	desc = "Fix syntax highlighting for special buffers",
-	pattern = { "gitsendemail", "conf", "editorconfig", "qf", "checkhealth", "less" },
-	callback = function(event)
-		vim.bo[event.buf].syntax = vim.bo[event.buf].filetype
-	end,
+  group = augroup("syntax_highlighting_fix", { clear = true }),
+  desc = "Fix syntax highlighting for special buffers",
+  pattern = { "gitsendemail", "conf", "editorconfig", "qf", "checkhealth", "less" },
+  callback = function(event)
+    vim.bo[event.buf].syntax = vim.bo[event.buf].filetype
+  end,
 })
 
 -- Vim filetype specific
 autocmd("FileType", {
-	group = augroup("vim_help_lookup", { clear = true }),
-	desc = "Set keywordprg for Vim files",
-	pattern = "vim",
-	command = "setlocal keywordprg=:vert\\ help",
+  group = augroup("vim_help_lookup", { clear = true }),
+  desc = "Set keywordprg for Vim files",
+  pattern = "vim",
+  command = "setlocal keywordprg=:vert\\ help",
 })
 
 -- Man pages
 autocmd("FileType", {
-	group = augroup("man_page_indent", { clear = true }),
-	desc = "Configure man page indentation",
-	pattern = "man",
-	command = "setlocal sw=1 ts=1",
+  group = augroup("man_page_indent", { clear = true }),
+  desc = "Configure man page indentation",
+  pattern = "man",
+  command = "setlocal sw=1 ts=1",
 })
 
 -- Use real tabs for Go and Rust
 autocmd("FileType", {
-	group = augroup("tab_for_indent", { clear = true }),
-	desc = "Use hard tabs for Go and Rust",
-	pattern = { "go", "rust" },
-	callback = function()
-		vim.bo.expandtab = false
-	end,
+  group = augroup("tab_for_indent", { clear = true }),
+  desc = "Use hard tabs for Go and Rust",
+  pattern = { "go", "rust" },
+  callback = function()
+    vim.bo.expandtab = false
+  end,
 })
 
 -- Auto-start Tree-sitter (commented out for optional use)
@@ -120,13 +120,13 @@ autocmd("FileType", {
 -- ============================================================================
 -- Remove trailing whitespace on save
 autocmd("BufWritePre", {
-	group = augroup("remove_trailing_whitespace", { clear = true }),
-	desc = "Remove trailing whitespace on save",
-	callback = function()
-		local view = vim.fn.winsaveview()
-		vim.cmd([[%s/\s\+$//e]])
-		vim.fn.winrestview(view)
-	end,
+  group = augroup("remove_trailing_whitespace", { clear = true }),
+  desc = "Remove trailing whitespace on save",
+  callback = function()
+    local view = vim.fn.winsaveview()
+    vim.cmd([[%s/\s\+$//e]])
+    vim.fn.winrestview(view)
+  end,
 })
 
 -- Format on save using efm langserver and configured formatters (commented out for optional use)
@@ -148,38 +148,38 @@ autocmd("BufWritePre", {
 -- ============================================================================
 -- Sync working directory with terminal
 autocmd({ "BufEnter", "TermEnter", "TermLeave" }, {
-	group = augroup("terminal_cwd_sync", { clear = true }),
-	desc = "Sync cwd with terminal buffer",
-	pattern = "term://*",
-	callback = function()
-		local cwd = vim.fn.resolve("/proc/" .. vim.b.terminal_job_pid .. "/cwd")
-		if vim.fn.isdirectory(cwd) == 1 then
-			vim.fn.chdir(cwd)
-		end
-	end,
+  group = augroup("terminal_cwd_sync", { clear = true }),
+  desc = "Sync cwd with terminal buffer",
+  pattern = "term://*",
+  callback = function()
+    local cwd = vim.fn.resolve("/proc/" .. vim.b.terminal_job_pid .. "/cwd")
+    if vim.fn.isdirectory(cwd) == 1 then
+      vim.fn.chdir(cwd)
+    end
+  end,
 })
 
 -- Disable scrolloff in terminal for better UX
 autocmd("TermEnter", {
-	group = augroup("terminal_scrolloff", { clear = true }),
-	desc = "Disable scrolloff in terminal",
-	pattern = "term://*",
-	callback = function()
-		vim.b.saved_scrolloff = vim.o.scrolloff
-		vim.o.scrolloff = 0
-	end,
+  group = augroup("terminal_scrolloff", { clear = true }),
+  desc = "Disable scrolloff in terminal",
+  pattern = "term://*",
+  callback = function()
+    vim.b.saved_scrolloff = vim.o.scrolloff
+    vim.o.scrolloff = 0
+  end,
 })
 
 -- Restore scrolloff after leaving terminal
 autocmd("BufLeave", {
-	group = augroup("terminal_scrolloff_restore", { clear = true }),
-	desc = "Restore scrolloff after leaving terminal",
-	pattern = "term://*",
-	callback = function()
-		if vim.b.saved_scrolloff ~= nil then
-			vim.o.scrolloff = vim.b.saved_scrolloff
-		end
-	end,
+  group = augroup("terminal_scrolloff_restore", { clear = true }),
+  desc = "Restore scrolloff after leaving terminal",
+  pattern = "term://*",
+  callback = function()
+    if vim.b.saved_scrolloff ~= nil then
+      vim.o.scrolloff = vim.b.saved_scrolloff
+    end
+  end,
 })
 
 -- ============================================================================
@@ -187,92 +187,96 @@ autocmd("BufLeave", {
 -- ============================================================================
 -- Add plugins using pack.lua
 vim.api.nvim_create_user_command("PackAdd", function(opts)
-	vim.pack.add(opts.fargs)
+  vim.pack.add(opts.fargs)
 end, {
-	nargs = "+",
-	desc = "Add plugins (:PackAdd user/repo1 user/repo2)",
+  nargs = "+",
+  desc = "Add plugins (:PackAdd user/repo1 user/repo2)",
 })
 
 -- Delete plugins from pack.lua
 vim.api.nvim_create_user_command("PackDel", function(opts)
-	vim.pack.del(opts.fargs)
+  vim.pack.del(opts.fargs)
 end, {
-	nargs = "+",
-	desc = "Delete plugins (:PackDel plugin1 plugin2)",
+  nargs = "+",
+  desc = "Delete plugins (:PackDel plugin1 plugin2)",
 })
 
 -- Update all plugins or specific ones
 vim.api.nvim_create_user_command("PackUpdate", function(opts)
-	if opts.args:match("%S") then
-		local plugins = vim.split(opts.args, "%s+", { trimempty = true })
-		vim.pack.update(plugins)
-	else
-		vim.pack.update()
-	end
+  if opts.args:match("%S") then
+    local plugins = vim.split(opts.args, "%s+", { trimempty = true })
+    vim.pack.update(plugins)
+  else
+    vim.pack.update()
+  end
 end, {
-	nargs = "*",
-	desc = "Update all plugins or specific ones (:PackUpdate [plugin1 plugin2])",
+  nargs = "*",
+  desc = "Update all plugins or specific ones (:PackUpdate [plugin1 plugin2])",
 })
 
 -- List non-active plugins and optionally delete them
 vim.api.nvim_create_user_command("PackCheck", function()
-	local non_active = vim.iter(vim.pack.get())
-		:filter(function(x) return not x.active end)
-		:map(function(x) return x.spec.name end)
-		:totable()
+  local non_active = vim
+    .iter(vim.pack.get())
+    :filter(function(x)
+      return not x.active
+    end)
+    :map(function(x)
+      return x.spec.name
+    end)
+    :totable()
 
-	if #non_active == 0 then
-		vim.notify("🆗 No non-active plugins found!", vim.log.levels.INFO)
-		return
-	end
+  if #non_active == 0 then
+    vim.notify("🆗 No non-active plugins found!", vim.log.levels.INFO)
+    return
+  end
 
-	vim.print("😴 Non-active plugins :")
-	print(" ")
-	for _, name in ipairs(non_active) do
-		print(name)
-	end
+  vim.print("😴 Non-active plugins :")
+  print(" ")
+  for _, name in ipairs(non_active) do
+    print(name)
+  end
 
-	print(" ")
+  print(" ")
 
-	local choice = vim.fn.confirm(
-		"Delete ALL non-active plugins from disk?",
-		"&Yes\n&No",
-		2  -- default = No
-	)
+  local choice = vim.fn.confirm(
+    "Delete ALL non-active plugins from disk?",
+    "&Yes\n&No",
+    2 -- default = No
+  )
 
-	if choice == 1 then
-		vim.pack.del(non_active)
-		vim.notify("🗑️  Deleted " .. #non_active .. " non-active plugin(s)", vim.log.levels.INFO)
-		print("Non-active plugins deleted!")
-		vim.api.nvim_exec_autocmds("User", { pattern = "PackChanged" })
-	else
-		vim.notify("Cancelled. No plugins were deleted!", vim.log.levels.INFO)
-	end
-end, { desc = "List non-active plugins and select to delete"})
+  if choice == 1 then
+    vim.pack.del(non_active)
+    vim.notify("🗑️  Deleted " .. #non_active .. " non-active plugin(s)", vim.log.levels.INFO)
+    print("Non-active plugins deleted!")
+    vim.api.nvim_exec_autocmds("User", { pattern = "PackChanged" })
+  else
+    vim.notify("Cancelled. No plugins were deleted!", vim.log.levels.INFO)
+  end
+end, { desc = "List non-active plugins and select to delete" })
 
 -- Save macro to file
 vim.api.nvim_create_user_command("SaveMacro", function(params)
-	local name = params.args
-	local dir = vim.fn.expand("~/.config/nvim/macros/")
-	local file = dir .. name .. ".macro"
-	local content = vim.fn.getreg("q")
+  local name = params.args
+  local dir = vim.fn.expand("~/.config/nvim/macros/")
+  local file = dir .. name .. ".macro"
+  local content = vim.fn.getreg("q")
 
-	vim.fn.mkdir(dir, "p")
-	vim.fn.writefile({ content }, file, "a")
+  vim.fn.mkdir(dir, "p")
+  vim.fn.writefile({ content }, file, "a")
 end, { nargs = 1, desc = "Save macro from register q to file" })
 
 -- Load macro from file
 vim.api.nvim_create_user_command("LoadMacro", function(params)
-	local name = params.args
-	local dir = vim.fn.expand("~/.config/nvim/macros/")
-	local file = dir .. name .. ".macro"
+  local name = params.args
+  local dir = vim.fn.expand("~/.config/nvim/macros/")
+  local file = dir .. name .. ".macro"
 
-	local content = vim.fn.readfile(file)
-	vim.fn.setreg("q", content)
+  local content = vim.fn.readfile(file)
+  vim.fn.setreg("q", content)
 end, { nargs = 1, desc = "Load macro from file to register q" })
 
 -- Reload configuration
 vim.api.nvim_create_user_command("Reload", function()
-	vim.cmd(":source $MYVIMRC")
+  vim.cmd(":source $MYVIMRC")
 end, { desc = "Reload Neovim configuration" })
-

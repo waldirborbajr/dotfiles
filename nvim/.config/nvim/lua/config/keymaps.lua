@@ -1,4 +1,3 @@
-
 -- =============================================
 -- HELPER FUNCTION: DELETE CHAR OR BLANK LINE
 -- =============================================
@@ -113,8 +112,12 @@ map("n", "<leader>bb", "<cmd>e #<CR>", { desc = "Switch to alternate buffer" })
 map("n", "<leader>`", "<cmd>e #<CR>", { desc = "Switch to alternate buffer" })
 
 -- Buffer deletion
-map("n", "<leader>bd", function() Snacks.bufdelete() end, { desc = "Delete buffer" })
-map("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Delete other buffers" })
+map("n", "<leader>bd", function()
+  Snacks.bufdelete()
+end, { desc = "Delete buffer" })
+map("n", "<leader>bo", function()
+  Snacks.bufdelete.other()
+end, { desc = "Delete other buffers" })
 map("n", "<leader>bD", "<cmd>bd<CR>", { desc = "Delete buffer + window" })
 
 -- Tab navigation
@@ -140,7 +143,12 @@ map("n", "<C-c>", ":nohl<CR>", { desc = "Clear search highlight", silent = true 
 map("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Clear search highlights" })
 
 -- Replace word under cursor globally
-map("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { desc = "Replace word under cursor globally" })
+map(
+  "n",
+  "<leader>s",
+  [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
+  { desc = "Replace word under cursor globally" }
+)
 
 -- Make current file executable
 map("n", "<leader>X", "<cmd>!chmod +x %<CR>", { desc = "Make file executable", silent = true })
