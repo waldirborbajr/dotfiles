@@ -80,15 +80,6 @@ window#waybar {
   background: @highlight;
 }
 
-tooltip {
-  background: @dark-9;
-  border-radius: 5px;
-}
-
-tooltip label {
-  color: white;
-}
-
 #media {
   color: #42ff9f;
   margin: 7px 0px 7px 80px;
@@ -106,4 +97,13 @@ tooltip label {
 #custom-media-time {
   color: @dark-5;
   font-size: 14px;
+}
+
+tooltip {
+  background: @dark-9;
+  border-radius: 5px;
+}
+
+tooltip label {
+  color: white;
 }
