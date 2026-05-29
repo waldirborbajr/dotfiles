@@ -26,11 +26,11 @@ autocmd("BufReadPost", {
 -- FOLDS & DISPLAY
 -- ============================================================================
 -- Open all folds automatically
-autocmd("BufEnter", {
-  group = augroup("open_folds", { clear = true }),
-  desc = "Open all folds on buffer enter",
-  command = "silent! normal! zR",
-})
+-- autocmd("BufEnter", {
+--   group = augroup("open_folds", { clear = true }),
+--   desc = "Open all folds on buffer enter",
+--   command = "silent! normal! zR",
+-- })
 
 -- Highlight yanked text for 200ms
 autocmd("TextYankPost", {
