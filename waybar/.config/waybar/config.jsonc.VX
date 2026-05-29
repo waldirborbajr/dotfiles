@@ -1,7 +1,7 @@
 {
-  "layer": "top",
-  "modules-left": ["hyprland/workspaces"],
-  "modules-center": ["clock"],
+    "layer": "top",
+    "modules-left": ["hyprland/workspaces", "group/media"],
+    "modules-center": ["clock"],
   "modules-right": [
     "hyprland/submap",
     "group/volume",
@@ -108,4 +108,31 @@
     "orientation": "horizontal",
     "modules": ["pulseaudio", "pulseaudio/slider"]
   }
+
+    "group/media": {
+      "orientation": "horizontal",
+      "modules": [
+        "custom/media-animation",
+        "custom/media-now-playing",
+        "custom/media-time"
+      ]
+    },
+    "custom/media-now-playing": {
+      "exec": "~/.config/waybar/custom_modules/media/media-now-playing.sh",
+      "escape": true,
+      "tooltip": false,
+      "on-click": "playerctl play-pause",
+      "on-click-middle": "playerctl previous",
+      "on-click-right": "playerctl next",
+    },
+    "custom/media-animation": {
+      "exec": "~/.config/waybar/custom_modules/media/media-animation.sh",
+      "tooltip": false,
+    },
+    "custom/media-time": {
+      "exec": "~/.config/waybar/custom_modules/media/media-time.sh",
+      "escape": true,
+      "interval": 1,
+      "tooltip": false,
+    }
 }
