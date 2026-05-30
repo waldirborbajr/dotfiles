@@ -1,13 +1,3 @@
-# =========================
-# Alacritty Configuration — Linux x86_64 Performance
-# =========================
-# Optimizations:
-#   • GPU rendering via OpenGL (Vulkan coming soon)
-#   • Wayland-first (~10-15% lower latency)
-#   • VSync disabled (maximum responsiveness)
-#   • Zero compositing overhead
-#   • Optimized memory pooling
-# =========================
 
 # =========================
 # Environment
@@ -27,11 +17,7 @@ padding = { x = 6, y = 6 }
 # Visual performance
 decorations = "None" # No titlebar (zero overhead with Wayland WM)
 opacity = 1.0        # Max performance — no blur/compositing
-# blur_radius = 0                  # REMOVED in Alacritty 0.13+ — key no longer exists
-
-resize_increments = true
-# startup_mode = "Maximized" #"Windowed" # Always start in a normal window — NOT fullscreen
-# Other options: "Maximized" | "Fullscreen" | "SimpleFullscreen"
+# blur_radius = 0    # REMOVED in Alacritty 0.13+ — key no longer exists
 
 # Initial window size — approximately 50% of a 1920x1080 screen
 # Alacritty uses columns/lines (character cells), not pixels
@@ -135,8 +121,9 @@ background = "#a6e3a1"
 # Bell (no distraction)
 # =========================
 [bell]
-animation = "None" # No animations = less overhead
-duration = 0
+animation = "Linear" # "None" removed — "Linear" with duration=0 is effectively silent
+# Alt values: "Ease" | "EaseOut" | "EaseOutSine" | "EaseOutQuad" | "EaseOutCubic" etc.
+duration = 0 # 0ms = bell is completely disabled regardless of animation
 
 # =========================
 # Selection (optimized for text)
@@ -154,9 +141,11 @@ bindings = [
   { key = "V", mods = "Control|Shift", action = "Paste" },
 
   # Font size adjustment (very useful for reading code)
-  { key = "Equal", mods = "Control", action = "IncreaseFontSize" },
-  { key = "Minus", mods = "Control", action = "DecreaseFontSize" },
-  { key = "Key0", mods = "Control", action = "ResetFontSize" },
+  # Note: key names use the actual character, not "Equal" or "Key0"
+  { key = "=", mods = "Control", action = "IncreaseFontSize" },
+  { key = "+", mods = "Control", action = "IncreaseFontSize" }, # Shift+= on most keyboards
+  { key = "-", mods = "Control", action = "DecreaseFontSize" },
+  { key = "0", mods = "Control", action = "ResetFontSize" },
 
   # Toggle fullscreen (manual — Alacritty won't start fullscreen)
   { key = "F11", mods = "None", action = "ToggleFullscreen" },
@@ -181,20 +170,22 @@ bindings = [
 # =========================
 # Uncomment the option you want to use:
 
-# Option 1: Zellij (recommended — better performance than tmux)
-[terminal.shell] # NOTE: [shell] was deprecated — use [terminal.shell]
-program = "/usr/bin/zellij"
-args = ["attach", "-c", "main"] # Auto-attach/create session "main"
+# Option 1: Zellij — commented out: binary not found at /usr/bin/zellij
+# To fix: run `which zellij` in your terminal and update the path below
+# Common alternative paths: ~/.cargo/bin/zellij | /usr/local/bin/zellij
+# [terminal.shell]
+# program = "/usr/bin/zellij"           # NOTE: [shell] was deprecated — use [terminal.shell]
+# args = ["attach", "-c", "main"]       # Auto-attach/create session "main"
 
 # Option 2: Tmux (if you prefer it)
 # [terminal.shell]
 # program = "/usr/bin/tmux"
 # args = ["new-session", "-A", "-D", "-s", "main"]
 
-# Option 3: Native shell (no multiplexer, for debugging)
-# [terminal.shell]
-# program = "/usr/bin/zsh"
-# args = ["-l"]
+# Option 3: Native shell — ACTIVE (safe fallback while Zellij path is unknown)
+[terminal.shell]
+program = "/usr/bin/zsh"
+args = ["-l"]
 
 # =========================
 # Performance / Debug
@@ -244,9 +235,19 @@ regex = "\\b[/\\.]?[\\w./\\-]*\\.[a-z]+"
 action = "Copy"
 post_processing = false
 
+[general]
 # =========================
-# Live Config Reload (useful for tweaking)
+# Alacritty Configuration — Linux x86_64 Performance
 # =========================
+# Optimizations:
+#   • GPU rendering via OpenGL (Vulkan coming soon)
+#   • Wayland-first (~10-15% lower latency)
+#   • VSync disabled (maximum responsiveness)
+#   • Zero compositing overhead
+#   • Optimized memory pooling
+# =========================
+
+# Must be declared before any [section] — top-level keys after [[hints]] are misread
 live_config_reload = true # Auto-reload on config file change
 
 # =========================
@@ -265,8 +266,6 @@ live_config_reload = true # Auto-reload on config file change
 #
 # If you still experience lag:
 # 1. Check if lag is from Helix/Zellij, not Alacritty:
-#    - Test with native shell: [shell] program = "/usr/bin/zsh"
+#    - Test with native shell: [terminal.shell] program = "/usr/bin/zsh"
 # 2. Enable render_timer for diagnostics
 # 3. Check GPU via glxinfo | grep "Device:"
-#
-#
