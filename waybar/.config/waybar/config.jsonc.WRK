@@ -1,0 +1,115 @@
+{
+    "layer": "top",
+    "position": "top",
+    "spacing": 0,
+    "modules-left": [
+        "niri/workspaces",
+        "idle_inhibitor",
+    ],
+    "modules-center": [
+        "niri/window"
+    ],
+    "modules-right": [
+        "bluetooth",
+        "pulseaudio",
+        "battery",
+        "tray",
+        "clock",
+    ],
+    "tray": {
+        "spacing": 10,
+    },
+    "niri/window": {
+        "all-outputs": true,
+        "format": "{title}",
+        "align": "center",
+        "max-length": 25,
+        "min-length": 25
+    },
+    "niri/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "warp-on-scroll": false,
+        "format": "{icon}",
+        "format-icons": {
+            "active": "•",
+            "default": "•",
+            "urgent": "•"
+        }
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": " ",
+            "deactivated": " "
+        }
+    },
+    "bluetooth": {
+        "format": "",
+        "format-disabled": "󰂲",
+        "format-connected": "󰂱",
+        "format-connected-battery": "󰂱 {device_battery_percentage}%",
+        "tooltip-format": "{controller_alias}\t{controller_address}",
+        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+        "on-click": "blueberry"
+    },
+    "clock": {
+        "interval": 60,
+        "align": 0,
+        "rotate": 0,
+        "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>",
+        "format": "{:%a %b %d  %I:%M %p}",
+        "on-click": "swaync-client -t",
+    },
+    "battery": {
+        "interval": 5,
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{capacity}% {icon}",
+        "format-full": "{capacity}% 󰁹",
+        "format-plugged": "{capacity}% 󱘖",
+        "format-charging": "{capacity}% 󱐥",
+        "format-icons": [
+            "󰁻", // 0-20%
+            "󰁽", // 21-40%
+            "󰁿", // 41-60%
+            "󰂁", // 61-80%
+            "󰁹" // 81-100%
+        ],
+        "tooltip-format": "{timeTo} {capacity}%"
+    },
+    "network": {
+        "format-wifi": " ",
+        "format-ethernet": "{ipaddr}/{cidr}",
+        "tooltip-format": "{ifname} via {gwaddr}",
+        "format-linked": "{ifname} (No IP)",
+        "format-disconnected": "󰤮",
+        "format-alt": " ",
+        "on-click": "nm-connection-editor",
+    },
+    "pulseaudio": {
+        "format": "{icon}",
+        "format-bluetooth": "{icon}",
+        "format-bluetooth-muted": "󰗿 {icon}",
+        "format-muted": "󰝟",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "󰋎",
+            "headset": "󰋎",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": [
+                " ",
+                " ",
+                " "
+            ]
+        },
+        "scroll-step": 5,
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-click-right": "pavucontrol"
+    }
+}

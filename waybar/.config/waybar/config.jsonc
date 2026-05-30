@@ -1,115 +1,108 @@
 {
     "layer": "top",
-    "position": "top",
-    "spacing": 0,
-    "modules-left": [
-        "niri/workspaces",
-        "idle_inhibitor",
-    ],
-    "modules-center": [
-        "niri/window"
-    ],
-    "modules-right": [
-        "bluetooth",
-        "pulseaudio",
-        "battery",
-        "tray",
-        "clock",
-    ],
-    "tray": {
-        "spacing": 10,
-    },
-    "niri/window": {
-        "all-outputs": true,
-        "format": "{title}",
-        "align": "center",
-        "max-length": 25,
-        "min-length": 25
-    },
-    "niri/workspaces": {
-        "disable-scroll": true,
-        "all-outputs": true,
-        "warp-on-scroll": false,
-        "format": "{icon}",
-        "format-icons": {
-            "active": "•",
-            "default": "•",
-            "urgent": "•"
-        }
-    },
-    "idle_inhibitor": {
-        "format": "{icon}",
-        "format-icons": {
-            "activated": " ",
-            "deactivated": " "
-        }
-    },
-    "bluetooth": {
-        "format": "",
-        "format-disabled": "󰂲",
-        "format-connected": "󰂱",
-        "format-connected-battery": "󰂱 {device_battery_percentage}%",
-        "tooltip-format": "{controller_alias}\t{controller_address}",
-        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
-        "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
-        "on-click": "blueberry"
-    },
-    "clock": {
-        "interval": 60,
-        "align": 0,
-        "rotate": 0,
-        "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>",
-        "format": "{:%a %b %d  %I:%M %p}",
-        "on-click": "swaync-client -t",
+    "modules-left": ["hyprland/workspaces", "group/media"],
+    "modules-center": ["clock"],
+    "modules-right": ["hyprland/submap", "group/volume", "battery", "bluetooth", "network", "cpu", "memory"],
+    "hyprland/window": {
+        "max-length": 50
     },
     "battery": {
-        "interval": 5,
-        "states": {
-            "warning": 30,
-            "critical": 15
-        },
+        "interval": 60,
         "format": "{capacity}% {icon}",
-        "format-full": "{capacity}% 󰁹",
-        "format-plugged": "{capacity}% 󱘖",
-        "format-charging": "{capacity}% 󱐥",
-        "format-icons": [
-            "󰁻", // 0-20%
-            "󰁽", // 21-40%
-            "󰁿", // 41-60%
-            "󰂁", // 61-80%
-            "󰁹" // 81-100%
-        ],
-        "tooltip-format": "{timeTo} {capacity}%"
+        "format-icons": {
+            "default": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+            "charging": ["󰢟", "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"]
+        },
+    },
+    "bluetooth": {
+      "format": "",
+      "format-disabled": "", // an empty format will hide the module
+      "format-connected": " {num_connections}",
+      "tooltip-format": "{controller_alias}\t{controller_address}",
+      "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
+      "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+      "on-click": "exec ghostty --title=bluetui -e bluetui"
+    },
+    "cpu": {
+        "interval": 10,
+        "format": " {}%",
+        "max-length": 10,
+        "on-click": "exec ghostty --title=btop -e btop"
+    },
+    "memory": {
+        "interval": 30,
+        "format": " {percentage}%",
+        "tooltip-format": "{used:0.1f}G/{total:0.1f}G used",
+        "on-click": "exec ghostty --title=htop -e htop",
     },
     "network": {
-        "format-wifi": " ",
-        "format-ethernet": "{ipaddr}/{cidr}",
-        "tooltip-format": "{ifname} via {gwaddr}",
-        "format-linked": "{ifname} (No IP)",
-        "format-disconnected": "󰤮",
-        "format-alt": " ",
-        "on-click": "nm-connection-editor",
+        "format": "",
+        "format-wifi": "",
+        "format-ethernet": "",
+        "format-disconnected": "󰤭", //An empty format will hide the module.
+        "tooltip-format": "{ifname} via {gwaddr} 󰊗",
+        "tooltip-format-wifi": "{essid} ({signalStrength}%) ",
+        "tooltip-format-ethernet": "{ifname} ",
+        "tooltip-format-disconnected": "󰖪",
+        "max-length": 50,
+        "on-click": "exec nmrs",
+    },
+    "clock": {
+      "format": "󰥔 {:%a, %d. %b %I:%M %p}",
+      "tooltip-format": "<tt><small>{calendar}</small></tt>",
+      "calendar": {
+        "format": {
+          "today": "<span color='#75f1fa'><b>{}</b></span>"
+        }
+      },
+      "on-click": "exec chromium --app=https://calendar.google.com"
     },
     "pulseaudio": {
-        "format": "{icon}",
-        "format-bluetooth": "{icon}",
-        "format-bluetooth-muted": "󰗿 {icon}",
-        "format-muted": "󰝟",
+        "format": "{volume}% {icon}",
+        "format-muted": "",
         "format-icons": {
-            "headphone": "",
-            "hands-free": "󰋎",
-            "headset": "󰋎",
-            "phone": "",
-            "portable": "",
-            "car": "",
-            "default": [
-                " ",
-                " ",
-                " "
-            ]
+            "default": ["", ""]
         },
-        "scroll-step": 5,
-        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
-        "on-click-right": "pavucontrol"
+        "scroll-step": 1,
+        "ignored-sinks": ["Easy Effects Sink"],
+        "on-click": "pavucontrol",
+    },
+    "pulseaudio/slider": {
+        "min": 0,
+        "max": 100,
+        "orientation": "horizontal"
+    },
+    "group/volume": {
+      "orientation": "horizontal",
+      "modules": [
+        "pulseaudio",
+        "pulseaudio/slider"
+      ]
+    },
+    "group/media": {
+      "orientation": "horizontal",
+      "modules": [
+        "custom/media-animation",
+        "custom/media-now-playing",
+        "custom/media-time"
+      ]
+    },
+    "custom/media-now-playing": {
+      "exec": "~/.config/waybar/modules/media-now-playing.sh",
+      "escape": true,
+      "tooltip": false,
+      "on-click": "playerctl play-pause",
+      "on-click-middle": "playerctl previous",
+      "on-click-right": "playerctl next",
+    },
+    "custom/media-animation": {
+      "exec": "~/.config/waybar/modules/media-animation.sh",
+      "tooltip": false,
+    },
+    "custom/media-time": {
+      "exec": "~/.config/waybar/modules/media-time.sh",
+      "escape": true,
+      "interval": 1,
+      "tooltip": false,
     }
 }

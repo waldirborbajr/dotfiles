@@ -45,7 +45,7 @@ startup_mode = "Windowed"          # Evita lag no Wayland em fullscreen startup
 # Font — JetBrains Mono (otimizado para código)
 # =========================
 [font]
-size = 13.0
+size = 11.0
 builtin_box_drawing = true         # Renderização eficiente de bordas
 
 normal   = { family = "JetBrains Mono", style = "Regular" }
