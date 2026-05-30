@@ -1,78 +1,79 @@
 # =========================
 # Alacritty Configuration — Linux x86_64 Performance
 # =========================
-# Otimizações:
-#   • GPU rendering via OpenGL (Vulkan em breve)
-#   • Wayland-first (latência ~10-15% menor)
-#   • VSync desativado (responsividade máxima)
+# Optimizations:
+#   • GPU rendering via OpenGL (Vulkan coming soon)
+#   • Wayland-first (~10-15% lower latency)
+#   • VSync disabled (maximum responsiveness)
 #   • Zero compositing overhead
-#   • Memory pooling otimizado
+#   • Optimized memory pooling
 # =========================
 
 # =========================
 # Environment
 # =========================
 [env]
-TERM = "xterm-256color"  # Confiável para Zellij + Helix (truecolor + mouse)
-                         # Alt: "alacritty" para features nativas do Alacritty
-                         # Alt: "tmux-256color" se tiver problemas dentro tmux
+TERM = "xterm-256color"  # Reliable for Zellij + Helix (truecolor + mouse)
+                         # Alt: "alacritty" for Alacritty-native features
+                         # Alt: "tmux-256color" if you have issues inside tmux
 
 # =========================
 # Window — Performance Focused
 # =========================
 [window]
-# Padding balanceado (mais espaço de tela, ainda legível)
+# Balanced padding (more screen space, still readable)
 padding = { x = 6, y = 6 }
 
 # Visual performance
-decorations = "None"               # Sem titlebar (overhead zero com WM Wayland)
-opacity = 1.0                      # Max performance — sem blur/compositing
-blur_radius = 0                    # Garantir que blur está off
+decorations = "None"               # No titlebar (zero overhead with Wayland WM)
+opacity = 1.0                      # Max performance — no blur/compositing
+blur_radius = 0                    # Ensure blur is off
 
-# Comportamento
-dynamic_title = true               # Títulos dinâmicos (sem overhead significativo)
+# Behavior
+dynamic_title = true               # Dynamic titles (no significant overhead)
 resize_increments = true
-startup_mode = "Windowed"          # Evita lag no Wayland em fullscreen startup
+startup_mode = "Windowed"          # Always start in a normal window — NOT fullscreen
+                                   # Other options: "Maximized" | "Fullscreen" | "SimpleFullscreen"
 
-# Descomente para tiling managers Wayland (Hyprland, Sway):
+# Uncomment for Wayland tiling managers (Hyprland, Sway):
 # class = { instance = "Alacritty", general = "Alacritty" }
 # maximize_to_workspace = true
 
-# Wayland-specific (melhor performance no Linux Wayland)
+# Wayland-specific (better performance on Linux Wayland)
 # wm_class = { instance = "Alacritty", general = "Alacritty" }
 
 # =========================
-# Font — JetBrains Mono (otimizado para código)
+# Font — JetBrains Mono (optimized for code)
 # =========================
 [font]
 size = 11.0
-builtin_box_drawing = true         # Renderização eficiente de bordas
+builtin_box_drawing = true         # Efficient border/box rendering
 
 normal   = { family = "JetBrains Mono", style = "Regular" }
 bold     = { family = "JetBrains Mono", style = "Bold" }
 italic   = { family = "JetBrains Mono", style = "Italic" }
 
-# Fallback fonts (manter compatibilidade)
+# Fallback font metrics (maintain compatibility)
 offset = { x = 0, y = 1 }
 glyph_offset = { x = 0, y = 0 }
 
 # =========================
-# Cursor — Helix Modal Editing Otimizado
+# Cursor — Optimized for Helix Modal Editing
 # =========================
 [cursor]
-# Inserção (Beam = rápido de localizar)
+# Insert mode (Beam = easy to locate)
 style = { shape = "Beam", blinking = "On" }
-blink_interval = 750              # Piscada visível, não distrativa
+blink_interval = 750              # Visible blink, not distracting
 
-# Unfocused
-unfocused_hollow = true           # Cursor oco quando não focado (economiza renders)
+# Unfocused window
+unfocused_hollow = true           # Hollow cursor when unfocused (saves renders)
 
 # =========================
 # Scrolling — Smooth & Fast
 # =========================
 [scrolling]
-history = 12000                   # Bom balanço: muitos logs, low memory footprint
-multiplier = 4                    # Scroll mais rápido (útil em outputs longos)
+history = 12000                   # Good balance: many logs, low memory footprint
+multiplier = 4                    # Faster scroll (useful for long outputs)
 
 # =========================
 # Colors — Catppuccin Mocha (Helix-friendly)
@@ -103,7 +104,7 @@ magenta = "#f5c2e7"
 cyan    = "#94e2d5"
 white   = "#a6adc8"
 
-# Cores adicionais (otimizado para Helix)
+# Additional colors (optimized for Helix)
 [colors.vi_mode_cursor]
 text = "#1e1e2e"
 cursor = "#89b4fa"
@@ -117,66 +118,66 @@ foreground = "#1e1e2e"
 background = "#a6e3a1"
 
 # =========================
-# Bell (sem distração)
+# Bell (no distraction)
 # =========================
 [bell]
-animation = "None"                # Sem animations = menos overhead
+animation = "None"                # No animations = less overhead
 duration = 0
 
 # =========================
-# Selection (otimizado para texto)
+# Selection (optimized for text)
 # =========================
 [selection]
 semantic_escape_chars = ",│`|:\"' ()[]{}<>\\‖"
 
 # =========================
-# Keyboard Bindings — Minimal, sem conflitos
+# Keyboard Bindings — Minimal, no conflicts
 # =========================
 [keyboard]
 bindings = [
-  # Clipboard — funciona dentro & fora do Zellij/Helix
+  # Clipboard — works inside & outside Zellij/Helix
   { key = "C", mods = "Control|Shift", action = "Copy"  },
   { key = "V", mods = "Control|Shift", action = "Paste" },
 
-  # Ajuste de tamanho de fonte (super útil para ler código)
+  # Font size adjustment (very useful for reading code)
   { key = "Equal",  mods = "Control", action = "IncreaseFontSize" },
   { key = "Minus",  mods = "Control", action = "DecreaseFontSize" },
   { key = "Key0",   mods = "Control", action = "ResetFontSize"    },
 
-  # Toggle fullscreen
+  # Toggle fullscreen (manual — Alacritty won't start fullscreen)
   { key = "F11",    mods = "None",    action = "ToggleFullscreen" },
   { key = "F",      mods = "Control|Shift", action = "ToggleFullscreen" },
 
   # Clear screen/history
-  { key = "L",      mods = "Control", chars = "\u000c" },              # Ctrl+L limpa
-  { key = "K",      mods = "Control", action = "ClearHistory" },       # Ctrl+K limpa scrollback
+  { key = "L",      mods = "Control", chars = "\u000c" },              # Ctrl+L clears screen
+  { key = "K",      mods = "Control", action = "ClearHistory" },       # Ctrl+K clears scrollback
 
-  # Smooth scrolling (útil para outputs longos do Helix)
+  # Smooth scrolling (useful for long Helix outputs)
   { key = "PageUp",   mods = "Shift", action = "ScrollPageUp"   },
   { key = "PageDown", mods = "Shift", action = "ScrollPageDown" },
   { key = "Up",       mods = "Control|Shift", action = "ScrollLineUp"   },
   { key = "Down",     mods = "Control|Shift", action = "ScrollLineDown" },
 
-  # Vi-mode hints para Helix (opcional, deixar para Helix gerenciar)
-  # Evitar mapear Ctrl+p / Ctrl+n — deixar Zellij/Helix gerenciar
+  # Vi-mode hints for Helix (optional — let Helix manage these)
+  # Avoid mapping Ctrl+p / Ctrl+n — let Zellij/Helix handle them
 ]
 
 # =========================
 # Shell / Multiplexer — Zellij focused
 # =========================
-# Descomente a config que você quer usar:
+# Uncomment the option you want to use:
 
-# Option 1: Zellij (recomendado — melhor performance que tmux)
+# Option 1: Zellij (recommended — better performance than tmux)
 [shell]
 program = "/usr/bin/zellij"
 args = ["attach", "-c", "main"]   # Auto-attach/create session "main"
 
-# Option 2: Tmux (se preferir)
+# Option 2: Tmux (if you prefer it)
 # [shell]
 # program = "/usr/bin/tmux"
 # args = ["new-session", "-A", "-D", "-s", "main"]
 
-# Option 3: Shell nativo (sem multiplexer, para debugging)
+# Option 3: Native shell (no multiplexer, for debugging)
 # [shell]
 # program = "/usr/bin/zsh"
 # args = ["-l"]
@@ -185,24 +186,24 @@ args = ["attach", "-c", "main"]   # Auto-attach/create session "main"
 # Performance / Debug
 # =========================
 [debug]
-# Desabilitar em produção (logs consomem I/O)
-render_timer = false              # Sem FPS overlay
-persistent_logging = false        # Sem log files
-log_level = "Off"                 # Sem logs console
-print_events = false              # Só habilitar para debug input lag
+# Disable in production (logs consume I/O)
+render_timer = false              # No FPS overlay
+persistent_logging = false        # No log files
+log_level = "Off"                 # No console logs
+print_events = false              # Enable only to debug input lag
 
-# Descomentar se diagnosticar lag:
+# Uncomment to diagnose lag:
 # render_timer = true
 # log_level = "Warn"
 # print_events = true
 
 # =========================
-# Alt + Mouse (optional)
+# Mouse
 # =========================
 [mouse]
-hide_when_typing = false          # Manter mouse visível (sem distração)
+hide_when_typing = false          # Keep mouse visible (no distraction)
 bindings = [
-  # Cmd+click para abrir URLs (Linux usa Meta/Alt)
+  # Right-click + Ctrl to open URLs (Linux uses Meta/Alt)
   { mouse = "Right", mods = "Control", action = "OpenUrlAtPointer" },
 ]
 
@@ -210,44 +211,45 @@ bindings = [
 # Hints (URLs, IPs, etc.)
 # =========================
 [[hints.enabled]]
-# Detectar URLs automaticamente
+# Auto-detect URLs
 regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|nntp:|telnet:|ssh:|git://)[^\\u0000-\\u001F\\u007F-\\u009F<>\"\\\\s{-}\\\\^⟨⟩]+"
 action = "Copy"
 post_processing = true
 mouse.enabled = true
 
 [[hints.enabled]]
-# Detectar email addresses
+# Detect email addresses
 regex = "(?:mailto:)?\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b"
 action = "Copy"
 post_processing = true
 
 [[hints.enabled]]
-# Detectar file paths
+# Detect file paths
 regex = "\\b[/\\.]?[\\w./\\-]*\\.[a-z]+"
 action = "Copy"
 post_processing = false
 
 # =========================
-# Live Config Reload (útil para tweaking)
+# Live Config Reload (useful for tweaking)
 # =========================
-live_config_reload = true         # Auto-reload se mudar config file
+live_config_reload = true         # Auto-reload on config file change
 
 # =========================
-# Notas Finais
+# Final Notes
 # =========================
 # Performance Checklist:
-# ✅ Padding otimizado (6px, não 8+)
-# ✅ Decorations = "None" (sem overhead)
-# ✅ Opacity = 1.0 (sem alpha blending)
+# ✅ Padding optimized (6px, not 8+)
+# ✅ Decorations = "None" (no overhead)
+# ✅ Opacity = 1.0 (no alpha blending)
 # ✅ Blur = 0 (zero compositing)
-# ✅ History = 12000 (balanço RAM vs logs)
-# ✅ Multiplexer = Zellij (mais leve que tmux)
+# ✅ History = 12000 (RAM vs logs balance)
+# ✅ Multiplexer = Zellij (lighter than tmux)
 # ✅ Debug = Off (zero logging overhead)
-# ✅ Hints = Habilitados (útil, zero overhead)
+# ✅ Hints = Enabled (useful, zero overhead)
+# ✅ startup_mode = "Windowed" (never starts fullscreen)
 #
-# Se ainda tiver lag:
-# 1. Verificar se é Helix/Zellij, não Alacritty:
-#    - Testar com shell nativo: [shell] program = "/usr/bin/zsh"
-# 2. Habilitar render_timer para diagnóstico
-# 3. Verificar GPU via glxinfo | grep "Device:"
+# If you still experience lag:
+# 1. Check if lag is from Helix/Zellij, not Alacritty:
+#    - Test with native shell: [shell] program = "/usr/bin/zsh"
+# 2. Enable render_timer for diagnostics
+# 3. Check GPU via glxinfo | grep "Device:"
