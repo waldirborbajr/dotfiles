@@ -1,108 +1,52 @@
--- WezTerm configuration module
--- This file contains the main configuration settings for the WezTerm terminal emulator
 local wezterm = require("wezterm")
 local config = {}
 
--- Use the config builder if available (recommended for newer WezTerm versions)
 if wezterm.config_builder then
 	config = wezterm.config_builder()
 end
 
-config = {
-	-- Cursor Configuration
-	-- Set cursor to a steady vertical bar instead of blinking block
-	default_cursor_style = "SteadyBar",
+-- Cursor
+config.default_cursor_style = "SteadyBar"
+-- Cursor follows Nord theme fg/bg instead of defaulting to white
+config.force_reverse_video_cursor = true
 
-	-- Auto-reload Configuration
-	-- Automatically reload config when config files change (useful during development)
-	automatically_reload_config = true,
+-- Behavior
+config.automatically_reload_config = true
+config.window_close_confirmation = "NeverPrompt"
+config.adjust_window_size_when_changing_font_size = false
+config.check_for_updates = false
+config.scrollback_lines = 10000
 
-	-- Window Behavior
-	-- Skip confirmation dialog when closing windows (faster workflow)
-	window_close_confirmation = "NeverPrompt",
-	-- Prevent window resizing when font size changes (maintains consistent window size)
-	adjust_window_size_when_changing_font_size = false,
-	-- Show only resize handles, hide title bar and other decorations for cleaner look
-	window_decorations = "RESIZE",
+-- Window
+config.window_decorations = "RESIZE"
+config.window_padding = { left = 3, right = 3, top = 0, bottom = 0 }
 
-	-- Update Settings
-	-- Disable automatic update checks (manual updates preferred)
-	check_for_updates = false,
+-- Tab bar (disabled — using workspaces instead)
+config.use_fancy_tab_bar = false
+config.tab_bar_at_bottom = false
+config.enable_tab_bar = false
 
-	-- Tab Bar Configuration
-	-- Disable fancy tab bar styling for simpler appearance
-	use_fancy_tab_bar = false,
-	-- Keep tab bar at top (false = top, true = bottom)
-	tab_bar_at_bottom = false,
-	-- Completely disable tab bar for single-pane usage
-	enable_tab_bar = false,
+-- Font
+config.font_size = 14
+config.font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Medium" })
 
-	-- Font Configuration
-	-- Set font size to 10pt for good readability
-	font_size = 14,
-	-- Use JetBrains Mono with bold weight for better code visibility
-	font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Bold" }),
-	-- Window Padding
-	-- Add minimal padding around terminal content
-	window_padding = {
-		left = 3, -- 3px left padding
-		right = 3, -- 3px right padding
-		top = 0, -- No top padding
-		bottom = 0, -- No bottom padding
-	},
+-- Visual: dim inactive panes so focused pane is always clear
+config.inactive_pane_hsb = {
+	saturation = 0.7,
+	brightness = 0.65,
+}
 
-	-- Background Configuration
-	-- Set semi-transparent black background for modern appearance
-	-- background = {
-	-- 	{
-	-- 		source = {
-	-- 			Color = "#000000", -- Pure black background
-	-- 		},
-	-- 		width = "100%", -- Cover full width
-	-- 		height = "100%", -- Cover full height
-	-- 		opacity = 0.85, -- 65% opacity for transparency effect
-	-- 	},
-	-- },
-	-- Hyperlink Detection Rules
-	-- Enhanced URL detection and clickability (inspired by: https://akos.ma/blog/adopting-wezterm/)
-	-- These rules make URLs clickable in the terminal output
-	hyperlink_rules = {
-		-- Match URLs wrapped in parentheses: (https://example.com)
-		{
-			regex = "\\((\\w+://\\S+)\\)",
-			format = "$1", -- Extract URL without parentheses
-			highlight = 1, -- Highlight the captured group
-		},
-		-- Match URLs wrapped in square brackets: [https://example.com]
-		{
-			regex = "\\[(\\w+://\\S+)\\]",
-			format = "$1", -- Extract URL without brackets
-			highlight = 1, -- Highlight the captured group
-		},
-		-- Match URLs wrapped in curly braces: {https://example.com}
-		{
-			regex = "\\{(\\w+://\\S+)\\}",
-			format = "$1", -- Extract URL without braces
-			highlight = 1, -- Highlight the captured group
-		},
-		-- Match URLs wrapped in angle brackets: <https://example.com>
-		{
-			regex = "<(\\w+://\\S+)>",
-			format = "$1", -- Extract URL without angle brackets
-			highlight = 1, -- Highlight the captured group
-		},
-		-- Match standalone URLs (not wrapped in brackets)
-		-- Improved regex to avoid matching URLs that are already in parentheses
-		{
-			regex = "[^(]\\b(\\w+://\\S+[)/a-zA-Z0-9-]+)",
-			format = "$1", -- Extract the URL
-			highlight = 1, -- Highlight the captured group
-		},
-		-- Auto-detect email addresses and make them clickable mailto links
-		{
-			regex = "\\b\\w+@[\\w-]+(\\.[\\w-]+)+\\b",
-			format = "mailto:$0", -- Convert to mailto: link
-		},
+-- Background: nord base color (#2e3440) at 95% opacity
+config.background = {
+	{
+		source = { Color = "#2e3440" },
+		width = "100%",
+		height = "100%",
+		opacity = 0.95,
 	},
 }
+
+-- Hyperlinks
+config.hyperlink_rules = wezterm.default_hyperlink_rules()
+
 return config

@@ -1,7 +1,10 @@
 -- keys.lua — WezTerm keyboard & mouse bindings
 -- Separated so they can be conditionally included without clashing with tmux.
 -- Usage in wezterm.lua:
---   require("keys").apply(config, IS_MACOS, act)
+--   require("keys").apply(config, IS_MACOS, act, wezterm, scan_projects, open_project)
+--
+-- Uses table.insert throughout to preserve any bindings already in config.keys
+-- (e.g. the F11 fullscreen key defined unconditionally in wezterm.lua).
 
 local M = {}
 
@@ -10,7 +13,8 @@ function M.apply(config, IS_MACOS, act, wezterm, scan_projects, open_project)
 	config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 800 }
 
 	-- ── KEYBINDINGS ─────────────────────────────────────────────────────
-	config.keys = {
+	-- Appends to config.keys so existing entries (e.g. F11) are preserved.
+	local bindings = {
 		{ key = "w", mods = "LEADER", action = act.ShowLauncherArgs({ flags = "WORKSPACES" }) },
 		{ key = "f", mods = "LEADER", action = act.ToggleFullScreen },
 
@@ -42,12 +46,21 @@ function M.apply(config, IS_MACOS, act, wezterm, scan_projects, open_project)
 		{ key = "p", mods = "LEADER|SHIFT", action = act.ActivateTabRelative(-1)              },
 
 		-- Misc
-		{ key = "z", mods = "LEADER", action = act.TogglePaneZoomState               },
-		{ key = "[", mods = "LEADER", action = act.ActivateCopyMode                  },
-		{ key = "r", mods = "LEADER", action = act.ReloadConfiguration               },
-		{ key = "s", mods = "LEADER", action = act.ShowLauncher                      },
+		{ key = "z", mods = "LEADER", action = act.TogglePaneZoomState                          },
+		{ key = "[", mods = "LEADER", action = act.ActivateCopyMode                             },
+		{ key = "r", mods = "LEADER", action = act.ReloadConfiguration                          },
+		{ key = "s", mods = "LEADER", action = act.ShowLauncher                                 },
 		{ key = "S", mods = "LEADER|SHIFT", action = act.ShowLauncherArgs({ flags = "DOMAINS" }) },
+
+		-- ── HIGH VALUE ────────────────────────────────────────────────────
+		-- Scrollback search: fuzzy search through terminal history
+		{ key = "/", mods = "LEADER", action = act.Search({ CaseInSensitiveString = "" }) },
+		-- Quick select: highlight URLs, hashes, IPs, paths for instant copy
+		{ key = "q", mods = "LEADER", action = act.QuickSelect },
 	}
+	for _, b in ipairs(bindings) do
+		table.insert(config.keys, b)
+	end
 
 	-- ── COPY / PASTE ────────────────────────────────────────────────────
 	if IS_MACOS then

@@ -1,35 +1,41 @@
-
 -- WezTerm Main Configuration Entry Point
--- This is the main file that WezTerm loads. It combines configuration and events,
--- and applies dynamic theming based on environment variables.
-
 local wezterm = require("wezterm")
-local config = require("config")    -- Import base configuration settings
-require("events")                   -- Load event handlers and utility functions
+local act = wezterm.action
+local config = require("config")
+require("events")
 
--- Dynamic Theme Selection System
--- Allows switching color schemes via the WEZTERM_THEME environment variable
--- Usage: export WEZTERM_THEME=nord (or onedark) before starting WezTerm
+config.color_scheme = "nord"
 
--- Available theme mappings
-local themes = {
-	nord = "nord",           -- Nord color scheme (cool blue/gray palette)
+-- ── GLOBAL KEYBINDINGS (always active, even without keys.lua) ────────
+config.keys = {
+	{ key = "F11", mods = "NONE", action = act.ToggleFullScreen },
 }
 
--- Retrieve the current theme from environment variable
--- Uses shell command to get WEZTERM_THEME environment variable value
-local success, stdout, stderr = wezterm.run_child_process({
-	os.getenv("SHELL"),    -- Use the user's default shell
-	"-c",                  -- Execute command flag
-	"printenv WEZTERM_THEME"  -- Print the environment variable value
-})
+-- ── KEYBINDINGS ───────────────────────────────────────────────────────
+-- Comment these two lines out when running inside tmux
+-- so the LEADER and all bindings don't conflict with tmux's own prefix.
+local IS_MACOS = wezterm.target_triple:find("apple") ~= nil
 
--- Clean up the theme name by removing all whitespace (including newlines)
-local selected_theme = stdout:gsub("%s+", "")
+local function scan_projects()
+	local home = os.getenv("HOME")
+	local dirs = { home .. "/prj" }
+	local cmd = 'for d in "' .. table.concat(dirs, '" "') .. '"; do [ -d "$d" ] && find "$d" -mindepth 1 -maxdepth 1 -type d 2>/dev/null; done'
+	local _, stdout = wezterm.run_child_process({ "bash", "-c", cmd })
+	local projects = {}
+	if stdout then
+		for line in stdout:gmatch("[^\r\n]+") do
+			local name = line:match(".*/(.*)")
+			if name then table.insert(projects, { id = name, path = line }) end
+		end
+	end
+	return projects
+end
 
--- Apply the selected theme to the configuration
--- If the theme name exists in our themes table, use it; otherwise, no theme is set
-config.color_scheme = themes[selected_theme]
+local function open_project(window, pane, project)
+	window:perform_action(act.SwitchToWorkspace({ name = project.id, cwd = project.path }), pane)
+end
 
--- Return the final configuration to WezTerm
+-- local keys = require("keys")
+-- keys.apply(config, IS_MACOS, act, wezterm, scan_projects, open_project)
+
 return config
