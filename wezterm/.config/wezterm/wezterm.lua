@@ -203,34 +203,7 @@ end
 -- Loaded from keys.lua. Comment this out when running inside tmux
 -- so the LEADER and all bindings don't conflict with tmux's own prefix.
 local keys = require("keys")
-keys.apply(config, IS_MACOS, act)
-
--- Wire up the project launcher key (needs scan_projects / open_project defined above)
-table.insert(config.keys, {
-	key = "p",
-	mods = "LEADER",
-	action = act.InputSelector({
-		title = "🚀 Open Project",
-		choices = (function()
-			local t = {}
-			for _, p in ipairs(scan_projects()) do
-				table.insert(t, { id = p.id, label = "📁 " .. p.id })
-			end
-			return t
-		end)(),
-		action = wezterm.action_callback(function(window, pane, id)
-			if not id then
-				return
-			end
-			for _, p in ipairs(scan_projects()) do
-				if p.id == id then
-					open_project(window, pane, p)
-					return
-				end
-			end
-		end),
-	}),
-})
+keys.apply(config, IS_MACOS, act, wezterm, scan_projects, open_project)
 
 -- ── OLD INLINE BINDINGS (kept for reference, replaced by keys.lua) ───
 -- config.keys = { ... }          -- see keys.lua
