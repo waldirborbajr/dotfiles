@@ -38,4 +38,15 @@ end
 -- local keys = require("keys")
 -- keys.apply(config, IS_MACOS, act, wezterm, scan_projects, open_project)
 
+-- ── SSH ───────────────────────────────────────────────────────────────
+local ssh = require("ssh")
+ssh.apply(config, act)
+
+-- LEADER+e → SSH host picker (opens remote session in a new tab)
+table.insert(config.keys, {
+	key = "e",
+	mods = "LEADER",
+	action = ssh.connect_action(act, wezterm),
+})
+
 return config
