@@ -199,14 +199,15 @@ local function open_project(window, pane, project)
 	end)
 end
 
+-- ── GLOBAL KEYBINDINGS (always active, even without keys.lua) ────────
+config.keys = {
+	{ key = "F11", mods = "NONE", action = act.ToggleFullScreen },
+}
+
 -- ── KEYBINDINGS ───────────────────────────────────────────────────────
 -- Loaded from keys.lua. Comment this out when running inside tmux
 -- so the LEADER and all bindings don't conflict with tmux's own prefix.
-local keys = require("keys")
-keys.apply(config, IS_MACOS, act, wezterm, scan_projects, open_project)
-
--- ── OLD INLINE BINDINGS (kept for reference, replaced by keys.lua) ───
--- config.keys = { ... }          -- see keys.lua
--- config.mouse_bindings = { ... } -- see keys.lua
+-- local keys = require("keys")
+-- keys.apply(config, IS_MACOS, act, wezterm, scan_projects, open_project)
 
 return config
