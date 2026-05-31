@@ -4,14 +4,14 @@ theme = "nord"
 # ====================== EDITOR ======================
 [editor]
 true-color = true
-# transparent = true          # ← Added for transparent background
+# transparent = true          # ← enable if WezTerm background opacity is active
 auto-format = true
 bufferline = "multiple"
 mouse = true
 line-number = "relative"
 cursorline = true
 color-modes = true
-idle-timeout = 250
+idle-timeout = 50             # was 250 — snappier LSP hover/completion
 scroll-lines = 3
 scrolloff = 8
 text-width = 100
@@ -19,9 +19,8 @@ gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
 end-of-line-diagnostics = "hint"
 trim-trailing-whitespace = true
 trim-final-newlines = true
-continue-comments = false
+continue-comments = false     # disable auto-continuation of comment tokens on Enter
 
-# Auto-save inteligente
 [editor.auto-save]
 focus-lost = true
 [editor.auto-save.after-delay]
@@ -30,14 +29,13 @@ timeout = 1500
 
 [editor.inline-diagnostics]
 cursor-line = "error"
-other-lines = "disable"
+other-lines = "hint"          # was "disable" — shows hints on non-cursor lines too
 
 [editor.cursor-shape]
 insert = "bar"
 normal = "block"
 select = "underline"
 
-# Statusline aprimorada
 [editor.statusline]
 left = ["mode", "spinner", "version-control", "file-name"]
 center = ["file-base-name", "read-only-indicator", "file-modification-indicator"]
@@ -49,7 +47,7 @@ enable = true
 display-messages = true
 display-inlay-hints = true
 snippets = true
-auto-signature-help = false
+auto-signature-help = true    # was false — gopls/rust-analyzer signature help is useful
 
 [editor.soft-wrap]
 enable = true
@@ -59,10 +57,10 @@ wrap-indicator = "↪ "
 
 [editor.indent-guides]
 render = true
-character = "▏"        # mudei para este (fica mais limpo)
+character = "▏"
 
 [editor.file-picker]
-hidden = false
+hidden = true                 # was false — show dotfiles in picker
 parents = true
 git-ignore = true
 git-global = true
@@ -70,16 +68,19 @@ git-exclude = true
 
 # ====================== KEYBINDINGS ======================
 [keys.normal]
-# Navegação de buffers
+# Buffer navigation
 "A-<" = "goto_previous_buffer"
 "A->" = "goto_next_buffer"
 "A-w" = ":buffer-close"
 
-# Busca
+# Search
 "*" = "search_selection"
 "#" = ["search_selection", "search_prev"]
 
-# Ferramentas externas
+# Redo (explicit — easier to remember than default U)
+"U" = "redo"
+
+# External tools
 "C-g" = [
   ":new",
   ":insert-output lazygit",
@@ -87,7 +88,6 @@ git-exclude = true
   ":redraw",
   ":reload-all"
 ]
-
 "C-y" = [
   ":sh rm -f /tmp/helix-yazi-chooser",
   ":insert-output yazi %{buffer_name} --chooser-file=/tmp/helix-yazi-chooser",
@@ -99,10 +99,19 @@ git-exclude = true
 "C-o" = "jump_backward"
 "C-i" = "jump_forward"
 
+[keys.normal.g]
+# LSP navigation (explicit mappings — gd/gr easy to forget without them here)
+d = "goto_definition"
+r = "goto_reference"
+i = "goto_implementation"
+y = "goto_type_definition"
+
 [keys.normal.space]
 l = ":toggle lsp.display-inlay-hints"
 w = ":write"
 q = ":quit"
+Q = ":qa!"                    # quit all buffers without confirm
+r = "rename_symbol"           # LSP rename
 Y = ":sh echo -n %{buffer_name} | pbcopy"
 M = ":set-language markdown"
 
@@ -114,4 +123,4 @@ a = "select_textobject_around"
 
 [keys.insert]
 j = { j = "normal_mode" }
-"C-s" = ":w"          # salvar com Ctrl+S
+"C-s" = ":w"
