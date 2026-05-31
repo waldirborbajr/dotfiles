@@ -5,15 +5,12 @@
 
 local M = {}
 
-function M.apply(config, IS_MACOS, act)
+function M.apply(config, IS_MACOS, act, wezterm, scan_projects, open_project)
 	-- ── LEADER ──────────────────────────────────────────────────────────
 	config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 800 }
 
 	-- ── KEYBINDINGS ─────────────────────────────────────────────────────
 	config.keys = {
-		-- Project launcher (requires scan_projects / open_project from wezterm.lua)
-		-- { key = "p", mods = "LEADER", action = ... }  -- wired up in wezterm.lua
-
 		{ key = "w", mods = "LEADER", action = act.ShowLauncherArgs({ flags = "WORKSPACES" }) },
 		{ key = "f", mods = "LEADER", action = act.ToggleFullScreen },
 
@@ -60,6 +57,31 @@ function M.apply(config, IS_MACOS, act)
 		table.insert(config.keys, { key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") })
 		table.insert(config.keys, { key = "c", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard")    })
 	end
+
+	-- ── PROJECT LAUNCHER ────────────────────────────────────────────────
+	table.insert(config.keys, {
+		key = "p",
+		mods = "LEADER",
+		action = act.InputSelector({
+			title = "🚀 Open Project",
+			choices = (function()
+				local t = {}
+				for _, p in ipairs(scan_projects()) do
+					table.insert(t, { id = p.id, label = "📁 " .. p.id })
+				end
+				return t
+			end)(),
+			action = wezterm.action_callback(function(window, pane, id)
+				if not id then return end
+				for _, p in ipairs(scan_projects()) do
+					if p.id == id then
+						open_project(window, pane, p)
+						return
+					end
+				end
+			end),
+		}),
+	})
 
 	-- ── MOUSE BINDINGS ──────────────────────────────────────────────────
 	config.mouse_bindings = {
