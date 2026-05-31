@@ -56,7 +56,8 @@ config.inactive_pane_hsb = {
 }
 
 -- ── LEADER ────────────────────────────────────────────────────────────
-config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 800 }
+-- Moved to keys.lua — set here only when keys.lua is NOT loaded (e.g. tmux mode).
+-- config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 800 }
 config.window_close_confirmation = "NeverPrompt"
 
 -- ── HYPERLINK RULES ───────────────────────────────────────────────────
@@ -126,7 +127,7 @@ wezterm.on("format-tab-title", function(tab, _, _, _, _, _)
 
 	if proc == "hx" or proc == "nvim" then
 		local dir = pane.title:match("([^/]+)$") or "editor"
-		return { { Text = " " .. (proc == "hx" and "" or "") .. " " .. dir .. " " } }
+		return { { Text = " " .. (proc == "hx" and "" or "") .. " " .. dir .. " " } }
 	end
 
 	if proc ~= "" and not proc:match("zsh|bash|fish|sh") then
@@ -199,108 +200,40 @@ local function open_project(window, pane, project)
 end
 
 -- ── KEYBINDINGS ───────────────────────────────────────────────────────
-config.keys = {
-	{
-		key = "p",
-		mods = "LEADER",
-		action = act.InputSelector({
-			title = "🚀 Open Project",
-			choices = (function()
-				local t = {}
-				for _, p in ipairs(scan_projects()) do
-					table.insert(t, { id = p.id, label = "📁 " .. p.id })
-				end
-				return t
-			end)(),
-			action = wezterm.action_callback(function(window, pane, id)
-				if not id then
+-- Loaded from keys.lua. Comment this out when running inside tmux
+-- so the LEADER and all bindings don't conflict with tmux's own prefix.
+local keys = require("keys")
+keys.apply(config, IS_MACOS, act)
+
+-- Wire up the project launcher key (needs scan_projects / open_project defined above)
+table.insert(config.keys, {
+	key = "p",
+	mods = "LEADER",
+	action = act.InputSelector({
+		title = "🚀 Open Project",
+		choices = (function()
+			local t = {}
+			for _, p in ipairs(scan_projects()) do
+				table.insert(t, { id = p.id, label = "📁 " .. p.id })
+			end
+			return t
+		end)(),
+		action = wezterm.action_callback(function(window, pane, id)
+			if not id then
+				return
+			end
+			for _, p in ipairs(scan_projects()) do
+				if p.id == id then
+					open_project(window, pane, p)
 					return
 				end
-				for _, p in ipairs(scan_projects()) do
-					if p.id == id then
-						open_project(window, pane, p)
-						return
-					end
-				end
-			end),
-		}),
-	},
+			end
+		end),
+	}),
+})
 
-	{ key = "w", mods = "LEADER", action = act.ShowLauncherArgs({ flags = "WORKSPACES" }) },
-	{ key = "f", mods = "LEADER", action = act.ToggleFullScreen },
-
-	-- Resize Panes
-	{ key = "h", mods = "LEADER", action = act.AdjustPaneSize({ "Left", 6 }) },
-	{ key = "j", mods = "LEADER", action = act.AdjustPaneSize({ "Down", 6 }) },
-	{ key = "k", mods = "LEADER", action = act.AdjustPaneSize({ "Up", 6 }) },
-	{ key = "l", mods = "LEADER", action = act.AdjustPaneSize({ "Right", 6 }) },
-
-	{ key = "h", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Right", 6 }) },
-	{ key = "j", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Up", 6 }) },
-	{ key = "k", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Down", 6 }) },
-	{ key = "l", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Left", 6 }) },
-
-	-- Navigation
-	{ key = "h", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Left") },
-	{ key = "j", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Down") },
-	{ key = "k", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Up") },
-	{ key = "l", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Right") },
-
-	-- Splits
-	-- { key = "h", mods = "LEADER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-	-- { key = "v", mods = "LEADER", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
-	-- Split para esquerda/direita
-	-- Splits
-	{
-		key = "v",
-		mods = "LEADER",
-		action = act.SplitPane({
-			direction = "Right",
-		}),
-	},
-
-	{
-		key = "h",
-		mods = "LEADER",
-		action = act.SplitPane({
-			direction = "Down",
-		}),
-	},
-
-	-- Tabs
-	{ key = "c", mods = "LEADER", action = act.SpawnTab("CurrentPaneDomain") },
-	{ key = "x", mods = "LEADER", action = act.CloseCurrentTab({ confirm = false }) },
-	{ key = "n", mods = "LEADER", action = act.ActivateTabRelative(1) },
-	{ key = "p", mods = "LEADER|SHIFT", action = act.ActivateTabRelative(-1) },
-
-	{ key = "z", mods = "LEADER", action = act.TogglePaneZoomState },
-	{ key = "[", mods = "LEADER", action = act.ActivateCopyMode },
-	{ key = "r", mods = "LEADER", action = act.ReloadConfiguration },
-	{ key = "s", mods = "LEADER", action = act.ShowLauncher },
-	{ key = "S", mods = "LEADER|SHIFT", action = act.ShowLauncherArgs({ flags = "DOMAINS" }) },
-}
-
--- Copy / Paste
-if IS_MACOS then
-	table.insert(config.keys, { key = "v", mods = "CMD", action = act.PasteFrom("Clipboard") })
-	table.insert(config.keys, { key = "c", mods = "CMD", action = act.CopyTo("Clipboard") })
-else
-	table.insert(config.keys, { key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") })
-	table.insert(config.keys, { key = "c", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") })
-end
-
--- Mouse Bindings
-config.mouse_bindings = {
-	{
-		event = { Up = { streak = 1, button = "Left" } },
-		mods = IS_MACOS and "CMD" or "CTRL",
-		action = act.OpenLinkAtMouseCursor,
-	},
-	{
-		event = { Down = { streak = 1, button = "Right" } },
-		mods = "NONE",
-		action = act.PasteFrom("Clipboard"),
-	},
-}
+-- ── OLD INLINE BINDINGS (kept for reference, replaced by keys.lua) ───
+-- config.keys = { ... }          -- see keys.lua
+-- config.mouse_bindings = { ... } -- see keys.lua
 
 return config
