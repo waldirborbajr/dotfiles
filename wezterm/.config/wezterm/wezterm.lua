@@ -35,8 +35,8 @@ local function open_project(window, pane, project)
 	window:perform_action(act.SwitchToWorkspace({ name = project.id, cwd = project.path }), pane)
 end
 
--- local keys = require("keys")
--- keys.apply(config, IS_MACOS, act, wezterm, scan_projects, open_project)
+local keys = require("keys")
+keys.apply(config, IS_MACOS, act, wezterm, scan_projects, open_project)
 
 -- ── SSH ───────────────────────────────────────────────────────────────
 local ssh = require("ssh")
