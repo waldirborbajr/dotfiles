@@ -10,7 +10,7 @@ local M = {}
 
 function M.apply(config, IS_MACOS, act, wezterm, scan_projects, open_project)
 	-- ── LEADER ──────────────────────────────────────────────────────────
-	config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 800 }
+	config.leader = { key = "\\", mods = "CTRL", timeout_milliseconds = 800 }
 
 	-- ── KEYBINDINGS ─────────────────────────────────────────────────────
 	-- Appends to config.keys so existing entries (e.g. F11) are preserved.
