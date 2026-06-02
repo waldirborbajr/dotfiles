@@ -5,7 +5,8 @@ local wezterm = require("wezterm")
 local act     = wezterm.action
 local mux     = wezterm.mux
 
-local config = wezterm.config_builder and wezterm.config_builder() or {}
+local config   = wezterm.config_builder and wezterm.config_builder() or {}
+local IS_MACOS = wezterm.target_triple:find("apple") ~= nil
 
 -- ── APPEARANCE ────────────────────────────────────────────────────────
 
@@ -17,7 +18,7 @@ config.force_reverse_video_cursor = true
 
 -- Font
 config.font      = wezterm.font("JetBrainsMono Nerd Font", { weight = "Medium" })
-config.font_size = 14
+config.font_size = IS_MACOS and 14 or 12
 
 -- Window chrome and padding
 config.window_decorations = "RESIZE"
@@ -53,10 +54,15 @@ config.enable_tab_bar    = false
 
 -- ── EVENTS ────────────────────────────────────────────────────────────
 
--- Maximize the window on startup
+-- Open the window at 50% of the screen size on startup
 wezterm.on("gui-startup", function()
 	local _, _, window = mux.spawn_window({})
-	window:gui_window():maximize()
+	local gui_win      = window:gui_window()
+	local screen       = gui_win:get_dimensions()
+	local sw           = screen.pixel_width
+	local sh           = screen.pixel_height
+	gui_win:set_position(sw // 4, sh // 4)
+	gui_win:set_inner_size(sw // 2, sh // 2)
 end)
 
 -- Dynamically adjusts font size when the window is resized so the
@@ -193,8 +199,6 @@ end
 -- ── KEYBINDINGS ───────────────────────────────────────────────────────
 -- To avoid conflicts when running inside tmux, comment out the leader
 -- definition and all LEADER bindings below.
-
-local IS_MACOS = wezterm.target_triple:find("apple") ~= nil
 
 config.leader = { key = "\\", mods = "CTRL", timeout_milliseconds = 800 }
 
