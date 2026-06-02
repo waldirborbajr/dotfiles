@@ -21,7 +21,7 @@ config.font      = wezterm.font("JetBrainsMono Nerd Font", { weight = "Medium" }
 config.font_size = IS_MACOS and 14 or 12
 
 -- Window chrome and padding
-config.window_decorations = "RESIZE"
+config.window_decorations = "NONE"
 config.window_padding     = { left = 3, right = 3, top = 0, bottom = 0 }
 
 -- Dim inactive panes so the focused one is always visually clear
