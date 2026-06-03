@@ -38,7 +38,8 @@ config.background = {
 }
 
 -- ── BEHAVIOR ──────────────────────────────────────────────────────────
-
+config.initial_cols = 120
+config.initial_rows = 40
 config.automatically_reload_config = true
 config.window_close_confirmation = "NeverPrompt"
 config.adjust_window_size_when_changing_font_size = false
@@ -51,80 +52,6 @@ config.hyperlink_rules = wezterm.default_hyperlink_rules()
 config.use_fancy_tab_bar = false
 config.tab_bar_at_bottom = false
 config.enable_tab_bar = false
-
--- ── EVENTS ────────────────────────────────────────────────────────────
-
--- Open the window at 50% of the screen size on startup
--- wezterm.on("gui-startup", function()
--- 	local _, _, window = mux.spawn_window({})
--- 	local gui_win      = window:gui_window()
--- 	local screen       = gui_win:get_dimensions()
--- 	local sw           = screen.pixel_width
--- 	local sh           = screen.pixel_height
--- 	gui_win:set_position(sw // 4, sh // 4)
--- 	gui_win:set_inner_size(sw // 2, sh // 2)
--- end)
-config.initial_cols = 120
-config.initial_rows = 40
-
--- Dynamically adjusts font size when the window is resized so the
--- terminal content fills the entire window height with minimal padding.
--- (Wired to the "window-resized" event below — currently disabled.)
-local function readjust_font_size(window, pane)
-	local window_dims = window:get_dimensions()
-	local pane_dims = pane:get_dimensions()
-
-	local config_overrides = {}
-	local initial_font_size = 14
-	config_overrides.font_size = initial_font_size
-
-	local max_iterations = 5
-	local iteration_count = 0
-	local tolerance = 3
-
-	local current_diff = window_dims.pixel_height - pane_dims.pixel_height
-	local min_diff = math.abs(current_diff)
-	local best_font_size = initial_font_size
-
-	while current_diff > tolerance and iteration_count < max_iterations do
-		wezterm.log_info(
-			string.format(
-				"Win Height: %d, Pane Height: %d, Height Diff: %d, Curr Font Size: %.2f, Cells: %d, Cell Height: %.2f",
-				window_dims.pixel_height,
-				pane_dims.pixel_height,
-				window_dims.pixel_height - pane_dims.pixel_height,
-				config_overrides.font_size,
-				pane_dims.viewport_rows,
-				pane_dims.pixel_height / pane_dims.viewport_rows
-			)
-		)
-
-		config_overrides.font_size = config_overrides.font_size + 0.5
-		window:set_config_overrides(config_overrides)
-
-		window_dims = window:get_dimensions()
-		pane_dims = pane:get_dimensions()
-		current_diff = window_dims.pixel_height - pane_dims.pixel_height
-
-		local abs_diff = math.abs(current_diff)
-		if abs_diff < min_diff then
-			min_diff = abs_diff
-			best_font_size = config_overrides.font_size
-		end
-
-		iteration_count = iteration_count + 1
-	end
-
-	if current_diff > tolerance then
-		config_overrides.font_size = best_font_size
-		window:set_config_overrides(config_overrides)
-	end
-end
-
--- Uncomment to enable automatic font-size adjustment on window resize:
--- wezterm.on("window-resized", function(window, pane)
--- 	readjust_font_size(window, pane)
--- end)
 
 -- ── SSH ───────────────────────────────────────────────────────────────
 
@@ -213,14 +140,28 @@ config.keys = {
 
 	  { key = 'l', mods = 'ALT', action = act.ShowLauncherArgs {
       flags = 'FUZZY|TABS|DOMAINS|LAUNCH_MENU_ITEMS|WORKSPACES|COMMANDS' } },
-  { key = 'w', mods = 'LEADER', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
-  { key = 'n', mods = 'LEADER', action = act.PromptInputLine {
-      description = 'New/switch workspace:',
-      action = wezterm.action_callback(function(window, pane, line)
-        if line and #line > 0 then
-          window:perform_action(act.SwitchToWorkspace { name = line }, pane)
-        end
-      end) } },
+	  { key = 'w', mods = 'LEADER', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
+	  { key = 'n', mods = 'LEADER', action = act.PromptInputLine {
+	      description = 'New/switch workspace:',
+	      action = wezterm.action_callback(function(window, pane, line)
+	        if line and #line > 0 then
+	          window:perform_action(act.SwitchToWorkspace { name = line }, pane)
+	        end
+	      end) } },
+
+	  { key = '\\', mods = 'LEADER', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
+	  { key = '-',  mods = 'LEADER', action = act.SplitVertical   { domain = 'CurrentPaneDomain' } },
+	  { key = 'h', mods = 'LEADER', action = act.ActivatePaneDirection 'Left' },
+	  { key = 'l', mods = 'LEADER', action = act.ActivatePaneDirection 'Right' },
+	  { key = 'k', mods = 'LEADER', action = act.ActivatePaneDirection 'Up' },
+	  { key = 'j', mods = 'LEADER', action = act.ActivatePaneDirection 'Down' },
+	  { key = 'a', mods = 'LEADER|CTRL', action = act.SendKey { key = 'a', mods = 'CTRL' } },
+	  -- Pop the current tab/pane out into its own new window. WezTerm has no native
+	  -- mouse drag-to-detach; this is the supported equivalent (pane:move_to_new_window).
+	  { key = 'o', mods = 'LEADER', action = wezterm.action_callback(function(window, pane)
+	      pane:move_to_new_window()
+	  end) },
+	  { key = 'v', mods = 'CTRL', action = act.PasteFrom 'Clipboard' },
 
 	-- Workspaces / launcher
 	{ key = "w", mods = "LEADER", action = act.ShowLauncherArgs({ flags = "WORKSPACES" }) },
