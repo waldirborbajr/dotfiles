@@ -138,30 +138,44 @@ config.keys = {
 	-- Always-active global binding
 	{ key = "F11", mods = "NONE", action = act.ToggleFullScreen },
 
-	  { key = 'l', mods = 'ALT', action = act.ShowLauncherArgs {
-      flags = 'FUZZY|TABS|DOMAINS|LAUNCH_MENU_ITEMS|WORKSPACES|COMMANDS' } },
-	  { key = 'w', mods = 'LEADER', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
-	  { key = 'n', mods = 'LEADER', action = act.PromptInputLine {
-	      description = 'New/switch workspace:',
-	      action = wezterm.action_callback(function(window, pane, line)
-	        if line and #line > 0 then
-	          window:perform_action(act.SwitchToWorkspace { name = line }, pane)
-	        end
-	      end) } },
+	{
+		key = "l",
+		mods = "ALT",
+		action = act.ShowLauncherArgs({
+			flags = "FUZZY|TABS|DOMAINS|LAUNCH_MENU_ITEMS|WORKSPACES|COMMANDS",
+		}),
+	},
+	{ key = "w", mods = "LEADER", action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) },
+	{
+		key = "n",
+		mods = "LEADER",
+		action = act.PromptInputLine({
+			description = "New/switch workspace:",
+			action = wezterm.action_callback(function(window, pane, line)
+				if line and #line > 0 then
+					window:perform_action(act.SwitchToWorkspace({ name = line }), pane)
+				end
+			end),
+		}),
+	},
 
-	  { key = '\\', mods = 'LEADER', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
-	  { key = '-',  mods = 'LEADER', action = act.SplitVertical   { domain = 'CurrentPaneDomain' } },
-	  { key = 'h', mods = 'LEADER', action = act.ActivatePaneDirection 'Left' },
-	  { key = 'l', mods = 'LEADER', action = act.ActivatePaneDirection 'Right' },
-	  { key = 'k', mods = 'LEADER', action = act.ActivatePaneDirection 'Up' },
-	  { key = 'j', mods = 'LEADER', action = act.ActivatePaneDirection 'Down' },
-	  { key = 'a', mods = 'LEADER|CTRL', action = act.SendKey { key = 'a', mods = 'CTRL' } },
-	  -- Pop the current tab/pane out into its own new window. WezTerm has no native
-	  -- mouse drag-to-detach; this is the supported equivalent (pane:move_to_new_window).
-	  { key = 'o', mods = 'LEADER', action = wezterm.action_callback(function(window, pane)
-	      pane:move_to_new_window()
-	  end) },
-	  { key = 'v', mods = 'CTRL', action = act.PasteFrom 'Clipboard' },
+	{ key = "\\", mods = "LEADER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+	{ key = "-", mods = "LEADER", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
+	{ key = "h", mods = "LEADER", action = act.ActivatePaneDirection("Left") },
+	{ key = "l", mods = "LEADER", action = act.ActivatePaneDirection("Right") },
+	{ key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
+	{ key = "j", mods = "LEADER", action = act.ActivatePaneDirection("Down") },
+	{ key = "a", mods = "LEADER|CTRL", action = act.SendKey({ key = "a", mods = "CTRL" }) },
+	-- Pop the current tab/pane out into its own new window. WezTerm has no native
+	-- mouse drag-to-detach; this is the supported equivalent (pane:move_to_new_window).
+	{
+		key = "o",
+		mods = "LEADER",
+		action = wezterm.action_callback(function(window, pane)
+			pane:move_to_new_window()
+		end),
+	},
+	{ key = "v", mods = "CTRL", action = act.PasteFrom("Clipboard") },
 
 	-- Workspaces / launcher
 	{ key = "w", mods = "LEADER", action = act.ShowLauncherArgs({ flags = "WORKSPACES" }) },
