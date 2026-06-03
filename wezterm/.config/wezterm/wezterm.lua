@@ -18,7 +18,7 @@ config.force_reverse_video_cursor = true
 
 -- Font
 config.font = wezterm.font("JetBrainsMono Nerd Font")
-config.font_size = IS_MACOS and 14 or 11.5
+config.font_size = IS_MACOS and 13.5 or 11.5
 
 -- Window chrome and padding
 config.window_decorations = "NONE"
