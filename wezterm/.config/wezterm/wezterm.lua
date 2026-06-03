@@ -2,10 +2,10 @@
 --  WezTerm Configuration
 -- ══════════════════════════════════════════════════════════════════════
 local wezterm = require("wezterm")
-local act     = wezterm.action
-local mux     = wezterm.mux
+local act = wezterm.action
+local mux = wezterm.mux
 
-local config   = wezterm.config_builder and wezterm.config_builder() or {}
+local config = wezterm.config_builder and wezterm.config_builder() or {}
 local IS_MACOS = wezterm.target_triple:find("apple") ~= nil
 
 -- ── APPEARANCE ────────────────────────────────────────────────────────
@@ -13,16 +13,16 @@ local IS_MACOS = wezterm.target_triple:find("apple") ~= nil
 config.color_scheme = "nord"
 
 -- Cursor: steady bar that follows the Nord fg/bg palette
-config.default_cursor_style    = "SteadyBar"
+config.default_cursor_style = "SteadyBar"
 config.force_reverse_video_cursor = true
 
 -- Font
-config.font      = wezterm.font("JetBrainsMono Nerd Font", { weight = "Medium" })
-config.font_size = IS_MACOS and 14 or 12
+config.font = wezterm.font("JetBrainsMono Nerd Font")
+config.font_size = IS_MACOS and 14 or 11.5
 
 -- Window chrome and padding
 config.window_decorations = "NONE"
-config.window_padding     = { left = 3, right = 3, top = 0, bottom = 0 }
+config.window_padding = { left = 3, right = 3, top = 0, bottom = 0 }
 
 -- Dim inactive panes so the focused one is always visually clear
 config.inactive_pane_hsb = { saturation = 0.7, brightness = 0.65 }
@@ -30,49 +30,51 @@ config.inactive_pane_hsb = { saturation = 0.7, brightness = 0.65 }
 -- Background: Nord base color (#2e3440) at 95% opacity
 config.background = {
 	{
-		source  = { Color = "#2e3440" },
-		width   = "100%",
-		height  = "100%",
-		opacity = 0.95,
+		source = { Color = "#2e3440" },
+		width = "100%",
+		height = "100%",
+		opacity = 0.90,
 	},
 }
 
 -- ── BEHAVIOR ──────────────────────────────────────────────────────────
 
-config.automatically_reload_config              = true
-config.window_close_confirmation                = "NeverPrompt"
+config.automatically_reload_config = true
+config.window_close_confirmation = "NeverPrompt"
 config.adjust_window_size_when_changing_font_size = false
-config.check_for_updates                        = false
-config.scrollback_lines                         = 10000
-config.hyperlink_rules                          = wezterm.default_hyperlink_rules()
+config.check_for_updates = false
+config.scrollback_lines = 10000
+config.hyperlink_rules = wezterm.default_hyperlink_rules()
 
 -- ── TAB BAR (disabled — using workspaces instead) ─────────────────────
 
 config.use_fancy_tab_bar = false
 config.tab_bar_at_bottom = false
-config.enable_tab_bar    = false
+config.enable_tab_bar = false
 
 -- ── EVENTS ────────────────────────────────────────────────────────────
 
 -- Open the window at 50% of the screen size on startup
-wezterm.on("gui-startup", function()
-	local _, _, window = mux.spawn_window({})
-	local gui_win      = window:gui_window()
-	local screen       = gui_win:get_dimensions()
-	local sw           = screen.pixel_width
-	local sh           = screen.pixel_height
-	gui_win:set_position(sw // 4, sh // 4)
-	gui_win:set_inner_size(sw // 2, sh // 2)
-end)
+-- wezterm.on("gui-startup", function()
+-- 	local _, _, window = mux.spawn_window({})
+-- 	local gui_win      = window:gui_window()
+-- 	local screen       = gui_win:get_dimensions()
+-- 	local sw           = screen.pixel_width
+-- 	local sh           = screen.pixel_height
+-- 	gui_win:set_position(sw // 4, sh // 4)
+-- 	gui_win:set_inner_size(sw // 2, sh // 2)
+-- end)
+config.initial_cols = 120
+config.initial_rows = 40
 
 -- Dynamically adjusts font size when the window is resized so the
 -- terminal content fills the entire window height with minimal padding.
 -- (Wired to the "window-resized" event below — currently disabled.)
 local function readjust_font_size(window, pane)
 	local window_dims = window:get_dimensions()
-	local pane_dims   = pane:get_dimensions()
+	local pane_dims = pane:get_dimensions()
 
-	local config_overrides  = {}
+	local config_overrides = {}
 	local initial_font_size = 14
 	config_overrides.font_size = initial_font_size
 
@@ -80,31 +82,33 @@ local function readjust_font_size(window, pane)
 	local iteration_count = 0
 	local tolerance = 3
 
-	local current_diff  = window_dims.pixel_height - pane_dims.pixel_height
-	local min_diff      = math.abs(current_diff)
+	local current_diff = window_dims.pixel_height - pane_dims.pixel_height
+	local min_diff = math.abs(current_diff)
 	local best_font_size = initial_font_size
 
 	while current_diff > tolerance and iteration_count < max_iterations do
-		wezterm.log_info(string.format(
-			"Win Height: %d, Pane Height: %d, Height Diff: %d, Curr Font Size: %.2f, Cells: %d, Cell Height: %.2f",
-			window_dims.pixel_height,
-			pane_dims.pixel_height,
-			window_dims.pixel_height - pane_dims.pixel_height,
-			config_overrides.font_size,
-			pane_dims.viewport_rows,
-			pane_dims.pixel_height / pane_dims.viewport_rows
-		))
+		wezterm.log_info(
+			string.format(
+				"Win Height: %d, Pane Height: %d, Height Diff: %d, Curr Font Size: %.2f, Cells: %d, Cell Height: %.2f",
+				window_dims.pixel_height,
+				pane_dims.pixel_height,
+				window_dims.pixel_height - pane_dims.pixel_height,
+				config_overrides.font_size,
+				pane_dims.viewport_rows,
+				pane_dims.pixel_height / pane_dims.viewport_rows
+			)
+		)
 
 		config_overrides.font_size = config_overrides.font_size + 0.5
 		window:set_config_overrides(config_overrides)
 
-		window_dims   = window:get_dimensions()
-		pane_dims     = pane:get_dimensions()
-		current_diff  = window_dims.pixel_height - pane_dims.pixel_height
+		window_dims = window:get_dimensions()
+		pane_dims = pane:get_dimensions()
+		current_diff = window_dims.pixel_height - pane_dims.pixel_height
 
 		local abs_diff = math.abs(current_diff)
 		if abs_diff < min_diff then
-			min_diff      = abs_diff
+			min_diff = abs_diff
 			best_font_size = config_overrides.font_size
 		end
 
@@ -127,8 +131,8 @@ end
 local ssh_hosts = {
 	raspi = {
 		label = "🍓 Raspberry Pi",
-		user  = "borba",
-		addr  = "192.168.1.101",
+		user = "borba",
+		addr = "192.168.1.101",
 	},
 }
 
@@ -136,10 +140,10 @@ local ssh_hosts = {
 config.ssh_domains = {}
 for id, host in pairs(ssh_hosts) do
 	table.insert(config.ssh_domains, {
-		name             = id,
-		remote_address   = host.addr,
-		username         = host.user,
-		multiplexing     = "None", -- disable WezTerm mux on remote; use tmux if needed
+		name = id,
+		remote_address = host.addr,
+		username = host.user,
+		multiplexing = "None", -- disable WezTerm mux on remote; use tmux if needed
 	})
 end
 
@@ -148,16 +152,18 @@ local function ssh_connect_action()
 	local choices = {}
 	for id, host in pairs(ssh_hosts) do
 		table.insert(choices, {
-			id    = id,
+			id = id,
 			label = host.label .. "  " .. host.user .. "@" .. host.addr,
 		})
 	end
 
 	return act.InputSelector({
-		title   = "SSH Connect",
+		title = "SSH Connect",
 		choices = choices,
-		action  = wezterm.action_callback(function(window, pane, id)
-			if not id then return end
+		action = wezterm.action_callback(function(window, pane, id)
+			if not id then
+				return
+			end
 			window:perform_action(
 				act.SpawnCommandInNewTab({
 					args = { "ssh", ssh_hosts[id].user .. "@" .. ssh_hosts[id].addr },
@@ -173,8 +179,10 @@ end
 -- Scans ~/prj for top-level directories and returns them as project entries
 local function scan_projects()
 	local home = os.getenv("HOME")
-	local dirs  = { home .. "/prj" }
-	local cmd   = 'for d in "' .. table.concat(dirs, '" "') .. '"; do [ -d "$d" ] && find "$d" -mindepth 1 -maxdepth 1 -type d 2>/dev/null; done'
+	local dirs = { home .. "/prj" }
+	local cmd = 'for d in "'
+		.. table.concat(dirs, '" "')
+		.. '"; do [ -d "$d" ] && find "$d" -mindepth 1 -maxdepth 1 -type d 2>/dev/null; done'
 	local _, stdout = wezterm.run_child_process({ "bash", "-c", cmd })
 	local projects = {}
 	if stdout then
@@ -190,10 +198,7 @@ end
 
 -- Switches to (or creates) a workspace named after the project
 local function open_project(window, pane, project)
-	window:perform_action(
-		act.SwitchToWorkspace({ name = project.id, cwd = project.path }),
-		pane
-	)
+	window:perform_action(act.SwitchToWorkspace({ name = project.id, cwd = project.path }), pane)
 end
 
 -- ── KEYBINDINGS ───────────────────────────────────────────────────────
@@ -204,45 +209,45 @@ config.leader = { key = "\\", mods = "CTRL", timeout_milliseconds = 800 }
 
 config.keys = {
 	-- Always-active global binding
-	{ key = "F11", mods = "NONE",  action = act.ToggleFullScreen },
+	{ key = "F11", mods = "NONE", action = act.ToggleFullScreen },
 
 	-- Workspaces / launcher
-	{ key = "w", mods = "LEADER",       action = act.ShowLauncherArgs({ flags = "WORKSPACES" }) },
-	{ key = "f", mods = "LEADER",       action = act.ToggleFullScreen },
-	{ key = "s", mods = "LEADER",       action = act.ShowLauncher },
+	{ key = "w", mods = "LEADER", action = act.ShowLauncherArgs({ flags = "WORKSPACES" }) },
+	{ key = "f", mods = "LEADER", action = act.ToggleFullScreen },
+	{ key = "s", mods = "LEADER", action = act.ShowLauncher },
 	{ key = "S", mods = "LEADER|SHIFT", action = act.ShowLauncherArgs({ flags = "DOMAINS" }) },
 
 	-- Resize panes (LEADER + hjkl)
-	{ key = "h", mods = "LEADER",       action = act.AdjustPaneSize({ "Left",  6 }) },
-	{ key = "j", mods = "LEADER",       action = act.AdjustPaneSize({ "Down",  6 }) },
-	{ key = "k", mods = "LEADER",       action = act.AdjustPaneSize({ "Up",    6 }) },
-	{ key = "l", mods = "LEADER",       action = act.AdjustPaneSize({ "Right", 6 }) },
+	{ key = "h", mods = "LEADER", action = act.AdjustPaneSize({ "Left", 6 }) },
+	{ key = "j", mods = "LEADER", action = act.AdjustPaneSize({ "Down", 6 }) },
+	{ key = "k", mods = "LEADER", action = act.AdjustPaneSize({ "Up", 6 }) },
+	{ key = "l", mods = "LEADER", action = act.AdjustPaneSize({ "Right", 6 }) },
 
 	-- Resize panes reversed (LEADER + SHIFT + hjkl)
 	{ key = "h", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Right", 6 }) },
-	{ key = "j", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Up",    6 }) },
-	{ key = "k", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Down",  6 }) },
-	{ key = "l", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Left",  6 }) },
+	{ key = "j", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Up", 6 }) },
+	{ key = "k", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Down", 6 }) },
+	{ key = "l", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Left", 6 }) },
 
 	-- Navigate panes (LEADER + CTRL + hjkl)
-	{ key = "h", mods = "LEADER|CTRL",  action = act.ActivatePaneDirection("Left")  },
-	{ key = "j", mods = "LEADER|CTRL",  action = act.ActivatePaneDirection("Down")  },
-	{ key = "k", mods = "LEADER|CTRL",  action = act.ActivatePaneDirection("Up")    },
-	{ key = "l", mods = "LEADER|CTRL",  action = act.ActivatePaneDirection("Right") },
+	{ key = "h", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Left") },
+	{ key = "j", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Down") },
+	{ key = "k", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Up") },
+	{ key = "l", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Right") },
 
 	-- Splits
 	{ key = "v", mods = "LEADER", action = act.SplitPane({ direction = "Right" }) },
-	{ key = "h", mods = "LEADER", action = act.SplitPane({ direction = "Down"  }) },
+	{ key = "h", mods = "LEADER", action = act.SplitPane({ direction = "Down" }) },
 
 	-- Tabs
-	{ key = "c", mods = "LEADER",       action = act.SpawnTab("CurrentPaneDomain")       },
-	{ key = "x", mods = "LEADER",       action = act.CloseCurrentTab({ confirm = false }) },
-	{ key = "n", mods = "LEADER",       action = act.ActivateTabRelative(1)               },
-	{ key = "p", mods = "LEADER|SHIFT", action = act.ActivateTabRelative(-1)              },
+	{ key = "c", mods = "LEADER", action = act.SpawnTab("CurrentPaneDomain") },
+	{ key = "x", mods = "LEADER", action = act.CloseCurrentTab({ confirm = false }) },
+	{ key = "n", mods = "LEADER", action = act.ActivateTabRelative(1) },
+	{ key = "p", mods = "LEADER|SHIFT", action = act.ActivateTabRelative(-1) },
 
 	-- Misc
 	{ key = "z", mods = "LEADER", action = act.TogglePaneZoomState },
-	{ key = "[", mods = "LEADER", action = act.ActivateCopyMode   },
+	{ key = "[", mods = "LEADER", action = act.ActivateCopyMode },
 	{ key = "r", mods = "LEADER", action = act.ReloadConfiguration },
 
 	-- Scrollback search: fuzzy-search through terminal history
@@ -253,19 +258,19 @@ config.keys = {
 
 -- Copy / Paste (platform-aware)
 if IS_MACOS then
-	table.insert(config.keys, { key = "v", mods = "CMD",        action = act.PasteFrom("Clipboard") })
-	table.insert(config.keys, { key = "c", mods = "CMD",        action = act.CopyTo("Clipboard")    })
+	table.insert(config.keys, { key = "v", mods = "CMD", action = act.PasteFrom("Clipboard") })
+	table.insert(config.keys, { key = "c", mods = "CMD", action = act.CopyTo("Clipboard") })
 else
 	table.insert(config.keys, { key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") })
-	table.insert(config.keys, { key = "c", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard")    })
+	table.insert(config.keys, { key = "c", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") })
 end
 
 -- Project launcher (LEADER+p)
 table.insert(config.keys, {
-	key  = "p",
+	key = "p",
 	mods = "LEADER",
 	action = act.InputSelector({
-		title   = "🚀 Open Project",
+		title = "🚀 Open Project",
 		choices = (function()
 			local t = {}
 			for _, p in ipairs(scan_projects()) do
@@ -274,7 +279,9 @@ table.insert(config.keys, {
 			return t
 		end)(),
 		action = wezterm.action_callback(function(window, pane, id)
-			if not id then return end
+			if not id then
+				return
+			end
 			for _, p in ipairs(scan_projects()) do
 				if p.id == id then
 					open_project(window, pane, p)
@@ -287,8 +294,8 @@ table.insert(config.keys, {
 
 -- SSH host picker (LEADER+e) — opens remote session in a new tab
 table.insert(config.keys, {
-	key    = "e",
-	mods   = "LEADER",
+	key = "e",
+	mods = "LEADER",
 	action = ssh_connect_action(),
 })
 
@@ -297,14 +304,14 @@ table.insert(config.keys, {
 config.mouse_bindings = {
 	-- Open hyperlinks with Cmd/Ctrl + left click
 	{
-		event  = { Up = { streak = 1, button = "Left" } },
-		mods   = IS_MACOS and "CMD" or "CTRL",
+		event = { Up = { streak = 1, button = "Left" } },
+		mods = IS_MACOS and "CMD" or "CTRL",
 		action = act.OpenLinkAtMouseCursor,
 	},
 	-- Right-click pastes from clipboard
 	{
-		event  = { Down = { streak = 1, button = "Right" } },
-		mods   = "NONE",
+		event = { Down = { streak = 1, button = "Right" } },
+		mods = "NONE",
 		action = act.PasteFrom("Clipboard"),
 	},
 }
