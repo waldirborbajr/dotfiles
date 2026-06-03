@@ -205,11 +205,22 @@ end
 -- To avoid conflicts when running inside tmux, comment out the leader
 -- definition and all LEADER bindings below.
 
-config.leader = { key = "\\", mods = "CTRL", timeout_milliseconds = 800 }
+config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 800 }
 
 config.keys = {
 	-- Always-active global binding
 	{ key = "F11", mods = "NONE", action = act.ToggleFullScreen },
+
+	  { key = 'l', mods = 'ALT', action = act.ShowLauncherArgs {
+      flags = 'FUZZY|TABS|DOMAINS|LAUNCH_MENU_ITEMS|WORKSPACES|COMMANDS' } },
+  { key = 'w', mods = 'LEADER', action = act.ShowLauncherArgs { flags = 'FUZZY|WORKSPACES' } },
+  { key = 'n', mods = 'LEADER', action = act.PromptInputLine {
+      description = 'New/switch workspace:',
+      action = wezterm.action_callback(function(window, pane, line)
+        if line and #line > 0 then
+          window:perform_action(act.SwitchToWorkspace { name = line }, pane)
+        end
+      end) } },
 
 	-- Workspaces / launcher
 	{ key = "w", mods = "LEADER", action = act.ShowLauncherArgs({ flags = "WORKSPACES" }) },
