@@ -35,5 +35,5 @@ export PATH="$HOME/.local/bin:$PATH"
 
 # Go
 export PATH="/usr/local/go/bin:$PATH"
-export GOPATH="$HOME/go/bin"
-
+export GOPATH="$HOME/go"
+export PATH=$PATH:$GOPATH/bin
