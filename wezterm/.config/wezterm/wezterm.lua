@@ -33,7 +33,7 @@ config.background = {
 		source = { Color = "#2e3440" },
 		width = "100%",
 		height = "100%",
-		opacity = 0.90,
+		opacity = 1.00,
 	},
 }
 
@@ -129,8 +129,6 @@ local function open_project(window, pane, project)
 end
 
 -- ── KEYBINDINGS ───────────────────────────────────────────────────────
--- To avoid conflicts when running inside tmux, comment out the leader
--- definition and all LEADER bindings below.
 
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 800 }
 
