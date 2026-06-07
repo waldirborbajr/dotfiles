@@ -70,6 +70,13 @@ git-ignore = true
 git-global = true
 git-exclude = true
 
+[keys.normal.g.e]
+c = ":config-open"
+t = ":open ~/.tmux.conf"
+a = ":open ~/.alias"
+z = ":open ~/.zshrc"
+l = ":open ~/.config/helix/languages.toml"
+
 # ====================== KEYBINDINGS ======================
 [keys.normal]
 # Buffer navigation
@@ -103,11 +110,8 @@ git-exclude = true
 "C-o" = "jump_backward"
 "C-i" = "jump_forward"
 
-[keys.normal."]"]
-d = "goto_next_diagnostic" 
-
-[keys.normal."["]
-d = "goto_prev_diagnostic"
+"C-n" = "goto_next_diag"
+"C-p" = "goto_prev_diag"
 
 [keys.normal.g]
 # LSP navigation (explicit mappings — gd/gr easy to forget without them here)
