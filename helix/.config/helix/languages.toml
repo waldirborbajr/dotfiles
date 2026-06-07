@@ -238,7 +238,7 @@ scope = "source.xml"
 injection-regex = "xml"
 file-types = ["xml", "svg", "xsd", "xsl"]
 roots = []
-auto-format = false
+auto-format = true
 language-servers = ["lemminx"]
 indent = { tab-width = 2, unit = "  " }
 comment-token = "<!--"
@@ -276,7 +276,7 @@ scope = "source.dockerfile"
 injection-regex = "docker|dockerfile"
 file-types = ["Dockerfile", "dockerfile"]
 roots = ["Dockerfile", "docker-compose.yml", "compose.yaml"]
-auto-format = false
+auto-format = true
 language-servers = ["docker-langserver"]
 indent = { tab-width = 4, unit = "\t" }
 comment-token = "#"
@@ -294,7 +294,7 @@ name = "markdown"
 scope = "source.md"
 injection-regex = "md|markdown"
 file-types = ["md", "markdown", "mdx"]
-auto-format = false
+auto-format = true
 language-servers = ["marksman"]
 indent = { tab-width = 2, unit = "  " }
 comment-token = "<!--"
@@ -315,7 +315,7 @@ file-types = [
   "sh", "bash", "zsh",
   ".bashrc", ".zshrc", ".profile", ".bash_profile"
 ]
-auto-format = false
+auto-format = true
 language-servers = ["bash-language-server"]
 indent = { tab-width = 4, unit = "\t" }
 comment-token = "#"
