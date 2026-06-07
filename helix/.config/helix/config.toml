@@ -103,11 +103,13 @@ git-exclude = true
 "C-o" = "jump_backward"
 "C-i" = "jump_forward"
 
-# faster diagnostics navigation
-"]d" = "goto_next_diag"
-"[d" = "goto_prev_diag"
-"]e" = "goto_next_error"
-"[e" = "goto_prev_error"
+[keys.normal."]"]
+d = "goto_next_diag"
+e = "goto_next_error"
+
+[keys.normal."["]
+d = "goto_prev_diag"
+e = "goto_prev_error"
 
 # open diagnostic in a popup (very useful with gopls/rust-analyzer)
 "<space>d" = "show_diagnostics"
@@ -128,9 +130,10 @@ r = "rename_symbol"           # LSP rename
 Y = ":sh echo -n %{buffer_name} | pbcopy"
 M = ":set-language markdown"
 
-f = "file_picker_in_current_buffer_directory"   # open picker rooted at current file's dir
-s = "symbol_picker"                              # LSP document symbols
-S = "workspace_symbol_picker"                    # LSP workspace-wide symbols
+f = "file_picker_in_current_buffer_directory"
+s = "symbol_picker"
+S = "workspace_symbol_picker"
+d = "show_diagnostics"
 
 [keys.select]
 i = "select_textobject_inner"
