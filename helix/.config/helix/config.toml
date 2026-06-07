@@ -104,15 +104,10 @@ git-exclude = true
 "C-i" = "jump_forward"
 
 [keys.normal."]"]
-d = "goto_next_diag"
-e = "goto_next_error"
+d = "goto_next_diagnostic" 
 
 [keys.normal."["]
-d = "goto_prev_diag"
-e = "goto_prev_error"
-
-# open diagnostic in a popup (very useful with gopls/rust-analyzer)
-"<space>d" = "show_diagnostics"
+d = "goto_prev_diagnostic"
 
 [keys.normal.g]
 # LSP navigation (explicit mappings — gd/gr easy to forget without them here)
