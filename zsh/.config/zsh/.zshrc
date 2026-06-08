@@ -50,6 +50,11 @@ autoload -Uz compinit
 # Initialize completion with cached metadata file
 compinit -d "$XDG_CACHE_HOME/zsh/zcompdump"
 
+# Fix `forward-word` and `backward-word`
+autoload -Uz select-word-style
+select-word-style normal
+zstyle ':zle:*' word-style unspecified
+
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 zstyle ':completion:*' menu select # improve completion menu style
 zstyle ':completion:*' completer _complete _approximate
