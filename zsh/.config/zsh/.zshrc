@@ -87,6 +87,23 @@ if [[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]]; then
   source /usr/share/doc/fzf/examples/completion.zsh
 fi
 
+# Fallback - Tenta encontrar o key-bindings do fzf de várias formas
+if [[ -z "$FZF_KEY_BINDINGS_LOADED" ]]; then
+  for file in \
+    /usr/share/fzf/key-bindings.zsh \
+    /usr/share/doc/fzf/examples/key-bindings.zsh \
+    /opt/homebrew/opt/fzf/shell/key-bindings.zsh \
+    /usr/local/opt/fzf/shell/key-bindings.zsh \
+    /usr/local/share/fzf/key-bindings.zsh; do
+
+    if [[ -f "$file" ]]; then
+      source "$file"
+      export FZF_KEY_BINDINGS_LOADED=1
+      break
+    fi
+  done
+fi
+
 # =========================================================
 # Modular Config Files
 # =========================================================
