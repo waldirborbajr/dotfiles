@@ -12,12 +12,10 @@ ZVM_VI_HIGHLIGHT_BACKGROUND=none
 ZVM_VI_HIGHLIGHT_FOREGROUND=none
 ZVM_VI_HIGHLIGHT_EXTRASTYLE=none
 
-# zsh-vi-mode resets all bindings on init, so custom bindings
-# must be registered via this hook to survive.
+# zsh-vi-mode resets all bindings on init
 zvm_after_init() {
-  # Ctrl+Right -> move forward one word
+  # Ctrl+Right / Ctrl+Left
   bindkey '^[[1;5C' forward-word
-  # Ctrl+Left -> move backward one word
   bindkey '^[[1;5D' backward-word
 
   # Ctrl+F -> fzf file picker
@@ -26,11 +24,10 @@ zvm_after_init() {
   # Ctrl+\ -> toggle autosuggestions
   bindkey '^\' autosuggest-toggle
 
-  # === ADICIONE ESTAS LINHAS ===
-  # Ctrl+R -> fzf history search
+  # === CTRL+R (fzf history) ===
   bindkey '^R' fzf-history-widget
 
-  # Up/Down -> history substring search
+  # History substring search (Up/Down arrows)
   bindkey '^[[A' history-substring-search-up
   bindkey '^[[B' history-substring-search-down
   bindkey '\e[A' history-beginning-search-backward
