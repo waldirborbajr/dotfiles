@@ -14,22 +14,12 @@ ZVM_VI_HIGHLIGHT_EXTRASTYLE=none
 
 # zsh-vi-mode resets all bindings on init
 zvm_after_init() {
-  # Ctrl+Right / Ctrl+Left
   bindkey '^[[1;5C' forward-word
   bindkey '^[[1;5D' backward-word
-
-  # Ctrl+F -> fzf file picker
   bindkey '^F' _fzf_file_no_hidden
-
-  # Ctrl+\ -> toggle autosuggestions
   bindkey '^\' autosuggest-toggle
+  bindkey '^R' fzf-history-widget   # ← deve funcionar agora
 
-  # === CTRL+R (fzf history) ===
-  bindkey '^R' fzf-history-widget
-
-  # History substring search (Up/Down arrows)
   bindkey '^[[A' history-substring-search-up
   bindkey '^[[B' history-substring-search-down
-  bindkey '\e[A' history-beginning-search-backward
-  bindkey '\e[B' history-beginning-search-forward
 }
