@@ -8,7 +8,7 @@
 #   Prompt:       starship
 #   Navigation:   zoxide, fzf, fd
 #   CLI tools:    eza, bat, nvim, ripgrep
-#   Node:         nvm
+#   Node:         nvm (lazy loaded)
 
 # =========================================================
 # History
@@ -44,7 +44,13 @@ eval "$(zoxide init zsh)"
 # =========================================================
 
 autoload -Uz compinit
-compinit -d "$XDG_CACHE_HOME/zsh/zcompdump"
+
+# Recompila o zcompdump só se tiver mais de 24h — acelera startup
+if [[ -n "$XDG_CACHE_HOME/zsh/zcompdump"(#qN.mh+24) ]]; then
+  compinit -d "$XDG_CACHE_HOME/zsh/zcompdump"
+else
+  compinit -C -d "$XDG_CACHE_HOME/zsh/zcompdump"
+fi
 
 autoload -Uz select-word-style
 select-word-style normal
@@ -80,9 +86,18 @@ source "$ZDOTDIR/bindings.zsh"
 source "$ZDOTDIR/prompt.zsh"
 
 # =========================================================
-# Node / NVM
+# Node / NVM — lazy load
+# Adia o source do nvm.sh para o primeiro uso real,
+# economizando ~200-500ms no startup do shell.
 # =========================================================
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+_nvm_lazy_load() {
+  unset -f nvm node npm npx
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ]         && source "$NVM_DIR/nvm.sh"
+  [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+}
+nvm()  { _nvm_lazy_load; nvm  "$@"; }
+node() { _nvm_lazy_load; node "$@"; }
+npm()  { _nvm_lazy_load; npm  "$@"; }
+npx()  { _nvm_lazy_load; npx  "$@"; }

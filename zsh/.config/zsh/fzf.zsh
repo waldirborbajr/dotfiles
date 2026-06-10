@@ -67,3 +67,19 @@ _fzf_file_no_hidden() {
   zle reset-prompt
 }
 zle -N _fzf_file_no_hidden
+
+# Ctrl+G: checkout de branch git com preview
+_fzf_git_branch() {
+  git rev-parse --is-inside-work-tree &>/dev/null || { zle reset-prompt; return; }
+  local branch
+  branch=$(git branch --all 2>/dev/null \
+    | grep -v HEAD \
+    | sed 's/.* //' | sed 's#remotes/origin/##' \
+    | sort -u \
+    | fzf --height 40% --reverse \
+          --preview 'git log --oneline --color=always {1} 2>/dev/null | head -20') \
+    || { zle reset-prompt; return; }
+  LBUFFER="git checkout $branch"
+  zle accept-line
+}
+zle -N _fzf_git_branch

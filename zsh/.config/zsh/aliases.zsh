@@ -303,3 +303,10 @@ alias cp='cp -i'
 alias mv='mv -i'
 alias mkdir='mkdir -p'
 alias ping='ping -c 5'
+
+# =========================================================
+# Dev utilities
+# =========================================================
+
+# Mede o tempo de startup do zsh (5 amostras)
+alias zsh-time='for i in $(seq 1 5); do /usr/bin/time zsh -i -c exit; done 2>&1'

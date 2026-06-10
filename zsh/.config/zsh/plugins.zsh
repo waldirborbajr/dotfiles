@@ -27,4 +27,4 @@ _zplugin_load zsh-users zsh-autosuggestions
 _zplugin_load zsh-users zsh-history-substring-search
 _zplugin_load jeffreytse zsh-vi-mode
 _zplugin_load zdharma-continuum fast-syntax-highlighting
-_zplugin_load agkozak zsh-z
+# zsh-z removido: zoxide (já iniciado no _zshrc) faz o mesmo com melhor algoritmo
