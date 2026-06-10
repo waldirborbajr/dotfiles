@@ -1,271 +1,224 @@
+# =============================================================================
+# Alacritty Configuration
+# Nord Theme — optimized for speed + security
+# Linux x86_64 + macOS Apple Silicon (M2)
+#
+# HOW TO SWITCH OS:
+#   Linux → keep [linux] block uncommented, comment out [macos] block
+#   macOS → keep [macos] block uncommented, comment out [linux] block
+# =============================================================================
 
-# =========================
-# Environment
-# =========================
+[general]
+live_config_reload = true
+
+# =============================================================================
+# Platform — Linux
+# Comment this entire block when using macOS
+# =============================================================================
 [env]
-TERM = "xterm-256color" # Reliable for Zellij + Helix (truecolor + mouse)
-# Alt: "alacritty" for Alacritty-native features
-# Alt: "tmux-256color" if you have issues inside tmux
+TERM = "xterm-256color"
 
-# =========================
-# Window — Performance Focused
-# =========================
 [window]
-# Balanced padding (more screen space, still readable)
 padding = { x = 6, y = 6 }
-
-# Visual performance
-decorations = "None" # No titlebar (zero overhead with Wayland WM)
-opacity = 1.0        # Max performance — no blur/compositing
-# blur_radius = 0    # REMOVED in Alacritty 0.13+ — key no longer exists
-
-# Initial window size — approximately 50% of a 1920x1080 screen
-# Alacritty uses columns/lines (character cells), not pixels
-# At font size 11 (JetBrains Mono), ~8px/col and ~18px/line:
-#   columns = 118 → ~960px wide  (half of 1920)
-#   lines   = 30  → ~540px tall  (half of 1080)
-# Adjust if your monitor resolution differs:
-#   2560x1440 → columns = 159, lines = 40
-#   1366x768  → columns = 84,  lines = 21
+decorations = "None"                       # No titlebar — zero WM overhead
+opacity = 1.0                              # No alpha blending
+dynamic_title = true
+resize_increments = true
+startup_mode = "Windowed"
 dimensions = { columns = 118, lines = 30 }
 
-# Behavior
-dynamic_title = true      # Dynamic titles (no significant overhead)
-resize_increments = true
-startup_mode = "Windowed" # Always start in a normal window — NOT fullscreen
-# Other options: "Maximized" | "Fullscreen" | "SimpleFullscreen"
+# =============================================================================
+# Platform — macOS (Apple Silicon M2)
+# Uncomment this block and comment the Linux block above when on macOS
+# =============================================================================
+# [env]
+# TERM = "xterm-256color"
+#
+# [window]
+# padding           = { x = 8, y = 8 }
+# decorations       = "Buttonless"  # Hides buttons, keeps native macOS shadow
+# opacity           = 1.0
+# dynamic_title     = true
+# resize_increments = true
+# startup_mode      = "Windowed"
+# dimensions        = { columns = 118, lines = 30 }
+# option_as_alt     = "OnlyLeft"    # Left Option as Meta (useful for zsh/nvim)
 
-# Uncomment for Wayland tiling managers (Hyprland, Sway):
-# class = { instance = "Alacritty", general = "Alacritty" }
-# maximize_to_workspace = true
-
-# Wayland-specific (better performance on Linux Wayland)
-# wm_class = { instance = "Alacritty", general = "Alacritty" }
-
-# =========================
-# Font — JetBrains Mono (optimized for code)
-# =========================
+# =============================================================================
+# Font
+# =============================================================================
 [font]
 size = 11.0
-builtin_box_drawing = true # Efficient border/box rendering
+builtin_box_drawing = true
 
 normal = { family = "JetBrains Mono", style = "Regular" }
 bold = { family = "JetBrains Mono", style = "Bold" }
 italic = { family = "JetBrains Mono", style = "Italic" }
 
-# Fallback font metrics (maintain compatibility)
 offset = { x = 0, y = 1 }
 glyph_offset = { x = 0, y = 0 }
 
-# =========================
-# Cursor — Optimized for Helix Modal Editing
-# =========================
+# =============================================================================
+# Cursor — optimized for Helix/vi modal editing
+# =============================================================================
 [cursor]
-# Insert mode (Beam = easy to locate)
 style = { shape = "Beam", blinking = "On" }
-blink_interval = 750                        # Visible blink, not distracting
+blink_interval = 750
+unfocused_hollow = true
 
-# Unfocused window
-unfocused_hollow = true # Hollow cursor when unfocused (saves renders)
-
-# =========================
-# Scrolling — Smooth & Fast
-# =========================
+# =============================================================================
+# Scrolling
+# =============================================================================
 [scrolling]
-history = 12000 # Good balance: many logs, low memory footprint
-multiplier = 4  # Faster scroll (useful for long outputs)
+history = 12000
+multiplier = 4
 
-# =========================
-# Colors — Catppuccin Mocha (Helix-friendly)
-# =========================
+# =============================================================================
+# Colors — Nord (nordtheme/alacritty, official palette)
+# Source: https://github.com/nordtheme/alacritty
+# =============================================================================
 [colors.primary]
-background = "#1e1e2e"
-foreground = "#cdd6f4"
+background = "#2e3440"
+foreground = "#d8dee9"
+dim_foreground = "#a5abb6"
 
-# Normal ANSI colors
-[colors.normal]
-black = "#45475a"
-red = "#f38ba8"
-green = "#a6e3a1"
-yellow = "#f9e2af"
-blue = "#89b4fa"
-magenta = "#f5c2e7"
-cyan = "#94e2d5"
-white = "#bac2de"
+[colors.cursor]
+text = "#2e3440"
+cursor = "#d8dee9"
 
-# Bright ANSI colors
-[colors.bright]
-black = "#585b70"
-red = "#f38ba8"
-green = "#a6e3a1"
-yellow = "#f9e2af"
-blue = "#89b4fa"
-magenta = "#f5c2e7"
-cyan = "#94e2d5"
-white = "#a6adc8"
-
-# Additional colors (optimized for Helix)
 [colors.vi_mode_cursor]
-text = "#1e1e2e"
-cursor = "#89b4fa"
+text = "#2e3440"
+cursor = "#d8dee9"
+
+[colors.selection]
+text = "CellForeground"
+background = "#4c566a"
 
 [colors.search.matches]
-foreground = "#1e1e2e"
-background = "#f9e2af"
+foreground = "CellBackground"
+background = "#88c0d0"
 
-[colors.search.focused_match]
-foreground = "#1e1e2e"
-background = "#a6e3a1"
+[colors.footer_bar]
+background = "#434c5e"
+foreground = "#d8dee9"
 
-# =========================
-# Bell (no distraction)
-# =========================
+[colors.normal]
+black = "#3b4252"
+red = "#bf616a"
+green = "#a3be8c"
+yellow = "#ebcb8b"
+blue = "#81a1c1"
+magenta = "#b48ead"
+cyan = "#88c0d0"
+white = "#e5e9f0"
+
+[colors.bright]
+black = "#4c566a"
+red = "#bf616a"
+green = "#a3be8c"
+yellow = "#ebcb8b"
+blue = "#81a1c1"
+magenta = "#b48ead"
+cyan = "#8fbcbb"
+white = "#eceff4"
+
+[colors.dim]
+black = "#373e4d"
+red = "#94545d"
+green = "#809575"
+yellow = "#b29e75"
+blue = "#68809a"
+magenta = "#8c738c"
+cyan = "#6d96a5"
+white = "#aeb3bb"
+
+# =============================================================================
+# Bell — disabled
+# =============================================================================
 [bell]
-animation = "Linear" # "None" removed — "Linear" with duration=0 is effectively silent
-# Alt values: "Ease" | "EaseOut" | "EaseOutSine" | "EaseOutQuad" | "EaseOutCubic" etc.
-duration = 0 # 0ms = bell is completely disabled regardless of animation
+animation = "Linear"
+duration = 0
 
-# =========================
-# Selection (optimized for text)
-# =========================
+# =============================================================================
+# Selection
+# =============================================================================
 [selection]
 semantic_escape_chars = ",│`|:\"' ()[]{}<>\\‖"
 
-# =========================
-# Keyboard Bindings — Minimal, no conflicts
-# =========================
+# =============================================================================
+# Security — disable clipboard injection and URL auto-open
+# OSC52 allows remote processes to write to your clipboard silently.
+# Disabling it prevents a common terminal escape-sequence attack vector.
+# =============================================================================
+[terminal]
+osc52 = "Disabled"
+
+# Shell — active (set to your preferred multiplexer below if needed)
+# Linux example with Zellij:
+#   program = "/usr/bin/zellij"
+#   args    = ["attach", "-c", "main"]
+# macOS example with Zellij via Homebrew:
+#   program = "/opt/homebrew/bin/zellij"
+#   args    = ["attach", "-c", "main"]
+[terminal.shell]
+program = "/usr/bin/zsh"
+args = ["-l"]
+
+# =============================================================================
+# Mouse — no auto-open on click (security)
+# =============================================================================
+[mouse]
+hide_when_typing = false
+# bindings intentionally empty: right-click open removed (security)
+
+# =============================================================================
+# Hints — URLs copied on keyboard hint only, not auto-opened on click
+# Removes the click-to-open vector while keeping keyboard-driven URL copy
+# =============================================================================
+[[hints.enabled]]
+regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|ssh:|git://)[^\\u0000-\\u001F\\u007F-\\u009F<>\"\\\\s{-}\\\\^⟨⟩]+"
+action = "Copy"
+post_processing = true
+mouse.enabled = false                                                                                                                                     # no click-to-open
+[hints.enabled.binding]
+key = "U"
+mods = "Control|Shift"
+
+# =============================================================================
+# Keyboard Bindings
+# =============================================================================
 [keyboard]
 bindings = [
-  # Clipboard — works inside & outside Zellij/Helix
+  # Clipboard
   { key = "C", mods = "Control|Shift", action = "Copy" },
   { key = "V", mods = "Control|Shift", action = "Paste" },
 
-  # Font size adjustment (very useful for reading code)
-  # Note: key names use the actual character, not "Equal" or "Key0"
+  # Font size
   { key = "=", mods = "Control", action = "IncreaseFontSize" },
-  { key = "+", mods = "Control", action = "IncreaseFontSize" }, # Shift+= on most keyboards
+  { key = "+", mods = "Control", action = "IncreaseFontSize" },
   { key = "-", mods = "Control", action = "DecreaseFontSize" },
   { key = "0", mods = "Control", action = "ResetFontSize" },
 
-  # Toggle fullscreen (manual — Alacritty won't start fullscreen)
+  # Fullscreen
   { key = "F11", mods = "None", action = "ToggleFullscreen" },
   { key = "F", mods = "Control|Shift", action = "ToggleFullscreen" },
 
-  # Clear screen/history
-  { key = "L", mods = "Control", chars = "\u000c" },        # Ctrl+L clears screen
-  { key = "K", mods = "Control", action = "ClearHistory" }, # Ctrl+K clears scrollback
-
-  # Smooth scrolling (useful for long Helix outputs)
+  # Scrollback
   { key = "PageUp", mods = "Shift", action = "ScrollPageUp" },
   { key = "PageDown", mods = "Shift", action = "ScrollPageDown" },
   { key = "Up", mods = "Control|Shift", action = "ScrollLineUp" },
   { key = "Down", mods = "Control|Shift", action = "ScrollLineDown" },
 
-  # Vi-mode hints for Helix (optional — let Helix manage these)
-  # Avoid mapping Ctrl+p / Ctrl+n — let Zellij/Helix handle them
+  # Clear
+  { key = "L", mods = "Control", chars = "\u000c" },
+  { key = "K", mods = "Control", action = "ClearHistory" },
 ]
 
-# =========================
-# Shell / Multiplexer — Zellij focused
-# =========================
-# Uncomment the option you want to use:
-
-# Option 1: Zellij — commented out: binary not found at /usr/bin/zellij
-# To fix: run `which zellij` in your terminal and update the path below
-# Common alternative paths: ~/.cargo/bin/zellij | /usr/local/bin/zellij
-# [terminal.shell]
-# program = "/usr/bin/zellij"           # NOTE: [shell] was deprecated — use [terminal.shell]
-# args = ["attach", "-c", "main"]       # Auto-attach/create session "main"
-
-# Option 2: Tmux (if you prefer it)
-# [terminal.shell]
-# program = "/usr/bin/tmux"
-# args = ["new-session", "-A", "-D", "-s", "main"]
-
-# Option 3: Native shell — ACTIVE (safe fallback while Zellij path is unknown)
-[terminal.shell]
-program = "/usr/bin/zsh"
-args = ["-l"]
-
-# =========================
-# Performance / Debug
-# =========================
+# =============================================================================
+# Performance / Debug — all off in production
+# =============================================================================
 [debug]
-# Disable in production (logs consume I/O)
-render_timer = false       # No FPS overlay
-persistent_logging = false # No log files
-log_level = "Off"          # No console logs
-print_events = false       # Enable only to debug input lag
-
-# Uncomment to diagnose lag:
-# render_timer = true
-# log_level = "Warn"
-# print_events = true
-
-# =========================
-# Mouse
-# =========================
-[mouse]
-hide_when_typing = false # Keep mouse visible (no distraction)
-bindings = [
-  # Right-click + Ctrl to open URLs (Linux uses Meta/Alt)
-  # "OpenUrlAtPointer" was removed — "Open" opens the URL under the mouse cursor
-  { mouse = "Right", mods = "Control", action = "Open" },
-]
-
-# =========================
-# Hints (URLs, IPs, etc.)
-# =========================
-[[hints.enabled]]
-# Auto-detect URLs
-regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|nntp:|telnet:|ssh:|git://)[^\\u0000-\\u001F\\u007F-\\u009F<>\"\\\\s{-}\\\\^⟨⟩]+"
-action = "Copy"
-post_processing = true
-mouse.enabled = true
-
-[[hints.enabled]]
-# Detect email addresses
-regex = "(?:mailto:)?\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b"
-action = "Copy"
-post_processing = true
-
-[[hints.enabled]]
-# Detect file paths
-regex = "\\b[/\\.]?[\\w./\\-]*\\.[a-z]+"
-action = "Copy"
-post_processing = false
-
-[general]
-# =========================
-# Alacritty Configuration — Linux x86_64 Performance
-# =========================
-# Optimizations:
-#   • GPU rendering via OpenGL (Vulkan coming soon)
-#   • Wayland-first (~10-15% lower latency)
-#   • VSync disabled (maximum responsiveness)
-#   • Zero compositing overhead
-#   • Optimized memory pooling
-# =========================
-
-# Must be declared before any [section] — top-level keys after [[hints]] are misread
-live_config_reload = true # Auto-reload on config file change
-
-# =========================
-# Final Notes
-# =========================
-# Performance Checklist:
-# ✅ Padding optimized (6px, not 8+)
-# ✅ Decorations = "None" (no overhead)
-# ✅ Opacity = 1.0 (no alpha blending)
-# ✅ Blur = 0 (zero compositing)
-# ✅ History = 12000 (RAM vs logs balance)
-# ✅ Multiplexer = Zellij (lighter than tmux)
-# ✅ Debug = Off (zero logging overhead)
-# ✅ Hints = Enabled (useful, zero overhead)
-# ✅ startup_mode = "Windowed" (never starts fullscreen)
-#
-# If you still experience lag:
-# 1. Check if lag is from Helix/Zellij, not Alacritty:
-#    - Test with native shell: [terminal.shell] program = "/usr/bin/zsh"
-# 2. Enable render_timer for diagnostics
-# 3. Check GPU via glxinfo | grep "Device:"
+render_timer = false
+persistent_logging = false
+log_level = "Off"
+print_events = false
