@@ -2,16 +2,18 @@
 # fzf
 # =========================================================
 
-# --strip-cwd-prefix adicionado no fd 8.3.0; detecta suporte em runtime
-# Sempre passa '.' explicitamente para evitar erro em versões antigas do fd
-_fd_base='fd --type f --hidden .'
-if fd --strip-cwd-prefix . /dev/null &>/dev/null 2>&1; then
-  _fd_base='fd --type f --hidden --strip-cwd-prefix .'
+# Usa fd se disponível (ou fdfind no Fedora), senão find nativo
+if command -v fd &>/dev/null; then
+  _FZF_FIND_CMD='fd --type f --hidden'
+elif command -v fdfind &>/dev/null; then
+  _FZF_FIND_CMD='fdfind --type f --hidden'
+else
+  _FZF_FIND_CMD='find . -type f'
 fi
 
-export FZF_DEFAULT_COMMAND="$_fd_base"
-export FZF_CTRL_T_COMMAND="$_fd_base"
-unset _fd_base
+export FZF_DEFAULT_COMMAND="$_FZF_FIND_CMD"
+export FZF_CTRL_T_COMMAND="$_FZF_FIND_CMD"
+unset _FZF_FIND_CMD
 
 # UI
 export FZF_DEFAULT_OPTS='
@@ -27,8 +29,7 @@ export _FZF_PREVIEW_CMD='bat --color=always --style=plain,numbers --line-range=:
 export FZF_CTRL_T_OPTS="--preview '$_FZF_PREVIEW_CMD'"
 
 # Registra fzf-history-widget e demais widgets.
-# DEVE rodar antes de plugins.zsh carregar o zsh-vi-mode,
-# para que o widget exista quando zvm_after_init() fizer bindkey.
+# DEVE rodar antes de plugins.zsh carregar o zsh-vi-mode.
 if command -v fzf &>/dev/null; then
   if fzf --zsh &>/dev/null 2>&1; then
     eval "$(fzf --zsh)"
@@ -53,8 +54,15 @@ fi
 
 # Ctrl+F: file picker excluindo hidden files
 _fzf_file_no_hidden() {
-  local result
-  result=$(fd --type f . | fzf --preview "$_FZF_PREVIEW_CMD") \
+  local find_cmd result
+  if command -v fd &>/dev/null; then
+    find_cmd='fd --type f'
+  elif command -v fdfind &>/dev/null; then
+    find_cmd='fdfind --type f'
+  else
+    find_cmd='find . -type f -not -path "*/\.*"'
+  fi
+  result=$(eval "$find_cmd" | fzf --preview "$_FZF_PREVIEW_CMD") \
     && LBUFFER+="$result"
   zle reset-prompt
 }
