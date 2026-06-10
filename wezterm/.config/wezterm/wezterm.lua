@@ -1,9 +1,9 @@
 -- ══════════════════════════════════════════════════════════════════════
 --  WezTerm Configuration
+--  Nord theme — Linux x86_64 + macOS Apple Silicon (M2)
 -- ══════════════════════════════════════════════════════════════════════
 local wezterm = require("wezterm")
 local act = wezterm.action
-local mux = wezterm.mux
 
 local config = wezterm.config_builder and wezterm.config_builder() or {}
 local IS_MACOS = wezterm.target_triple:find("apple") ~= nil
@@ -11,47 +11,58 @@ local IS_MACOS = wezterm.target_triple:find("apple") ~= nil
 -- ── APPEARANCE ────────────────────────────────────────────────────────
 
 config.color_scheme = "nord"
-
--- Cursor: steady bar that follows the Nord fg/bg palette
 config.default_cursor_style = "SteadyBar"
 config.force_reverse_video_cursor = true
 
--- Font
 config.font = wezterm.font("JetBrainsMono Nerd Font")
 config.font_size = IS_MACOS and 13.5 or 11.5
 
--- Window chrome and padding
-config.window_decorations = "NONE"
-config.window_padding = { left = 3, right = 3, top = 0, bottom = 0 }
+config.window_decorations = IS_MACOS and "RESIZE" or "NONE"
+config.window_padding = { left = 6, right = 6, top = 4, bottom = 4 }
 
--- Dim inactive panes so the focused one is always visually clear
+-- Dim inactive panes
 config.inactive_pane_hsb = { saturation = 0.7, brightness = 0.65 }
 
--- Background: Nord base color (#2e3440) at 95% opacity
 config.background = {
 	{
 		source = { Color = "#2e3440" },
 		width = "100%",
 		height = "100%",
-		opacity = 1.00,
+		opacity = 1.0,
 	},
 }
 
 -- ── BEHAVIOR ──────────────────────────────────────────────────────────
+
 config.initial_cols = 120
 config.initial_rows = 40
 config.automatically_reload_config = true
 config.window_close_confirmation = "NeverPrompt"
 config.adjust_window_size_when_changing_font_size = false
 config.check_for_updates = false
-config.scrollback_lines = 10000
+config.scrollback_lines = 12000
 config.hyperlink_rules = wezterm.default_hyperlink_rules()
 
--- ── TAB BAR (disabled — using workspaces instead) ─────────────────────
+-- Faster key repeat (useful in nvim/helix)
+config.key_map_preference = "Mapped"
+
+-- ── TAB BAR ───────────────────────────────────────────────────────────
 
 config.use_fancy_tab_bar = false
-config.tab_bar_at_bottom = false
-config.enable_tab_bar = false
+config.tab_bar_at_bottom = true
+config.enable_tab_bar = true -- enabled: useful with multiple tabs/workspaces
+config.hide_tab_bar_if_only_one_tab = true -- hidden when only one tab — clean look
+
+config.colors = {
+	tab_bar = {
+		background = "#2e3440",
+		active_tab = { bg_color = "#4c566a", fg_color = "#eceff4", intensity = "Bold" },
+		inactive_tab = { bg_color = "#2e3440", fg_color = "#7b8394" },
+		inactive_tab_hover = { bg_color = "#3b4252", fg_color = "#d8dee9" },
+		new_tab = { bg_color = "#2e3440", fg_color = "#4c566a" },
+		new_tab_hover = { bg_color = "#3b4252", fg_color = "#88c0d0" },
+	},
+}
 
 -- ── SSH ───────────────────────────────────────────────────────────────
 
@@ -63,18 +74,16 @@ local ssh_hosts = {
 	},
 }
 
--- Register SSH domains so WezTerm can open panes directly on remote hosts
 config.ssh_domains = {}
 for id, host in pairs(ssh_hosts) do
 	table.insert(config.ssh_domains, {
 		name = id,
 		remote_address = host.addr,
 		username = host.user,
-		multiplexing = "None", -- disable WezTerm mux on remote; use tmux if needed
+		multiplexing = "None",
 	})
 end
 
--- Returns an InputSelector action to pick an SSH host and open it in a new tab
 local function ssh_connect_action()
 	local choices = {}
 	for id, host in pairs(ssh_hosts) do
@@ -83,7 +92,6 @@ local function ssh_connect_action()
 			label = host.label .. "  " .. host.user .. "@" .. host.addr,
 		})
 	end
-
 	return act.InputSelector({
 		title = "SSH Connect",
 		choices = choices,
@@ -101,41 +109,84 @@ local function ssh_connect_action()
 	})
 end
 
--- ── PROJECTS ─────────────────────────────────────────────────────────
+-- ── PROJECTS ──────────────────────────────────────────────────────────
+-- Scans $HOME/prj for top-level directories.
+-- Results cached per config load — scan_projects() called once at startup,
+-- not on every keypress.
 
--- Scans ~/prj for top-level directories and returns them as project entries
+local _projects_cache = nil
+
 local function scan_projects()
+	if _projects_cache then
+		return _projects_cache
+	end
 	local home = os.getenv("HOME")
-	local dirs = { home .. "/prj" }
-	local cmd = 'for d in "'
-		.. table.concat(dirs, '" "')
-		.. '"; do [ -d "$d" ] && find "$d" -mindepth 1 -maxdepth 1 -type d 2>/dev/null; done'
-	local _, stdout = wezterm.run_child_process({ "bash", "-c", cmd })
+	local base = home .. "/prj"
+	local _, stdout = wezterm.run_child_process({
+		"find",
+		base,
+		"-mindepth",
+		"1",
+		"-maxdepth",
+		"1",
+		"-type",
+		"d",
+	})
 	local projects = {}
 	if stdout then
 		for line in stdout:gmatch("[^\r\n]+") do
-			local name = line:match(".*/(.*)")
+			local name = line:match(".*/(.+)$")
 			if name then
-				table.insert(projects, { id = name, path = line })
+				table.insert(projects, { id = name, label = "📁 " .. name, path = line })
 			end
 		end
+		table.sort(projects, function(a, b)
+			return a.id < b.id
+		end)
 	end
+	_projects_cache = projects
 	return projects
 end
 
--- Switches to (or creates) a workspace named after the project
-local function open_project(window, pane, project)
-	window:perform_action(act.SwitchToWorkspace({ name = project.id, cwd = project.path }), pane)
+local function project_launcher()
+	local projects = scan_projects()
+	local choices = {}
+	for _, p in ipairs(projects) do
+		table.insert(choices, { id = p.id, label = p.label })
+	end
+	return act.InputSelector({
+		title = "🚀 Open Project",
+		choices = choices,
+		action = wezterm.action_callback(function(window, pane, id)
+			if not id then
+				return
+			end
+			for _, p in ipairs(projects) do -- projects already in scope — no second scan
+				if p.id == id then
+					window:perform_action(act.SwitchToWorkspace({ name = p.id, spawn = { cwd = p.path } }), pane)
+					return
+				end
+			end
+		end),
+	})
 end
 
 -- ── KEYBINDINGS ───────────────────────────────────────────────────────
+-- Convention:
+--   LEADER+hjkl         → navigate panes
+--   LEADER+SHIFT+hjkl   → resize panes
+--   LEADER+\            → split vertical (new pane to the right)
+--   LEADER+-            → split horizontal (new pane below)
+--   LEADER+n            → new/switch workspace by name
+--   LEADER+t            → new tab
+--   LEADER+a            → removed (was Ctrl+A passthrough; tmux uses Ctrl+B)
 
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 800 }
 
 config.keys = {
-	-- Always-active global binding
-	{ key = "F11", mods = "NONE", action = act.ToggleFullScreen },
 
+	-- ── Global (no leader) ──────────────────────────────────────────
+	{ key = "F11", mods = "NONE", action = act.ToggleFullScreen },
 	{
 		key = "l",
 		mods = "ALT",
@@ -143,6 +194,42 @@ config.keys = {
 			flags = "FUZZY|TABS|DOMAINS|LAUNCH_MENU_ITEMS|WORKSPACES|COMMANDS",
 		}),
 	},
+
+	-- ── Splits ──────────────────────────────────────────────────────
+	-- \ = vertical split (new pane to the right)
+	{ key = "\\", mods = "LEADER", action = act.SplitPane({ direction = "Right", size = { Percent = 50 } }) },
+	-- -  = horizontal split (new pane below)
+	{ key = "-", mods = "LEADER", action = act.SplitPane({ direction = "Down", size = { Percent = 40 } }) },
+
+	-- ── Pane navigation (LEADER+hjkl) ───────────────────────────────
+	{ key = "h", mods = "LEADER", action = act.ActivatePaneDirection("Left") },
+	{ key = "j", mods = "LEADER", action = act.ActivatePaneDirection("Down") },
+	{ key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
+	{ key = "l", mods = "LEADER", action = act.ActivatePaneDirection("Right") },
+
+	-- ── Pane resize (LEADER+SHIFT+hjkl) ─────────────────────────────
+	{ key = "H", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Left", 6 }) },
+	{ key = "J", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Down", 6 }) },
+	{ key = "K", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Up", 6 }) },
+	{ key = "L", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Right", 6 }) },
+
+	-- ── Pane misc ───────────────────────────────────────────────────
+	{ key = "z", mods = "LEADER", action = act.TogglePaneZoomState },
+	{
+		key = "o",
+		mods = "LEADER",
+		action = wezterm.action_callback(function(_, pane)
+			pane:move_to_new_window()
+		end),
+	},
+
+	-- ── Tabs (LEADER+t / LEADER+x / LEADER+[ / LEADER+]) ───────────
+	{ key = "t", mods = "LEADER", action = act.SpawnTab("CurrentPaneDomain") },
+	{ key = "x", mods = "LEADER", action = act.CloseCurrentTab({ confirm = false }) },
+	{ key = "[", mods = "LEADER", action = act.ActivateTabRelative(-1) },
+	{ key = "]", mods = "LEADER", action = act.ActivateTabRelative(1) },
+
+	-- ── Workspaces ──────────────────────────────────────────────────
 	{ key = "w", mods = "LEADER", action = act.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }) },
 	{
 		key = "n",
@@ -156,123 +243,45 @@ config.keys = {
 			end),
 		}),
 	},
+	{ key = "p", mods = "LEADER", action = project_launcher() },
 
-	{ key = "\\", mods = "LEADER", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-	{ key = "-", mods = "LEADER", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
-	{ key = "h", mods = "LEADER", action = act.ActivatePaneDirection("Left") },
-	{ key = "l", mods = "LEADER", action = act.ActivatePaneDirection("Right") },
-	{ key = "k", mods = "LEADER", action = act.ActivatePaneDirection("Up") },
-	{ key = "j", mods = "LEADER", action = act.ActivatePaneDirection("Down") },
-	{ key = "a", mods = "LEADER|CTRL", action = act.SendKey({ key = "a", mods = "CTRL" }) },
-	-- Pop the current tab/pane out into its own new window. WezTerm has no native
-	-- mouse drag-to-detach; this is the supported equivalent (pane:move_to_new_window).
-	{
-		key = "o",
-		mods = "LEADER",
-		action = wezterm.action_callback(function(window, pane)
-			pane:move_to_new_window()
-		end),
-	},
-	{ key = "v", mods = "CTRL", action = act.PasteFrom("Clipboard") },
+	-- ── SSH ─────────────────────────────────────────────────────────
+	{ key = "e", mods = "LEADER", action = ssh_connect_action() },
 
-	-- Workspaces / launcher
-	{ key = "w", mods = "LEADER", action = act.ShowLauncherArgs({ flags = "WORKSPACES" }) },
-	{ key = "f", mods = "LEADER", action = act.ToggleFullScreen },
-	{ key = "s", mods = "LEADER", action = act.ShowLauncher },
-	{ key = "S", mods = "LEADER|SHIFT", action = act.ShowLauncherArgs({ flags = "DOMAINS" }) },
-
-	-- Resize panes (LEADER + hjkl)
-	{ key = "h", mods = "LEADER", action = act.AdjustPaneSize({ "Left", 6 }) },
-	{ key = "j", mods = "LEADER", action = act.AdjustPaneSize({ "Down", 6 }) },
-	{ key = "k", mods = "LEADER", action = act.AdjustPaneSize({ "Up", 6 }) },
-	{ key = "l", mods = "LEADER", action = act.AdjustPaneSize({ "Right", 6 }) },
-
-	-- Resize panes reversed (LEADER + SHIFT + hjkl)
-	{ key = "h", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Right", 6 }) },
-	{ key = "j", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Up", 6 }) },
-	{ key = "k", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Down", 6 }) },
-	{ key = "l", mods = "LEADER|SHIFT", action = act.AdjustPaneSize({ "Left", 6 }) },
-
-	-- Navigate panes (LEADER + CTRL + hjkl)
-	{ key = "h", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Left") },
-	{ key = "j", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Down") },
-	{ key = "k", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Up") },
-	{ key = "l", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Right") },
-
-	-- Splits
-	{ key = "v", mods = "LEADER", action = act.SplitPane({ direction = "Right" }) },
-	{ key = "h", mods = "LEADER", action = act.SplitPane({ direction = "Down" }) },
-
-	-- Tabs
-	{ key = "c", mods = "LEADER", action = act.SpawnTab("CurrentPaneDomain") },
-	{ key = "x", mods = "LEADER", action = act.CloseCurrentTab({ confirm = false }) },
-	{ key = "n", mods = "LEADER", action = act.ActivateTabRelative(1) },
-	{ key = "p", mods = "LEADER|SHIFT", action = act.ActivateTabRelative(-1) },
-
-	-- Misc
+	-- ── Misc ────────────────────────────────────────────────────────
 	{ key = "z", mods = "LEADER", action = act.TogglePaneZoomState },
-	{ key = "[", mods = "LEADER", action = act.ActivateCopyMode },
+	{ key = "m", mods = "LEADER", action = act.ActivateCopyMode },
 	{ key = "r", mods = "LEADER", action = act.ReloadConfiguration },
-
-	-- Scrollback search: fuzzy-search through terminal history
 	{ key = "/", mods = "LEADER", action = act.Search({ CaseInSensitiveString = "" }) },
-	-- Quick select: highlight URLs, hashes, IPs, paths for instant copy
 	{ key = "q", mods = "LEADER", action = act.QuickSelect },
+	{ key = "s", mods = "LEADER", action = act.ShowLauncher },
 }
 
--- Copy / Paste (platform-aware)
+-- Copy/Paste — platform-aware
 if IS_MACOS then
-	table.insert(config.keys, { key = "v", mods = "CMD", action = act.PasteFrom("Clipboard") })
 	table.insert(config.keys, { key = "c", mods = "CMD", action = act.CopyTo("Clipboard") })
+	table.insert(config.keys, { key = "v", mods = "CMD", action = act.PasteFrom("Clipboard") })
+	table.insert(config.keys, { key = "=", mods = "CMD", action = act.IncreaseFontSize })
+	table.insert(config.keys, { key = "-", mods = "CMD", action = act.DecreaseFontSize })
+	table.insert(config.keys, { key = "0", mods = "CMD", action = act.ResetFontSize })
 else
-	table.insert(config.keys, { key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") })
 	table.insert(config.keys, { key = "c", mods = "CTRL|SHIFT", action = act.CopyTo("Clipboard") })
+	table.insert(config.keys, { key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") })
+	table.insert(config.keys, { key = "=", mods = "CTRL", action = act.IncreaseFontSize })
+	table.insert(config.keys, { key = "-", mods = "CTRL", action = act.DecreaseFontSize })
+	table.insert(config.keys, { key = "0", mods = "CTRL", action = act.ResetFontSize })
 end
-
--- Project launcher (LEADER+p)
-table.insert(config.keys, {
-	key = "p",
-	mods = "LEADER",
-	action = act.InputSelector({
-		title = "🚀 Open Project",
-		choices = (function()
-			local t = {}
-			for _, p in ipairs(scan_projects()) do
-				table.insert(t, { id = p.id, label = "📁 " .. p.id })
-			end
-			return t
-		end)(),
-		action = wezterm.action_callback(function(window, pane, id)
-			if not id then
-				return
-			end
-			for _, p in ipairs(scan_projects()) do
-				if p.id == id then
-					open_project(window, pane, p)
-					return
-				end
-			end
-		end),
-	}),
-})
-
--- SSH host picker (LEADER+e) — opens remote session in a new tab
-table.insert(config.keys, {
-	key = "e",
-	mods = "LEADER",
-	action = ssh_connect_action(),
-})
 
 -- ── MOUSE BINDINGS ────────────────────────────────────────────────────
 
 config.mouse_bindings = {
-	-- Open hyperlinks with Cmd/Ctrl + left click
+	-- Cmd/Ctrl + left click → open hyperlink
 	{
 		event = { Up = { streak = 1, button = "Left" } },
 		mods = IS_MACOS and "CMD" or "CTRL",
 		action = act.OpenLinkAtMouseCursor,
 	},
-	-- Right-click pastes from clipboard
+	-- Right-click → paste
 	{
 		event = { Down = { streak = 1, button = "Right" } },
 		mods = "NONE",
