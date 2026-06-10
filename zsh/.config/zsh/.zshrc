@@ -60,51 +60,6 @@ zstyle ':completion:*' menu select # improve completion menu style
 zstyle ':completion:*' completer _complete _approximate
 
 # =========================================================
-# Fuzzy finder
-# =========================================================
-
-# macOS / Homebrew (Apple Silicon)
-if [[ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ]]; then
-  source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
-  source /opt/homebrew/opt/fzf/shell/completion.zsh
-fi
-
-# macOS / Homebrew (Intel)
-if [[ -f /usr/local/opt/fzf/shell/key-bindings.zsh ]]; then
-  source /usr/local/opt/fzf/shell/key-bindings.zsh
-  source /usr/local/opt/fzf/shell/completion.zsh
-fi
-
-# Arch
-if [[ -f /usr/share/fzf/key-bindings.zsh ]]; then
-  source /usr/share/fzf/key-bindings.zsh
-  source /usr/share/fzf/completion.zsh
-fi
-
-# Ubuntu
-if [[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]]; then
-  source /usr/share/doc/fzf/examples/key-bindings.zsh
-  source /usr/share/doc/fzf/examples/completion.zsh
-fi
-
-# Fallback - Tenta encontrar o key-bindings do fzf de várias formas
-if [[ -z "$FZF_KEY_BINDINGS_LOADED" ]]; then
-  for file in \
-    /usr/share/fzf/key-bindings.zsh \
-    /usr/share/doc/fzf/examples/key-bindings.zsh \
-    /opt/homebrew/opt/fzf/shell/key-bindings.zsh \
-    /usr/local/opt/fzf/shell/key-bindings.zsh \
-    /usr/local/share/fzf/key-bindings.zsh; do
-
-    if [[ -f "$file" ]]; then
-      source "$file"
-      export FZF_KEY_BINDINGS_LOADED=1
-      break
-    fi
-  done
-fi
-
-# =========================================================
 # Modular Config Files
 # =========================================================
 
@@ -117,11 +72,13 @@ source "$ZDOTDIR/aliases.zsh"
 # Functions
 source "$ZDOTDIR/functions.zsh"
 
-# Custom keybindings
-source "$ZDOTDIR/bindings.zsh"
-
-# Plugins and plugin manager
+# Plugins and plugin manager  ← deve vir ANTES de bindings.zsh
+# zsh-vi-mode reseta keybindings ao inicializar; por isso bindings.zsh
+# usa zvm_after_init() — mas essa função só existe depois deste source.
 source "$ZDOTDIR/plugins.zsh"
+
+# Custom keybindings (usa zvm_after_init, que só existe após plugins.zsh)
+source "$ZDOTDIR/bindings.zsh"
 
 # Prompt/theme
 source "$ZDOTDIR/prompt.zsh"
