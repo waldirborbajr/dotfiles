@@ -2,10 +2,11 @@
 # fzf
 # =========================================================
 
-# --strip-cwd-prefix foi adicionado no fd 8.3.0; detecta suporte em runtime
-_fd_base='fd --type f --hidden'
+# --strip-cwd-prefix adicionado no fd 8.3.0; detecta suporte em runtime
+# Sempre passa '.' explicitamente para evitar erro em versões antigas do fd
+_fd_base='fd --type f --hidden .'
 if fd --strip-cwd-prefix . /dev/null &>/dev/null 2>&1; then
-  _fd_base="$_fd_base --strip-cwd-prefix"
+  _fd_base='fd --type f --hidden --strip-cwd-prefix .'
 fi
 
 export FZF_DEFAULT_COMMAND="$_fd_base"
@@ -25,15 +26,13 @@ export FZF_DEFAULT_OPTS='
 export _FZF_PREVIEW_CMD='bat --color=always --style=plain,numbers --line-range=:500 {}'
 export FZF_CTRL_T_OPTS="--preview '$_FZF_PREVIEW_CMD'"
 
-# Registra fzf-history-widget e os demais widgets do fzf.
-# DEVE rodar aqui, antes de plugins.zsh carregar o zsh-vi-mode,
-# para que o widget já exista quando zvm_after_init() fizer bindkey.
+# Registra fzf-history-widget e demais widgets.
+# DEVE rodar antes de plugins.zsh carregar o zsh-vi-mode,
+# para que o widget exista quando zvm_after_init() fizer bindkey.
 if command -v fzf &>/dev/null; then
   if fzf --zsh &>/dev/null 2>&1; then
-    # fzf >= 0.48: gera os bindings automaticamente
     eval "$(fzf --zsh)"
   else
-    # fzf < 0.48: source dos arquivos estáticos
     for _fzf_kb in \
       /usr/share/fzf/key-bindings.zsh \
       /usr/share/doc/fzf/examples/key-bindings.zsh \
@@ -54,9 +53,8 @@ fi
 
 # Ctrl+F: file picker excluindo hidden files
 _fzf_file_no_hidden() {
-  local cmd result
-  cmd='fd --type f'
-  result=$(eval "$cmd" | fzf --preview "$_FZF_PREVIEW_CMD") \
+  local result
+  result=$(fd --type f . | fzf --preview "$_FZF_PREVIEW_CMD") \
     && LBUFFER+="$result"
   zle reset-prompt
 }
