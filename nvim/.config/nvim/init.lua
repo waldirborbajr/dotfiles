@@ -10,6 +10,6 @@ require("vim._core.ui2").enable({
 	},
 })
 
-require("borba.core")
-require("borba.lazy")
-require("current-theme")
+vim.pack.add{ "https://github.com/neovim/nvim-lspconfig" }
+vim.lsp.enable("gopls")
+vim.cmd.colorscheme("catppuccin")
