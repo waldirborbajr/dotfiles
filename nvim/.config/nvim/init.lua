@@ -3,7 +3,6 @@ vim.pack.add {
     'https://github.com/neovim/nvim-lspconfig',
     'https://github.com/stevearc/oil.nvim',
     'https://github.com/y9san9/y9nika.nvim',
-    'https://github.com/wakatime/vim-wakatime',
     'https://github.com/vyfor/cord.nvim',
 }
 
