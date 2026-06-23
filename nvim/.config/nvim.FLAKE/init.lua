@@ -1,5 +1,5 @@
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+vim.g.mapleader = " "      -- Space as leader for custom mappings
+vim.g.maplocalleader = " " -- Space as local leader for buffer-local mappings
 
 -- Scrolloff
 local scrolloff = math.floor(vim.o.lines / 2) - 3
@@ -61,5 +61,20 @@ vim.o.autoindent = true
 vim.cmd("packadd nvim.undotree")
 vim.keymap.set("n", "<leader>u", require("undotree").open)
 
--- Local project config
+-- Local project config`
 vim.o.exrc = true
+
+vim.opt.completeopt = 'menu,menuone,fuzzy,noinsert'
+vim.opt.swapfile = false
+vim.opt.confirm = true
+vim.opt.linebreak = true
+vim.opt.termguicolors = true
+vim.opt.wildoptions:append { 'fuzzy' }
+vim.opt.nrformats:append { 'blank', 'alpha' }
+vim.opt.path:append { '**' }
+vim.opt.smoothscroll = true
+vim.opt.grepprg = 'rg --vimgrep --no-messages --smart-case'
+vim.opt.statusline = '[%n] %<%f %h%w%m%r%=%-14.(%l,%c%V%) %P'
+
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
