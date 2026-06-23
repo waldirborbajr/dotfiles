@@ -2,6 +2,7 @@
 # Setup script for configuring Git with GPG signing on a new machine
 
 set dotenv-load
+set shell := ["bash", "-cu"]
 
 # User configuration
 GIT_NAME := "waldirborbajr"
