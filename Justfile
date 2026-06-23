@@ -21,7 +21,8 @@ default:
     else
         echo "✗ GPG not found. Install it first:"
         echo "  macOS:  brew install gnupg"
-        echo "  Linux:  sudo apt install gnupg"
+        echo "  Linux:  sudo apt install gnupg -y"
+        echo "          sudo dnf install gnupg -y"
         echo "  Windows: download from https://gnupg.org"
         exit 1
     fi
@@ -150,8 +151,16 @@ default:
         echo "Installing GPG on macOS..."
         brew install gnupg
     elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        echo "Installing GPG on Linux..."
-        sudo apt update && sudo apt install -y gnupg
+        if [ -f /etc/fedora-release ]; then
+            echo "Installing GPG on Fedora..."
+            sudo dnf install -y gnupg
+        elif [ -f /etc/debian_version ]; then
+            echo "Installing GPG on Debian/Ubuntu..."
+            sudo apt update && sudo apt install -y gnupg
+        else
+            echo "Installing GPG on Linux..."
+            sudo apt update && sudo apt install -y gnupg
+        fi
     else
         echo "Unsupported OS. Install GPG manually from https://gnupg.org"
         exit 1
