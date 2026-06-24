@@ -21,9 +21,9 @@ style = 'full'
 [[blocks.segments]]
 type = 'go'
 style = 'plain'
-background = 'transparent'
-foreground = '#00add8'
-template = ' {{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}'
+foreground = "#ffffff"
+background = "#7FD5EA"
+template = "  {{ .Full }} "
 [blocks.segments.options]
 fetch_version = true
 display_mode = 'context'   # shows only in Go projects
@@ -31,9 +31,9 @@ display_mode = 'context'   # shows only in Go projects
 [[blocks.segments]]
 type = 'rust'
 style = 'plain'
-background = 'transparent'
-foreground = '#dea584'
-template = ' {{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}'
+foreground = "#193549"
+background = "#99908a"
+template = "  {{ .Full }} "
 [blocks.segments.options]
 fetch_version = true
 display_mode = 'context'
@@ -43,7 +43,7 @@ type = 'python'
 style = 'plain'
 background = 'transparent'
 foreground = '#ffd43b'
-template = ' {{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}{{ end }}'
+template = "  {{ .Full }} "
 [blocks.segments.options]
 fetch_version = true
 fetch_virtual_env = true
@@ -55,7 +55,7 @@ type = 'docker'
 style = 'plain'
 background = 'transparent'
 foreground = '#0db7ed'
-template = ' {{ .Context }}'
+template = "  {{ .Context }} "
 [blocks.segments.options]
 display_mode = 'context'   # only shows when context != "default"
 fetch_context = true
