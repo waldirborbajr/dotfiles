@@ -22,7 +22,7 @@ style = 'full'
 type = 'go'
 style = 'plain'
 foreground = "#ffffff"
-background = "#7FD5EA"
+background = 'transparent'
 template = "  {{ .Full }} "
 [blocks.segments.options]
 fetch_version = true
@@ -32,7 +32,7 @@ display_mode = 'context'   # shows only in Go projects
 type = 'rust'
 style = 'plain'
 foreground = "#193549"
-background = "#99908a"
+background = 'transparent'
 template = "  {{ .Full }} "
 [blocks.segments.options]
 fetch_version = true
