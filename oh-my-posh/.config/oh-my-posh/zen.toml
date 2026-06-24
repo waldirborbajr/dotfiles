@@ -1,5 +1,4 @@
 #:schema https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
-
 version = 2
 final_space = true
 console_title_template = '{{ .Shell }} in {{ .Folder }}'
@@ -15,9 +14,51 @@ style = 'plain'
 background = 'transparent'
 foreground = '#8aadf4'
 template = '{{ .Path }}'
-
-[blocks.segments.properties]
+[blocks.segments.options]
 style = 'full'
+
+# === Language segments (Go / Rust / Python) ===
+[[blocks.segments]]
+type = 'go'
+style = 'plain'
+background = 'transparent'
+foreground = '#00add8'
+template = ' {{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}'
+[blocks.segments.options]
+fetch_version = true
+display_mode = 'context'   # shows only in Go projects
+
+[[blocks.segments]]
+type = 'rust'
+style = 'plain'
+background = 'transparent'
+foreground = '#dea584'
+template = ' {{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}'
+[blocks.segments.options]
+fetch_version = true
+display_mode = 'context'
+
+[[blocks.segments]]
+type = 'python'
+style = 'plain'
+background = 'transparent'
+foreground = '#ffd43b'
+template = ' {{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}{{ end }}'
+[blocks.segments.options]
+fetch_version = true
+fetch_virtual_env = true
+display_mode = 'context'   # shows version + venv when relevant
+
+# === Docker segment ===
+[[blocks.segments]]
+type = 'docker'
+style = 'plain'
+background = 'transparent'
+foreground = '#0db7ed'
+template = ' {{ .Context }}'
+[blocks.segments.options]
+display_mode = 'context'   # only shows when context != "default"
+fetch_context = true
 
 [[blocks.segments]]
 type = 'git'
@@ -25,8 +66,7 @@ style = 'plain'
 foreground = '#6e738d'
 background = 'transparent'
 template = ' {{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }} <cyan>{{ if gt .Behind 0 }}⇣{{ end }}{{ if gt .Ahead 0 }}⇡{{ end }}</>'
-
-[blocks.segments.properties]
+[blocks.segments.options]
 branch_icon = ''
 commit_icon = '@'
 fetch_status = true
@@ -41,8 +81,7 @@ style = 'plain'
 foreground = '#eed49f'
 background = 'transparent'
 template = '{{ .FormattedMs }}'
-
-[blocks.segments.properties]
+[blocks.segments.options]
 threshold = 5000
 
 [[blocks]]
