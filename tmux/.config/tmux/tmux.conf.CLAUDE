@@ -21,7 +21,7 @@ set -ag terminal-features ",alacritty:RGB"
 set -ag terminal-features ",kitty:RGB"
 # set -ga terminal-overrides ",xterm-256color:Tc"
 
-set -g set-clipboard on  # relies on OSC52, enabled in alacritty.toml ([terminal] osc52 = "Enabled")
+set -g set-clipboard on
 set -g focus-events on
 set -g status-position bottom
 set -g status-interval 10
@@ -115,11 +115,8 @@ bind - split-window -v -c "#{pane_current_path}"
 setw -g mode-keys vi
 bind -T copy-mode-vi v send-keys -X begin-selection
 bind -T copy-mode-vi C-v send-keys -X rectangle-toggle
-# copy-pipe-and-cancel (not copy-selection-and-cancel) so the selection is
-# also pushed out via OSC52 to the real system clipboard through Alacritty,
-# not just tmux's internal paste buffer.
-bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "cat"
-bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "cat"
+bind -T copy-mode-vi y send-keys -X copy-selection-and-cancel
+bind -T copy-mode-vi Enter send-keys -X copy-selection-and-cancel
 
 ##############################################################################
 # 8. COLOR THEME - NORD
@@ -205,12 +202,6 @@ set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'tmux-plugins/tmux-yank'
 set -g @plugin 'sainnhe/tmux-fzf'
 set -g @plugin 'kampanosg/tmux-lazygit-popup'
-
-# tmux-yank: force OSC52 so copy works straight through Alacritty without
-# needing xclip/wl-copy/pbcopy installed on the system.
-set -g @override_copy_command 'cat'
-set -g @yank_with_mouse on
-set -g @yank_action 'copy-pipe-and-cancel'
 
 # Session Persistence
 # set -g @plugin 'tmux-plugins/tmux-resurrect'

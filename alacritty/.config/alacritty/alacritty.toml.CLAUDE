@@ -32,8 +32,7 @@ dimensions = { columns = 118, lines = 30 }
 # Uncomment this block and comment the Linux block above when on macOS
 # =============================================================================
 # [env]
-# TERM = "xterm-256color"  # the real terminal type; tmux promotes panes to
-#                          # tmux-256color internally via default-terminal
+# TERM = "xterm-256color"
 #
 # [window]
 # padding           = { x = 8, y = 8 }
@@ -147,15 +146,12 @@ duration = 0
 semantic_escape_chars = ",│`|:\"' ()[]{}<>\\‖"
 
 # =============================================================================
-# Security — URL auto-open disabled; OSC52 enabled for tmux clipboard
-# tmux.conf has `set -g set-clipboard on`, which relies on OSC52 to push
-# copy-mode selections to the system clipboard (and read pastes back in).
-# Trade-off accepted: any program with terminal access (local shell, a
-# remote SSH session, etc.) can also use OSC52 to touch the clipboard.
-# URL auto-open on click stays disabled below regardless.
+# Security — disable clipboard injection and URL auto-open
+# OSC52 allows remote processes to write to your clipboard silently.
+# Disabling it prevents a common terminal escape-sequence attack vector.
 # =============================================================================
 [terminal]
-osc52 = "CopyPaste"
+osc52 = "Disabled"
 
 # Shell — active (set to your preferred multiplexer below if needed)
 # Linux example with Zellij:
@@ -207,14 +203,11 @@ bindings = [
   { key = "F11", mods = "None", action = "ToggleFullscreen" },
   { key = "F", mods = "Control|Shift", action = "ToggleFullscreen" },
 
-  # Scrollback — note: inside tmux, mouse wheel and copy-mode (prefix+[) take
-  # over scrolling automatically (mouse on, mode-keys vi in tmux.conf).
-  # These bindings only matter outside tmux or as a manual fallback, kept on
-  # keys tmux doesn't reserve so they never get swallowed by the prefix.
+  # Scrollback
   { key = "PageUp", mods = "Shift", action = "ScrollPageUp" },
   { key = "PageDown", mods = "Shift", action = "ScrollPageDown" },
-  { key = "Home", mods = "Shift", action = "ScrollToTop" },
-  { key = "End", mods = "Shift", action = "ScrollToBottom" },
+  { key = "Up", mods = "Control|Shift", action = "ScrollLineUp" },
+  { key = "Down", mods = "Control|Shift", action = "ScrollLineDown" },
 
   # Clear
   { key = "L", mods = "Control", chars = "\u000c" },
