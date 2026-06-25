@@ -14,6 +14,7 @@ default:
 
 # Check if GPG is installed
 @check-gpg:
+    #!/usr/bin/env bash
     echo "Checking GPG installation..."
     if command -v gpg &> /dev/null; then
         echo "✓ GPG is installed"
@@ -94,11 +95,11 @@ default:
     git config --global commit.gpgsign true
     git config --global gpg.program gpg
     
-    @if [ -n "{{ NAME }}" ]; then
+    if [ -n "{{ NAME }}" ]; then
         git config --global user.name "{{ NAME }}"
     fi
     
-    @if [ -n "{{ EMAIL }}" ]; then
+    if [ -n "{{ EMAIL }}" ]; then
         git config --global user.email "{{ EMAIL }}"
     fi
     
