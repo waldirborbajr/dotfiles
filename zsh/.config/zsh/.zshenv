@@ -37,3 +37,6 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="/usr/local/go/bin:$PATH"
 export GOPATH="$HOME/go"
 export PATH=$PATH:$GOPATH/bin
+
+// DEVBOX
+export PATH="$HOME/.local/devbox/bin:$PATH"
