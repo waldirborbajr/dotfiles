@@ -37,10 +37,10 @@ setopt NUMERIC_GLOB_SORT  # sort file10 after file9, not after file1
 # Smart directory navigation
 # =========================================================
 
-eval "$(zoxide init zsh)"
+command -v eval "$(zoxide init zsh)"
 
 # init oh my posh with theme from stow
-eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/zen.toml)"
+command -v eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/zen.toml)"
 
 # =========================================================
 # Completion
