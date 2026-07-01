@@ -84,7 +84,8 @@
     },
     "custom/quit": {
         "format": "",
-        "on-click": "swaynag -f 'Terminus (TTF)'  -t warning -m 'Do you really want to exit sway?' -b 'Yes, exit sway' 'swaymsg exit'"
+        "on-click": "swaynag -f 'FiraCode Nerd Font 10' -t warning -m 'Do you really want to exit sway?' -b 'Yes, exit sway' 'swaymsg exit'"
+
     },
     "custom/power": {
         "format": "  ",
