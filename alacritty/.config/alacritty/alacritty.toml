@@ -165,7 +165,7 @@ osc52 = "CopyPaste"
 #   program = "/opt/homebrew/bin/zellij"
 #   args    = ["attach", "-c", "main"]
 [terminal.shell]
-program = "/usr/bin/zsh"
+program = "zsh"
 args = ["-l"]
 
 # =============================================================================
