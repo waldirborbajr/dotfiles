@@ -52,9 +52,12 @@ dimensions = { columns = 118, lines = 30 }
 size = 11.0
 builtin_box_drawing = true
 
-normal = { family = "JetBrains Mono", style = "Regular" }
-bold = { family = "JetBrains Mono", style = "Bold" }
-italic = { family = "JetBrains Mono", style = "Italic" }
+# normal = { family = "JetBrains Mono", style = "Regular" }
+# bold = { family = "JetBrains Mono", style = "Bold" }
+# italic = { family = "JetBrains Mono", style = "Italic" }
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
+italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
 
 offset = { x = 0, y = 1 }
 glyph_offset = { x = 0, y = 0 }
