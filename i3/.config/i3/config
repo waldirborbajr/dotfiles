@@ -31,8 +31,9 @@ exec --no-startup-id dex --autostart --environment i3
 # Polkit authentication agent — required for GUI privilege prompts (mounting
 # disks, NetworkManager elevation, etc.). security.polkit.enable = true in
 # configuration.nix only enables the backend; this starts the GUI agent.
-# Requires pkgs.polkit_gnome (or lxsession's lxpolkit) in systemPackages.
-exec --no-startup-id polkit-gnome-authentication-agent-1
+# Requires pkgs.lxsession (provides lxpolkit) in systemPackages — lighter
+# than polkit_gnome, no extra GTK/GNOME dependency chain.
+exec --no-startup-id lxpolkit
 
 # Compositor — removes tearing, adds subtle shadows. Requires pkgs.picom.
 exec --no-startup-id picom
