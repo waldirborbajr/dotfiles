@@ -217,3 +217,8 @@ exec_always xrandr --output DP-4 --mode 2560x1440 --scale 0.8x0.8 --rate 59.97 -
 
 # Wallpaper
 exec_always --no-startup-id feh --bg-fill ~/Pictures/wallpaper.png
+bindsym $mod+Shift+w exec --no-startup-id feh --bg-fill ~/Pictures/wallpaper.png
+
+
+
+
