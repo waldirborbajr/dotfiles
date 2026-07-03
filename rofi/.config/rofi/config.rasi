@@ -1,13 +1,13 @@
 configuration {
   display-drun: "Applications:";
   drun-display-format: "{icon} {name}";
-  font: "JetBrainsMono Nerd Font Bold 16";
+  font: "JetBrainsMono Nerd Font Bold 12";
 modi: "drun";
       show-icons: true;
       icon-theme: "Papirus";
 }
 
-@theme "/dev/null"
+//@theme "/dev/null"
 
 * {
 bg: #11121d;
@@ -71,3 +71,5 @@ enabled: true;
 padding: 12 0 0 12;
          text-color: @fg;
 }
+
+@theme "/nix/store/69pqlq792pnd70bnpj62s2vgisv80j9p-rofi-2.0.0/share/rofi/themes/android_notification.rasi"
