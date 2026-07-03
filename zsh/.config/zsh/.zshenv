@@ -2,15 +2,29 @@
 
 # ---------- XDG base directories ----------
 # Centralizes config/cache/data locations
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_CACHE_HOME="$HOME/.cache"
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_STATE_HOME="$HOME/.local/state"
+#export XDG_CONFIG_HOME="$HOME/.config"
+#export XDG_CACHE_HOME="$HOME/.cache"
+#export XDG_DATA_HOME="$HOME/.local/share"
+#export XDG_STATE_HOME="$HOME/.local/state"
+
+export XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
+export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
+export XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
+export XDG_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}
+
+# Set ZDOTDIR here. All other Zsh related configuration happens there.
+# ------------------------------------------------------------------------------
+export ZDOTDIR=${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}
 
 # ---------- Editor ----------
 # Default editor used by git, crontab, etc.
 export EDITOR="nvim"
 export VISUAL="nvim"
+
+# History (must be here so it applies everywhere)
+export HISTFILE="$ZDOTDIR/.zhistory"
+export HISTSIZE=10000
+export SAVEHIST=10000
 
 # ---------- Pager ----------
 if command -v bat >/dev/null 2>&1; then
@@ -38,5 +52,8 @@ export PATH="/usr/local/go/bin:$PATH"
 export GOPATH="$HOME/go"
 export PATH=$PATH:$GOPATH/bin
 
-// DEVBOX
+# Hide computer name in terminal
+export DEFAULT_USER="$(whoami)"
+
+# DEVBOX
 export PATH="$HOME/.local/devbox/bin:$PATH"
