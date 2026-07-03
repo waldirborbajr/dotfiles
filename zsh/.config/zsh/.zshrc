@@ -5,25 +5,22 @@
 # Uses:
 #   Plugins:      fast-syntax-highlighting, zsh-autosuggestions,
 #                 zsh-history-substring-search, zsh-vi-mode
-#   Prompt:       starship
+#   Prompt:       oh-my-posh
 #   Navigation:   zoxide, fzf, fd
 #   CLI tools:    eza, bat, nvim, ripgrep
 #   Node:         nvm (lazy loaded)
 
 # =========================================================
-# History
+# History behaviour (HISTFILE/HISTSIZE/SAVEHIST defined in .zshenv)
 # =========================================================
-
-HISTFILE="$XDG_STATE_HOME/zsh/history"
-HISTSIZE=100000
-SAVEHIST=100000
 
 setopt APPEND_HISTORY
 setopt SHARE_HISTORY
-setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS   # remove any duplicate, not just consecutive ones
 setopt HIST_IGNORE_SPACE
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_FIND_NO_DUPS
+setopt HIST_SAVE_NO_DUPS      # don't write duplicates to disk either
 
 # =========================================================
 # Shell behaviour
@@ -52,6 +49,10 @@ fi
 # =========================================================
 
 autoload -Uz compinit
+
+# Ensure the cache dir exists before compinit tries to write the dump there —
+# on a fresh machine $XDG_CACHE_HOME/zsh may not exist yet.
+[[ -d "$XDG_CACHE_HOME/zsh" ]] || mkdir -p "$XDG_CACHE_HOME/zsh"
 
 # Recompila o zcompdump só se tiver mais de 24h — acelera startup
 if [[ -n "$XDG_CACHE_HOME/zsh/zcompdump"(#qN.mh+24) ]]; then
@@ -89,9 +90,6 @@ source "$ZDOTDIR/plugins.zsh"
 
 # Keybindings — usa zvm_after_init(), que já existe após plugins.zsh
 source "$ZDOTDIR/bindings.zsh"
-
-# Prompt/theme
-source "$ZDOTDIR/prompt.zsh"
 
 # =========================================================
 # Node / NVM — lazy load
