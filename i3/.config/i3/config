@@ -244,7 +244,9 @@ workspace 2 output DP-4
 exec_always xrandr --output DP-4 --mode 2560x1440 --scale 0.8x0.8 --rate 59.97 --right-of eDP-1 --rotate normal  --output  eDP-1 --auto --scale 0.6x0.6 --pos 0x0 --primary
 
 # ==================== WALLPAPER ====================
-# Usa --bg-max para evitar corte e distorção
+# --bg-max   = escala mantendo proporção (recomendado - sem cortar)
+# --bg-fill  = preenche cortando (o que estava acontecendo)
+# --bg-scale = estica para caber (pode distorcer)
 exec_always --no-startup-id feh --bg-max --no-fehbg ~/Pictures/wallpaper.png
 
 # Atalho para mudar o wallpaper
