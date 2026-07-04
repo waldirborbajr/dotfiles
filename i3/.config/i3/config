@@ -243,6 +243,12 @@ workspace 1 output eDP-1
 workspace 2 output DP-4
 exec_always xrandr --output DP-4 --mode 2560x1440 --scale 0.8x0.8 --rate 59.97 --right-of eDP-1 --rotate normal  --output  eDP-1 --auto --scale 0.6x0.6 --pos 0x0 --primary
 
-# Wallpaper
-exec_always --no-startup-id feh --bg-fill ~/Pictures/wallpaper.png
-bindsym $mod+Shift+w exec --no-startup-id feh --bg-fill ~/Pictures/wallpaper.png
+# ==================== WALLPAPER ====================
+# Usa --bg-max para evitar corte e distorção
+exec_always --no-startup-id feh --bg-max --no-fehbg ~/Pictures/wallpaper.png
+
+# Atalho para mudar o wallpaper
+bindsym $mod+Shift+w exec --no-startup-id "feh --bg-max --no-fehbg ~/Pictures/wallpaper.png"
+
+
+
