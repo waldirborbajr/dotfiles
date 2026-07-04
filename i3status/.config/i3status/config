@@ -1,7 +1,7 @@
 # i3status config file
 # Catppuccin Mocha theme, Nerd Font icons.
 # Place at: ~/.config/i3status/config
-# (i3status auto-discovers this path — no change needed in i3 config's
+# (i3status auto-discovers this path -- no change needed in i3 config's
 # `status_command i3status` line)
 
 general {
@@ -23,45 +23,45 @@ order += "battery 0"
 order += "tztime local"
 
 wireless _first_ {
-        format_up = "  %essid (%quality)"
-        format_down = "  disconnected"
+        format_up = " %essid (%quality)"
+        format_down = " disconnected"
 }
 
 ethernet _first_ {
-        format_up = "  %ip"
+        format_up = " %ip"
         format_down = ""   # hides the block entirely when there's no wired interface
 }
 
 cpu_usage {
-        format = "  %usage"
+        format = " %usage"
         max_threshold = 85
         degraded_threshold = 60
 }
 
 memory {
-        format = "  %used / %total"
+        format = " %used / %total"
         threshold_degraded = "10%"
         threshold_critical = "5%"
 }
 
 disk "/" {
-        format = "  %avail free"
+        format = " %avail free"
         low_threshold = 15
         threshold_type = percentage_avail
 }
 
 volume master {
-        format = "  %volume"
-        format_muted = "  muted"
+        format = " %volume"
+        format_muted = " muted"
         device = "pulse"
 }
 
 battery 0 {
         format = "%status %percentage %remaining"
         format_down = ""   # hides the block on machines with no battery (e.g. the UTM VM)
-        status_chr = ""
-        status_bat = ""
-        status_full = ""
+        status_chr = ""
+        status_bat = ""
+        status_full = ""
         path = "/sys/class/power_supply/BAT%d/uevent"
         low_threshold = 15
         threshold_type = percentage
@@ -69,5 +69,5 @@ battery 0 {
 }
 
 tztime local {
-        format = "  %Y-%m-%d %H:%M"
+        format = " %Y-%m-%d %H:%M"
 }
