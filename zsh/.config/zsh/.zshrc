@@ -91,6 +91,9 @@ source "$ZDOTDIR/plugins.zsh"
 # Keybindings — usa zvm_after_init(), que já existe após plugins.zsh
 source "$ZDOTDIR/bindings.zsh"
 
+# Prompt-related env vars (virtualenv suppression, etc.)
+source "$ZDOTDIR/prompt.zsh"
+
 # =========================================================
 # Node / NVM — lazy load
 # Adia o source do nvm.sh para o primeiro uso real,
