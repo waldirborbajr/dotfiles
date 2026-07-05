@@ -1,47 +1,50 @@
-# i3status config file - Catppuccin Mocha theme with Nerd Font icons
+# i3status config - Catppuccin Mocha + Nerd Font
 general {
     colors = true
     interval = 5
-    color_good = "#a6e3a1"      # green
-    color_degraded = "#f9e2af"  # yellow
-    color_bad = "#f38ba8"       # red
+    color_good = "#a6e3a1"
+    color_degraded = "#f9e2af"
+    color_bad = "#f38ba8"
     color_separator = "#45475a"
 }
 
 order += "disk /"
 order += "cpu_usage"
 order += "memory"
-order += "wireless wlan0"      # ← mais confiável que _first_
-order += "ethernet enp"        # ← pega interfaces com "enp" (comum no Dell)
-order += "ethernet eth"        # ← fallback para eth0/eth1
+order += "wireless _first_"
+order += "ethernet _first_"
 order += "volume master"
 order += "battery 0"
 order += "tztime local"
 
-# ====================== WIRELESS ======================
-wireless wlan0 {
-    format_up = " %essid (%quality)"
+# ====================== NETWORK (IP visibility fix) ======================
+wireless _first_ {
+    format_up = " %essid (%quality) %ip"
     format_down = " disconnected"
 }
 
-# Tenta outras interfaces wireless comuns
-wireless wlp {
-    format_up = " %essid (%quality)"
+ethernet _first_ {
+    format_up = " %ip"
+    format_down = ""   # hide when no cable
+}
+
+# Fallbacks (caso _first_ não funcione)
+wireless wlan0 {
+    format_up = " %essid (%quality) %ip"
     format_down = ""
 }
 
-# ====================== ETHERNET ======================
 ethernet enp {
     format_up = " %ip"
     format_down = ""
 }
 
-ethernet eth {
+ethernet eth0 {
     format_up = " %ip"
     format_down = ""
 }
 
-# ====================== OUTROS MÓDULOS ======================
+# ====================== SYSTEM ======================
 cpu_usage {
     format = " %usage"
     max_threshold = 85
@@ -68,7 +71,7 @@ volume master {
 
 battery 0 {
     format = "%status %percentage %remaining"
-    format_down = ""                    # esconde em VMs sem bateria
+    format_down = ""
     status_chr = ""
     status_bat = ""
     status_full = ""
