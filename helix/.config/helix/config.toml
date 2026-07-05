@@ -4,14 +4,14 @@ theme = "nord"
 # ====================== EDITOR ======================
 [editor]
 true-color = true
-# transparent = true          # ← enable if WezTerm background opacity is active
+# transparent = true        # ← enable if using WezTerm with background opacity
 auto-format = true
 bufferline = "multiple"
 mouse = true
 line-number = "relative"
 cursorline = true
 color-modes = true
-idle-timeout = 50             # was 250 — snappier LSP hover/completion
+idle-timeout = 50
 scroll-lines = 3
 scrolloff = 8
 text-width = 100
@@ -19,19 +19,20 @@ gutters = ["diff", "diagnostics", "line-numbers", "spacer"]
 end-of-line-diagnostics = "hint"
 trim-trailing-whitespace = true
 trim-final-newlines = true
-continue-comments = false     # disable auto-continuation of comment tokens on Enter
-completion-trigger-len = 1     # trigger completion after 1 char instead of default 2
-completion-replace = true      # replace word under cursor instead of inserting before
+continue-comments = false
+completion-trigger-len = 1
+completion-replace = true
 
 [editor.auto-save]
 focus-lost = true
+
 [editor.auto-save.after-delay]
 enable = true
 timeout = 1500
 
 [editor.inline-diagnostics]
 cursor-line = "error"
-other-lines = "warning"          # was "disable" — shows hints on non-cursor lines too
+other-lines = "warning"
 
 [editor.cursor-shape]
 insert = "bar"
@@ -39,10 +40,9 @@ normal = "block"
 select = "underline"
 
 [editor.statusline]
-left = ["mode", "spinner", "version-control", "file-name"]
+left = ["mode", "spinner", "version-control", "branch", "file-name"]
 center = ["file-base-name", "read-only-indicator", "file-modification-indicator"]
 right = ["diagnostics", "selections", "primary-selection-length", "position-percentage", "position", "total-line-numbers", "file-encoding", "file-type"]
-
 separator = "│"
 
 [editor.lsp]
@@ -50,7 +50,7 @@ enable = true
 display-messages = true
 display-inlay-hints = true
 snippets = true
-auto-signature-help = true    # was false — gopls/rust-analyzer signature help is useful
+auto-signature-help = true
 goto-reference-include-declaration = true
 
 [editor.soft-wrap]
@@ -64,18 +64,11 @@ render = true
 character = "▏"
 
 [editor.file-picker]
-hidden = true                 # was false — show dotfiles in picker
+hidden = true
 parents = true
 git-ignore = true
 git-global = true
 git-exclude = true
-
-[keys.normal.g.e]
-c = ":config-open"
-t = ":open ~/.tmux.conf"
-a = ":open ~/.alias"
-z = ":open ~/.zshrc"
-l = ":open ~/.config/helix/languages.toml"
 
 # ====================== KEYBINDINGS ======================
 [keys.normal]
@@ -88,7 +81,7 @@ l = ":open ~/.config/helix/languages.toml"
 "*" = "search_selection"
 "#" = ["search_selection", "search_prev"]
 
-# Redo (explicit — easier to remember than default U)
+# Redo
 "U" = "redo"
 
 # External tools
@@ -99,6 +92,7 @@ l = ":open ~/.config/helix/languages.toml"
   ":redraw",
   ":reload-all"
 ]
+
 "C-y" = [
   ":sh rm -f /tmp/helix-yazi-chooser",
   ":insert-output yazi %{buffer_name} --chooser-file=/tmp/helix-yazi-chooser",
@@ -109,30 +103,42 @@ l = ":open ~/.config/helix/languages.toml"
 "A-f" = ":format"
 "C-o" = "jump_backward"
 "C-i" = "jump_forward"
-
 "C-n" = "goto_next_diag"
 "C-p" = "goto_prev_diag"
 
+# Quick config access
+[keys.normal.g.e]
+c = ":config-open"
+t = ":open ~/.tmux.conf"
+a = ":open ~/.alias"
+z = ":open ~/.zshrc"
+l = ":open ~/.config/helix/languages.toml"
+
+# LSP navigation
 [keys.normal.g]
-# LSP navigation (explicit mappings — gd/gr easy to forget without them here)
 d = "goto_definition"
 r = "goto_reference"
 i = "goto_implementation"
 y = "goto_type_definition"
 
+# Space menu - Improved
 [keys.normal.space]
 l = ":toggle lsp.display-inlay-hints"
 w = ":write"
 q = ":quit"
-Q = ":qa!"                    # quit all buffers without confirm
-r = "rename_symbol"           # LSP rename
+Q = ":qa!"
+r = "rename_symbol"
 Y = ":sh echo -n %{buffer_name} | pbcopy"
 M = ":set-language markdown"
-
-f = "file_picker_in_current_buffer_directory"
+# f = "file_picker_in_current_buffer_directory"
 s = "symbol_picker"
 S = "workspace_symbol_picker"
-# d = "show_diagnostics"
+d = "show_diagnostics"           # ← Item 1
+e = "select_textobject_around"  # ← Item 1
+
+# Multi-cursor support
+"C-c" = "toggle_comments"        # ← Item 3
+"C-a" = "select_all"             # ← Item 3
 
 [keys.select]
 i = "select_textobject_inner"
