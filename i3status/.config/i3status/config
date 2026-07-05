@@ -1,83 +1,108 @@
-# i3status config - Catppuccin Mocha + Nerd Font (otimizado pro seu Dell)
+# i3status configuration file.
+# see "man i3status" for documentation.
+
+# It is important that this file is edited as UTF-8.
+# The following line should contain a sharp s:
+# ß
+# If the above line is not correctly displayed, fix your editor first!
+
 general {
-    colors = true
-    interval = 5
-    color_good = "#a6e3a1"     # green
-    color_degraded = "#fab387" # orange
-    color_bad = "#f38ba8"      # red
-    color_separator = "#45475a"
-    separator = " │ "
+	colors         = true
+	interval       = 5
+	color_good     = "#D8DEE9"
+	color_bad      = "#EC5f67"
+	color_degraded = "#FAC863"
 }
 
-order += "disk /"
+order += "ipv6"
+order += "wireless _first_"
+order += "ethernet _first_"
+order += "cpu_temperature 0"
 order += "cpu_usage"
+order += "load"
 order += "memory"
-order += "ethernet enp4s0"     # ← interface real do seu Dell
-order += "wireless _first_"    # mantido para outras máquinas com WiFi
+order += "read_file brightness"
 order += "volume master"
-order += "battery 0"
-order += "tztime local"
+order += "battery all"
+order += "tztime date"
+order += "tztime hour"
 
-# ====================== ETHERNET (principal no Dell) ======================
-ethernet enp4s0 {
-    format_up = " %ip"
-    format_down = ""
+battery all {
+	format                        = "%status %percentage %remaining"
+	status_bat                    = "🔋"
+	status_chr                    = "🔌"
+	status_full                   = "🔌"
+	status_unk                    = "♻"
+	low_threshold                 = 25
+	threshold_type                = percentage
+	hide_seconds                  = true
+	# Show percentage as interger
+	integer_battery_capacity      = true
 }
 
-# Fallback para outras interfaces ethernet
-ethernet enp {
-    format_up = " %ip"
-    format_down = ""
+ethernet _first_ {
+	# if you use %speed, i3status requires root privileges
+	format_up   = "🔗 %ip (%speed)"
+	format_down = ""
 }
 
-# ====================== WIRELESS (para outras máquinas) ======================
-wireless _first_ {
-    format_up = " %essid (%quality) %ip"
-    format_down = ""
+ipv6 {
+	format_up   = "%ip"
+	format_down = ""
 }
 
-wireless wlan0 {
-    format_up = " %essid (%quality) %ip"
-    format_down = ""
+tztime date {
+	format                = "%a, %d %b %Y"
+	separator             = false
+	separator_block_width = 5
 }
 
-# ====================== SYSTEM ======================
-cpu_usage {
-    format = " %usage"
-    max_threshold = 85
-    degraded_threshold = 60
-}
-
-memory {
-    format = " %used / %total"
-    threshold_degraded = "10%"
-    threshold_critical = "5%"
-}
-
-disk "/" {
-    format = " %avail free"
-    low_threshold = 15
-    threshold_type = percentage_avail
+tztime hour {
+	format = "%H:%M"
 }
 
 volume master {
-    format = " %volume"
-    format_muted = " muted"
-    device = "pulse"
+	format       = "🔊 %volume"
+	format_muted = "🔇 Muted (%volume)"
+	device       = "pulse:0"
 }
 
-battery 0 {
-    format = "%status %percentage %remaining"
-    format_down = ""
-    status_chr = ""
-    status_bat = ""
-    status_full = ""
-    path = "/sys/class/power_supply/BAT%d/uevent"
-    low_threshold = 15
-    threshold_type = percentage
-    integer_battery_capacity = true
+wireless _first_ {
+	format_up   = "📡 %essid (%quality) %ip"
+	format_down = ""
 }
 
-tztime local {
-    format = " %H:%M"
+read_file brightness {
+	format         = "💡 %content%"
+	path           = "/home/gquittet/.cache/brightness"
+	max_characters = 3
+}
+
+cpu_temperature 0 {
+	format                 = "🌡 %degrees °C"
+	path                   = "/sys/class/thermal/thermal_zone0/temp"
+	max_threshold          = 75
+	format_above_threshold = "🥵 %degrees ⁰C"
+	separator              = false
+}
+
+cpu_usage {
+	format                 = "📈 %usage"
+	max_threshold          = 75
+	format_above_threshold = "📈 %usage"
+	separator              = false
+}
+
+load {
+	format        = "(%5min %15min)"
+	max_threshold = "4"
+	separator     = false
+}
+
+memory {
+	format             = "%used (%total)"
+	memory_used_method = "memavailable"
+	threshold_degraded = "15%"
+	threshold_critical = "5%"
+	threshold_degraded = "%used (%total)"
 }
