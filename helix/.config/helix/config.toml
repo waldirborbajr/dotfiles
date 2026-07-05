@@ -4,7 +4,7 @@ theme = "nord"
 # ====================== EDITOR ======================
 [editor]
 true-color = true
-# transparent = true        # ← enable if using WezTerm with background opacity
+# transparent = true
 auto-format = true
 bufferline = "multiple"
 mouse = true
@@ -85,20 +85,8 @@ git-exclude = true
 "U" = "redo"
 
 # External tools
-"C-g" = [
-  ":new",
-  ":insert-output lazygit",
-  ":buffer-close!",
-  ":redraw",
-  ":reload-all"
-]
-
-"C-y" = [
-  ":sh rm -f /tmp/helix-yazi-chooser",
-  ":insert-output yazi %{buffer_name} --chooser-file=/tmp/helix-yazi-chooser",
-  ":open %sh{cat /tmp/helix-yazi-chooser}",
-  ":redraw"
-]
+"C-g" = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw", ":reload-all"]
+"C-y" = [":sh rm -f /tmp/helix-yazi-chooser", ":insert-output yazi %{buffer_name} --chooser-file=/tmp/helix-yazi-chooser", ":open %sh{cat /tmp/helix-yazi-chooser}", ":redraw"]
 
 "A-f" = ":format"
 "C-o" = "jump_backward"
@@ -130,10 +118,10 @@ Q = ":qa!"
 r = "rename_symbol"
 Y = ":sh echo -n %{buffer_name} | pbcopy"
 M = ":set-language markdown"
-# f = "file_picker_in_current_buffer_directory"
+f = "file_picker_in_current_buffer_directory"
 s = "symbol_picker"
 S = "workspace_symbol_picker"
-d = "show_diagnostics"           # ← Item 1
+D = "show_diagnostics"           # ← Item 1 (usando Shift+D para evitar conflito)
 e = "select_textobject_around"  # ← Item 1
 
 # Multi-cursor support
