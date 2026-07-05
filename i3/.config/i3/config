@@ -170,12 +170,12 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 # bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
-# Power menu (Shutdown, Restart, Hibernate, Suspend, Exit i3)
+# Power Menu - Logout, Hibernate, Suspend, Restart, Shutdown
 bindsym $mod+Shift+e exec --no-startup-id "i3-nagbar -t warning -m 'Power Menu' \
-    -B '  Exit i3' 'i3-msg exit' \
+    -B '  Logout' 'i3-msg exit' \
     -B '  Hibernate' 'systemctl hibernate' \
     -B '  Suspend' 'systemctl suspend' \
-    -B '  Restart' 'systemctl reboot' \
+    -B '  Reboot' 'systemctl reboot' \
     -B '  Shutdown' 'systemctl poweroff'"
 
 # resize window (you can also use the mouse for that)
