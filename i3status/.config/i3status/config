@@ -21,7 +21,7 @@ order += "cpu_temperature 0"
 order += "cpu_usage"
 order += "load"
 order += "memory"
-order += "read_file brightness"
+# order += "read_file brightness"
 order += "volume master"
 order += "battery all"
 order += "tztime date"
@@ -72,11 +72,10 @@ wireless _first_ {
 	format_down = ""
 }
 
-read_file brightness {
-	format         = "💡 %content%"
-	path           = "/home/gquittet/.cache/brightness"
-	max_characters = 3
-}
+#read_file brightness {
+#	format         = "💡 %content%"
+#	max_characters = 3
+#}
 
 cpu_temperature 0 {
 	format                 = "🌡 %degrees °C"
