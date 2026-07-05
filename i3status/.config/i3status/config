@@ -1,73 +1,83 @@
-# i3status config file
-# Catppuccin Mocha theme, Nerd Font icons.
-# Place at: ~/.config/i3status/config
-# (i3status auto-discovers this path -- no change needed in i3 config's
-# `status_command i3status` line)
-
+# i3status config file - Catppuccin Mocha theme with Nerd Font icons
 general {
-        colors = true
-        interval = 5
-        color_good = "#a6e3a1"      # green
-        color_degraded = "#f9e2af"  # yellow
-        color_bad = "#f38ba8"       # red
-        color_separator = "#45475a" # surface1
+    colors = true
+    interval = 5
+    color_good = "#a6e3a1"      # green
+    color_degraded = "#f9e2af"  # yellow
+    color_bad = "#f38ba8"       # red
+    color_separator = "#45475a"
 }
 
 order += "disk /"
 order += "cpu_usage"
 order += "memory"
-order += "wireless _first_"
-order += "ethernet _first_"
+order += "wireless wlan0"      # ← mais confiável que _first_
+order += "ethernet enp"        # ← pega interfaces com "enp" (comum no Dell)
+order += "ethernet eth"        # ← fallback para eth0/eth1
 order += "volume master"
 order += "battery 0"
 order += "tztime local"
 
-wireless _first_ {
-        format_up = " %essid (%quality)"
-        format_down = " disconnected"
+# ====================== WIRELESS ======================
+wireless wlan0 {
+    format_up = " %essid (%quality)"
+    format_down = " disconnected"
 }
 
-ethernet _first_ {
-        format_up = " %ip"
-        format_down = ""   # hides the block entirely when there's no wired interface
+# Tenta outras interfaces wireless comuns
+wireless wlp {
+    format_up = " %essid (%quality)"
+    format_down = ""
 }
 
+# ====================== ETHERNET ======================
+ethernet enp {
+    format_up = " %ip"
+    format_down = ""
+}
+
+ethernet eth {
+    format_up = " %ip"
+    format_down = ""
+}
+
+# ====================== OUTROS MÓDULOS ======================
 cpu_usage {
-        format = " %usage"
-        max_threshold = 85
-        degraded_threshold = 60
+    format = " %usage"
+    max_threshold = 85
+    degraded_threshold = 60
 }
 
 memory {
-        format = " %used / %total"
-        threshold_degraded = "10%"
-        threshold_critical = "5%"
+    format = " %used / %total"
+    threshold_degraded = "10%"
+    threshold_critical = "5%"
 }
 
 disk "/" {
-        format = " %avail free"
-        low_threshold = 15
-        threshold_type = percentage_avail
+    format = " %avail free"
+    low_threshold = 15
+    threshold_type = percentage_avail
 }
 
 volume master {
-        format = " %volume"
-        format_muted = " muted"
-        device = "pulse"
+    format = " %volume"
+    format_muted = " muted"
+    device = "pulse"
 }
 
 battery 0 {
-        format = "%status %percentage %remaining"
-        format_down = ""   # hides the block on machines with no battery (e.g. the UTM VM)
-        status_chr = ""
-        status_bat = ""
-        status_full = ""
-        path = "/sys/class/power_supply/BAT%d/uevent"
-        low_threshold = 15
-        threshold_type = percentage
-        integer_battery_capacity = true
+    format = "%status %percentage %remaining"
+    format_down = ""                    # esconde em VMs sem bateria
+    status_chr = ""
+    status_bat = ""
+    status_full = ""
+    path = "/sys/class/power_supply/BAT%d/uevent"
+    low_threshold = 15
+    threshold_type = percentage
+    integer_battery_capacity = true
 }
 
 tztime local {
-        format = " %Y-%m-%d %H:%M"
+    format = " %Y-%m-%d %H:%M"
 }
