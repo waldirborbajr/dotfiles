@@ -79,19 +79,15 @@ z = ":open ~/.zshrc"
 l = ":open ~/.config/helix/languages.toml"
 
 [keys.normal]
-# Buffer navigation
 "A-<" = "goto_previous_buffer"
 "A->" = "goto_next_buffer"
 "A-w" = ":buffer-close"
 
-# Search
 "*" = "search_selection"
 "#" = ["search_selection", "search_prev"]
 
-# Redo
 "U" = "redo"
 
-# External tools
 "C-g" = [
   ":new",
   ":insert-output lazygit",
@@ -130,7 +126,7 @@ M = ":set-language markdown"
 f = "file_picker_in_current_buffer_directory"
 s = "symbol_picker"
 S = "workspace_symbol_picker"
-D = ":diagnostics"          # ← Correto e seguro
+D = "diagnostics"          # ← correto para Helix 25.07.1
 e = "select_textobject_around"
 
 # Multi-cursor
