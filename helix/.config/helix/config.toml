@@ -126,7 +126,6 @@ M = ":set-language markdown"
 f = "file_picker_in_current_buffer_directory"
 s = "symbol_picker"
 S = "workspace_symbol_picker"
-D = "diagnostics"          # ← correto para Helix 25.07.1
 e = "select_textobject_around"
 
 # Multi-cursor
