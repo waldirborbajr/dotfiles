@@ -1,11 +1,13 @@
 # i3status config - Catppuccin Mocha + Nerd Font
+# Mostra automaticamente WiFi OU Ethernet conforme o que estiver ativo
 general {
     colors = true
     interval = 5
-    color_good = "#a6e3a1"
-    color_degraded = "#f9e2af"
-    color_bad = "#f38ba8"
+    color_good = "#a6e3a1"     # green
+    color_degraded = "#fab387" # orange
+    color_bad = "#f38ba8"      # red
     color_separator = "#45475a"
+    separator = " │ "
 }
 
 order += "disk /"
@@ -17,18 +19,19 @@ order += "volume master"
 order += "battery 0"
 order += "tztime local"
 
-# ====================== NETWORK (IP visibility fix) ======================
+# ====================== WIRELESS ======================
 wireless _first_ {
     format_up = " %essid (%quality) %ip"
-    format_down = " disconnected"
+    format_down = ""
 }
 
+# ====================== ETHERNET ======================
 ethernet _first_ {
     format_up = " %ip"
-    format_down = ""   # hide when no cable
+    format_down = ""
 }
 
-# Fallbacks (caso _first_ não funcione)
+# ====================== FALLBACKS (caso necessário) ======================
 wireless wlan0 {
     format_up = " %essid (%quality) %ip"
     format_down = ""
@@ -82,5 +85,5 @@ battery 0 {
 }
 
 tztime local {
-    format = " %Y-%m-%d %H:%M"
+    format = " %H:%M"
 }
