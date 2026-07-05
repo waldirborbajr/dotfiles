@@ -4,7 +4,6 @@ theme = "nord"
 # ====================== EDITOR ======================
 [editor]
 true-color = true
-# transparent = true
 auto-format = true
 bufferline = "multiple"
 mouse = true
@@ -72,29 +71,24 @@ git-exclude = true
 
 # ====================== KEYBINDINGS ======================
 [keys.normal]
-# Buffer navigation
-"A-<" = "goto_previous_buffer"
-"A->" = "goto_next_buffer"
-"A-w" = ":buffer-close"
+A-< = "goto_previous_buffer"
+A-> = "goto_next_buffer"
+A-w = ":buffer-close"
 
-# Search
-"*" = "search_selection"
-"#" = ["search_selection", "search_prev"]
+* = "search_selection"
+# = ["search_selection", "search_prev"]
 
-# Redo
-"U" = "redo"
+U = "redo"
 
-# External tools
-"C-g" = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw", ":reload-all"]
-"C-y" = [":sh rm -f /tmp/helix-yazi-chooser", ":insert-output yazi %{buffer_name} --chooser-file=/tmp/helix-yazi-chooser", ":open %sh{cat /tmp/helix-yazi-chooser}", ":redraw"]
+C-g = [":new", ":insert-output lazygit", ":buffer-close!", ":redraw", ":reload-all"]
+C-y = [":sh rm -f /tmp/helix-yazi-chooser", ":insert-output yazi %{buffer_name} --chooser-file=/tmp/helix-yazi-chooser", ":open %sh{cat /tmp/helix-yazi-chooser}", ":redraw"]
 
-"A-f" = ":format"
-"C-o" = "jump_backward"
-"C-i" = "jump_forward"
-"C-n" = "goto_next_diag"
-"C-p" = "goto_prev_diag"
+A-f = ":format"
+C-o = "jump_backward"
+C-i = "jump_forward"
+C-n = "goto_next_diag"
+C-p = "goto_prev_diag"
 
-# Quick config access
 [keys.normal.g.e]
 c = ":config-open"
 t = ":open ~/.tmux.conf"
@@ -102,14 +96,12 @@ a = ":open ~/.alias"
 z = ":open ~/.zshrc"
 l = ":open ~/.config/helix/languages.toml"
 
-# LSP navigation
 [keys.normal.g]
 d = "goto_definition"
 r = "goto_reference"
 i = "goto_implementation"
 y = "goto_type_definition"
 
-# Space menu - Improved
 [keys.normal.space]
 l = ":toggle lsp.display-inlay-hints"
 w = ":write"
@@ -121,19 +113,19 @@ M = ":set-language markdown"
 f = "file_picker_in_current_buffer_directory"
 s = "symbol_picker"
 S = "workspace_symbol_picker"
-D = "show_diagnostics"           # ← Item 1 (usando Shift+D para evitar conflito)
-e = "select_textobject_around"  # ← Item 1
+D = "diagnostics"                    # ← correto (show diagnostics)
+e = "select_textobject_around"
 
-# Multi-cursor support
-"C-c" = "toggle_comments"        # ← Item 3
-"C-a" = "select_all"             # ← Item 3
+# Multi-cursor
+C-c = "toggle_comments"
+C-a = "select_all"
 
 [keys.select]
 i = "select_textobject_inner"
 a = "select_textobject_around"
-"A-x" = "extend_to_line_bounds"
-"X" = "select_line_above"
+A-x = "extend_to_line_bounds"
+X = "select_line_above"
 
 [keys.insert]
 j = { j = "normal_mode" }
-"C-s" = ":w"
+C-s = ":w"
