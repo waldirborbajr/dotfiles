@@ -46,34 +46,34 @@ default:
     #!/usr/bin/env bash
     set -e
     echo "Configuring Git with GPG signing..."
-    
+
     # List keys
     echo ""
     echo "Available GPG keys:"
     gpg --list-secret-keys --keyid-format=long | grep -E "^\s+[A-F0-9]{16}" | awk '{print $NF}' || true
-    
+
     echo ""
     echo "Enter your GPG key ID (last 16 chars, e.g., ABC123DEF456GHIJ):"
     read -r KEY_ID
-    
+
     if [ -z "$KEY_ID" ]; then
         echo "No key ID provided. Exiting."
         exit 1
     fi
-    
+
     # Validate key exists
     if ! gpg --list-secret-keys --keyid-format=long | grep -q "$KEY_ID"; then
         echo "✗ Key not found: $KEY_ID"
         exit 1
     fi
-    
+
     # Configure with predefined user info
     git config --global user.name "{{ GIT_NAME }}"
     git config --global user.email "{{ GIT_EMAIL }}"
     git config --global user.signingkey "$KEY_ID"
     git config --global commit.gpgsign true
     git config --global gpg.program gpg
-    
+
     echo ""
     echo "✓ Git user.name: {{ GIT_NAME }}"
     echo "✓ Git user.email: {{ GIT_EMAIL }}"
@@ -84,25 +84,25 @@ default:
 @configure-git-silent KEY_ID NAME="" EMAIL="":
     #!/usr/bin/env bash
     set -e
-    
+
     # Validate key exists
     if ! gpg --list-secret-keys --keyid-format=long | grep -q "{{ KEY_ID }}"; then
         echo "✗ Key not found: {{ KEY_ID }}"
         exit 1
     fi
-    
+
     git config --global user.signingkey "{{ KEY_ID }}"
     git config --global commit.gpgsign true
     git config --global gpg.program gpg
-    
+
     if [ -n "{{ NAME }}" ]; then
         git config --global user.name "{{ NAME }}"
     fi
-    
+
     if [ -n "{{ EMAIL }}" ]; then
         git config --global user.email "{{ EMAIL }}"
     fi
-    
+
     echo "✓ Git configured with GPG key: {{ KEY_ID }}"
 
 # Test GPG signing with a dry-run
@@ -110,16 +110,16 @@ default:
     #!/usr/bin/env bash
     echo "Testing GPG signing..."
     echo ""
-    
+
     # Check if signing is configured
     SIGNING_KEY=$(git config --global user.signingkey)
     if [ -z "$SIGNING_KEY" ]; then
         echo "✗ No signing key configured. Run 'just configure-git' first."
         exit 1
     fi
-    
+
     echo "Using key: $SIGNING_KEY"
-    
+
     # Try to sign a test message
     TEST_MSG="test"
     if echo "$TEST_MSG" | gpg --sign --armor --default-key "$SIGNING_KEY" > /dev/null 2>&1; then
@@ -128,7 +128,7 @@ default:
         echo "✗ GPG signing failed. Check your passphrase/key."
         exit 1
     fi
-    
+
     # Show current config
     echo ""
     echo "Current Git config:"
@@ -147,7 +147,7 @@ default:
         echo "GPG already installed"
         exit 0
     fi
-    
+
     if [[ "$OSTYPE" == "darwin"* ]]; then
         echo "Installing GPG on macOS..."
         brew install gnupg
@@ -171,19 +171,19 @@ default:
 @full-setup:
     #!/usr/bin/env bash
     set -e
-    
+
     echo "🚀 Starting complete Git + GPG setup for {{ GIT_NAME }}..."
     echo ""
-    
+
     # Install GPG if needed
     just install-gpg
     just check-gpg
-    
+
     echo ""
-    
+
     # Check for existing keys
     KEY_COUNT=$(gpg --list-secret-keys --keyid-format=long 2>/dev/null | grep -c "sec " || echo 0)
-    
+
     if [ "$KEY_COUNT" -eq 0 ]; then
         echo "No GPG keys found. Generating one now..."
         just generate-key
@@ -191,12 +191,12 @@ default:
         echo "Found $KEY_COUNT existing key(s):"
         just list-keys
     fi
-    
+
     echo ""
     just configure-git
     echo ""
     just test-signing
-    
+
     echo ""
     echo "✅ Setup complete!"
     echo ""
@@ -222,12 +222,12 @@ default:
 @export-public-key:
     #!/usr/bin/env bash
     SIGNING_KEY=$(git config --global user.signingkey)
-    
+
     if [ -z "$SIGNING_KEY" ]; then
         echo "No signing key configured"
         exit 1
     fi
-    
+
     echo "Public key for $SIGNING_KEY:"
     echo ""
     gpg --armor --export "$SIGNING_KEY"
@@ -249,14 +249,14 @@ default:
     echo "⚠️  This will reset your Git GPG configuration"
     echo "Continue? (type 'yes' to confirm)"
     read -r CONFIRM
-    
+
     if [ "$CONFIRM" != "yes" ]; then
         echo "Cancelled"
         exit 0
     fi
-    
+
     git config --global --unset user.signingkey || true
     git config --global --unset commit.gpgsign || true
     git config --global --unset gpg.program || true
-    
+
     echo "✓ Configuration reset"
