@@ -1,54 +1,66 @@
 general {
-  colors = false
+  colors = true
   interval = 1
+  color_good = "#a6e3a1"
+  color_degraded = "#f9e2af"
+  color_bad = "#f38ba8"
 }
-order += "brightness"
-order += "cpu_usage"
-order += "ethernet _first_"
+
+# Only network, CPU, memory, volume, battery and clock — kept minimal
+# on purpose for a dev-focused status bar (dropped load and temperature).
 order += "wireless _first_"
-order += "cpu_temperature 0"
-order += "load"
+order += "ethernet _first_"
+order += "cpu_usage"
 order += "memory"
 order += "volume master"
 order += "battery all"
 order += "tztime local"
+
+# Only the interface actually in use shows anything. format_down = ""
+# is what fixes "ETH0 always showing" — when eth is down, this block
+# renders empty instead of a permanent "ETH DN" label.
 wireless _first_ {
-  format_up = "NET %quality - %essid - %ip"
-  format_down = "NET DOWN"
+  format_up = "  %quality %essid"
+  format_down = ""
 }
+
 ethernet _first_ {
-   format_up = "ETH %ip"
-   format_down = "ETH DN"
+  format_up = "  %ip"
+  format_down = ""
 }
+
 cpu_usage {
-  format = "CPU %usage"
+  format = "  %usage"
+  max_threshold = 75
+  format_above_threshold = "  %usage"
 }
-cpu_temperature 0 {
-  format = "TMP %degrees°C"
-  path = "/sys/class/hwmon/hwmon4/temp1_input"
-}
-load {
-  format = "LOD %5min"
-}
+
 memory {
-  format = "RAM %used"
+  format = "  %used"
+  threshold_degraded = "10%"
+  format_degraded = "  LOW %free"
 }
-battery all {
-  format = "BAT %status %percentage"
-  format_down = "D"
-  status_chr = "C"
-  status_bat = "B"
-  status_unk = "U"
-  status_full = "F"
-  status_idle = "I"
-}
+
 volume master {
-  format = "VOL %volume"
-  format_muted = "M"
+  format = "  %volume"
+  format_muted = "  MUTE"
   device = "default"
   mixer = "Master"
   mixer_idx = 0
 }
+
+battery all {
+  format = "%status %percentage"
+  format_down = ""
+  status_chr = "  "
+  status_bat = "  "
+  status_unk = "  "
+  status_full = "  "
+  status_idle = "  "
+  low_threshold = 15
+  threshold_type = "percentage"
+}
+
 tztime local {
-  format = "%^a %d %^b %I:%M:%S  "
+  format = "  %H:%M"
 }
