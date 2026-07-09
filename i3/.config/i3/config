@@ -113,11 +113,25 @@ bindsym $mod+Shift+0 move container to workspace number $ws10
 
 # ==================== POWER MENU ====================
 bindsym $mod+Shift+e exec --no-startup-id "i3-nagbar -t warning -m 'Power Menu' \
-    -B '  Logout' 'i3-msg exit' \
-    -B '  Hibernate' 'systemctl hibernate' \
-    -B '  Suspend' 'systemctl suspend' \
-    -B '  Reboot' 'systemctl reboot' \
-    -B '  Shutdown' 'systemctl poweroff'"
+    -B '  Logout' 'i3-msg exit' \
+    -B '  Hibernate' 'systemctl hibernate' \
+    -B '  Suspend' 'systemctl suspend' \
+    -B '  Reboot' 'systemctl reboot' \
+    -B '  Shutdown' 'systemctl poweroff'"
+
+# ==================== SESSION CONTROL ====================
+# Missing from the original config — present in the reference config.
+# Reload just re-reads this file (fast, no visual disruption).
+# Restart re-execs i3 in place (preserves layout/session), useful after
+# upgrading i3 or if something gets into a weird state.
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+
+# ==================== LOCK SCREEN ====================
+# Missing from the original config. xss-lock already locks on sleep/idle
+# (see AUTOSTART), but this adds a manual "lock right now" key using the
+# same wallpaper set below.
+bindsym $mod+Escape exec --no-startup-id i3lock -i ~/Pictures/wallpaper.png
 
 # ==================== RESIZE MODE ====================
 mode "resize" {
@@ -143,6 +157,17 @@ bindsym $mod+g exec --no-startup-id rofi -show window
 
 bindsym F1 exec $HOME/.config/emacs/bin/doom run
 
+# ---- Optional: direct app launchers (present in reference config) ----
+# Not enabled by default since app choice/terminal is personal and the
+# reference paths (alacritty, specific scripts) may not match your setup.
+# Uncomment and adjust binaries/paths as needed.
+# bindsym $mod+z exec firefox
+# bindsym $mod+n exec chromium
+# bindsym $mod+m exec vlc
+# bindsym $mod+x exec i3-sensible-terminal -e ranger
+# bindsym $mod+c exec i3-sensible-terminal -e tmux
+# bindsym $mod+i exec --no-startup-id ~/scripts/wifi.sh
+
 # ==================== MONITOR SETUP ====================
 workspace 1 output eDP-1
 workspace 2 output DP-4
@@ -154,6 +179,9 @@ exec_always --no-startup-id feh --bg-max --no-fehbg ~/Pictures/wallpaper.png
 bindsym $mod+Shift+w exec --no-startup-id "feh --bg-max --no-fehbg ~/Pictures/wallpaper.png"
 
 # ==================== BAR CONFIG ====================
+# Missing from the original config: toggle bar visibility.
+bindsym $mod+b bar mode toggle
+
 bar {
     position bottom
     tray_output primary
