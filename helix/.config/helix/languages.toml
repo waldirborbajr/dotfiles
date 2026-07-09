@@ -37,11 +37,12 @@ command = "golangci-lint-langserver"
 
 [[language]]
 name = "go"
+scope = "source.go"
 file-types = ["go"]
 roots = ["go.work", "go.mod"]
 auto-format = true
 formatter = { command = "goimports", args = ["-"] }
-language-servers = ["gopls", "golangci-lint-lsp"]
+language-servers = ["gopls", "golangci-lint-lsp", "llm-suggest", "colors", "scls"]
 indent = { tab-width = 4, unit = "\t" }
 
 # ================================================================================================
@@ -65,11 +66,12 @@ closureReturnTypeHints.enable = "with_block"
 
 [[language]]
 name = "rust"
+scope = "source.rust"
 file-types = ["rs"]
 roots = ["Cargo.toml"]
 auto-format = true
 formatter = { command = "rustfmt", args = ["--emit=stdout"] }
-language-servers = ["rust-analyzer"]
+language-servers = ["rust-analyzer", "llm-suggest", "colors", "scls"]
 indent = { tab-width = 4, unit = "\t" }
 
 # ================================================================================================
@@ -80,11 +82,12 @@ command = "lua-language-server"
 
 [[language]]
 name = "lua"
+scope = "source.lua"
 file-types = ["lua"]
 roots = ["init.lua", ".luarc.json"]
 auto-format = true
 formatter = { command = "stylua", args = ["--stdin-filepath", "x.lua", "-"] }
-language-servers = ["lua-language-server"]
+language-servers = ["lua-language-server", "llm-suggest", "colors", "scls"]
 indent = { tab-width = 2, unit = " " }
 
 # ================================================================================================
@@ -96,20 +99,22 @@ args = ["--stdio"]
 
 [[language]]
 name = "typescript"
+scope = "source.ts"
 file-types = ["ts", "tsx"]
 roots = ["package.json", "tsconfig.json"]
 auto-format = true
 formatter = { command = "prettier", args = ["--parser", "typescript"] }
-language-servers = ["typescript-language-server"]
+language-servers = ["typescript-language-server", "llm-suggest", "colors", "scls"]
 indent = { tab-width = 2, unit = " " }
 
 [[language]]
 name = "javascript"
+scope = "source.js"
 file-types = ["js", "jsx"]
 roots = ["package.json"]
 auto-format = true
 formatter = { command = "prettier", args = ["--parser", "babel"] }
-language-servers = ["typescript-language-server"]
+language-servers = ["typescript-language-server", "llm-suggest", "colors", "scls"]
 indent = { tab-width = 2, unit = " " }
 
 # ================================================================================================
@@ -120,11 +125,12 @@ command = "pylsp"
 
 [[language]]
 name = "python"
+scope = "source.python"
 file-types = ["py", "pyi"]
 roots = ["pyproject.toml", "setup.py"]
 auto-format = true
 formatter = { command = "black", args = ["-"] }
-language-servers = ["pylsp"]
+language-servers = ["pylsp", "llm-suggest", "colors", "scls"]
 indent = { tab-width = 4, unit = " " }
 
 # ================================================================================================
@@ -138,11 +144,12 @@ command = "nil"
 
 [[language]]
 name = "nix"
+scope = "source.nix"
 file-types = ["nix"]
 roots = ["flake.nix", "shell.nix", "default.nix"]
 auto-format = true
 formatter = { command = "alejandra" }
-language-servers = ["nixd", "nil"]
+language-servers = ["nixd", "nil", "llm-suggest", "colors", "scls"]
 indent = { tab-width = 2, unit = " " }
 
 # ================================================================================================
@@ -155,10 +162,11 @@ args = ["lsp", "stdio"]
 
 [[language]]
 name = "toml"
+scope = "source.toml"
 file-types = ["toml", "Cargo.lock"]
 auto-format = true
 formatter = { command = "taplo", args = ["fmt", "-"] }
-language-servers = ["taplo"]
+language-servers = ["taplo", "llm-suggest", "colors", "scls"]
 indent = { tab-width = 2, unit = " " }
 
 # JSON / JSONC / YAML / XML / Docker / Markdown / Shell ... (mantidos iguais, só limpei um pouco)
@@ -169,17 +177,13 @@ args = ["--stdio"]
 
 [[language]]
 name = "json"
+scope = "source.json"
 file-types = ["json"]
 auto-format = true
 formatter = { command = "prettier", args = ["--parser", "json"] }
-language-servers = ["vscode-json-language-server"]
+language-servers = ["vscode-json-language-server", "llm-suggest", "colors", "scls"]
 indent = { tab-width = 2, unit = " " }
 
-# ... (YAML, Markdown, Shell, etc. ficam como estavam)
-
-# ================================================================================================
-# GLOBAL LANGUAGE SERVERS (LLM + cores)
-# ================================================================================================
-[[language]]
-name = "global"  # aplica para todos os arquivos
-language-servers = ["llm-suggest", "colors", "scls"]
+# ... (YAML, Markdown, Shell, etc. ficam como estavam — lembre-se de adicionar `scope`
+# e, se quiser os LSPs globais, incluir "llm-suggest", "colors", "scls" na lista de
+# language-servers de cada um deles também)
