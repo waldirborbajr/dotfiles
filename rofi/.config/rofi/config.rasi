@@ -76,4 +76,6 @@ padding: 12 0 0 12;
 
 //@theme "/nix/store/69pqlq792pnd70bnpj62s2vgisv80j9p-rofi-2.0.0/share/rofi/themes/Arc-Dark.rasi"
 
-@theme "/nix/store/smag1avi30y14xhc4k631hpkr4ypx6dw-rofi-2.0.0/share/rofi/themes/android_notification.rasi"
+//@theme "/nix/store/smag1avi30y14xhc4k631hpkr4ypx6dw-rofi-2.0.0/share/rofi/themes/android_notification.rasi"
+
+@theme "/nix/store/69pqlq792pnd70bnpj62s2vgisv80j9p-rofi-2.0.0/share/rofi/themes/Arc-Dark.rasi"
