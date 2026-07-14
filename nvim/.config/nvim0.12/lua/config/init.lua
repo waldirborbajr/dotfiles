@@ -1,0 +1,6 @@
+require("config.options")
+require("config.pack")
+require("config.keymaps")
+require("config.lsp")
+require("config.autocmd")
+require("config.colorscheme")
