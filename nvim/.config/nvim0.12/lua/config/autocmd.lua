@@ -1,9 +1,9 @@
 -- =============================================================================
--- AUTOCOMMANDS (versão unificada)
+-- AUTOCOMMANDS (unified version)
 -- =============================================================================
--- Autocmds são carregados automaticamente no evento VeryLazy.
--- Arquivo consolidado: duplicações removidas, regras conflitantes resolvidas
--- e alguns autocmds novos adicionados (ver relatório enviado junto do arquivo).
+-- Autocmds are loaded automatically on the VeryLazy event.
+-- Consolidated file: duplicates removed, conflicting rules resolved
+-- and some new autocmds added (see the report sent along with the file).
 
 local autocmd = vim.api.nvim_create_autocmd
 
@@ -12,14 +12,14 @@ local function augroup(name)
 end
 
 -- =============================================================================
--- PERFORMANCE / GERAL
+-- PERFORMANCE / GENERAL
 -- =============================================================================
 
--- Verifica se o arquivo mudou fora do Neovim (debounced)
+-- Checks if the file changed outside Neovim (debounced)
 local _checktime_timer = nil
 autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
   group = augroup("checktime"),
-  desc = "Checar mudanças externas no arquivo (debounced)",
+  desc = "Check for external file changes (debounced)",
   callback = function()
     if _checktime_timer then
       _checktime_timer:stop()
@@ -35,11 +35,11 @@ autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
   end,
 })
 
--- Redimensiona splits proporcionalmente quando a janela do terminal muda
+-- Resizes splits proportionally when the terminal window changes
 local _resize_timer = nil
 autocmd("VimResized", {
   group = augroup("resize_splits"),
-  desc = "Reequilibrar splits ao redimensionar a janela (debounced)",
+  desc = "Rebalance splits on window resize (debounced)",
   callback = function()
     if _resize_timer then
       _resize_timer:stop()
@@ -55,10 +55,10 @@ autocmd("VimResized", {
   end,
 })
 
--- [NOVO] Desativa recursos pesados em arquivos muito grandes (>1MB)
+-- [NEW] Disable heavy features in very large files (>1MB)
 autocmd("BufReadPre", {
   group = augroup("large_file"),
-  desc = "Desativar swapfile, spell, folds e treesitter em arquivos grandes",
+  desc = "Disable swapfile, spell, folds and treesitter in large files",
   callback = function(event)
     local name = vim.api.nvim_buf_get_name(event.buf)
     local ok, stats = pcall(function()
@@ -80,11 +80,11 @@ autocmd("BufReadPre", {
 -- BUFFER & CURSOR
 -- =============================================================================
 
--- Restaura a última posição do cursor ao reabrir um arquivo
--- (une "last_loc" e "last_location": guarda de filetype + centraliza a tela)
+-- Restores the last cursor position when reopening a file
+-- (merges "last_loc" and "last_location": filetype guard + centers the screen)
 autocmd("BufReadPost", {
   group = augroup("last_loc"),
-  desc = "Restaurar última posição do cursor",
+  desc = "Restore last cursor position",
   callback = function(event)
     local exclude = { "gitcommit", "gitrebase" }
     local buf = event.buf
@@ -100,10 +100,10 @@ autocmd("BufReadPost", {
   end,
 })
 
--- Cria diretórios intermediários automaticamente ao salvar, se não existirem
+-- Automatically creates intermediate directories on save, if they don't exist
 autocmd("BufWritePre", {
   group = augroup("auto_create_dir"),
-  desc = "Criar diretório de destino automaticamente ao salvar",
+  desc = "Automatically create destination directory on save",
   callback = function(event)
     if event.match:match("^%w%w+:[\\/][\\/]") then
       return
@@ -114,13 +114,13 @@ autocmd("BufWritePre", {
 })
 
 -- =============================================================================
--- UI / EXPERIÊNCIA DE EDIÇÃO
+-- UI / EDITING EXPERIENCE
 -- =============================================================================
 
--- Melhora performance visual durante inserção (desliga cursorline/relativenumber)
+-- Improves visual performance during insert mode (turns off cursorline/relativenumber)
 autocmd("InsertEnter", {
   group = augroup("insert_ui_perf"),
-  desc = "Simplificar UI ao entrar no modo de inserção",
+  desc = "Simplify UI when entering insert mode",
   callback = function()
     vim.wo.cursorline = false
     vim.wo.relativenumber = false
@@ -130,36 +130,36 @@ autocmd("InsertEnter", {
 
 autocmd("InsertLeave", {
   group = augroup("insert_ui_perf"),
-  desc = "Restaurar UI ao sair do modo de inserção",
+  desc = "Restore UI when leaving insert mode",
   callback = function()
     vim.wo.cursorline = true
     vim.wo.relativenumber = true
   end,
 })
 
--- Trata "-" como parte da palavra em CSS/HTML/JSX etc. (útil p/ classes kebab-case)
+-- Treats "-" as part of a word in CSS/HTML/JSX etc. (useful for kebab-case classes)
 autocmd("FileType", {
   group = augroup("iskeyword_kebab"),
-  desc = "Incluir '-' em iskeyword para arquivos baseados em kebab-case",
+  desc = "Include '-' in iskeyword for kebab-case based files",
   pattern = { "css", "scss", "less", "html", "htmldjango", "blade", "typescriptreact", "javascriptreact" },
   callback = function()
     vim.opt_local.iskeyword:append("-")
   end,
 })
 
--- Destaca o texto copiado (yank) por um curto período
+-- Highlights yanked text for a short period
 autocmd("TextYankPost", {
   group = augroup("highlight_yank"),
-  desc = "Destacar visualmente o texto copiado",
+  desc = "Visually highlight yanked text",
   callback = function()
     vim.hl.on_yank({ higroup = "IncSearch", timeout = 200 })
   end,
 })
 
--- Corrige o conceallevel em arquivos JSON (evita esconder aspas/chaves)
+-- Fixes conceallevel in JSON files (avoids hiding quotes/braces)
 autocmd("FileType", {
   group = augroup("json_conceal"),
-  desc = "Desativar conceal em arquivos JSON",
+  desc = "Disable conceal in JSON files",
   pattern = { "json", "jsonc", "json5" },
   callback = function()
     vim.opt_local.conceallevel = 0
@@ -167,13 +167,13 @@ autocmd("FileType", {
 })
 
 -- =============================================================================
--- FILETYPES ESPECIAIS (fechar, indentação, detecção)
+-- SPECIAL FILETYPES (close, indentation, detection)
 -- =============================================================================
 
--- Fecha alguns tipos de buffer com "q" e os remove da lista de buffers
+-- Closes certain buffer types with "q" and removes them from the buffer list
 autocmd("FileType", {
   group = augroup("close_with_q"),
-  desc = "Fechar buffers utilitários com 'q'",
+  desc = "Close utility buffers with 'q'",
   pattern = {
     "PlenaryTestPopup",
     "checkhealth",
@@ -206,10 +206,10 @@ autocmd("FileType", {
   end,
 })
 
--- Ajustes para páginas de manual (une "man_unlisted" + "man_page_indent")
+-- Adjustments for man pages (merges "man_unlisted" + "man_page_indent")
 autocmd("FileType", {
   group = augroup("man_settings"),
-  desc = "Buffer de man page não listado + indentação estreita",
+  desc = "Unlisted man page buffer + narrow indentation",
   pattern = "man",
   callback = function(event)
     vim.bo[event.buf].buflisted = false
@@ -218,11 +218,11 @@ autocmd("FileType", {
   end,
 })
 
--- Wrap, linebreak e spellcheck para arquivos de "prosa"
--- (une "wrap_spell" x2 + "wrap_spell" alternativo + "BetterReadForTextFiles")
+-- Wrap, linebreak and spellcheck for "prose" files
+-- (merges "wrap_spell" x2 + alternative "wrap_spell" + "BetterReadForTextFiles")
 autocmd("FileType", {
   group = augroup("wrap_spell"),
-  desc = "Ativar wrap, linebreak e spell em arquivos de texto/markdown",
+  desc = "Enable wrap, linebreak and spell in text/markdown files",
   pattern = { "text", "plaintex", "typst", "gitcommit", "markdown" },
   callback = function()
     vim.opt_local.wrap = true
@@ -231,79 +231,79 @@ autocmd("FileType", {
   end,
 })
 
--- Garante que .md/.mdx sejam detectados como markdown
--- (versão anterior duplicava wrap/linebreak/nospell, conflitando com "wrap_spell")
+-- Ensures .md/.mdx are detected as markdown
+-- (previous version duplicated wrap/linebreak/nospell, conflicting with "wrap_spell")
 autocmd({ "BufNewFile", "BufFilePre", "BufRead" }, {
   group = augroup("markdown_filetype"),
-  desc = "Detectar .md/.mdx como markdown",
+  desc = "Detect .md/.mdx as markdown",
   pattern = { "*.md", "*.mdx" },
   callback = function()
     vim.bo.filetype = "markdown"
   end,
 })
 
--- Corrige syntax highlighting em buffers especiais
+-- Fixes syntax highlighting in special buffers
 autocmd("FileType", {
   group = augroup("syntax_highlighting_fix"),
-  desc = "Corrigir syntax highlighting em buffers especiais",
+  desc = "Fix syntax highlighting in special buffers",
   pattern = { "gitsendemail", "conf", "editorconfig", "qf", "checkhealth", "less" },
   callback = function(event)
     vim.bo[event.buf].syntax = vim.bo[event.buf].filetype
   end,
 })
 
--- keywordprg para arquivos Vimscript (busca na :help)
+-- keywordprg for Vimscript files (search in :help)
 autocmd("FileType", {
   group = augroup("vim_help_lookup"),
-  desc = "Usar :help como keywordprg em arquivos Vim",
+  desc = "Use :help as keywordprg in Vim files",
   pattern = "vim",
   command = "setlocal keywordprg=:vert\\ help",
 })
 
--- Usa tabs reais (não espaços) para Go e Rust
+-- Uses real tabs (not spaces) for Go and Rust
 autocmd("FileType", {
   group = augroup("tab_for_indent"),
-  desc = "Usar hard tabs em Go e Rust",
+  desc = "Use hard tabs in Go and Rust",
   pattern = { "go", "rust" },
   callback = function()
     vim.bo.expandtab = false
   end,
 })
 
--- Define filetype para .env e .env.*
+-- Sets filetype for .env and .env.*
 autocmd({ "BufRead", "BufNewFile" }, {
   group = augroup("env_filetype"),
-  desc = "Definir filetype=sh para arquivos .env",
+  desc = "Set filetype=sh for .env files",
   pattern = { "*.env", ".env.*" },
   callback = function()
     vim.opt_local.filetype = "sh"
   end,
 })
 
--- Define filetype para arquivos *.tomg-config*
+-- Sets filetype for *.tomg-config* files
 autocmd({ "BufRead", "BufNewFile" }, {
   group = augroup("toml_filetype"),
-  desc = "Definir filetype=toml para *.tomg-config*",
+  desc = "Set filetype=toml for *.tomg-config*",
   pattern = { "*.tomg-config*" },
   callback = function()
     vim.opt_local.filetype = "toml"
   end,
 })
 
--- Define filetype para arquivos .ejs
+-- Sets filetype for .ejs files
 autocmd({ "BufRead", "BufNewFile" }, {
   group = augroup("ejs_filetype"),
-  desc = "Definir filetype=embedded_template para .ejs",
+  desc = "Set filetype=embedded_template for .ejs",
   pattern = { "*.ejs", "*.ejs.t" },
   callback = function()
     vim.opt_local.filetype = "embedded_template"
   end,
 })
 
--- Define filetype para arquivos .code-snippets
+-- Sets filetype for .code-snippets files
 autocmd({ "BufRead", "BufNewFile" }, {
   group = augroup("code_snippets_filetype"),
-  desc = "Definir filetype=json para .code-snippets",
+  desc = "Set filetype=json for .code-snippets",
   pattern = { "*.code-snippets" },
   callback = function()
     vim.opt_local.filetype = "json"
@@ -311,28 +311,28 @@ autocmd({ "BufRead", "BufNewFile" }, {
 })
 
 -- =============================================================================
--- COMENTÁRIOS
+-- COMMENTS
 -- =============================================================================
 
--- Desativa continuação automática de comentários em novas linhas
+-- Disables automatic comment continuation on new lines
 autocmd({ "FileType", "BufEnter" }, {
   group = augroup("no_auto_comment"),
-  desc = "Desativar continuação automática de comentários",
+  desc = "Disable automatic comment continuation",
   callback = function()
     vim.opt_local.formatoptions:remove({ "c", "r", "o" })
   end,
 })
 
 -- =============================================================================
--- EDIÇÃO DE TEXTO
+-- TEXT EDITING
 -- =============================================================================
 
--- Remove espaços em branco no final das linhas ao salvar
--- (melhoria: ignora filetypes onde trailing whitespace é significativo,
--- como markdown, que usa 2 espaços no final para forçar quebra de linha)
+-- Removes trailing whitespace at end of lines on save
+-- (improvement: ignores filetypes where trailing whitespace is significant,
+-- such as markdown, which uses 2 trailing spaces to force a line break)
 autocmd("BufWritePre", {
   group = augroup("remove_trailing_whitespace"),
-  desc = "Remover trailing whitespace ao salvar (exceto markdown/diff)",
+  desc = "Remove trailing whitespace on save (except markdown/diff)",
   callback = function(event)
     local exclude = { "markdown", "diff" }
     if vim.tbl_contains(exclude, vim.bo[event.buf].filetype) then
@@ -344,7 +344,7 @@ autocmd("BufWritePre", {
   end,
 })
 
--- Corrige automaticamente com `oxlint --fix` ao salvar, se o projeto tiver config
+-- Automatically fixes with `oxlint --fix` on save, if the project has a config
 local function root_has_oxlint(path)
   return vim.fs.find({
     ".oxlintrc.json",
@@ -359,7 +359,7 @@ end
 
 autocmd("BufWritePre", {
   group = augroup("oxlint_fix_on_save"),
-  desc = "Rodar oxlint --fix ao salvar (se configurado no projeto)",
+  desc = "Run oxlint --fix on save (if configured in the project)",
   pattern = { "*.js", "*.jsx", "*.ts", "*.tsx", "*.vue", "*.svelte", "*.astro" },
   callback = function(args)
     local path = vim.fs.dirname(vim.api.nvim_buf_get_name(args.buf))
@@ -384,7 +384,7 @@ autocmd("BufWritePre", {
   end,
 })
 
--- Formatação ao salvar via efm-langserver (opcional, desativado por padrão)
+-- Format on save via efm-langserver (optional, disabled by default)
 -- local lsp_fmt_group = augroup("format_on_save")
 -- autocmd("BufWritePre", {
 --   group = lsp_fmt_group,
@@ -402,10 +402,10 @@ autocmd("BufWritePre", {
 -- TREE-SITTER
 -- =============================================================================
 
--- Inicia o Tree-sitter automaticamente via API nativa
+-- Starts Tree-sitter automatically via native API
 autocmd("FileType", {
   group = augroup("treesitter_start"),
-  desc = "Iniciar Tree-sitter automaticamente",
+  desc = "Start Tree-sitter automatically",
   callback = function(event)
     pcall(vim.treesitter.start, event.buf)
   end,
@@ -415,10 +415,10 @@ autocmd("FileType", {
 -- FOLDS & DISPLAY
 -- =============================================================================
 
--- Abrir todos os folds automaticamente (opcional, desativado por padrão)
+-- Open all folds automatically (optional, disabled by default)
 -- autocmd("BufEnter", {
 --   group = augroup("open_folds"),
---   desc = "Abrir todos os folds ao entrar no buffer",
+--   desc = "Open all folds when entering the buffer",
 --   command = "silent! normal! zR",
 -- })
 
@@ -426,10 +426,10 @@ autocmd("FileType", {
 -- TERMINAL
 -- =============================================================================
 
--- Sincroniza o cwd do Neovim com o diretório do processo do terminal
+-- Syncs Neovim's cwd with the terminal process directory
 autocmd({ "BufEnter", "TermEnter", "TermLeave" }, {
   group = augroup("terminal_cwd_sync"),
-  desc = "Sincronizar cwd com o buffer do terminal",
+  desc = "Sync cwd with the terminal buffer",
   pattern = "term://*",
   callback = function()
     local cwd = vim.fn.resolve("/proc/" .. vim.b.terminal_job_pid .. "/cwd")
@@ -439,10 +439,10 @@ autocmd({ "BufEnter", "TermEnter", "TermLeave" }, {
   end,
 })
 
--- Desativa scrolloff dentro do terminal para melhor UX
+-- Disables scrolloff inside the terminal for better UX
 autocmd("TermEnter", {
   group = augroup("terminal_scrolloff"),
-  desc = "Desativar scrolloff no terminal",
+  desc = "Disable scrolloff in the terminal",
   pattern = "term://*",
   callback = function()
     vim.b.saved_scrolloff = vim.o.scrolloff
@@ -450,10 +450,10 @@ autocmd("TermEnter", {
   end,
 })
 
--- Restaura o scrolloff ao sair do terminal
+-- Restores scrolloff when leaving the terminal
 autocmd("BufLeave", {
   group = augroup("terminal_scrolloff_restore"),
-  desc = "Restaurar scrolloff ao sair do terminal",
+  desc = "Restore scrolloff on terminal exit",
   pattern = "term://*",
   callback = function()
     if vim.b.saved_scrolloff ~= nil then
@@ -462,10 +462,10 @@ autocmd("BufLeave", {
   end,
 })
 
--- [NOVO] UI mais limpa dentro do terminal (sem números/signcolumn)
+-- [NEW] Cleaner UI inside the terminal (no numbers/signcolumn)
 autocmd("TermOpen", {
   group = augroup("terminal_ui"),
-  desc = "Desativar number/relativenumber/signcolumn em buffers de terminal",
+  desc = "Disable number/relativenumber/signcolumn in terminal buffers",
   pattern = "term://*",
   callback = function()
     vim.opt_local.number = false
@@ -478,7 +478,7 @@ autocmd("TermOpen", {
 -- USER COMMANDS
 -- =============================================================================
 
--- Adicionar plugins usando pack.lua
+-- Add plugins using pack.lua
 vim.api.nvim_create_user_command("PackAdd", function(opts)
   vim.pack.add(opts.fargs)
 end, {
@@ -486,7 +486,7 @@ end, {
   desc = "Add plugins (:PackAdd user/repo1 user/repo2)",
 })
 
--- Remover plugins do pack.lua
+-- Remove plugins from pack.lua
 vim.api.nvim_create_user_command("PackDel", function(opts)
   vim.pack.del(opts.fargs)
 end, {
@@ -494,7 +494,7 @@ end, {
   desc = "Delete plugins (:PackDel plugin1 plugin2)",
 })
 
--- Atualizar todos os plugins ou específicos
+-- Update all plugins or specific ones
 vim.api.nvim_create_user_command("PackUpdate", function(opts)
   if opts.args:match("%S") then
     local plugins = vim.split(opts.args, "%s+", { trimempty = true })
@@ -507,7 +507,7 @@ end, {
   desc = "Update all plugins or specific ones (:PackUpdate [plugin1 plugin2])",
 })
 
--- Listar plugins não-ativos e opcionalmente deletá-los
+-- List non-active plugins and optionally delete them
 vim.api.nvim_create_user_command("PackCheck", function()
   local non_active = vim
     .iter(vim.pack.get())
@@ -535,7 +535,7 @@ vim.api.nvim_create_user_command("PackCheck", function()
   local choice = vim.fn.confirm(
     "Delete ALL non-active plugins from disk?",
     "&Yes\n&No",
-    2 -- padrão = No
+    2 -- default = No
   )
 
   if choice == 1 then
@@ -548,7 +548,7 @@ vim.api.nvim_create_user_command("PackCheck", function()
   end
 end, { desc = "List non-active plugins and select to delete" })
 
--- Salvar macro em arquivo
+-- Save macro to file
 vim.api.nvim_create_user_command("SaveMacro", function(params)
   local name = params.args
   local dir = vim.fn.expand("~/.config/nvim/macros/")
@@ -559,7 +559,7 @@ vim.api.nvim_create_user_command("SaveMacro", function(params)
   vim.fn.writefile({ content }, file, "a")
 end, { nargs = 1, desc = "Save macro from register q to file" })
 
--- Carregar macro de arquivo
+-- Load macro from file
 vim.api.nvim_create_user_command("LoadMacro", function(params)
   local name = params.args
   local dir = vim.fn.expand("~/.config/nvim/macros/")
@@ -569,7 +569,7 @@ vim.api.nvim_create_user_command("LoadMacro", function(params)
   vim.fn.setreg("q", content)
 end, { nargs = 1, desc = "Load macro from file to register q" })
 
--- Recarregar configuração
+-- Reload configuration
 vim.api.nvim_create_user_command("Reload", function()
   vim.cmd(":source $MYVIMRC")
 end, { desc = "Reload Neovim configuration" })
