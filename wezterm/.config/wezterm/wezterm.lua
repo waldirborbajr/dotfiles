@@ -49,9 +49,9 @@ config.key_map_preference = "Mapped"
 -- ── TAB BAR ───────────────────────────────────────────────────────────
 
 config.use_fancy_tab_bar = false
-config.tab_bar_at_bottom = true
-config.enable_tab_bar = true -- enabled: useful with multiple tabs/workspaces
-config.hide_tab_bar_if_only_one_tab = true -- hidden when only one tab — clean look
+config.tab_bar_at_bottom = false -- agora em cima
+config.enable_tab_bar = true -- habilitado: útil com múltiplas abas/workspaces
+config.hide_tab_bar_if_only_one_tab = true -- some quando só tem 1 aba — já estava assim
 
 config.colors = {
 	tab_bar = {
