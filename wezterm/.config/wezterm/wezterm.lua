@@ -420,19 +420,19 @@ config.keys = {
 	{ key = "s", mods = "LEADER", action = act.ShowLauncher },
 
 	-- ── Lazygit (LEADER+g) ────────────────────────────────────────────
-	{
-		key = "g",
-		mods = "LEADER",
-		action = act.SpawnCommandInNewTab({
-			args = { "lazygit" },
-			cwd = wezterm.home_dir, -- ou remova essa linha pra abrir no cwd do pane atual
-		}),
-	},	
+	-- {
+	-- 	key = "g",
+	-- 	mods = "LEADER",
+	-- 	action = act.SpawnCommandInNewTab({
+	-- 		args = { "lazygit" },
+	-- 		cwd = wezterm.home_dir, -- ou remova essa linha pra abrir no cwd do pane atual
+	-- 	}),
+	-- },	
 
 	-- LEADER+Q → só coisas git (hash + branch)
 	{
-	  key = "Q",
-	  mods = "LEADER|SHIFT",
+	  key = "g",
+	  mods = "LEADER", -- |SHIFT
 	  action = act.QuickSelectArgs({
 	    label = "git",
 	    patterns = {
