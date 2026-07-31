@@ -68,21 +68,12 @@ wezterm.on("format-tab-title", function(tab)
 	}
 end)
 
--- ── Trocar de aba por número (LEADER + 1..9) ────────────────────────
-for i = 1, 9 do
-	table.insert(config.keys, {
-		key = tostring(i),
-		mods = "LEADER",
-		action = act.ActivateTab(i - 1), -- índice começa em 0
-	})
-end
-
 -- ── TAB BAR ───────────────────────────────────────────────────────────
 
 config.use_fancy_tab_bar = false
 config.tab_bar_at_bottom = false -- agora em cima
 config.enable_tab_bar = true -- habilitado: útil com múltiplas abas/workspaces
-config.hide_tab_bar_if_only_one_tab = true -- some quando só tem 1 aba — já estava assim
+config.hide_tab_bar_if_only_one_tab = true -- some quando só tem 1 aba
 
 config.colors = {
 	tab_bar = {
@@ -210,6 +201,7 @@ end
 --   LEADER+-            → split horizontal (new pane below)
 --   LEADER+n            → new/switch workspace by name
 --   LEADER+t            → new tab
+--   LEADER+1..9         → jump to tab by number
 --   LEADER+a            → removed (was Ctrl+A passthrough; tmux uses Ctrl+B)
 
 config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 800 }
@@ -280,13 +272,21 @@ config.keys = {
 	{ key = "e", mods = "LEADER", action = ssh_connect_action() },
 
 	-- ── Misc ────────────────────────────────────────────────────────
-	{ key = "z", mods = "LEADER", action = act.TogglePaneZoomState },
 	{ key = "m", mods = "LEADER", action = act.ActivateCopyMode },
 	{ key = "r", mods = "LEADER", action = act.ReloadConfiguration },
 	{ key = "/", mods = "LEADER", action = act.Search({ CaseInSensitiveString = "" }) },
 	{ key = "q", mods = "LEADER", action = act.QuickSelect },
 	{ key = "s", mods = "LEADER", action = act.ShowLauncher },
 }
+
+-- ── Trocar de aba por número (LEADER + 1..9) ────────────────────────
+for i = 1, 9 do
+	table.insert(config.keys, {
+		key = tostring(i),
+		mods = "LEADER",
+		action = act.ActivateTab(i - 1), -- índice começa em 0
+	})
+end
 
 -- Copy/Paste — platform-aware
 if IS_MACOS then
