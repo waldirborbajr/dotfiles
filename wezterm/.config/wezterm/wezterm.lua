@@ -68,6 +68,15 @@ wezterm.on("format-tab-title", function(tab)
 	}
 end)
 
+-- ── Trocar de aba por número (LEADER + 1..9) ────────────────────────
+for i = 1, 9 do
+	table.insert(config.keys, {
+		key = tostring(i),
+		mods = "LEADER",
+		action = act.ActivateTabIndex(i - 1), -- índice começa em 0
+	})
+end
+
 -- ── TAB BAR ───────────────────────────────────────────────────────────
 
 config.use_fancy_tab_bar = false
