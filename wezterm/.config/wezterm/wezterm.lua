@@ -73,7 +73,7 @@ for i = 1, 9 do
 	table.insert(config.keys, {
 		key = tostring(i),
 		mods = "LEADER",
-		action = act.ActivateTabIndex(i - 1), -- índice começa em 0
+		action = act.ActivateTab(i - 1), -- índice começa em 0
 	})
 end
 
