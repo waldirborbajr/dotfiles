@@ -287,6 +287,15 @@ config.keys = {
 			cwd = wezterm.home_dir, -- ou remova essa linha pra abrir no cwd do pane atual
 		}),
 	},	
+
+	-- ── Ir para dotfiles (LEADER+c) ──────────────────────────────────
+	{
+		key = "c",
+		mods = "LEADER",
+		action = act.SpawnCommandInNewTab({
+			cwd = wezterm.home_dir .. "/dotfiles",
+		}),
+	},	
 }
 
 -- ── Trocar de aba por número (LEADER + 1..9) ────────────────────────
