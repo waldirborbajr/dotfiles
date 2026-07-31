@@ -46,6 +46,14 @@ config.hyperlink_rules = wezterm.default_hyperlink_rules()
 -- Faster key repeat (useful in nvim/helix)
 config.key_map_preference = "Mapped"
 
+-- ── GRAPHICS BACKEND ─────────────────────────────────────────────────
+
+if IS_MACOS then
+	config.max_fps = 30 -- economiza bateria/GPU no M2; sobe pra 60 se quiser mais suavidade
+else
+	config.prefer_egl = true -- EGL costuma ser mais estável/rápido no Linux (X11/Wayland)
+end
+
 -- ── TAB TITLE (dinâmico: mostra o processo em foreground) ──────────────
 
 wezterm.on("format-tab-title", function(tab)
