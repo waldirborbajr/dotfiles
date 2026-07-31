@@ -16,7 +16,7 @@ config.force_reverse_video_cursor = true
 
 config.font = wezterm.font("JetBrainsMono Nerd Font")
 config.font_size = IS_MACOS and 13.5 or 11.5
-config.line_height = 1.4
+config.line_height = 1.2
 
 config.window_decorations = IS_MACOS and "RESIZE" or "NONE"
 config.window_padding = { left = 6, right = 6, top = 4, bottom = 4 }
