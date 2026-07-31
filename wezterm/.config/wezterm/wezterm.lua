@@ -46,6 +46,28 @@ config.hyperlink_rules = wezterm.default_hyperlink_rules()
 -- Faster key repeat (useful in nvim/helix)
 config.key_map_preference = "Mapped"
 
+-- ── TAB TITLE (dinâmico: mostra o processo em foreground) ──────────────
+
+wezterm.on("format-tab-title", function(tab)
+	local pane = tab.active_pane
+	local proc = pane.foreground_process_name
+
+	-- extrai só o nome do binário (sem path completo)
+	local name = proc and proc:match("([^/\\]+)$") or nil
+
+	-- alguns processos vêm com sufixo estranho (ex: "-zsh"); limpa o "-" inicial
+	if name then
+		name = name:gsub("^%-", "")
+	end
+
+	-- fallback pro nome do shell se não identificar nada
+	local title = name or pane.title or "shell"
+
+	return {
+		{ Text = " " .. title .. " " },
+	}
+end)
+
 -- ── TAB BAR ───────────────────────────────────────────────────────────
 
 config.use_fancy_tab_bar = false
