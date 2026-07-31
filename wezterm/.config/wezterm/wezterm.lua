@@ -277,6 +277,16 @@ config.keys = {
 	{ key = "/", mods = "LEADER", action = act.Search({ CaseInSensitiveString = "" }) },
 	{ key = "q", mods = "LEADER", action = act.QuickSelect },
 	{ key = "s", mods = "LEADER", action = act.ShowLauncher },
+
+	-- ── Lazygit (LEADER+g) ────────────────────────────────────────────
+	{
+		key = "g",
+		mods = "LEADER",
+		action = act.SpawnCommandInNewTab({
+			args = { "lazygit" },
+			cwd = wezterm.home_dir, -- ou remova essa linha pra abrir no cwd do pane atual
+		}),
+	},	
 }
 
 -- ── Trocar de aba por número (LEADER + 1..9) ────────────────────────
