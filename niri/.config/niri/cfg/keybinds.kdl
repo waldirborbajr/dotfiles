@@ -9,7 +9,7 @@ binds {
     MOD+SHIFT+ESCAPE                     { show-hotkey-overlay; }
 
     // ─── Applications ───
-    MOD+RETURN                          hotkey-overlay-title="Open Terminal: Alacritty" { spawn "alacritty"; }
+    MOD+RETURN                          hotkey-overlay-title="Open Terminal: Wezterm" { spawn "wezterm"; }
     MOD+CTRL+RETURN                     hotkey-overlay-title="Open App Launcher: noctalia launcher" { spawn-sh "qs -c noctalia-shell ipc call launcher toggle"; }
     MOD+B                               hotkey-overlay-title="Open Browser: firefox" { spawn "firefox"; }
     MOD+ALT+L                           hotkey-overlay-title="Lock Screen: noctalia lock" { spawn-sh "qs -c noctalia-shell ipc call lockScreen lock"; }
