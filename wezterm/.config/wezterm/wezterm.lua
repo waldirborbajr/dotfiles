@@ -195,6 +195,37 @@ config.colors = {
 	},
 }
 
+-- ── Quick Select patterns ────────────────────────────────────────────
+config.quick_select_patterns = {
+  -- Go: path com .go (relativo ou absoluto)
+  [[(?:[./\w-]+/)?[\w-]+\.go(?::\d+)?]],
+
+  -- Go: package path estilo module (github.com/foo/bar/...)
+  [[(?:[a-z0-9.-]+\.)+[a-z0-9-]+(?:/[\w.-]+)+]],
+
+  -- Git: hash curto/longo (já existe no default, mas reforça)
+  [[\b[0-9a-f]{7,40}\b]],
+
+  -- Git: branch comum (feature/..., fix/..., main, master, develop)
+  [[\b(?:main|master|develop|dev|staging|prod|feature|fix|hotfix|release)/[\w./-]+\b]],
+  [[\b(?:feature|fix|hotfix|release)/[\w./-]+\b]],
+
+  -- Git: ref estilo origin/main
+  [[\b[\w.-]+/[\w./-]+\b]],
+
+  -- Docker image:tag
+  [[\b[\w./-]+:[\w.-]+\b]],
+
+  -- UUID
+  [[\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b]],
+
+  -- Jira / ticket (PROJ-123)
+  [[\b[A-Z]{2,10}-\d+\b]],
+
+  -- Hex color
+  [[#[0-9a-fA-F]{3,8}\b]],
+}
+
 -- ── SSH ───────────────────────────────────────────────────────────────
 
 local ssh_hosts = {
@@ -397,6 +428,23 @@ config.keys = {
 			cwd = wezterm.home_dir, -- ou remova essa linha pra abrir no cwd do pane atual
 		}),
 	},	
+
+	-- LEADER+Q → só coisas git (hash + branch)
+	{
+	  key = "Q",
+	  mods = "LEADER|SHIFT",
+	  action = act.QuickSelectArgs({
+	    label = "git",
+	    patterns = {
+	      [[\b[0-9a-f]{7,40}\b]],
+	      [[\b(?:main|master|develop|feature|fix|hotfix|release)/[\w./-]+\b]],
+	      [[\b(?:feature|fix|hotfix|release)/[\w./-]+\b]],
+	    },
+	  }),
+	},
+	
+	-- LEADER+G → só paths Go / module paths (se quiser separado do lazygit)
+	-- (cuidado: você já usa LEADER+g pro lazygit)	
 
 	-- ── Ir para dotfiles (LEADER+c) ──────────────────────────────────
 	{
