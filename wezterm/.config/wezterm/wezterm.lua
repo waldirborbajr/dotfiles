@@ -83,7 +83,7 @@ local _git_cache = { path = nil, branch = nil, ts = 0 }
 local GIT_CACHE_TTL = 3  -- seconds
 
 local function get_git_branch(path)
-  local now = wezterm.time.now():as_secs()
+  local now = os.time()
   if _git_cache.path == path and (now - _git_cache.ts) < GIT_CACHE_TTL then
     return _git_cache.branch
   end
