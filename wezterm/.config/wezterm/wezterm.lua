@@ -18,7 +18,8 @@ config.font = wezterm.font("JetBrainsMono Nerd Font")
 config.font_size = IS_MACOS and 13.5 or 11.5
 
 config.window_decorations = IS_MACOS and "RESIZE" or "NONE"
-config.window_padding = { left = 6, right = 6, top = 4, bottom = 4 }
+config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
+-- config.window_padding = { left = 6, right = 6, top = 4, bottom = 4 }
 
 -- Dim inactive panes
 config.inactive_pane_hsb = { saturation = 0.7, brightness = 0.65 }
