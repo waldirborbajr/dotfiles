@@ -7,42 +7,48 @@
 #######################################
 syshealth() {
   setopt localoptions pipefail no_unset
-
   echo "🧠 Detecting OS..."
-
   if command -v nala >/dev/null 2>&1 || command -v apt >/dev/null 2>&1; then
     echo "🐧 Debian/Ubuntu detected"
-
     command -v nala >/dev/null 2>&1 && PKG="nala" || PKG="apt"
-
     sudo $PKG install -f -y 2>/dev/null
     sudo dpkg --configure -a
-
     echo "🧹 Cleaning system..."
     sudo rm -rf /var/lib/apt/lists/*
-
     sudo $PKG update && sudo $PKG upgrade -y
     sudo $PKG autoremove -y
     sudo $PKG clean
-
   elif command -v dnf >/dev/null 2>&1; then
     echo "🎩 Fedora detected"
-
     sudo dnf upgrade --refresh -y
     sudo dnf autoremove -y
     sudo dnf clean all
-
   else
     echo "❌ Unsupported package manager"
     return 1
   fi
 
+  # flatpak / snap
   command -v flatpak >/dev/null && flatpak update -y && flatpak uninstall --unused -y
   command -v snap >/dev/null && sudo snap refresh
 
+  # Go binaries installed with `go install`
+  if command -v go >/dev/null 2>&1; then
+    echo "🐹 Updating Go packages (go install)..."
+    if command -v gup >/dev/null 2>&1; then
+      gup update
+    else
+      echo "  ℹ️  gup not found. Install it once with:"
+      echo "     go install github.com/nao1215/gup@latest"
+      echo "  Then re-run syshealth to keep all go-install binaries updated."
+    fi
+  fi
+
+  # Rust / cargo
   command -v rustup >/dev/null && rustup update
-  command -v gup >/dev/null && gup update
   command -v cargo >/dev/null && cargo install-update -a
+
+  # ya
   command -v ya >/dev/null && ya pkg upgrade
 
   echo "🎉 System updated!"
