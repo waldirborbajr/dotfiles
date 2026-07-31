@@ -1,0 +1,379 @@
+include "./cfg/autostart.kdl"
+
+spawn-at-startup "noctalia"
+
+//spawn-at-startup "vicinae" "server"
+
+//Workspaces do monitor 2
+workspace "1" {
+    open-on-output "HDMI-A-1"
+}
+
+workspace "2" {
+    open-on-output "HDMI-A-1"
+}
+
+//Regra para abrir o Slack no monitor 2
+window-rule {
+    match app-id="slack"
+    open-on-output "HDMI-A-1"
+    open-on-workspace "1"
+    open-maximized true
+    //default-window-height { proportion 0.5; }
+    //default-column-width { proportion 1.0; }
+}
+
+//Regra para abrir o Telegram no monitor 2
+window-rule {
+    match app-id="org.telegram.desktop"
+    open-on-output "HDMI-A-1"
+    open-on-workspace "2"
+    open-maximized false
+    default-window-height { proportion 0.5; }
+    default-column-width { proportion 1.0; }
+}
+
+//Floating Preview
+window-rule {
+    match app-id="org.gnome.NautilusPreviewer"
+    match app-id="qimgv"
+    match app-id="mpv"
+    open-floating true
+    default-column-width { proportion 1.0; }
+}
+
+
+include "./cfg/keybinds.kdl"
+  binds {
+    
+    //Abrir Vivaldi
+    Mod+B { spawn "vivaldi"; }
+
+    //Dividir a tela
+    Mod+BracketLeft  { consume-window-into-column; }
+    Mod+BracketRight { expel-window-from-column; }
+
+    //Maximizar Tela
+    Alt+M { maximize-column; }
+
+    //Fullscreen
+    Mod+F { fullscreen-window; }
+
+    //Foco para a ESQUERDA
+    Alt+A { focus-column-left; }
+      
+    //Foco para BAIXO
+    Alt+S { focus-workspace-down; }
+      
+    //Foco para CIMA
+    Alt+W { focus-workspace-up; }
+      
+    //Foco para a DIREITA
+    Alt+D { focus-column-right; }
+
+    //Abre/Fecha o launcher do Noctalia
+    Alt+Space { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
+    //Alt+Space repeat=false { spawn "vicinae" "toggle"; }
+
+    //Fechar Janelas
+    Alt+Q { close-window; }
+
+    //Abre o plugin Clipper do Noctalia
+    Mod+V { spawn "noctalia" "msg" "panel-toggle" "clipboard"; }
+
+    //Centralizar Janela
+    Alt+C { center-column; }
+
+    //Ativa/Desativa o Desktop Widgets
+    Alt+R { spawn-sh "qs -c noctalia-shell ipc call desktopWidgets toggle"; }
+
+    // Abre o terminal Kitty com Win + Home
+    Mod+Home { spawn "kitty"; }
+
+    // Audio & Brightness
+    XF86AudioRaiseVolume { spawn-sh "noctalia msg volume-up"; }
+    XF86AudioLowerVolume { spawn-sh "noctalia msg volume-down"; }
+    XF86AudioMute { spawn-sh "noctalia msg volume-mute"; }
+
+    
+}
+
+include "./cfg/input.kdl"
+    input {
+    mouse {
+    accel-speed -0.5
+    scroll-method "on-button-down"
+    scroll-button 274
+    //accel-profile "flat"
+         }
+
+focus-follows-mouse max-scroll-amount="10%"
+    keyboard{
+    xkb {
+    //Define o layout principal como US
+    layout "us"
+    //Define a variante
+    variant "intl"
+	}
+	}
+	
+	}
+
+include "./cfg/display.kdl"
+
+
+include "./cfg/layout.kdl"
+    // layout {
+    //Bordas Brancas
+    //focus-ring {
+    //width 2
+    //active-color "#ffffff"    // White
+    //inactive-color "#44475a"  // Dark blue/grey
+    //}
+    //}
+
+    layout {
+    gaps 16 // Gap between windows
+    //Bordas Brothel
+    focus-ring {
+    width 4
+    active-gradient from="#ff0000" to="#0000ff" angle=45
+    }
+    }
+
+    //layout {
+    //Bordas Coloridas
+    //focus-ring {
+    //width 3 // A borda na imagem fica fina e elegante
+    //active-gradient from="#03BBDF" to="#FFF762" angle=45
+    //inactive-color "#282a36"
+    //}
+    //}
+
+include "./cfg/rules.kdl"
+  window-rule {
+    //Bordas redondas nas janelas (default is 20)
+    geometry-corner-radius 14 
+    clip-to-geometry true
+      }
+
+//Ativa o blur
+   layer-rule {
+   match namespace="^noctalia-(background|launcher-overlay|dock)-.*$"
+   background-effect {
+   blur true
+   xray false
+   }
+   }
+   blur {
+   passes 3        //More passes = stronger/smoother blur (default: 3)
+   offset 3.0      //Sample distance per pass
+   noise 0.03      //Grain overlay
+   saturation 0.75 //Color saturation boost
+   }
+
+
+
+include "./cfg/misc.kdl"
+
+environment {
+   //Determinar o Vivaldi como navegador padrão
+   BROWSER "vivaldi-stable"
+   }
+
+
+   //Monique monitor configuration
+   include "monitors.kdl"
+
+animations {
+
+  // Uncomment to turn off all animations.
+  // off
+
+  // Slow down all animations by this factor. Values below 1 speed them up instead.
+  // slowdown 2.0
+  
+ window-open{
+
+  duration-ms 500
+  curve "ease-out-quad"
+
+  custom-shader r"
+
+    float hash(vec2 vector) {
+
+      float d = dot(vector, vec2(127.1, 311.7));
+
+      float ds = sin(d);
+
+      float hash_value = fract(ds * 43758.5453);
+
+      return hash_value;
+    }
+
+    float noise(vec2 vector) {
+
+      vec2 i = floor(vector);
+      vec2 f = fract(vector);
+
+      f = f * f * (3.0 - 2.0 * f);
+
+      float bottom_left = hash(i);
+      float bottom_right = hash(i + vec2(1.0, 0.0));
+      float top_left = hash(i + vec2(0.0, 1.0));
+      float top_right = hash(i + vec2(1.0, 1.0));
+
+      float bottom = mix(bottom_left, bottom_right, f.x);
+      float top = mix(top_left, top_right, f.x);
+
+      float blend = mix(bottom,top,f.y);
+
+      return blend;
+    }
+
+    float fbm(vec2 vector, int octaves) {
+
+      float total_noise = 0.0;
+
+      float amplitude = 0.5;
+
+      for (int i = 0; i < octaves; i++){
+
+        total_noise += noise(vector) * amplitude;
+
+        vector *= 2.0;
+
+        amplitude *= 0.5;
+      }
+
+      return total_noise;
+    }
+
+    vec4 burn_open(vec3 coords_geo, vec3 size_geo) {
+
+      float progress = niri_clamped_progress;
+
+      vec2 coords = coords_geo.xy;
+
+      float small_seed = 3.0 + niri_random_seed * 5.0;
+      float big_seed = 25.0 + niri_random_seed * 100.0;
+
+      int octaves = 5;
+
+      float fbm_noise = fbm((coords * small_seed + big_seed), octaves);
+
+      float mask = smoothstep(progress, progress + 0.05, fbm_noise);
+
+      float burn_width = 0.08;
+      float burn_mask = smoothstep(progress - burn_width, progress, fbm_noise) * (1.0 - mask);
+
+      vec3 burn_color = mix(vec3(1.0, 0.4, 0.2), vec3(1.0, 0.2, 0.05), burn_mask);
+      vec4 burn_edge = vec4(burn_color * burn_mask * 2.0, burn_mask);
+
+      vec3 coords_tex = niri_geo_to_tex * vec3(coords, 1.0);
+      vec4 color = texture2D(niri_tex, coords_tex.st);
+
+      color = (color * (1.0 - mask)) + (burn_edge * color.a);
+
+      return color;
+    }
+
+    vec4 open_color(vec3 coords_geo, vec3 size_geo) {
+      return burn_open(coords_geo, size_geo);
+    }
+
+  "
+}
+
+window-close{
+
+  duration-ms 400
+  curve "linear"
+
+  custom-shader r"
+
+    float hash(vec2 vector) {
+
+      float d = dot(vector, vec2(127.1, 311.7));
+
+      float ds = sin(d);
+
+      float hash_value = fract(ds * 43758.5453);
+
+      return hash_value;
+    }
+
+    float noise(vec2 vector) {
+
+      vec2 i = floor(vector);
+      vec2 f = fract(vector);
+
+      f = f * f * (3.0 - 2.0 * f);
+
+      float bottom_left = hash(i);
+      float bottom_right = hash(i + vec2(1.0, 0.0));
+      float top_left = hash(i + vec2(0.0, 1.0));
+      float top_right = hash(i + vec2(1.0, 1.0));
+
+      float bottom = mix(bottom_left, bottom_right, f.x);
+      float top = mix(top_left, top_right, f.x);
+
+      float blend = mix(bottom,top,f.y);
+
+      return blend;
+    }
+
+    float fbm(vec2 vector, int octaves) {
+
+      float total_noise = 0.0;
+
+      float amplitude = 0.5;
+
+      for (int i = 0; i < octaves; i++){
+
+        total_noise += noise(vector) * amplitude;
+
+        vector *= 2.0;
+
+        amplitude *= 0.5;
+      }
+
+      return total_noise;
+    }
+
+    vec4 burn_close(vec3 coords_geo, vec3 size_geo) {
+
+      float progress = niri_clamped_progress;
+
+      vec2 coords = coords_geo.xy;
+
+      float small_seed = 3.0 + niri_random_seed * 5.0;
+      float big_seed = 25.0 + niri_random_seed * 100.0;
+
+      int octaves = 5;
+
+      float fbm_noise = fbm((coords * small_seed + big_seed), octaves);
+
+      float mask = smoothstep(progress, progress + 0.05, fbm_noise);
+
+      float burn_width = 0.08;
+      float burn_mask = smoothstep(progress - burn_width, progress, fbm_noise) * (1.0 - mask);
+
+      vec3 burn_color = mix(vec3(1.0, 0.4, 0.2), vec3(1.0, 0.2, 0.05), burn_mask);
+      vec4 burn_edge = vec4(burn_color * burn_mask * 2.0, burn_mask);
+
+      vec3 coords_tex = niri_geo_to_tex * vec3(coords, 1.0);
+      vec4 color = texture2D(niri_tex, coords_tex.st);
+
+      color = (color * mask) + (burn_edge * color.a);
+
+      return color;
+    }
+
+    vec4 close_color(vec3 coords_geo, vec3 size_geo) {
+      return burn_close(coords_geo, size_geo);
+    }
+
+  "
+}
+}
