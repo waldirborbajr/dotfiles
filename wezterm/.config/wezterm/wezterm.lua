@@ -78,44 +78,104 @@ wezterm.on("format-tab-title", function(tab)
 end)
 
 -- ── STATUS BAR (leader indicator + git branch + workspace + hora) ────
+-- Cache for git branch (avoids spawning git on every status update)
+local _git_cache = { path = nil, branch = nil, ts = 0 }
+local GIT_CACHE_TTL = 3  -- seconds
+
+local function get_git_branch(path)
+  local now = wezterm.time.now():as_secs()
+  if _git_cache.path == path and (now - _git_cache.ts) < GIT_CACHE_TTL then
+    return _git_cache.branch
+  end
+  local ok, stdout = wezterm.run_child_process({
+    "git", "-C", path, "rev-parse", "--abbrev-ref", "HEAD",
+  })
+  local branch = nil
+  if ok and stdout then
+    branch = stdout:gsub("%s+$", "")
+    if branch == "" then
+      branch = nil
+    end
+  end
+  _git_cache = { path = path, branch = branch, ts = now }
+  return branch
+end
+
 wezterm.on("update-status", function(window, pane)
-	local cells = {}
+  local cells = {}
 
-	-- indicador visual quando o leader (Ctrl+A) está ativo, esperando o próximo comando
-	if window:leader_is_active() then
-		table.insert(cells, { Foreground = { Color = "#2e3440" } })
-		table.insert(cells, { Background = { Color = "#88c0d0" } })
-		table.insert(cells, { Text = " LEADER " })
-		table.insert(cells, "ResetAttributes")
-	end
+  -- indicador visual quando o leader (Ctrl+A) está ativo
+  if window:leader_is_active() then
+    table.insert(cells, { Foreground = { Color = "#2e3440" } })
+    table.insert(cells, { Background = { Color = "#88c0d0" } })
+    table.insert(cells, { Text = " LEADER " })
+    table.insert(cells, "ResetAttributes")
+  end
 
-	-- nome do workspace atual
-	table.insert(cells, { Text = " " .. window:active_workspace() .. " " })
+  -- nome do workspace atual
+  table.insert(cells, { Text = " " .. window:active_workspace() .. " " })
 
-	-- se estiver numa sessão remota (SSH), mostra o domínio
-	local domain = pane:get_domain_name()
-	if domain and domain ~= "local" then
-		table.insert(cells, { Text = " 🌐 " .. domain .. " " })
-	end
+  -- se estiver numa sessão remota (SSH), mostra o domínio
+  local domain = pane:get_domain_name()
+  if domain and domain ~= "local" then
+    table.insert(cells, { Text = " 🌐 " .. domain .. " " })
+  end
 
-	-- branch git do diretório atual do painel
-	local cwd = pane:get_current_working_dir()
-	if cwd then
-		local path = cwd.file_path or tostring(cwd)
-		local ok, stdout = wezterm.run_child_process({ "git", "-C", path, "rev-parse", "--abbrev-ref", "HEAD" })
-		if ok and stdout then
-			local branch = stdout:gsub("%s+$", "")
-			if branch ~= "" then
-				table.insert(cells, { Text = " 🌿 " .. branch .. " " })
-			end
-		end
-	end
+  -- branch git do diretório atual do painel (com cache de 3s)
+  local cwd = pane:get_current_working_dir()
+  if cwd then
+    local path = cwd.file_path or tostring(cwd)
+    local branch = get_git_branch(path)
+    if branch then
+      table.insert(cells, { Text = " 🌿 " .. branch .. " " })
+    end
+  end
 
-	-- hora
-	table.insert(cells, { Text = " " .. wezterm.strftime("%H:%M") .. " " })
+  -- hora
+  table.insert(cells, { Text = " " .. wezterm.strftime("%H:%M") .. " " })
 
-	window:set_right_status(wezterm.format(cells))
+  window:set_right_status(wezterm.format(cells))
 end)
+
+-- ── STATUS BAR (leader indicator + git branch + workspace + hora) ────
+-- wezterm.on("update-status", function(window, pane)
+-- 	local cells = {}
+
+-- 	-- indicador visual quando o leader (Ctrl+A) está ativo, esperando o próximo comando
+-- 	if window:leader_is_active() then
+-- 		table.insert(cells, { Foreground = { Color = "#2e3440" } })
+-- 		table.insert(cells, { Background = { Color = "#88c0d0" } })
+-- 		table.insert(cells, { Text = " LEADER " })
+-- 		table.insert(cells, "ResetAttributes")
+-- 	end
+
+-- 	-- nome do workspace atual
+-- 	table.insert(cells, { Text = " " .. window:active_workspace() .. " " })
+
+-- 	-- se estiver numa sessão remota (SSH), mostra o domínio
+-- 	local domain = pane:get_domain_name()
+-- 	if domain and domain ~= "local" then
+-- 		table.insert(cells, { Text = " 🌐 " .. domain .. " " })
+-- 	end
+
+-- 	-- branch git do diretório atual do painel
+-- 	local cwd = pane:get_current_working_dir()
+-- 	if cwd then
+-- 		local path = cwd.file_path or tostring(cwd)
+-- 		local ok, stdout = wezterm.run_child_process({ "git", "-C", path, "rev-parse", "--abbrev-ref", "HEAD" })
+-- 		if ok and stdout then
+-- 			local branch = stdout:gsub("%s+$", "")
+-- 			if branch ~= "" then
+-- 				table.insert(cells, { Text = " 🌿 " .. branch .. " " })
+-- 			end
+-- 		end
+-- 	end
+
+-- 	-- hora
+-- 	table.insert(cells, { Text = " " .. wezterm.strftime("%H:%M") .. " " })
+
+-- 	window:set_right_status(wezterm.format(cells))
+-- end)
 
 -- ── TAB BAR ───────────────────────────────────────────────────────────
 
