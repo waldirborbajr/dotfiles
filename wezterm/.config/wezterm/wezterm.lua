@@ -77,6 +77,46 @@ wezterm.on("format-tab-title", function(tab)
 	}
 end)
 
+-- ── STATUS BAR (leader indicator + git branch + workspace + hora) ────
+wezterm.on("update-status", function(window, pane)
+	local cells = {}
+
+	-- indicador visual quando o leader (Ctrl+A) está ativo, esperando o próximo comando
+	if window:leader_is_active() then
+		table.insert(cells, { Foreground = { Color = "#2e3440" } })
+		table.insert(cells, { Background = { Color = "#88c0d0" } })
+		table.insert(cells, { Text = " LEADER " })
+		table.insert(cells, "ResetAttributes")
+	end
+
+	-- nome do workspace atual
+	table.insert(cells, { Text = " " .. window:active_workspace() .. " " })
+
+	-- se estiver numa sessão remota (SSH), mostra o domínio
+	local domain = pane:get_domain_name()
+	if domain and domain ~= "local" then
+		table.insert(cells, { Text = " 🌐 " .. domain .. " " })
+	end
+
+	-- branch git do diretório atual do painel
+	local cwd = pane:get_current_working_dir()
+	if cwd then
+		local path = cwd.file_path or tostring(cwd)
+		local ok, stdout = wezterm.run_child_process({ "git", "-C", path, "rev-parse", "--abbrev-ref", "HEAD" })
+		if ok and stdout then
+			local branch = stdout:gsub("%s+$", "")
+			if branch ~= "" then
+				table.insert(cells, { Text = " 🌿 " .. branch .. " " })
+			end
+		end
+	end
+
+	-- hora
+	table.insert(cells, { Text = " " .. wezterm.strftime("%H:%M") .. " " })
+
+	window:set_right_status(wezterm.format(cells))
+end)
+
 -- ── TAB BAR ───────────────────────────────────────────────────────────
 
 config.use_fancy_tab_bar = false
@@ -254,10 +294,11 @@ config.keys = {
 			pane:move_to_new_window()
 		end),
 	},
-
-	-- ── Tabs (LEADER+t / LEADER+x / LEADER+[ / LEADER+]) ───────────
+	
+	-- ── Tabs (LEADER+t / LEADER+x / LEADER+X / LEADER+[ / LEADER+]) ──
 	{ key = "t", mods = "LEADER", action = act.SpawnTab("CurrentPaneDomain") },
-	{ key = "x", mods = "LEADER", action = act.CloseCurrentTab({ confirm = false }) },
+	{ key = "x", mods = "LEADER", action = act.CloseCurrentPane({ confirm = false }) }, -- fecha só o painel
+	{ key = "X", mods = "LEADER|SHIFT", action = act.CloseCurrentTab({ confirm = false }) }, -- fecha a aba inteira
 	{ key = "[", mods = "LEADER", action = act.ActivateTabRelative(-1) },
 	{ key = "]", mods = "LEADER", action = act.ActivateTabRelative(1) },
 
