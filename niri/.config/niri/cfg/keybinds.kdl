@@ -20,8 +20,7 @@ binds {
     // Applications
     // ============================================================
 
-    MOD+RETURN
-        hotkey-overlay-title="Terminal: WezTerm"
+    MOD+RETURN hotkey-overlay-title="Terminal: WezTerm"
     {
         spawn "wezterm";
     }
