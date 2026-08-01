@@ -1,14 +1,6 @@
 binds {
 
     // ============================================================
-    // Niri Keybindings
-    // Fedora 43 + Noctalia (2026)
-    // ============================================================
-
-    // https://github.com/YaLTeR/niri/wiki/Configuration:-Key-Bindings
-    // https://noctalia.dev
-
-    // ============================================================
     // Hotkey Overlay
     // ============================================================
 
@@ -24,27 +16,19 @@ binds {
         spawn "wezterm";
     }
 
-    MOD+CTRL+RETURN
-        hotkey-overlay-title="Application Launcher"
-    {
+    MOD+CTRL+RETURN {
         spawn "noctalia" "msg" "panel-toggle" "launcher";
     }
 
-    MOD+B
-        hotkey-overlay-title="Firefox"
-    {
+    MOD+B {
         spawn "firefox";
     }
 
-    MOD+E
-        hotkey-overlay-title="Files"
-    {
+    MOD+E {
         spawn "nautilus";
     }
 
-    MOD+ALT+L
-        hotkey-overlay-title="Lock Session"
-    {
+    MOD+ALT+L {
         spawn "noctalia" "msg" "session" "lock";
     }
 
@@ -52,33 +36,23 @@ binds {
     // Noctalia
     // ============================================================
 
-    MOD+A
-        hotkey-overlay-title="Control Center"
-    {
+    MOD+A {
         spawn "noctalia" "msg" "panel-toggle" "control-center";
     }
 
-    MOD+COMMA
-        hotkey-overlay-title="Settings"
-    {
+    MOD+COMMA {
         spawn "noctalia" "msg" "settings-open";
     }
 
-    MOD+SHIFT+T
-        hotkey-overlay-title="Toggle Theme"
-    {
+    MOD+SHIFT+T {
         spawn "noctalia" "msg" "theme-mode-toggle";
     }
 
-    MOD+SHIFT+D
-        hotkey-overlay-title="Do Not Disturb"
-    {
+    MOD+SHIFT+D {
         spawn "noctalia" "msg" "notification-dnd-toggle";
     }
 
-    MOD+SHIFT+C
-        hotkey-overlay-title="Caffeine Mode"
-    {
+    MOD+SHIFT+C {
         spawn "noctalia" "msg" "caffeine-toggle";
     }
 
@@ -86,19 +60,19 @@ binds {
     // Audio
     // ============================================================
 
-    XF86AUDIORAISEVOLUME allow-when-locked=true {
+    XF86AudioRaiseVolume allow-when-locked=true {
         spawn "noctalia" "msg" "volume-up";
     }
 
-    XF86AUDIOLOWERVOLUME allow-when-locked=true {
+    XF86AudioLowerVolume allow-when-locked=true {
         spawn "noctalia" "msg" "volume-down";
     }
 
-    XF86AUDIOMUTE allow-when-locked=true {
+    XF86AudioMute allow-when-locked=true {
         spawn "noctalia" "msg" "volume-mute";
     }
 
-    XF86AUDIOMICMUTE allow-when-locked=true {
+    XF86AudioMicMute allow-when-locked=true {
         spawn "noctalia" "msg" "mic-mute";
     }
 
@@ -106,11 +80,11 @@ binds {
     // Brightness
     // ============================================================
 
-    XF86MONBRIGHTNESSUP {
+    XF86MonBrightnessUp {
         spawn "noctalia" "msg" "brightness-up";
     }
 
-    XF86MONBRIGHTNESSDOWN {
+    XF86MonBrightnessDown {
         spawn "noctalia" "msg" "brightness-down";
     }
 
@@ -118,19 +92,19 @@ binds {
     // Media
     // ============================================================
 
-    XF86AUDIOPLAY {
+    XF86AudioPlay {
         spawn "noctalia" "msg" "media" "toggle";
     }
 
-    XF86AUDIONEXT {
+    XF86AudioNext {
         spawn "noctalia" "msg" "media" "next";
     }
 
-    XF86AUDIOPREV {
+    XF86AudioPrev {
         spawn "noctalia" "msg" "media" "previous";
     }
 
-    XF86AUDIOSTOP {
+    XF86AudioStop {
         spawn "noctalia" "msg" "media" "stop";
     }
 
@@ -138,11 +112,11 @@ binds {
     // Screenshots
     // ============================================================
 
-    PRINT {
+    Print {
         spawn "noctalia" "msg" "screenshot-fullscreen";
     }
 
-    SHIFT+PRINT {
+    Shift+Print {
         spawn "noctalia" "msg" "screenshot-region";
     }
 
@@ -150,128 +124,54 @@ binds {
     // Window Management
     // ============================================================
 
-    MOD+Q {
-        close-window;
-    }
+    MOD+Q { close-window; }
 
-    MOD+LEFT {
-        focus-column-left;
-    }
+    MOD+LEFT { focus-column-left; }
+    MOD+H { focus-column-left; }
 
-    MOD+H {
-        focus-column-left;
-    }
+    MOD+RIGHT { focus-column-right; }
+    MOD+L { focus-column-right; }
 
-    MOD+RIGHT {
-        focus-column-right;
-    }
+    MOD+UP { focus-window-up; }
+    MOD+K { focus-window-up; }
 
-    MOD+L {
-        focus-column-right;
-    }
+    MOD+DOWN { focus-window-down; }
+    MOD+J { focus-window-down; }
 
-    MOD+UP {
-        focus-window-up;
-    }
+    MOD+CTRL+LEFT { move-column-left; }
+    MOD+CTRL+H { move-column-left; }
 
-    MOD+K {
-        focus-window-up;
-    }
+    MOD+CTRL+RIGHT { move-column-right; }
+    MOD+CTRL+L { move-column-right; }
 
-    MOD+DOWN {
-        focus-window-down;
-    }
+    MOD+CTRL+UP { move-window-up; }
+    MOD+CTRL+K { move-window-up; }
 
-    MOD+J {
-        focus-window-down;
-    }
+    MOD+CTRL+DOWN { move-window-down; }
+    MOD+CTRL+J { move-window-down; }
 
-    MOD+CTRL+LEFT {
-        move-column-left;
-    }
+    MOD+HOME { focus-column-first; }
+    MOD+END { focus-column-last; }
 
-    MOD+CTRL+H {
-        move-column-left;
-    }
-
-    MOD+CTRL+RIGHT {
-        move-column-right;
-    }
-
-    MOD+CTRL+L {
-        move-column-right;
-    }
-
-    MOD+CTRL+UP {
-        move-window-up;
-    }
-
-    MOD+CTRL+K {
-        move-window-up;
-    }
-
-    MOD+CTRL+DOWN {
-        move-window-down;
-    }
-
-    MOD+CTRL+J {
-        move-window-down;
-    }
-
-    MOD+HOME {
-        focus-column-first;
-    }
-
-    MOD+END {
-        focus-column-last;
-    }
-
-    MOD+CTRL+HOME {
-        move-column-to-first;
-    }
-
-    MOD+CTRL+END {
-        move-column-to-last;
-    }
+    MOD+CTRL+HOME { move-column-to-first; }
+    MOD+CTRL+END { move-column-to-last; }
 
     // ============================================================
     // Monitor Navigation
     // ============================================================
 
-    MOD+SHIFT+LEFT {
-        focus-monitor-left;
-    }
+    MOD+SHIFT+LEFT { focus-monitor-left; }
+    MOD+SHIFT+RIGHT { focus-monitor-right; }
+    MOD+SHIFT+UP { focus-monitor-up; }
+    MOD+SHIFT+DOWN { focus-monitor-down; }
 
-    MOD+SHIFT+RIGHT {
-        focus-monitor-right;
-    }
-
-    MOD+SHIFT+UP {
-        focus-monitor-up;
-    }
-
-    MOD+SHIFT+DOWN {
-        focus-monitor-down;
-    }
-
-    MOD+SHIFT+CTRL+LEFT {
-        move-column-to-monitor-left;
-    }
-
-    MOD+SHIFT+CTRL+RIGHT {
-        move-column-to-monitor-right;
-    }
-
-    MOD+SHIFT+CTRL+UP {
-        move-column-to-monitor-up;
-    }
-
-    MOD+SHIFT+CTRL+DOWN {
-        move-column-to-monitor-down;
-    }
+    MOD+SHIFT+CTRL+LEFT { move-column-to-monitor-left; }
+    MOD+SHIFT+CTRL+RIGHT { move-column-to-monitor-right; }
+    MOD+SHIFT+CTRL+UP { move-column-to-monitor-up; }
+    MOD+SHIFT+CTRL+DOWN { move-column-to-monitor-down; }
 
     // ============================================================
-    // Workspace Navigation
+    // Workspaces
     // ============================================================
 
     MOD+1 { focus-workspace 1; }
@@ -366,7 +266,7 @@ binds {
     // Window Switcher
     // ============================================================
 
-    ALT+TAB {
+    Alt+Tab {
         spawn "noctalia" "msg" "window-switcher";
     }
 
@@ -382,9 +282,7 @@ binds {
     // Power
     // ============================================================
 
-    MOD+SHIFT+P
-        hotkey-overlay-title="Turn Off Displays"
-    {
+    MOD+SHIFT+P {
         spawn "noctalia" "msg" "dpms-off";
     }
 
