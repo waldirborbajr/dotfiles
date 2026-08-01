@@ -1,9 +1,6 @@
 include "./cfg/autostart.kdl"
 
-// spawn-at-startup "noctalia"
-spawn-sh-at-startup "sh -c 'if command -v noctalia >/dev/null 2>&1; then exec noctalia; else exec noctalia-shell; fi'"
-
-//spawn-at-startup "vicinae" "server"
+spawn-at-startup "noctalia"
 
 //Workspaces do monitor 2
 workspace "1" {
