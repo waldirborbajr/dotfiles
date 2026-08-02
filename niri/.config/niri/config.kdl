@@ -353,10 +353,24 @@ window-rule {
 
 // Example: enable rounded corners for all windows.
 // (This example rule is commented out with a "/-" in front.)
-/-window-rule {
-    geometry-corner-radius 12
+window-rule {
+    geometry-corner-radius 14
     clip-to-geometry true
 }
+layer-rule {
+   match namespace="^noctalia-(background|launcher-overlay|dock)-.*$"
+   background-effect {
+       blur true
+       xray false
+   }
+}
+blur {
+   passes 3        //More passes = stronger/smoother blur (default: 3)
+   offset 3.0      //Sample distance per pass
+   noise 0.03      //Grain overlay
+   saturation 0.75 //Color saturation boost
+}
+
 
 binds {
     // Keys consist of modifiers separated by + signs, followed by an XKB key name
