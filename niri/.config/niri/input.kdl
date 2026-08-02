@@ -3,7 +3,7 @@ input {
         xkb {
             // For Mac 2011
             model "macbook79"
-            layout "us,br"
+            layout "us,us"
             // variant ",nodeadkeys"
             variant ",intl"
             options "compose:ralt,grp:alt_shift_toggle"
