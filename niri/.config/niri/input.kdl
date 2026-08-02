@@ -4,7 +4,7 @@ input {
             // For Mac 2011
             model "macbook79"
             layout "us,br"
-            variant ",nodeadkeys"
+            // variant ",nodeadkeys"
             options "compose:ralt,grp:alt_shift_toggle"
         }
         // Enable numlock on startup, omitting this setting disables it.
