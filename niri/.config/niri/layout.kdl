@@ -44,3 +44,11 @@ layout {
         // bottom 64
     }
 }
+
+// Global blur settings (used by layer-rule background-effect, etc.)
+blur {
+    passes 3        // More passes = stronger/smoother blur (default: 3)
+    offset 3.0      // Sample distance per pass
+    noise 0.03      // Grain overlay
+    saturation 0.75 // Color saturation boost
+}

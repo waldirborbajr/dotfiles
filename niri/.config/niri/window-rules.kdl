@@ -24,8 +24,17 @@ window-rule {
     // block-out-from "screencast"
 }
 
-// Example: enable rounded corners for all windows.
-/-window-rule {
-    geometry-corner-radius 12
+// Rounded corners for all windows.
+window-rule {
+    geometry-corner-radius 14
     clip-to-geometry true
+}
+
+// Noctalia shell surfaces: blurred background.
+layer-rule {
+    match namespace="^noctalia-(background|launcher-overlay|dock)-.*$"
+    background-effect {
+        blur true
+        xray false
+    }
 }
