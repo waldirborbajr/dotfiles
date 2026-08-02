@@ -5,6 +5,7 @@ input {
             model "macbook79"
             layout "us,br"
             // variant ",nodeadkeys"
+            variant ",intl"
             options "compose:ralt,grp:alt_shift_toggle"
         }
         // Enable numlock on startup, omitting this setting disables it.
