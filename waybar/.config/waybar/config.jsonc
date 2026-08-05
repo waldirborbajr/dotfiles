@@ -37,10 +37,17 @@
             "default": ""
         }
     },
-    
+
     "niri/language": {
         "format": "⌨ {}"
     },
+
+    // "custom/kblayout": {
+    //     "exec": "~/.config/waybar/scripts/kb-layout.sh",
+    //     "interval": 1,
+    //     "format": "⌨ {}",
+    //     "tooltip": false
+    // },
 
     "clock": {
         "interval": 1,
