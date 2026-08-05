@@ -39,7 +39,7 @@
     },
 
     "niri/language": {
-        "format": "⌨ {}"
+        "format": "⌨ {short}"
     },
 
     // "custom/kblayout": {
