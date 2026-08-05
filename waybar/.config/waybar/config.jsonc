@@ -39,9 +39,7 @@
     },
 
     "niri/language": {
-        "format": "⌨ {short}",
-        "min-length": 2,
-        "max-length": 3,
+        "format": "⌨ {flag}"
     },
 
     // "custom/kblayout": {
