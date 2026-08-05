@@ -8,4 +8,17 @@ include "layout.kdl"
 include "startup.kdl"
 include "window-rules.kdl"
 include "binds.kdl"
-include "misc.kdl"
+
+hotkey-overlay {
+    // skip-at-startup
+}
+
+// prefer-no-csd
+
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+// screenshot-path null
+
+animations {
+    // off
+    // slowdown 3.0
+}
