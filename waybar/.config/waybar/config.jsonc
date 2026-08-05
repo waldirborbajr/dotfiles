@@ -39,7 +39,7 @@
     },
 
     "niri/language": {
-        "format": "⌨ {short}"
+        "format": "⌨ {short}",
         "min-length": 2,
         "max-length": 3,
     },
