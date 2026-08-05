@@ -39,7 +39,7 @@
     },
 
     "niri/language": {
-        "format": "⌨ {flag}"
+        "format": "⌨ {}"
     },
 
     // "custom/kblayout": {
