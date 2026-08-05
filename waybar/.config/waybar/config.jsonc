@@ -25,6 +25,7 @@
         "memory",
         "temperature",
         "backlight",
+        "niri/language",
         "battery",
         "tray"
     ],
@@ -35,6 +36,10 @@
             "active": "",
             "default": ""
         }
+    },
+    
+    "niri/language": {
+        "format": "⌨ {}"
     },
 
     "clock": {
