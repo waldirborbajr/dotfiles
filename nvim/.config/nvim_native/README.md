@@ -17,10 +17,8 @@ A minimal, fast Neovim configuration with zero plugins. Built entirely on Neovim
 
 ## Alias
 
-```sh~~ ~~ 
+```sh 
 alias nv="NVMIM_APPNAME=nvim_native nvim"
-
-``
 ```
 
 ## Video
