@@ -8,7 +8,10 @@
 
 spawn-at-startup "nm-applet"
 spawn-at-startup "nextcloud" "--background"
-spawn-at-startup "/usr/lib/soteria-polkit/soteria"
+// polkit agent: gerenciado via NixOS (security.soteria.enable = true em
+// configuration.nix), que roda como systemd user service. O path abaixo era
+// FHS-only (Arch/Ubuntu) e não existe no NixOS — removido.
+// spawn-at-startup "/usr/lib/soteria-polkit/soteria"
 
 spawn-at-startup "gsettings" "set" "org.gnome.desktop.interface" "cursor-theme" "capitaine-cursors"
 
