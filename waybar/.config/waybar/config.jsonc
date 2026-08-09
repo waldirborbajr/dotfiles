@@ -16,16 +16,12 @@
     ],
 
     "modules-right": [
-        "custom/wallpaper",
         "idle_inhibitor",
         "pulseaudio",
         "network",
         "power-profiles-daemon",
         "cpu",
         "memory",
-        "temperature",
-        "backlight",
-        "niri/language",
         "battery",
         "tray"
     ],
@@ -38,46 +34,37 @@
         }
     },
 
-    "niri/language": {
-        "format": "⌨ {}"
-    },
-
-    // "custom/kblayout": {
-    //     "exec": "~/.config/waybar/scripts/kb-layout.sh",
-    //     "interval": 1,
-    //     "format": "⌨ {}",
-    //     "tooltip": false
-    // },
-
     "clock": {
-        "interval": 1,
+        "interval": 60,
         "format": " {:%H:%M}",
-        "tooltip-format": "<big>{:%A, %d %B %Y}</big>\n<tt>{calendar}</tt>"
+        "tooltip-format": "<big>{:%A, %d %B %Y}</big>\n<tt>{calendar}</tt>",
+        "calendar": {
+            "mode": "month",
+            "weeks-pos": "right",
+            "format": {
+                "months": "<span color='#88c0d0'><b>{}</b></span>",
+                "days": "<span color='#eceff4'>{}</span>",
+                "weeks": "<span color='#81a1c1'><b>W{}</b></span>",
+                "weekdays": "<span color='#ebcb8b'><b>{}</b></span>",
+                "today": "<span color='#bf616a'><b><u>{}</u></b></span>"
+            }
+        }
     },
 
     "cpu": {
-        "format": "󰍛 {usage}%"
+        "interval": 5,
+        "format": "󰍛 {usage}%",
+        "tooltip": true
     },
 
     "memory": {
-        "format": "󰘚 {}%"
-    },
-
-    "temperature": {
-        "critical-threshold": 80,
-        "format": "󰔏 {temperatureC}°"
-    },
-
-    "backlight": {
-        "format": "{icon} {percent}%",
-        "format-icons": [
-            "󰃞",
-            "󰃟",
-            "󰃠"
-        ]
+        "interval": 10,
+        "format": "󰘚 {}%",
+        "tooltip": true
     },
 
     "battery": {
+        "interval": 30,
         "states": {
             "warning": 25,
             "critical": 10
@@ -85,6 +72,7 @@
         "format": "{icon} {capacity}%",
         "format-charging": "󰂄 {capacity}%",
         "format-plugged": "󰂄 {capacity}%",
+        "format-full": "󰁹 {capacity}%",
         "format-icons": [
             "󰂎",
             "󰁺",
@@ -97,13 +85,19 @@
             "󰂁",
             "󰂂",
             "󰁹"
-        ]
+        ],
+        "tooltip": true
     },
 
     "network": {
+        "interval": 10,
         "format-wifi": "󰖩 {signalStrength}%",
         "format-ethernet": "󰈀",
-        "format-disconnected": "󰖪"
+        "format-disconnected": "󰖪",
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)\n{ipaddr}",
+        "tooltip-format-ethernet": "{ifname}\n{ipaddr}",
+        "tooltip-format-disconnected": "Disconnected",
+        "on-click": "nm-connection-editor"
     },
 
     "pulseaudio": {
@@ -115,11 +109,16 @@
                 "󰖀",
                 "󰕾"
             ]
-        }
+        },
+        "on-click": "pavucontrol",
+        "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "tooltip": true
     },
 
     "power-profiles-daemon": {
         "format": "{icon}",
+        "tooltip": true,
+        "tooltip-format": "Power profile: {profile}",
         "format-icons": {
             "performance": "󰓅",
             "balanced": "󰾅",
@@ -132,12 +131,14 @@
         "format-icons": {
             "activated": "",
             "deactivated": ""
-        }
+        },
+        "tooltip": true
     },
 
     "tray": {
-        "spacing": 8
-    },
+        "spacing": 8,
+        "icon-size": 16
+    }
 
     "custom/wallpaper": {
         "interval": 30,
