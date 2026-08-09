@@ -1,10 +1,11 @@
 // Processes spawned at niri startup.
 
 // Escolhe o input.kdl correto por hostname (antes de qualquer coisa)
-spawn-sh-at-startup "~/dotfiles/niri/select-input.sh"
+spawn-sh-at-startup "~/dotfiles/niri/scripts/select-input.sh"
 
 spawn-at-startup "waybar"
-spawn-at-startup "swaybg" "-i" "/home/borba/Pictures/Wallpapers/wallpaper.jpg" "-m" "fill"
 
-// To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
-// spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
+// Wallpaper com $HOME / ~
+spawn-sh-at-startup "swaybg -i \"$HOME/Pictures/Wallpapers/wallpaper.jpg\" -m fill"
+// ou:
+// spawn-sh-at-startup "swaybg -i ~/Pictures/Wallpapers/wallpaper.jpg -m fill"
