@@ -55,7 +55,7 @@ layout {
     // You can enable drop shadows for windows.
     shadow {
         // Uncomment the next line to enable shadows.
-        on
+        off
         // Softness controls the shadow blur radius.
         softness 30
         // Spread expands the shadow.
