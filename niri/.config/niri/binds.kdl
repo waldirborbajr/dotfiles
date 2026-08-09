@@ -166,4 +166,13 @@ binds {
     Ctrl+Alt+Delete { quit; }
 
     Mod+Shift+P { power-off-monitors; }
+    
+    // Larguras rápidas
+    Mod+Shift+1 { set-column-width "25%"; }
+    Mod+Shift+2 { set-column-width "33%"; }
+    Mod+Shift+3 { set-column-width "50%"; }
+    
+    // Em floating, altura também ajuda
+    Mod+Alt+Minus { set-window-height "-5%"; }
+    Mod+Alt+Equal { set-window-height "+5%"; }
 }
