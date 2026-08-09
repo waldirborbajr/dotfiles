@@ -5,7 +5,7 @@ binds {
 
     Mod+T hotkey-overlay-title="Open a Terminal: Wezterm" { spawn "wezterm"; }
     Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
-    Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
+    Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock" "-f"; }
 
     Super+Alt+S allow-when-locked=true hotkey-overlay-title=null { spawn-sh "pkill orca || exec orca"; }
 
@@ -14,16 +14,15 @@ binds {
     XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
     XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
 
-    XF86AudioPlay        allow-when-locked=true { spawn-sh "playerctl play-pause"; }
-    XF86AudioStop        allow-when-locked=true { spawn-sh "playerctl stop"; }
-    XF86AudioPrev        allow-when-locked=true { spawn-sh "playerctl previous"; }
-    XF86AudioNext        allow-when-locked=true { spawn-sh "playerctl next"; }
+    XF86AudioPlay allow-when-locked=true { spawn-sh "playerctl play-pause"; }
+    XF86AudioStop allow-when-locked=true { spawn-sh "playerctl stop"; }
+    XF86AudioPrev allow-when-locked=true { spawn-sh "playerctl previous"; }
+    XF86AudioNext allow-when-locked=true { spawn-sh "playerctl next"; }
 
-    XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
+    XF86MonBrightnessUp   allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
     XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
 
     Mod+O repeat=false { toggle-overview; }
-
     Mod+Q repeat=false { close-window; }
 
     Mod+Left  { focus-column-left; }
@@ -119,60 +118,82 @@ binds {
 
     Mod+BracketLeft  { consume-or-expel-window-left; }
     Mod+BracketRight { consume-or-expel-window-right; }
-
     Mod+Comma  { consume-window-into-column; }
     Mod+Period { expel-window-from-column; }
 
     Mod+R { switch-preset-column-width; }
     Mod+Shift+R { switch-preset-column-width-back; }
-
     Mod+Ctrl+Shift+R { switch-preset-window-height; }
     Mod+Ctrl+R { reset-window-height; }
 
     Mod+F { maximize-column; }
     Mod+Shift+F { fullscreen-window; }
-
     Mod+M { maximize-window-to-edges; }
-
     Mod+Ctrl+F { expand-column-to-available-width; }
 
     Mod+C { center-column; }
     Mod+Ctrl+C { center-visible-columns; }
 
     Mod+Minus { set-column-width "-10%"; }
-    Mod+Equal { set-column-width "+10%"; }
-
+    Mod+equal { set-column-width "+10%"; }
     Mod+Shift+Minus { set-window-height "-10%"; }
-    Mod+Shift+Equal { set-window-height "+10%"; }
+    Mod+Shift+equal { set-window-height "+10%"; }
 
-    Mod+V       { toggle-window-floating; }
+    Mod+V { toggle-window-floating; }
     Mod+Shift+V { switch-focus-between-floating-and-tiling; }
 
     Mod+W { toggle-column-tabbed-display; }
 
-    // Mod+Space       { switch-layout "next"; }
+    // Mod+Space { switch-layout "next"; }
     // Mod+Shift+Space { switch-layout "prev"; }
 
-    Print { screenshot; }
-    Ctrl+Print { screenshot-screen; }
+    // ==================== SCREENSHOTS ====================
+    // Dell (tem Print)
+    Print hotkey-overlay-title="Screenshot area" {
+        spawn-sh "grim -g \"$(slurp)\" - | swappy -f -"
+    }
+    Ctrl+Print hotkey-overlay-title="Screenshot screen" {
+        spawn-sh "grim - | swappy -f -"
+    }
     Alt+Print { screenshot-window; }
-    Mod+Alt+4 { screenshot-screen; }
-    Mod+Alt+P { screenshot; }
+
+    // Mac / K380 (sem Print) — mesmos atalhos em todas as máquinas
+    Mod+Shift+S hotkey-overlay-title="Screenshot area" {
+        spawn-sh "grim -g \"$(slurp)\" - | swappy -f -"
+    }
+    Mod+Shift+A hotkey-overlay-title="Screenshot screen" {
+        spawn-sh "grim - | swappy -f -"
+    }
+    Mod+Shift+W hotkey-overlay-title="Screenshot window" {
+        screenshot-window
+    }
+
+    // Atalhos extras legados
+    Mod+Alt+4 {
+        spawn-sh "grim - | swappy -f -"
+    }
+    Mod+Alt+P {
+        spawn-sh "grim -g \"$(slurp)\" - | swappy -f -"
+    }
+
+    // ==================== CLIPBOARD HISTORY ====================
+    Mod+Shift+C hotkey-overlay-title="Clipboard history" {
+        spawn-sh "cliphist list | fuzzel -d -p 'Clipboard: ' -l 12 -w 60 | cliphist decode | wl-copy"
+    }
 
     Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
 
     // Mod+Shift+E { quit; }
     Mod+Shift+E { spawn-sh "wlr-which-key -k e"; }
     Ctrl+Alt+Delete { quit; }
-
     Mod+Shift+P { power-off-monitors; }
-    
+
     // Larguras rápidas
     Mod+Shift+1 { set-column-width "25%"; }
     Mod+Shift+2 { set-column-width "33%"; }
     Mod+Shift+3 { set-column-width "50%"; }
-    
+
     // Em floating, altura também ajuda
     Mod+Alt+Minus { set-window-height "-5%"; }
-    Mod+Alt+Equal { set-window-height "+5%"; }
+    Mod+Alt+equal { set-window-height "+5%"; }
 }
