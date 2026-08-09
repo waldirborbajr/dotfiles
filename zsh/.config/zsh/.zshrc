@@ -110,3 +110,8 @@ nvm()  { _nvm_lazy_load; nvm  "$@"; }
 node() { _nvm_lazy_load; node "$@"; }
 npm()  { _nvm_lazy_load; npm  "$@"; }
 npx()  { _nvm_lazy_load; npx  "$@"; }
+
+# no final do ~/.zprofile (ou ~/.zshenv)
+if [[ -x "$HOME/dotfiles/niri/.config/niri/scripts/select-input.sh" ]]; then
+  "$HOME/dotfiles/niri/.config/niri/scripts/select-input.sh"
+fi
