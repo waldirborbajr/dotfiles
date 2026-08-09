@@ -1,6 +1,6 @@
 // Processes spawned at niri startup.
 spawn-at-startup "waybar"
-spawn-at-startup "swaybg" "-i" "/home/borba/Pictures/Wallpapers/anGdxc4-big-bang-theory-wallpaper.jpg" "-m" "fill"
+spawn-at-startup "swaybg" "-i" "/home/borba/Pictures/Wallpapers/wallpaper.jpg" "-m" "fill"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
