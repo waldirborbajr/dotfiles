@@ -1,22 +1,24 @@
 # Theming
-font: JetBrainsMono Nerd Font 12
-background: "#434c5ed0"
-color: "#e5e9f0"
-border: "#ebcb8b"
-separator: " ➜ "
+font: JetBrainsMono Nerd Font 18
+background: "#2e3440ee"
+color: "#eceff4"
+border: "#88c0d0"
+separator: "  →  "
 border_width: 3
-corner_r: 12
-padding: 15 # Defaults to corner_r
-rows_per_column: 6 # No limit by default
-column_padding: 25 # Defaults to padding
+corner_r: 16
+padding: 24
+rows_per_column: 8
+column_padding: 32
 
-# Anchor and margin
-anchor: bottom # One of center, left, right, top, bottom, bottom-left, top-left, etc.
-# Only relevant when anchor is not center
+# Posição
+anchor: center
 margin_right: 0
 margin_bottom: 0
 margin_left: 0
 margin_top: 0
+
+# Opcional: não conflitar com binds do niri
+inhibit_compositor_keyboard_shortcuts: true
 
 # namespace to use for the layer shell surface
 #namespace: "wlr_which_key"
