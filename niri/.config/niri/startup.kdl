@@ -1,8 +1,5 @@
 // Processes spawned at niri startup.
 
-// Escolhe o input.kdl correto por hostname (antes de qualquer coisa)
-spawn-sh-at-startup "~/dotfiles/niri/scripts/select-input.sh"
-
 spawn-at-startup "waybar"
 
 // Wallpaper com $HOME / ~
