@@ -138,7 +138,7 @@
     "tray": {
         "spacing": 8,
         "icon-size": 16
-    }
+    },
 
     "custom/wallpaper": {
         "interval": 30,
